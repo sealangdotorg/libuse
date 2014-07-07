@@ -47,7 +47,7 @@ _SRG = \
 _matcher = re.compile( "(\%\{)|(:)|(\%\})" )
 _ignore  = re.compile( "[ \t]" )
 
-def preprocess( text ) :
+def transform( text ) :
     
     state = []
     stack = []
@@ -78,7 +78,7 @@ def preprocess( text ) :
         
         elif e.group(2) is not None \
          and valid      is not None :
-
+            
             options = _ignore.sub( "", text[ valid[1] : e.span()[0] ] ).split( "," )
             
             for option in options :
@@ -104,13 +104,15 @@ def preprocess( text ) :
             result = "%s%s%s" % ( result, text[ last : e.span()[0]  ], generate_sequence() )
             last   = e.span()[1]
     
-    return "%s%s" % ( result, text[ last : ], )
+    if last < 0 :
+        return text
+    else :
+        return "%s%s" % ( result, text[ last : ], )
 # end def
 
 
-def printf( message, *args ) :
-    
-    message = preprocess( message )
+def printf( message, *args ) :    
+    message = transform( message )
     print( message % args )
 # end def
 
