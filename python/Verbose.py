@@ -10,9 +10,6 @@ import sys
 import os
 import re
 
-
-# "asdf %(red|rrrr %(bold|rbrb%) rrrr%) asdf"
-
 _CSI = "\x1B["
 
 _SRG = \
@@ -62,27 +59,22 @@ def preprocess( text ) :
             for s in state :
                 seq = "%s%d;" % ( seq, s, )
             
-        seq = seq[:-1] + "m"
-        
-        print( seq )
-        return seq
+        return seq[:-1] + "m"
     # end def
-    
-    print( text )
     
     i = _matcher.finditer( text )
     
-    valid = None
-    
+    valid  = None
     result = ""
+    last   = -1
     
     for e in i :
         if e.group(1) is not None :
             valid = e.span()
             
-            print( "v=1,beg@" )
-            print( e.span() )
-            continue
+            if last < 0 :
+                last = valid[0]
+                result = text[ : valid[0] ]
         
         elif e.group(2) is not None \
          and valid      is not None :
@@ -97,33 +89,22 @@ def preprocess( text ) :
             
             stack.append( len( options ) )
             
-            result = "%s" % ( result, )
-            
-            generate_sequence()
+            result = "%s%s%s" % ( result, text[ last : valid[0] ], generate_sequence(), )
+            last   = e.span()[1]
             
             valid = None
-            
-            print( "v=0,sep@" )
-            print( e.span() )
             
         elif e.group(3) is not None :
             if valid is not None :
                 assert( 0 and "LIBVERBOSE: need a seperator in color format" )
             
             for i in range( stack.pop() ) :
-                print(i)
                 state.pop()
             
-            generate_sequence()
-            
-            print( "end@" )
-            print( e.span() )
-        
-        print( "--------------------> %s" % state )
-        print( "--------------------> %s" % stack )
-
+            result = "%s%s%s" % ( result, text[ last : e.span()[0]  ], generate_sequence() )
+            last   = e.span()[1]
     
-    return _matcher.sub("", text)
+    return "%s%s" % ( result, text[ last : ], )
 # end def
 
 
