@@ -1,0 +1,9 @@
+
+* libverbose - A reusable verbose utility for different programming languages
+
+currently only =python= supported
+
+
+** License
+
+#+include: LICENSE.txt
