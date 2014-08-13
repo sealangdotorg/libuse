@@ -111,9 +111,17 @@ def transform( text ) :
 # end def
 
 
-def printf( message, *args ) :    
+def printf( message, *args, **kwargs ) :
+    stream = sys.stdout
+    
+    if "stream" in kwargs :
+        stream = kwargs[ "stream" ]
+    
+    if stream is None :
+        return
+    
     message = transform( message )
-    print( message % args )
+    stream.write( message % args )
 # end def
 
 
