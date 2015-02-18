@@ -7,45 +7,36 @@
   file in the project root directory.
 */
 
-#ifndef _LIB_STDHL_C_TYPE_H_
-#define _LIB_STDHL_C_TYPE_H_
+#ifndef _LIB_STDHL_CPP_TYPE_H_
+#define _LIB_STDHL_CPP_TYPE_H_
 
-#include <stdint.h>
+#include <set>
+#include <map>
+#include <list>
+#include <vector>
+#include <string>
+#include <unordered_set>
+#include <unordered_map>
+#include <type_traits>
 
-#include "default.h"
+using namespace std;
+
+#include "type.h"
+#include "Default.h"
 
 /**
-   @file     type.h
-   
+   @file     Type.h
+   @class    Type
    @brief    TODO
    
    TODO
    
    @author   Philipp Paulweber
-   @date     2015-02-14
+   @date     2015-02-15
 */
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
 
-typedef uint8_t  u8;
-typedef uint16_t u16;
-typedef uint16_t u32;
-typedef uint64_t u64;
-
-typedef int8_t   i8;
-typedef int16_t  i16;
-typedef int16_t  i32;
-typedef int64_t  i64;
-
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* _LIB_STDHL_C_TYPE_H_ */
+#endif /* _LIB_STDHL_CPP_TYPE_H_ */
 
 
 /*

@@ -1,2 +1,5 @@
 .attic
 python/*.pyc
+libstdhlc.a
+libstdhlcpp.a
+obj

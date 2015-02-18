@@ -7,22 +7,23 @@
   file in the project root directory.
 */
 
-#ifndef _LIB_STDHL_C_TYPE_H_
-#define _LIB_STDHL_C_TYPE_H_
+#ifndef _LIB_STDHL_C_ARGS_H_
+#define _LIB_STDHL_C_ARGS_H_
 
-#include <stdint.h>
+#include <getopt.h>
 
 #include "default.h"
+#include "type.h"
 
 /**
-   @file     type.h
+   @file     args.h
    
    @brief    TODO
    
    TODO
    
    @author   Philipp Paulweber
-   @date     2015-02-14
+   @date     2015-02-16
 */
 
 #ifdef __cplusplus
@@ -30,22 +31,12 @@ extern "C"
 {
 #endif
 
-typedef uint8_t  u8;
-typedef uint16_t u16;
-typedef uint16_t u32;
-typedef uint64_t u64;
-
-typedef int8_t   i8;
-typedef int16_t  i16;
-typedef int16_t  i32;
-typedef int64_t  i64;
-
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* _LIB_STDHL_C_TYPE_H_ */
+#endif /* _LIB_STDHL_C_ARGS_H_ */
 
 
 /*
