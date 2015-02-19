@@ -36,23 +36,25 @@ obj:
 	mkdir -p obj
 
 obj/%.o: c/%.c
-	@echo "CC " $<
+	@echo "CC  " $<
 	@$(CC) $(CCFLAG) $(INCLUDE) -c $< -o $@
 
 obj/%.o: cpp/%.cpp
-	@echo "CC " $<
+	@echo "CPP " $<
 	@$(CPP) $(CPPFLAG) $(INCLUDE) -c $< -o $@
 
 libstdhlc.a: $(COBJECTS)
-	@echo "AR " $@
+	@echo "AR  " $@
 	@$(AR) rsc $@ $(filter %.o,$^)
 	@ranlib $@
 
 libstdhlcpp.a: $(CPPOBJECTS)
-	@echo "AR " $@
+	@echo "AR  " $@
 	@$(AR) rsc $@ $(filter %.o,$^)
 	@ranlib $@
 
 clean:
-	rm -rf obj
-	rm -f $(TARGET)
+	@echo "RM  " obj
+	@rm -rf obj
+	@echo "RM  " $(TARGET)
+	@rm -f $(TARGET)

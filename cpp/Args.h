@@ -40,16 +40,17 @@ public:
 	, OPTIONAL = 2
 	};
 	
-	function< void( Args& args ) > usage;
-	function< void( Args& args, int ) > error;
-	function< void( Args& args, const char* ) > error_arg_required;
-	function< void( Args& args, const char* ) > error_arg_invalid;
+	function< void( void ) > usage;
+	function< void( int, const char* ) > error;
+	function< void( const char* ) > error_arg_required;
+	function< void( const char* ) > error_arg_invalid;
 	
 private:
 	struct Option
 	{
 		option field;
 		const char* description;
+		const char* metatag;
 		function< void( const char* ) > action;
 	};
 	
@@ -61,51 +62,161 @@ private:
 	
 	function< void( const char* ) > process_non_option;
 	
-	unordered_map< const char*, Option > options;
+    unordered_map< const char*, Option > options;
 	
 	string format_str;
 	
+	int (*getopt_func)( int, char* const*, const char*, const option*, int* );
+	
 public:
 	
-	Args( int argc
-		  , const char** argv
-		  , Mode mode = DEFAULT
-		  , function< void( const char* ) > process_non_option = []( const char* arg ) { } )
+	Args
+	( int argc
+	, const char** argv
+	, function< void( const char* ) > process_non_option = []( const char* arg ) { }
+	) 
+	: Args( argc, argv, ALTERNATE, process_non_option )
+	{
+	}
+	
+	Args
+	( int argc
+	, const char** argv
+	, Mode mode
+	, function< void( const char* ) > process_non_option 
+	)
 	: argc( argc )
 	, argv( argv )
 	, mode( mode )
 	, process_non_option( process_non_option )
 	{
-		usage = []( Args& obj ) 
+		if( mode == DEFAULT )
 		{
-			for( pair< const char*, Option > opt : obj.options )
+			getopt_func = &getopt_long;
+		}
+		else
+		{
+			getopt_func = &getopt_long_only;
+		}
+		
+		usage = [this]() 
+		{
+			map< string, Option > sorted_options;
+			
+			for( auto& opt : this->options )
 			{
-				printf( "  -%c --%-20.20s %s\n"
-					, opt.second.field.val > 10 ? opt.second.field.val : ' '
-					, opt.second.field.name
+				string key;
+				
+				if( opt.second.field.val )
+				{
+					key.push_back( opt.second.field.val );
+				}
+				if( opt.second.field.name )
+				{
+					key.append( opt.second.field.name );
+				}
+				
+				sorted_options[ key ] = opt.second;
+			}
+			
+			for( auto& opt : sorted_options )
+			{
+				string str;
+								
+				if( opt.second.field.val )
+				{
+					str.append( "-" );
+					str.push_back( opt.second.field.val );
+					
+					if( opt.second.field.has_arg )
+					{
+						if( opt.second.field.has_arg == OPTIONAL )
+						{
+							str.append("[=");
+						}
+					
+						str.append( "<" );
+						str.append( opt.second.metatag );
+						str.append( ">" );
+						
+						if( opt.second.field.has_arg == OPTIONAL )
+						{
+							str.append("]");
+						}
+					}
+					
+					str.append( " " );
+				}
+				
+				if( opt.second.field.name )
+				{
+					if( this->mode == DEFAULT )
+					{
+						str.append( "--" );
+					}
+					else
+					{
+						str.append( "-" );
+					}
+					
+					str.append( opt.second.field.name );
+
+					if( opt.second.field.has_arg )
+					{
+						if( opt.second.field.has_arg == OPTIONAL )
+						{
+							str.append("[=");
+						}
+						else
+						{
+							str.append(" ");
+						}
+						
+						str.append( "<" );
+						str.append( opt.second.metatag );
+						str.append( ">" );
+						
+						if( opt.second.field.has_arg == OPTIONAL )
+						{
+							str.append("]");
+						}
+					}
+				}
+				
+				fprintf( stderr, "  %-30.30s %s\n"
+						 , str.c_str()
 					, opt.second.description );
 			}		
 		};
 		
-		error = []( Args& obj, int errors ) 
+		error = [this]( int error_code, const char* msg ) 
 		{
-			obj.usage( obj );
-			exit( -1 );
+			if( msg )
+			{
+				fprintf( stderr, "%s: error: %s\n", this->argv[0], msg );				
+			}
+			
+			exit( error_code );
 		};
 		
-		error_arg_required = []( Args& obj, const char* arg ) 
+		error_arg_required = [this]( const char* arg ) 
 		{
 			fprintf( stderr
 				   , "%s: error: option '%s' requires an argument\n"
-				   , obj.argv[0], arg );
+				   , this->argv[0], arg );
 		};
 		
-		error_arg_invalid = []( Args& obj, const char* arg ) 
+		error_arg_invalid = [this]( const char* arg ) 
 		{
 			fprintf( stderr
 				   , "%s: error: unrecognized option '%s'\n"
-				   , obj.argv[0], arg );
+				   , this->argv[0], arg );
 		};
+	}
+	
+	const char* getProgramName() const
+	{
+		return argv[ 0 ];
 	}
 	
 	void parse( void )
@@ -120,15 +231,6 @@ public:
 		for( pair< const char*, Option > opt : options )
 		{
 			getopt_options[ pos ] = opt.second.field;
-			
-			// printf( "%i: %s, %i, %p, %i\n"
-			// 		, pos
-			// 		, getopt_options[ pos ].name
-			// 		, getopt_options[ pos ].has_arg
-			// 		, getopt_options[ pos ].flag
-			// 		, getopt_options[ pos ].val
-			// 	);
-			
 			pos++;
 		}
 		
@@ -140,7 +242,7 @@ public:
 		{ 
 			int getopt_index = 0;
 			
-			getopt_ctrl = getopt_long_only
+			getopt_ctrl = getopt_func
 				( argc
 				, (char* const*)argv
 				, format_str.c_str()
@@ -204,19 +306,19 @@ public:
 			
 			if( getopt_ctrl == ':' )
 			{
-				error_arg_required( *this, argv[ optind - 1 ] );
+				error_arg_required( argv[ optind - 1 ] );
 				err++;
 				continue;
 			}
 			
 			if( getopt_ctrl == '?' )
 			{
-				error_arg_invalid( *this, argv[ optind - 1 ] );
+				error_arg_invalid( argv[ optind - 1 ] );
 				err++;
 				continue;
 			}
 			
-			error( *this, err );
+			error( -1, 0 );
 		}
 		
 		for( int index = optind; index < argc; index++ )
@@ -226,21 +328,18 @@ public:
 		
 		if( err > 0 )
 		{
-			error( *this, err );
+			error( -1, 0 );
 		}
 	}
 	
-	// void add( const char* arg_string, function< void( T ) > action )
-	// {
-	// }
-	
-//private:
-	// template< class T >
-	void add( const char arg_char
-			  , const char* arg_str
-			  , const char* description
-			  , Kind kind
-			  , function< void( const char* ) > action )
+	void add
+	( const char arg_char
+	, const char* arg_str
+	, Kind kind
+	, const char* description
+	, function< void( const char* ) > action
+	, const char* metatag = "arg"
+	)
 	{
 		const char* key = (const char*)(size_t)arg_char;
 		
@@ -260,7 +359,7 @@ public:
 				exit( -1 );		
 			}
 		}
-	    
+		
 		if( arg_str )
 		{
 			if( options.find( arg_str ) != options.end() )
@@ -290,6 +389,7 @@ public:
 		
 		opt.action        = action;
 		opt.description   = description;
+		opt.metatag       = metatag;
 		
 		if( arg_char > 0 )
 		{
