@@ -10,7 +10,7 @@
 #ifndef _LIB_STDHL_CPP_DEFAULT_H_
 #define _LIB_STDHL_CPP_DEFAULT_H_
 
-#include "default.h"
+#include "stdhl/c/default.h"
 
 #include <sstream>
 #include <fstream>

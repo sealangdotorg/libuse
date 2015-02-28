@@ -10,7 +10,7 @@
 #ifndef _LIB_STDHL_CPP_ARGS_H_
 #define _LIB_STDHL_CPP_ARGS_H_
 
-#include "args.h"
+#include "stdhl/c/args.h"
 
 #include "Type.h"
 
@@ -283,7 +283,7 @@ public:
 					continue;
 				}
 				
-				if( optc == getopt_ctrl )
+				if( (int)optc == (int)getopt_ctrl )
 				{
 					if( optarg )
 					{

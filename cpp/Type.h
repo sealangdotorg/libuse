@@ -21,7 +21,7 @@
 
 using namespace std;
 
-#include "type.h"
+#include "stdhl/c/type.h"
 #include "Default.h"
 
 /**
@@ -35,6 +35,13 @@ using namespace std;
    @date     2015-02-15
 */
 
+namespace libstdhl 
+{
+	class Type
+	{
+		
+	};
+}
 
 #endif /* _LIB_STDHL_CPP_TYPE_H_ */
 
