@@ -123,7 +123,7 @@ public:
 			{
 				string str;
 								
-				if( opt.second.field.val )
+				if( opt.second.field.val < 256 )
 				{
 					str.append( "-" );
 					str.push_back( opt.second.field.val );
@@ -132,7 +132,11 @@ public:
 					{
 						if( opt.second.field.has_arg == OPTIONAL )
 						{
-							str.append("[=");
+							str.append( "[=" );
+						}
+						else
+						{
+							str.append( " " );
 						}
 					
 						str.append( "<" );
@@ -165,11 +169,11 @@ public:
 					{
 						if( opt.second.field.has_arg == OPTIONAL )
 						{
-							str.append("[=");
+							str.append( "[=" );
 						}
 						else
 						{
-							str.append(" ");
+							str.append( " " );
 						}
 						
 						str.append( "<" );
@@ -178,7 +182,7 @@ public:
 						
 						if( opt.second.field.has_arg == OPTIONAL )
 						{
-							str.append("]");
+							str.append( "]" );
 						}
 					}
 				}
@@ -230,6 +234,10 @@ public:
 		
 		for( pair< const char*, Option > opt : options )
 		{
+			// printf( "%i: %c (%i), %i:%s\n"
+			// 		, pos, opt.first, opt.first
+			// 		, opt.second.field.val, opt.second.field.name );
+			
 			getopt_options[ pos ] = opt.second.field;
 			pos++;
 		}
@@ -249,6 +257,8 @@ public:
 				, getopt_options
 				, &getopt_index
 				);
+			
+			// printf( "%i, %i, %i, '%s', \n", getopt_ctrl, getopt_index, optind, optarg );
 			
 			if( getopt_ctrl == -1 )
 			{
@@ -278,12 +288,7 @@ public:
 			{
 				size_t optc = (size_t)opt.first;
 				
-				if( optc >= 256 )
-				{
-					continue;
-				}
-				
-				if( (int)optc == (int)getopt_ctrl )
+				if( optc > 0 && optc < 256 && (int)optc == (int)getopt_ctrl )
 				{
 					if( optarg )
 					{
@@ -313,8 +318,66 @@ public:
 			
 			if( getopt_ctrl == '?' )
 			{
-				error_arg_invalid( argv[ optind - 1 ] );
-				err++;
+				bool found = false;
+				
+				for( pair< const char*, Option > opt : options )
+				{
+				    string optstr;
+					int optc = opt.second.field.val;
+					
+					if( optc > 0 && optc < 256 )
+					{
+						optstr.append( "-" );
+						optstr.push_back( (char)optc );
+					}
+					else
+					{
+						if( !opt.second.field.name )
+						{
+							continue;
+						}
+					
+						if( this->mode == DEFAULT )
+						{
+							optstr.append( "--" );
+						}
+						else
+						{
+							optstr.append( "-" );
+						}
+					
+						optstr.append( opt.second.field.name );
+					}
+					
+					if( optstr.compare( argv[ optind - 1 ] ) == 0 )
+					{
+						if( optarg )
+						{
+							opt.second.action( optarg );
+						}
+						else
+						{
+							if( opt.second.field.has_arg == REQUIRED )
+							{
+								error_arg_required( argv[ optind - 1 ] );
+							}
+							else
+							{
+								opt.second.action( "" );
+							}
+						}
+						
+						found = true;
+						break;
+					}
+				}
+				
+				if( !found )
+				{
+					error_arg_invalid( argv[ optind - 1 ] );
+					err++;
+				}
+
 				continue;
 			}
 			
@@ -344,6 +407,7 @@ public:
 		const char* key = (const char*)(size_t)arg_char;
 		
 		assert( ( ( arg_char == 0 ) ||
+				  ( arg_char == '+' ) ||
 				  ( arg_char >= 'a' && arg_char <= 'z' ) ||
 				  ( arg_char >= 'A' && arg_char <= 'Z' ) ||
 				  ( arg_char >= '0' && arg_char <= '9' ) ) &&
@@ -385,7 +449,7 @@ public:
 		opt.field.name    = arg_str;
 		opt.field.has_arg = kind;
 		opt.field.flag    = 0;
-		opt.field.val     = arg_char;
+		opt.field.val     = arg_char;			
 		
 		opt.action        = action;
 		opt.description   = description;
@@ -393,15 +457,15 @@ public:
 		
 		if( arg_char > 0 )
 		{
-			char _arg_char[] = ".";
-			_arg_char[0] = arg_char;
-			format_str.append( _arg_char );
+			format_str.push_back( arg_char );
 			
 			if( kind == REQUIRED or kind == OPTIONAL )
 			{
 				format_str.append( ":" );
 			}
 		}
+		
+		// printf( "format_str: '%s'\n", format_str.c_str() );
 	}
 	
 	

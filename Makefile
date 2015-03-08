@@ -27,8 +27,8 @@ COBJECTS += obj/args.o
 
 CPPOBJECTS += obj/Args.o
 
-INCLUDE += -I c
-INCLUDE += -I cpp
+INCLUDE += -I ../
+# INCLUDE += -I cpp
 
 default: obj $(TARGET)
 

@@ -1,5 +1,6 @@
+
 # 
-# Copyright (c) 2014 Philipp Paulweber
+# Copyright (c) 2015 Philipp Paulweber
 # 
 # This file is part of the 'libverbose' project which is released under a NCSA
 # open source software license. For more information, see the LICENSE.txt 

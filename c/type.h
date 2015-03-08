@@ -11,6 +11,7 @@
 #define _LIB_STDHL_C_TYPE_H_
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "default.h"
 
@@ -30,6 +31,8 @@ extern "C"
 {
 #endif
 
+typedef bool     u1;
+	
 typedef uint8_t  u8;
 typedef uint16_t u16;
 typedef uint16_t u32;
