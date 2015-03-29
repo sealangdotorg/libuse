@@ -1,5 +1,8 @@
 
-* libverbose - A reusable verbose utility for different programming languages
+* libstdhl 
+
+
+** Verbose.py - A reusable verbose utility for different programming languages
 
 currently only =python= supported
 

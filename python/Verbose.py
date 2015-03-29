@@ -2,7 +2,7 @@
 # 
 # Copyright (c) 2015 Philipp Paulweber
 # 
-# This file is part of the 'libverbose' project which is released under a NCSA
+# This file is part of the 'libstdhl' project which is released under a NCSA
 # open source software license. For more information, see the LICENSE.txt 
 # file in the project root directory.
 #
