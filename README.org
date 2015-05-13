@@ -1,12 +1,16 @@
 
-* libstdhl 
+* libstdhl: a general purpose high-level library
 
+This library includes some basic data-structures, classes, definitions etc.
+which are used in several projects for different languages.
 
-** Verbose.py - A reusable verbose utility for different programming languages
+** Status 
 
-currently only =python= supported
+Currently the repository covers some Python and C/C++ libraries.
 
+This repository is still in a early stage and more libraries and documentation
+is coming soon!
 
 ** License
 
-#+include: LICENSE.txt
+For license and copyright information please take a look into the LICENSE.txt file.
