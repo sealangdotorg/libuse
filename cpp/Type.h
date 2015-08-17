@@ -62,16 +62,7 @@ using namespace std;
 
 namespace libstdhl 
 {
-	template<typename BASE, typename TYPE>
-	inline bool isa(const TYPE*)
-	{
-		return std::is_base_of<BASE, TYPE>::value;
-	}
 	
-	class Type
-	{
-		
-	};
 }
 
 #endif /* _LIB_STDHL_CPP_TYPE_H_ */
