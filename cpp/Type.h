@@ -62,7 +62,24 @@ using namespace std;
 
 namespace libstdhl 
 {
-	
+
+	class Hash
+	{
+	public:
+		size_t operator()( const char *val ) const
+		{
+			return std::hash< std::string >()( val );
+		}
+	};
+
+	class Equal
+	{
+	public:
+		size_t operator()( const char *val1, const char *val2 ) const
+		{
+			return std::string( val1 ) == std::string( val2 );
+		}
+	};
 }
 
 #endif /* _LIB_STDHL_CPP_TYPE_H_ */
