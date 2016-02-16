@@ -74,6 +74,11 @@ namespace libstdhl
 			assert( reference && "object reference was never bound" );
 			return reference;
 		}
+
+		const u1 isBound( void ) const
+		{
+			return reference != 0;
+		}
 	};
 }
 
