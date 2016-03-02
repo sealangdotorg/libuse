@@ -1,5 +1,5 @@
 //  
-//  Copyright (c) 2015 Philipp Paulweber
+//  Copyright (c) 2016 Philipp Paulweber
 //  All rights reserved.
 //  
 //  Developed by: Philipp Paulweber
@@ -32,37 +32,55 @@
 //  WITH THE SOFTWARE.
 //  
 
-#ifndef _LIB_STDHL_C_DEFAULT_H_
-#define _LIB_STDHL_C_DEFAULT_H_
+#ifndef _LIB_STDHL_CPP_LABELING_H_
+#define _LIB_STDHL_CPP_LABELING_H_
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <assert.h>
+#include "Type.h"
+#include "Allocator.h"
 
 /**
-   @file     default.h
-   
    @brief    TODO
    
    TODO
-   
-   @author   Philipp Paulweber
-   @date     2015-02-14
 */
 
-#ifdef __cplusplus
-extern "C"
+namespace libstdhl 
 {
-#endif
-
-
-#ifdef __cplusplus
+    class Labeling
+	{
+	private:
+		char* label;
+		
+	public:
+		Labeling()
+		: label( 0 )
+		{
+		}
+		
+		~Labeling()
+		{
+			if( label )
+			{
+				free( label );
+			}
+		}
+		
+	    const char* getLabel( void )
+		{
+			if( label == 0 )
+			{
+				std::string s( "lbl" + std::to_string( (u64)this ) );
+				label = (char*)malloc( s.size() );
+				assert( label );
+				strcpy( label, s.c_str() );
+			}
+			
+			return label;
+		}
+	};
 }
-#endif
 
-#endif /* _LIB_STDHL_C_DEFAULT_H_ */
+#endif /* _LIB_STDHL_CPP_LABELING_H_ */
 
 
 //  

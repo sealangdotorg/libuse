@@ -1,5 +1,5 @@
 //  
-//  Copyright (c) 2015 Philipp Paulweber
+//  Copyright (c) 2016 Philipp Paulweber
 //  All rights reserved.
 //  
 //  Developed by: Philipp Paulweber
@@ -32,37 +32,50 @@
 //  WITH THE SOFTWARE.
 //  
 
-#ifndef _LIB_STDHL_C_DEFAULT_H_
-#define _LIB_STDHL_C_DEFAULT_H_
+#ifndef _LIB_STDHL_CPP_ALLOCATOR_H_
+#define _LIB_STDHL_CPP_ALLOCATOR_H_
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <assert.h>
+#include "Type.h"
 
 /**
-   @file     default.h
-   
    @brief    TODO
    
    TODO
-   
-   @author   Philipp Paulweber
-   @date     2015-02-14
 */
 
-#ifdef __cplusplus
-extern "C"
+namespace libstdhl 
 {
-#endif
-
-
-#ifdef __cplusplus
+    class Allocator
+	{
+  //private:
+	public:
+		Allocator()
+		{
+		}
+		
+		~Allocator()
+		{
+		}
+		
+	    static const char* string( const std::string& str )
+		{
+			static std::unordered_set< std::string > cache;
+			
+			if( cache.count( str ) == 0 )
+			{
+				cache.insert( str );
+			}
+			
+			auto result = cache.find( str );
+			assert( result != cache.end() );
+			
+			return result->c_str();
+		}
+	};
 }
-#endif
 
-#endif /* _LIB_STDHL_C_DEFAULT_H_ */
+
+#endif /* _LIB_STDHL_CPP_ALLOCATOR_H_ */
 
 
 //  
