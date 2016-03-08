@@ -69,13 +69,18 @@ namespace libstdhl
 		{
 			if( label == 0 )
 			{
-				std::string s( "lbl" + std::to_string( (u64)this ) );
+				std::string s( "lbl" + std::to_string( getLabelID() ) );
 				label = (char*)malloc( s.size() );
 				assert( label );
 				strcpy( label, s.c_str() );
 			}
 			
 			return label;
+		}
+
+		virtual u64 getLabelID( void )
+		{
+			return (u64)this;
 		}
 	};
 }
