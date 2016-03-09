@@ -37,6 +37,9 @@
 
 #include "stdhl/c/default.h"
 
+#include <ctime>
+#include <bitset>
+#include <chrono>
 #include <sstream>
 #include <fstream>
 #include <iostream>
