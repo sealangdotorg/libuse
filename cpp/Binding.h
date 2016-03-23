@@ -49,7 +49,7 @@ namespace libstdhl
 	class Binding
 	{
 	private:
-		C* reference;
+		C* reference = 0;
 		
 	public:
 		void bind( C* object )
