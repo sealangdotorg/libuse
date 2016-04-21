@@ -18,7 +18,7 @@
 #   GNU General Public License for more details.
 #   
 #   You should have received a copy of the GNU General Public License
-#   along with this program. If not, see <http://www.gnu.org/licenses/>.
+#   along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 #   
 
 import os
@@ -53,8 +53,12 @@ def relicense( filepath, comment, licensetext = licensetext ) :
     for line in fileinput.FileInput( filepath, inplace = 1 ) :
         cnt = cnt + 1
         if cnt == 1 :
-            for txt in licensetext :
-                print "%-4s%s" % ( comment, txt )
+            sys.stderr.write( "'%s' '%s' '%s'\n" % ( line, comment, licensetext[0] ) )
+            if comment == "//" and line.replace( "\n", "" ) != ("%-4s%s" % ( comment, licensetext[0] )) :
+                context = False
+            else :
+                for txt in licensetext :
+                    print "%-4s%s" % ( comment, txt )
         
         if context :
             if not line.startswith( comment ) :
