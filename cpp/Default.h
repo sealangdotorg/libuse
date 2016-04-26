@@ -27,15 +27,17 @@
 #include "stdhl/c/default.h"
 
 #include <ctime>
+#include <tuple>
 #include <bitset>
 #include <chrono>
+#include <utility>
 #include <sstream>
 #include <fstream>
 #include <iostream>
 #include <algorithm>
 #include <functional>
 
-using namespace std;
+// using namespace std;
 
 /**
    @brief    TODO
