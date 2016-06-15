@@ -21,25 +21,11 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //  
 
-#ifndef _LIB_STDHL_CPP_DEFAULT_H_
-#define _LIB_STDHL_CPP_DEFAULT_H_
+#ifndef _LIB_STDHL_CPP_FILE_H_
+#define _LIB_STDHL_CPP_FILE_H_
 
-#include "stdhl/c/default.h"
-
-#include <ctime>
-#include <tuple>
-#include <bitset>
-#include <chrono>
-#include <utility>
-#include <sstream>
-#include <fstream>
-#include <iostream>
-#include <algorithm>
-#include <functional>
-#include <iterator>
-#include <regex>
-
-// using namespace std;
+#include "Default.h"
+#include "Type.h"
 
 /**
    @brief    TODO
@@ -47,12 +33,44 @@
    TODO
 */
 
-
-namespace libstdhl
+namespace libstdhl 
 {
+	class File
+	{
+	public:
+		static u1 exists( const char* file_name )
+		{
+			std::ifstream fd( file_name );
+			return (u1)fd;
+		};
+		
+		static u8 readLines
+		( const char* file_name
+		  , function< void( u32, const std::string& ) > process_line
+		) 
+		{
+ 			u32 cnt = 0;
+			std::string line;
+			std::ifstream fd( file_name );
+			
+			if( not fd )
+			{
+				return -1;
+			}
+			
+			while( getline( fd, line ) )
+			{
+				process_line( cnt, line );
+				cnt++;
+			}
+			
+		    fd.close();
+			return 0;
+		};
+	};
 }
 
-#endif /* _LIB_STDHL_CPP_DEFAULT_H_ */
+#endif /* _LIB_STDHL_CPP_FILE_H_ */
 
 
 //  
