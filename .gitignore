@@ -1,6 +1,7 @@
-.attic
-py/*.pyc
-py/*.pyo
-libstdhlc.a
-libstdhlcpp.a
-obj
+/.attic
+/py/*.pyc
+/py/*.pyo
+/libstdhlc.a
+/libstdhlcpp.a
+/obj
+/test
