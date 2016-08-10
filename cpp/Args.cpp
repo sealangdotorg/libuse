@@ -29,7 +29,7 @@ Args::Args
 , const char** argv
 , function< void( const char* ) > process_non_option 
 )
-: Args( argc, argv, mode, process_non_option )
+: Args( argc, argv, DEFAULT, process_non_option )
 {
 }
 
