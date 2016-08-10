@@ -26,11 +26,13 @@ AR=ar
 CC=clang
 CCFLAG += -std=c11
 CCFLAG += -g
+CCFLAG += -O0
 CCFLAG += -Wall
 
 CPP=clang
 CPPFLAG += -std=c++11
 CPPFLAG += -g
+CPPFLAG += -O0
 CPPFLAG += -Wall
 #CPPFLAG += -Wextra
 
