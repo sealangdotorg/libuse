@@ -46,22 +46,6 @@ Args::Args
 {
     format_str = "";
 	
-	for( int i = 0; i < argc; i++ )
-	{
-		if( std::string( argv[i] ).find( " " ) != std::string::npos )
-		{
-			fprintf
-			( stderr
-			, "%s: internal error: '%s' is a invalid argument element at argv[%i] to parse\n"
-			, argv[0]
-			, argv[i]
-			, i
-			);
-			exit( -1 );		
-		}
-	}
-	
-	
 	if( mode == DEFAULT )
 	{
 		getopt_func = &getopt_long;
