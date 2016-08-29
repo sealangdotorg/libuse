@@ -35,32 +35,32 @@
 namespace libstdhl 
 {
     class Allocator
-	{
+    {
   //private:
-	public:
-		Allocator()
-		{
-		}
-		
-		~Allocator()
-		{
-		}
-		
-	    static const char* string( const std::string& str )
-		{
-			static std::unordered_set< std::string > cache;
-			
-			if( cache.count( str ) == 0 )
-			{
-				cache.insert( str );
-			}
-			
-			auto result = cache.find( str );
-			assert( result != cache.end() );
-			
-			return result->c_str();
-		}
-	};
+    public:
+        Allocator()
+        {
+        }
+        
+        ~Allocator()
+        {
+        }
+        
+        static const char* string( const std::string& str )
+        {
+            static std::unordered_set< std::string > cache;
+            
+            if( cache.count( str ) == 0 )
+            {
+                cache.insert( str );
+            }
+            
+            auto result = cache.find( str );
+            assert( result != cache.end() );
+            
+            return result->c_str();
+        }
+    };
 }
 
 

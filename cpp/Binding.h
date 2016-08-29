@@ -35,40 +35,40 @@
 namespace libstdhl 
 {
     template< class C >
-	class Binding
-	{
-	private:
-		C* reference = 0;
-		
-	public:
-		void bind( C* object )
-		{
-			assert( !reference && "already bounded to a reference" );
-			assert( object && "invalid object reference to bind" );
-			
-			reference = object;
-		}
-		
-		C* unbind( void )
-		{
-			assert( reference && "object reference was never bound" );
-			
-			C* tmp = reference;
-			reference = 0;
-			return tmp;
-		}
-		
-	    C* getBound( void ) const
-		{
-			assert( reference && "object reference was never bound" );
-			return reference;
-		}
+    class Binding
+    {
+    private:
+        C* reference = 0;
+        
+    public:
+        void bind( C* object )
+        {
+            assert( !reference && "already bounded to a reference" );
+            assert( object && "invalid object reference to bind" );
+            
+            reference = object;
+        }
+        
+        C* unbind( void )
+        {
+            assert( reference && "object reference was never bound" );
+            
+            C* tmp = reference;
+            reference = 0;
+            return tmp;
+        }
+        
+        C* getBound( void ) const
+        {
+            assert( reference && "object reference was never bound" );
+            return reference;
+        }
 
-		const u1 isBound( void ) const
-		{
-			return reference != 0;
-		}
-	};
+        const u1 isBound( void ) const
+        {
+            return reference != 0;
+        }
+    };
 }
 
 #endif /* _LIB_STDHL_CPP_BINDING_H_ */

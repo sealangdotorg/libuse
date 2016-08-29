@@ -36,42 +36,42 @@
 namespace libstdhl 
 {
     class Labeling
-	{
-	private:
-		char* label;
-		
-	public:
-		Labeling()
-		: label( 0 )
-		{
-		}
-		
-		~Labeling()
-		{
-			if( label )
-			{
-				free( label );
-			}
-		}
-		
-	    const char* getLabel( void )
-		{
-			if( label == 0 )
-			{
-				std::string s( "lbl" + std::to_string( getLabelID() ) );
-				label = (char*)malloc( s.size() );
-				assert( label );
-				strcpy( label, s.c_str() );
-			}
-			
-			return label;
-		}
+    {
+    private:
+        char* label;
+        
+    public:
+        Labeling()
+        : label( 0 )
+        {
+        }
+        
+        ~Labeling()
+        {
+            if( label )
+            {
+                free( label );
+            }
+        }
+        
+        const char* getLabel( void )
+        {
+            if( label == 0 )
+            {
+                std::string s( "lbl" + std::to_string( getLabelID() ) );
+                label = (char*)malloc( s.size() );
+                assert( label );
+                strcpy( label, s.c_str() );
+            }
+            
+            return label;
+        }
 
-		virtual u64 getLabelID( void )
-		{
-			return (u64)this;
-		}
-	};
+        virtual u64 getLabelID( void )
+        {
+            return (u64)this;
+        }
+    };
 }
 
 #endif /* _LIB_STDHL_CPP_LABELING_H_ */

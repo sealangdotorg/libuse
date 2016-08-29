@@ -37,87 +37,87 @@
 class Args  
 {
 public:
-	enum Mode
-	{ DEFAULT   = 0
-	, ALTERNATE = 1
-	};
-	
-	enum Kind
-	{ NONE     = 0
-	, REQUIRED = 1
-	, OPTIONAL = 2
-	};
-	
-	function< void( void ) > usage;
-	function< void( int, const char* ) > error;
-	function< void( const char* ) > error_arg_required;
-	function< void( const char* ) > error_arg_invalid;
-	
+    enum Mode
+    { DEFAULT   = 0
+    , ALTERNATE = 1
+    };
+    
+    enum Kind
+    { NONE     = 0
+    , REQUIRED = 1
+    , OPTIONAL = 2
+    };
+    
+    function< void( void ) > usage;
+    function< void( int, const char* ) > error;
+    function< void( const char* ) > error_arg_required;
+    function< void( const char* ) > error_arg_invalid;
+    
 private:
-	struct Option
-	{
-		option field;
-		const char* description;
-		const char* metatag;
-		function< void( const char* ) > action;
-	};
-	
-	int argc;
-	
-	const char** argv;
-	
-	Mode mode;
-	
-	function< void( const char* ) > process_non_option;
-	
-	std::string format_str;
-	
-	unordered_map< std::string, Option > options;
+    struct Option
+    {
+        option field;
+        const char* description;
+        const char* metatag;
+        function< void( const char* ) > action;
+    };
     
-	int (*getopt_func)( int, char* const*, const char*, const option*, int* );
-	
-public:	
-	Args
-	( int argc
-	, const char** argv
-	, function< void( const char* ) > process_non_option = []( const char* arg ) { }
-	);
-	
-	Args
-	( int argc
-	, const char** argv
-	, Mode mode
-	, function< void( const char* ) > process_non_option = []( const char* arg ) { }
-	);
-	
-	const char* getProgramName() const;
+    int argc;
     
-	int parse( void );
-	
-	void add
-	( const char arg_char
-	, Kind kind
-	, const char* description
-	, function< void( const char* ) > process_option
-	, const char* metatag = "arg"
-	);
+    const char** argv;
+    
+    Mode mode;
+    
+    function< void( const char* ) > process_non_option;
+    
+    std::string format_str;
+    
+    unordered_map< std::string, Option > options;
+    
+    int (*getopt_func)( int, char* const*, const char*, const option*, int* );
+    
+public:    
+    Args
+    ( int argc
+    , const char** argv
+    , function< void( const char* ) > process_non_option = []( const char* arg ) { }
+    );
+    
+    Args
+    ( int argc
+    , const char** argv
+    , Mode mode
+    , function< void( const char* ) > process_non_option = []( const char* arg ) { }
+    );
+    
+    const char* getProgramName() const;
+    
+    int parse( void );
+    
+    void add
+    ( const char arg_char
+    , Kind kind
+    , const char* description
+    , function< void( const char* ) > process_option
+    , const char* metatag = "arg"
+    );
 
-	void add
-	( const char* arg_str
-	, Kind kind
-	, const char* description
-	, function< void( const char* ) > process_option
-	, const char* metatag = "arg"
-	);
+    void add
+    ( const char* arg_str
+    , Kind kind
+    , const char* description
+    , function< void( const char* ) > process_option
+    , const char* metatag = "arg"
+    );
 
-	void add
-	( const char arg_char
-	, const char* arg_str
-	, Kind kind
-	, const char* description
-	, function< void( const char* ) > process_option
-	, const char* metatag = "arg"
-	);
+    void add
+    ( const char arg_char
+    , const char* arg_str
+    , Kind kind
+    , const char* description
+    , function< void( const char* ) > process_option
+    , const char* metatag = "arg"
+    );
 };
 
 #endif /* _LIB_STDHL_CPP_ARGS_H_ */
