@@ -21,50 +21,101 @@
 #   along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 #   
 
-AR=ar
+.PHONY:
 
-CC=clang
-CCFLAG += -std=c11
-CCFLAG += -g
-CCFLAG += -O0
-CCFLAG += -Wall
+default: debug
 
-CPP=clang
-CPPFLAG += -std=c++11
-CPPFLAG += -g
-CPPFLAG += -O0
-CPPFLAG += -Wall
-#CPPFLAG += -Wextra
+help:
+	@echo "TODO"
 
-TARGET += libstdhlc.a
+
+TARGET  = libstdhlc.a
 TARGET += libstdhlcpp.a
 
-COBJECTS += obj/args.o
+TEST_TARGET = test-libstdhl
 
-CPPOBJECTS += obj/Args.o
 
-INCLUDE += -I ../
-# INCLUDE += -I cpp
+CP  = $(shell find cpp -name '*.cpp' | cut -d'.' -f1)
+CO  = $(CP:%=obj/%.o)
 
-default: obj $(TARGET)
+XP  = $(shell find c -name '*.c' | cut -d'.' -f1)
+XO  = $(XP:%=obj/%.o)
 
-obj:
-	mkdir -p obj
+CI  = -I ../
 
-obj/%.o: c/%.c
-	@echo "CC  " $<
-	@$(CC) $(CCFLAG) $(INCLUDE) -c $< -o $@
+CL  =
 
-obj/%.o: cpp/%.cpp
-	@echo "CPP " $<
-	@$(CPP) $(CPPFLAG) $(INCLUDE) -c $< -o $@
+CC  =
+CF  =
 
-libstdhlc.a: $(COBJECTS)
+  %-gcc: CC = gcc
+%-clang: CC = clang
+
+  debug-%: CF += -O0 -g
+release-%: CF += -O3 -DNDEBUG
+
+linux%:  CF += -Wall -std=c++11
+linux%:  XF += -Wall -std=c11
+linux3%: CF += -m32
+linux6%: CF += -m64
+
+
+build: config $(TARGET)
+check: build $(TEST_TARGET)
+
+linux32-build: build
+linux64-build: build
+
+linux32-check: check
+linux64-check: check
+
+
+  debug-build-linux32-gcc:   linux32-build
+release-build-linux32-gcc:   linux32-build
+
+  debug-build-linux64-gcc:   linux64-build
+release-build-linux64-gcc:   linux64-build
+
+  debug-build-linux32-clang: linux32-build
+release-build-linux32-clang: linux32-build
+
+  debug-build-linux64-clang: linux64-build
+  debug-check-linux64-clang: linux64-check
+release-build-linux64-clang: linux64-build
+release-check-linux64-clang: linux64-check
+
+
+
+
+  debug:   debug-build-linux64-clang
+release: clean release-build-linux64-clang
+
+test:           debug-check-linux64-clang
+release-test: release-check-linux64-clang
+
+
+config: CFG=CC="$(CC)" CF="$(CF)" XF="$(XF)"
+config:
+	@echo "CFG  $(CFG)"
+
+
+obj/%.o: %.cpp
+	@mkdir -p `dirname $@`
+	@echo "C++ " $<
+	@$(CC) $(CF) $(CI) -c $< -o $@
+
+obj/%.o: %.c
+	@mkdir -p `dirname $@`
+	@echo "C   " $<
+	@$(CC) $(XF) $(CI) -c $< -o $@
+
+
+libstdhlc.a: $(XO)
 	@echo "AR  " $@
 	@$(AR) rsc $@ $(filter %.o,$^)
 	@ranlib $@
 
-libstdhlcpp.a: $(CPPOBJECTS)
+libstdhlcpp.a: $(CO)
 	@echo "AR  " $@
 	@$(AR) rsc $@ $(filter %.o,$^)
 	@ranlib $@
@@ -74,27 +125,62 @@ clean:
 	@rm -rf obj
 	@echo "RM  " $(TARGET)
 	@rm -f $(TARGET)
-	@rm -f test
+	@rm -f $(TEST_TARGET)
 
 
-TEST_FILES   = $(shell find uts -name '*.cpp' | cut -d'.' -f1)
-TEST_OBJECTS = $(TEST_FILES:%=obj/%.o)
+#TEST_TARGET = $(TARGET:%.a=%-test.a)
 
-TEST_INCLUDE  = -I ../gtest/googletest/include
-TEST_INCLUDE += -I ../gtest/googletest
+TF   = $(shell find uts -name '*.cpp' | cut -d'.' -f1)
+TO = $(TF:%=obj/%.o)
 
-TEST_LIBRARY  = -lstdc++
-TEST_LIBRARY += -lm
-TEST_LIBRARY += -lpthread
+TI  = -I ../gtest/googletest/include
+TI += -I ../gtest/googletest
+
+TL  = -lstdc++
+TL += -lm
+TL += -lpthread
 
 obj/uts/%.o: uts/%.cpp
 	@mkdir -p `dirname $@`
-	@echo "CPP " $<
-	@$(CPP) $(CPPFLAG) $(TEST_INCLUDE) $(INCLUDE) -c $< -o $@
+	@echo "C++ " $<
+	@$(CC) $(CF) $(TI) $(CI) -c $< -o $@
 
-test: default obj $(TEST_OBJECTS)
-	@rm -f $@
-	@echo "LD  " $@
-	@$(CPP) $(CPPFLAG) $(TEST_INCLUDE) $(INCLUDE) $(TEST_LIBRARY) -o $@ $(filter %.o,$^) $(TARGET) ../gtest/googletest/src/gtest-all.cc ../gtest/googletest/src/gtest_main.cc
+$(TEST_TARGET): $(CO) $(TO)
+#@rm -f $@
+	@echo "LD " $@
+	@$(CC) \
+	  $(CF) \
+	  $(TI) \
+	  $(CI) \
+	  $(TL) \
+	  -o $@ \
+	  $(TO) \
+	  libstdhlcpp.a  \
+	  ../gtest/googletest/src/gtest-all.cc \
+	  ../gtest/googletest/src/gtest_main.cc 
 	@echo "RUN " $@
 	@./$@
+
+
+# test: #$(TEST_TARGET)
+# 	@rm -f $@
+# 	@echo "LD  " $@
+# 	@$(CC) \
+# 	  $(CF) \
+# 	  $(TI) \
+# 	  $(CI) \
+# 	  $(TL) \
+# 	  -o $@ \
+# 	  libstdhlcpp.a  \
+# 	  $(TEST_OBJECTS) \
+# 	  ../gtest/googletest/src/gtest-all.cc \
+# 	  ../gtest/googletest/src/gtest_main.cc 
+# 	@echo "RUN " $@
+# 	@./$@
+
+# $(TEST_TARGET): $(TEST_OBJECTS)
+#	@echo "AR  " $@
+#	@$(AR) rsc $@ $(filter %.o,$^)
+#	@ranlib $@
+
+
