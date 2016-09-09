@@ -29,10 +29,12 @@ help:
 	@echo "TODO"
 
 
-TARGET  = libstdhlc.a
-TARGET += libstdhlcpp.a
+REPO = libstdhl
 
-TEST_TARGET = test-libstdhl
+TARGET  = $(REPO)c.a
+TARGET += $(REPO)cpp.a
+
+TEST_TARGET = test-$(REPO)
 
 
 CP  = $(shell find cpp -name '*.cpp' | cut -d'.' -f1)
@@ -71,13 +73,19 @@ linux64-check: check
 
 
   debug-build-linux32-gcc:   linux32-build
+  debug-check-linux32-gcc:   linux32-check
 release-build-linux32-gcc:   linux32-build
+release-check-linux32-gcc:   linux32-check
 
   debug-build-linux64-gcc:   linux64-build
+  debug-check-linux64-gcc:   linux64-check
 release-build-linux64-gcc:   linux64-build
+release-check-linux64-gcc:   linux64-check
 
   debug-build-linux32-clang: linux32-build
+  debug-check-linux32-clang: linux32-check
 release-build-linux32-clang: linux32-build
+release-check-linux32-clang: linux32-check
 
   debug-build-linux64-clang: linux64-build
   debug-check-linux64-clang: linux64-check
@@ -85,13 +93,11 @@ release-build-linux64-clang: linux64-build
 release-check-linux64-clang: linux64-check
 
 
-
-
   debug:   debug-build-linux64-clang
 release: clean release-build-linux64-clang
 
 test:           debug-check-linux64-clang
-release-test: release-check-linux64-clang
+test-release: release-check-linux64-clang
 
 
 config: CFG=CC="$(CC)" CF="$(CF)" XF="$(XF)"
@@ -125,6 +131,7 @@ clean:
 	@rm -rf obj
 	@echo "RM  " $(TARGET)
 	@rm -f $(TARGET)
+	@echo "RM  " $(TEST_TARGET)
 	@rm -f $(TEST_TARGET)
 
 
@@ -146,7 +153,6 @@ obj/uts/%.o: uts/%.cpp
 	@$(CC) $(CF) $(TI) $(CI) -c $< -o $@
 
 $(TEST_TARGET): $(CO) $(TO)
-#@rm -f $@
 	@echo "LD " $@
 	@$(CC) \
 	  $(CF) \
