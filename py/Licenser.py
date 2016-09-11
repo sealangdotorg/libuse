@@ -88,7 +88,7 @@ def searcher( dirpath, rootdir = True ) :
             relicense( filepath, "//" )
         if fileext in [ ".ll" ] :
             relicense( filepath, ";;" )
-        if fileext in [ ".py", ".mk" ] \
+        if fileext in [ ".py", ".mk", ".yml" ] \
         or filename == "Makefile" :
             relicense( filepath, "#" )
 # end def
