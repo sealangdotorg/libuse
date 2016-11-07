@@ -72,7 +72,7 @@ private:
     
     std::string format_str;
     
-    unordered_map< std::string, Option > options;
+    std::unordered_map< std::string, Option > options;
     
     int (*getopt_func)( int, char* const*, const char*, const option*, int* );
     

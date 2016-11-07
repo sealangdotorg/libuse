@@ -77,76 +77,55 @@ Args::Args
         
         for( auto& opt : sorted_options )
         {
-            string str;
-                            
-            if( opt.second.field.val < 256 )
+            string str = "-";
+            
+            if( opt.second.field.val and (not opt.second.field.name) )
             {
-                str.append( "-" );
+                // only short option provided
                 str.push_back( opt.second.field.val );
-                
-                if( opt.second.field.has_arg )
+            }
+            else
+            {
+                // long option provided 
+                if( opt.second.field.val )
                 {
-                    if( opt.second.field.has_arg == OPTIONAL )
-                    {
-                        str.append( "[=" );
-                    }
-                    else
-                    {
-                        str.append( " " );
-                    }
-                
-                    str.append( "<" );
-                    str.append( opt.second.metatag );
-                    str.append( ">" );
-                    
-                    if( opt.second.field.has_arg == OPTIONAL )
-                    {
-                        str.append("]");
-                    }
+                    // additionally short option provided
+                    str.push_back( opt.second.field.val );
+                    str.append( ", -" );
                 }
                 
-                str.append( " " );
+                str.append( "-" );
+                str.append( opt.second.field.name );
             }
             
-            if( opt.second.field.name )
+            if( opt.second.field.has_arg )
             {
-                if( this->mode == DEFAULT )
+                if( opt.second.field.has_arg == OPTIONAL )
                 {
-                    str.append( "--" );
+                    str.append( "[=" );
                 }
                 else
                 {
-                    str.append( "-" );
+                    str.append( " " );
                 }
                 
-                str.append( opt.second.field.name );
-
-                if( opt.second.field.has_arg )
+                str.append( "<" );
+                str.append( opt.second.metatag );
+                str.append( ">" );
+                    
+                if( opt.second.field.has_arg == OPTIONAL )
                 {
-                    if( opt.second.field.has_arg == OPTIONAL )
-                    {
-                        str.append( "[=" );
-                    }
-                    else
-                    {
-                        str.append( " " );
-                    }
-                    
-                    str.append( "<" );
-                    str.append( opt.second.metatag );
-                    str.append( ">" );
-                    
-                    if( opt.second.field.has_arg == OPTIONAL )
-                    {
-                        str.append( "]" );
-                    }
+                    str.append( "]" );
                 }
             }
-            
-            fprintf( stderr, "  %-30.30s %s\n"
-                     , str.c_str()
-                , opt.second.description );
-        }        
+                        
+            fprintf
+            ( stderr
+            , "  %-30.30s %s\n"
+            , str.c_str()
+            , opt.second.description
+            );
+        }
     };
     
     error = [this]( int error_code, const char* msg ) 
@@ -197,9 +176,14 @@ int Args::parse( void )
     
     for( auto& opt : options )
     {
-        // printf( "%i: %c (%i), %i:%s\n"
-        //         , pos, opt.first, opt.first
-        //         , opt.second.field.val, opt.second.field.name );
+        // printf( "%i: %s | %i:%s\n    %s | %s | %p\n"
+        //         , pos, opt.first.c_str()
+        //         , opt.second.field.val
+        //         , opt.second.field.name
+        //         , opt.second.description
+        //         , opt.second.metatag
+        //         , &opt.second.action
+        //     );
         
         getopt_options[ pos ] = opt.second.field;
         pos++;
