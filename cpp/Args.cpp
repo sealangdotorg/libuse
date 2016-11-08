@@ -65,6 +65,7 @@ Args::Args
             
             if( opt.second.field.val )
             {
+                key.push_back( '.' );
                 key.push_back( opt.second.field.val );
             }
             if( opt.second.field.name )
