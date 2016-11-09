@@ -49,7 +49,11 @@ public:
     };
     
     function< void( void ) > usage;
+    function< void( const char*, const char* ) > message;
+    function< void( const char* ) > info;
+    function< void( const char* ) > warning;
     function< void( int, const char* ) > error;
+    
     function< void( const char* ) > error_arg_required;
     function< void( const char* ) > error_arg_invalid;
     

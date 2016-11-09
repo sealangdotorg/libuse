@@ -128,21 +128,39 @@ Args::Args
             );
         }
     };
+
+    message = [ this ]( const char* kind, const char* msg ) 
+    {
+        assert( kind );
+        assert( msg );
+
+        fprintf( stderr, "%s: %s: %s\n", this->argv[0], kind, msg );
+    };
     
-    error = [this]( int error_code, const char* msg ) 
+    info = [ this ]( const char* msg ) 
+    {
+        this->message( "info", msg );
+    };
+    
+    warning = [ this ]( const char* msg ) 
+    {
+        this->message( "warning", msg );
+    };
+
+    error = [ this ]( int error_code, const char* msg ) 
     {
         if( msg )
         {
-            fprintf( stderr, "%s: error: %s\n", this->argv[0], msg );                
+            this->message( "error", msg );
         }
-
+        
         if( error_code != 0 )
         {
             exit( error_code );
         }
     };
     
-    error_arg_required = [this]( const char* arg ) 
+    error_arg_required = [ this ]( const char* arg ) 
     {
         std::string tmp;
         tmp.append( "option '" );
@@ -151,7 +169,7 @@ Args::Args
         error( 0, tmp.c_str() );
     };
     
-    error_arg_invalid = [this]( const char* arg ) 
+    error_arg_invalid = [ this ]( const char* arg ) 
     {
         std::string tmp;
         tmp.append( "unrecognized option '" );
