@@ -24,7 +24,7 @@
 #ifndef _LIB_STDHL_CPP_DEFAULT_H_
 #define _LIB_STDHL_CPP_DEFAULT_H_
 
-#include "stdhl/c/default.h"
+#include "c/default.h"
 
 #include <ctime>
 #include <tuple>

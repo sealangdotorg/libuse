@@ -24,7 +24,7 @@
 #ifndef _LIB_STDHL_CPP_ARGS_H_
 #define _LIB_STDHL_CPP_ARGS_H_
 
-#include "stdhl/c/args.h"
+#include "c/args.h"
 
 #include "Type.h"
 

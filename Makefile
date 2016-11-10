@@ -43,7 +43,7 @@ CO  = $(CP:%=obj/%.o)
 XP  = $(shell find c -name '*.c' | cut -d'.' -f1)
 XO  = $(XP:%=obj/%.o)
 
-CI  = -I ../
+CI  = -I ./
 
 CL  =
 
@@ -137,11 +137,16 @@ clean:
 
 #TEST_TARGET = $(TARGET:%.a=%-test.a)
 
+GT = ../gtest
+ifeq ("$(wildcard $(GT))","")
+GT = lib/gtest
+endif
+
 TF   = $(shell find uts -name '*.cpp' | cut -d'.' -f1)
 TO = $(TF:%=obj/%.o)
 
-TI  = -I ../gtest/googletest/include
-TI += -I ../gtest/googletest
+TI  = -I $(GT)/googletest/include
+TI += -I $(GT)/googletest
 
 TL  = -lstdc++
 TL += -lm
@@ -162,8 +167,8 @@ $(TEST_TARGET): $(CO) $(TO)
 	  -o $@ \
 	  $(TO) \
 	  libstdhlcpp.a  \
-	  ../gtest/googletest/src/gtest-all.cc \
-	  ../gtest/googletest/src/gtest_main.cc 
+	  $(GT)/googletest/src/gtest-all.cc \
+	  $(GT)/googletest/src/gtest_main.cc 
 	@echo "RUN " $@
 	@./$@
 

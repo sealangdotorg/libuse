@@ -35,7 +35,7 @@
 
 using namespace std;
 
-#include "stdhl/c/type.h"
+#include "c/type.h"
 #include "Default.h"
 
 /**

@@ -23,7 +23,7 @@
 
 #include "gtest/gtest.h"
 
-#include "stdhl/cpp/Args.h"
+#include "cpp/Args.h"
 
 
 #define TEST_NAME                                                       \
