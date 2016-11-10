@@ -50,9 +50,11 @@ CL  =
 CC  =
 CF  =
 
-GT = ../gtest
-ifeq ("$(wildcard $(GT))","")
-GT = lib/gtest
+LIB = ../..
+GT  = lib/gtest
+
+ifeq ("$(wildcard $(LIB)/$(GT))","")
+LIB = .
 endif
 
 
@@ -110,8 +112,6 @@ test-release: release-check-linux64-clang
 config: CFG=CC="$(CC)" CF="$(CF)" XF="$(XF)"
 config:
 	@echo "CFG  $(CFG)"
-	@echo "     $(GT)"
-	@echo "     $(TI)"
 
 
 obj/%.o: %.cpp
@@ -150,8 +150,8 @@ clean:
 TF   = $(shell find uts -name '*.cpp' | cut -d'.' -f1)
 TO = $(TF:%=obj/%.o)
 
-TI  = -I $(GT)/googletest/include
-TI += -I $(GT)/googletest
+TI  = -I $(LIB)/$(GT)/googletest/include
+TI += -I $(LIB)/$(GT)/googletest
 
 TL  = -lstdc++
 TL += -lm
@@ -172,8 +172,8 @@ $(TEST_TARGET): $(CO) $(TO)
 	  -o $@ \
 	  $(TO) \
 	  libstdhlcpp.a  \
-	  $(GT)/googletest/src/gtest-all.cc \
-	  $(GT)/googletest/src/gtest_main.cc 
+	  $(LIB)/$(GT)/googletest/src/gtest-all.cc \
+	  $(LIB)/$(GT)/googletest/src/gtest_main.cc 
 	@echo "RUN " $@
 	@./$@
 
