@@ -50,6 +50,13 @@ CL  =
 CC  =
 CF  =
 
+GT = ../gtest
+ifeq ("$(wildcard $(GT))","")
+GT = lib/gtest
+endif
+
+
+
   %-gcc: CC = gcc
 %-clang: CC = clang
 
@@ -103,6 +110,7 @@ test-release: release-check-linux64-clang
 config: CFG=CC="$(CC)" CF="$(CF)" XF="$(XF)"
 config:
 	@echo "CFG  $(CFG)"
+	@echo "     $(GT)"
 
 
 obj/%.o: %.cpp
@@ -137,10 +145,6 @@ clean:
 
 #TEST_TARGET = $(TARGET:%.a=%-test.a)
 
-GT = ../gtest
-ifeq ("$(wildcard $(GT))","")
-GT = lib/gtest
-endif
 
 TF   = $(shell find uts -name '*.cpp' | cut -d'.' -f1)
 TO = $(TF:%=obj/%.o)
