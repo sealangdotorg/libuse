@@ -111,6 +111,7 @@ config: CFG=CC="$(CC)" CF="$(CF)" XF="$(XF)"
 config:
 	@echo "CFG  $(CFG)"
 	@echo "     $(GT)"
+	@echo "     $(TI)"
 
 
 obj/%.o: %.cpp
