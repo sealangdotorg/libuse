@@ -28,36 +28,36 @@
 
 /**
    @brief    TODO
-   
+
    TODO
 */
 
-namespace libstdhl 
+namespace libstdhl
 {
-    template< class C >
+    template < class C >
     class Binding
     {
-    private:
+      private:
         C* reference = 0;
-        
-    public:
+
+      public:
         void bind( C* object )
         {
             assert( !reference && "already bounded to a reference" );
             assert( object && "invalid object reference to bind" );
-            
+
             reference = object;
         }
-        
+
         C* unbind( void )
         {
             assert( reference && "object reference was never bound" );
-            
+
             C* tmp = reference;
             reference = 0;
             return tmp;
         }
-        
+
         C* getBound( void ) const
         {
             assert( reference && "object reference was never bound" );
@@ -73,8 +73,7 @@ namespace libstdhl
 
 #endif /* _LIB_STDHL_CPP_BINDING_H_ */
 
-
-//  
+//
 //  Local variables:
 //  mode: c++
 //  indent-tabs-mode: nil
@@ -82,4 +81,4 @@ namespace libstdhl
 //  tab-width: 4
 //  End:
 //  vim:noexpandtab:sw=4:ts=4:
-//  
+//

@@ -24,23 +24,21 @@
 #ifndef _LIB_STDHL_C_DEFAULT_H_
 #define _LIB_STDHL_C_DEFAULT_H_
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <assert.h>
 
 /**
    @brief    TODO
-   
+
    TODO
 */
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
-
 
 #ifdef __cplusplus
 }
@@ -48,8 +46,7 @@ extern "C"
 
 #endif /* _LIB_STDHL_C_DEFAULT_H_ */
 
-
-//  
+//
 //  Local variables:
 //  mode: c++
 //  indent-tabs-mode: nil
@@ -57,4 +54,4 @@ extern "C"
 //  tab-width: 4
 //  End:
 //  vim:noexpandtab:sw=4:ts=4:
-//  
+//

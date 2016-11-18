@@ -28,46 +28,44 @@
 
 /**
    @brief    TODO
-   
+
    TODO
 */
 
-namespace libstdhl 
+namespace libstdhl
 {
     class Allocator
     {
-  //private:
-    public:
+        // private:
+      public:
         Allocator()
         {
         }
-        
+
         ~Allocator()
         {
         }
-        
+
         static const char* string( const std::string& str )
         {
             static std::unordered_set< std::string > cache;
-            
+
             if( cache.count( str ) == 0 )
             {
                 cache.insert( str );
             }
-            
+
             auto result = cache.find( str );
             assert( result != cache.end() );
-            
+
             return result->c_str();
         }
     };
 }
 
-
 #endif /* _LIB_STDHL_CPP_ALLOCATOR_H_ */
 
-
-//  
+//
 //  Local variables:
 //  mode: c++
 //  indent-tabs-mode: nil
@@ -75,4 +73,4 @@ namespace libstdhl
 //  tab-width: 4
 //  End:
 //  vim:noexpandtab:sw=4:ts=4:
-//  
+//

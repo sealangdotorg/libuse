@@ -29,41 +29,39 @@
 
 /**
    @brief    TODO
-   
+
    TODO
 */
 
-namespace libstdhl 
+namespace libstdhl
 {
     class File
     {
-    public:
+      public:
         static u1 exists( const char* file_name )
         {
             std::ifstream fd( file_name );
             return (u1)fd;
         };
-        
-        static u8 readLines
-        ( const char* file_name
-          , function< void( u32, const std::string& ) > process_line
-        ) 
+
+        static u8 readLines( const char* file_name,
+            function< void( u32, const std::string& ) > process_line )
         {
-             u32 cnt = 0;
+            u32 cnt = 0;
             std::string line;
             std::ifstream fd( file_name );
-            
+
             if( not fd )
             {
                 return -1;
             }
-            
+
             while( getline( fd, line ) )
             {
                 process_line( cnt, line );
                 cnt++;
             }
-            
+
             fd.close();
             return 0;
         };
@@ -72,8 +70,7 @@ namespace libstdhl
 
 #endif /* _LIB_STDHL_CPP_FILE_H_ */
 
-
-//  
+//
 //  Local variables:
 //  mode: c++
 //  indent-tabs-mode: nil
@@ -81,4 +78,4 @@ namespace libstdhl
 //  tab-width: 4
 //  End:
 //  vim:noexpandtab:sw=4:ts=4:
-//  
+//

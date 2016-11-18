@@ -24,33 +24,33 @@
 #ifndef _LIB_STDHL_CPP_TYPE_H_
 #define _LIB_STDHL_CPP_TYPE_H_
 
-#include <set>
-#include <map>
 #include <list>
-#include <vector>
+#include <map>
+#include <set>
 #include <string>
-#include <unordered_set>
-#include <unordered_map>
 #include <type_traits>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
 
 using namespace std;
 
-#include "c/type.h"
 #include "Default.h"
+#include "c/type.h"
 
 /**
    @brief    TODO
-   
+
    TODO
 */
 
-namespace libstdhl 
+namespace libstdhl
 {
 
     class Hash
     {
-    public:
-        size_t operator()( const char *val ) const
+      public:
+        size_t operator()( const char* val ) const
         {
             return std::hash< std::string >()( val );
         }
@@ -58,8 +58,8 @@ namespace libstdhl
 
     class Equal
     {
-    public:
-        size_t operator()( const char *val1, const char *val2 ) const
+      public:
+        size_t operator()( const char* val1, const char* val2 ) const
         {
             return std::string( val1 ) == std::string( val2 );
         }
@@ -68,8 +68,7 @@ namespace libstdhl
 
 #endif /* _LIB_STDHL_CPP_TYPE_H_ */
 
-
-//  
+//
 //  Local variables:
 //  mode: c++
 //  indent-tabs-mode: nil
@@ -77,4 +76,4 @@ namespace libstdhl
 //  tab-width: 4
 //  End:
 //  vim:noexpandtab:sw=4:ts=4:
-//  
+//

@@ -24,28 +24,28 @@
 #ifndef _LIB_STDHL_CPP_LABELING_H_
 #define _LIB_STDHL_CPP_LABELING_H_
 
-#include "Type.h"
 #include "Allocator.h"
+#include "Type.h"
 
 /**
    @brief    TODO
-   
+
    TODO
 */
 
-namespace libstdhl 
+namespace libstdhl
 {
     class Labeling
     {
-    private:
+      private:
         char* label;
-        
-    public:
+
+      public:
         Labeling()
         : label( 0 )
         {
         }
-        
+
         ~Labeling()
         {
             if( label )
@@ -53,7 +53,7 @@ namespace libstdhl
                 free( label );
             }
         }
-        
+
         const char* getLabel( void )
         {
             if( label == 0 )
@@ -63,7 +63,7 @@ namespace libstdhl
                 assert( label );
                 strcpy( label, s.c_str() );
             }
-            
+
             return label;
         }
 
@@ -76,8 +76,7 @@ namespace libstdhl
 
 #endif /* _LIB_STDHL_CPP_LABELING_H_ */
 
-
-//  
+//
 //  Local variables:
 //  mode: c++
 //  indent-tabs-mode: nil
@@ -85,4 +84,4 @@ namespace libstdhl
 //  tab-width: 4
 //  End:
 //  vim:noexpandtab:sw=4:ts=4:
-//  
+//

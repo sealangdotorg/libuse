@@ -26,27 +26,26 @@
 
 #include "c/default.h"
 
-#include <ctime>
-#include <tuple>
+#include <algorithm>
 #include <bitset>
 #include <chrono>
-#include <utility>
-#include <sstream>
+#include <ctime>
 #include <fstream>
-#include <iostream>
-#include <algorithm>
 #include <functional>
+#include <iostream>
 #include <iterator>
 #include <regex>
+#include <sstream>
+#include <tuple>
+#include <utility>
 
 // using namespace std;
 
 /**
    @brief    TODO
-   
+
    TODO
 */
-
 
 namespace libstdhl
 {
@@ -54,8 +53,7 @@ namespace libstdhl
 
 #endif /* _LIB_STDHL_CPP_DEFAULT_H_ */
 
-
-//  
+//
 //  Local variables:
 //  mode: c++
 //  indent-tabs-mode: nil
@@ -63,4 +61,4 @@ namespace libstdhl
 //  tab-width: 4
 //  End:
 //  vim:noexpandtab:sw=4:ts=4:
-//  
+//

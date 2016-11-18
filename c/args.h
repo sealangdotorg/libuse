@@ -31,15 +31,13 @@
 
 /**
    @brief    TODO
-   
+
    TODO
 */
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
-
 
 #ifdef __cplusplus
 }
@@ -47,8 +45,7 @@ extern "C"
 
 #endif /* _LIB_STDHL_C_ARGS_H_ */
 
-
-//  
+//
 //  Local variables:
 //  mode: c++
 //  indent-tabs-mode: nil
@@ -56,4 +53,4 @@ extern "C"
 //  tab-width: 4
 //  End:
 //  vim:noexpandtab:sw=4:ts=4:
-//  
+//

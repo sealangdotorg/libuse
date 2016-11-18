@@ -24,33 +24,32 @@
 #ifndef _LIB_STDHL_C_TYPE_H_
 #define _LIB_STDHL_C_TYPE_H_
 
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #include "default.h"
 
 /**
    @brief    TODO
-   
+
    TODO
 */
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-    typedef bool     u1;
-    typedef uint8_t  u8;
-    typedef uint16_t u16;
-    typedef uint16_t u32;
-    typedef uint64_t u64;
+typedef bool u1;
+typedef uint8_t u8;
+typedef uint16_t u16;
+typedef uint16_t u32;
+typedef uint64_t u64;
 
-    typedef bool     i1;
-    typedef int8_t   i8;
-    typedef int16_t  i16;
-    typedef int16_t  i32;
-    typedef int64_t  i64;
+typedef bool i1;
+typedef int8_t i8;
+typedef int16_t i16;
+typedef int16_t i32;
+typedef int64_t i64;
 
 #ifdef __cplusplus
 }
@@ -58,8 +57,7 @@ extern "C"
 
 #endif /* _LIB_STDHL_C_TYPE_H_ */
 
-
-//  
+//
 //  Local variables:
 //  mode: c++
 //  indent-tabs-mode: nil
@@ -67,4 +65,4 @@ extern "C"
 //  tab-width: 4
 //  End:
 //  vim:noexpandtab:sw=4:ts=4:
-//  
+//
