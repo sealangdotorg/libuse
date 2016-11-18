@@ -91,8 +91,17 @@ def searcher( dirpath, rootdir = True ) :
             relicense( filepath, "//" )
         if fileext in [ ".ll" ] :
             relicense( filepath, ";;" )
-        if fileext in [ ".py", ".mk", ".yml" ] \
-        or filename == "Makefile" :
+        if fileext in \
+        [ ".py"
+        , ".mk"
+        , ".yml"
+        , ".cfg"
+        , ".sh"
+        ] \
+        or filename in \
+        [ "Makefile"
+        , ".clang-format"
+        ] :
             relicense( filepath, "#" )
 # end def
 
