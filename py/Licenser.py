@@ -54,7 +54,7 @@ def relicense( filepath, comment, licensetext = licensetext ) :
         cnt = cnt + 1
         if cnt == 1 :
             sys.stderr.write( "'%s' '%s' '%s'\n" % ( line, comment, licensetext[0] ) )
-            if comment == "//" and line.replace( "\n", "" ) != ("%-4s%s" % ( comment, licensetext[0] )) :
+            if comment == "//" and line.replace( "\n", "" ) != ( "%s" % ( comment ) ) :
                 context = False
             else :
                 for txt in licensetext :
