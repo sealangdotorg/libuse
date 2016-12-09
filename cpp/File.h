@@ -45,7 +45,8 @@ namespace libstdhl
         };
 
         static u8 readLines( const char* file_name,
-            function< void( u32, const std::string& ) > process_line )
+            function< void( u32, const std::string& ) >
+                process_line )
         {
             u32 cnt = 0;
             std::string line;

@@ -160,11 +160,11 @@ TL += -lpthread
 obj/uts/%.o: uts/%.cpp
 	@mkdir -p `dirname $@`
 	@echo "C++ " $<
-	$(CC) $(CF) $(TI) $(CI) -c $< -o $@
+	@$(CC) $(CF) $(TI) $(CI) -c $< -o $@
 
 $(TEST_TARGET): $(CO) $(TO)
 	@echo "LD " $@
-	$(CC) \
+	@$(CC) \
 	  $(CF) \
 	  $(TI) \
 	  $(CI) \

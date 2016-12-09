@@ -24,5 +24,5 @@
 #include "gtest/gtest.h"
 
 TEST( libstdhl, example )
-{    
+{
 }

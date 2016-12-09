@@ -23,6 +23,8 @@
 
 #include "Args.h"
 
+using namespace libstdhl;
+
 Args::Args( int argc, const char** argv,
     function< void( const char* ) > process_non_option )
 : Args( argc, argv, DEFAULT, process_non_option )

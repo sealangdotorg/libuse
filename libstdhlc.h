@@ -21,15 +21,12 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_C_DEFAULT_H_
-#define _LIB_STDHL_C_DEFAULT_H_
+#ifndef _LIB_STDHL_C_H_
+#define _LIB_STDHL_C_H_
 
-#include <assert.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+#include "c/args.h"
+#include "c/default.h"
+#include "c/type.h"
 
 /**
    @brief    TODO
@@ -37,15 +34,7 @@
    TODO
 */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* _LIB_STDHL_C_DEFAULT_H_ */
+#endif /* _LIB_STDHL_C_H_ */
 
 //
 //  Local variables:
