@@ -101,15 +101,13 @@ namespace libstdhl
       private:
         Log();
 
-        void msg( Source& source,
-            Channel& channel,
-            const std::vector< Sink* >& sink,
-            const char* format... ) const
+        void log( Source& source, Channel& channel,
+            const std::vector< Sink* >& sink, const char* format,
+            va_list args ) const
         {
-            va_list args;
-
             char buffer[ 1024 ];
-            sprintf( buffer, format, args );
+
+            vsprintf( buffer, format, args );
 
             printf( "%s: %s: %s\n", source.get(), channel.get(), buffer );
         };
@@ -121,25 +119,31 @@ namespace libstdhl
         };
 
       public:
-        static void info( const char* format... )
+        static void info( const char* format, ... )
         {
             va_list args;
-            instance().msg(
+            va_start( args, format );
+            instance().log(
                 DefaultSource, Info, { &DefaultSink }, format, args );
+            va_end( args );
         };
 
-        static void warning( const char* format... )
+        static void warning( const char* format, ... )
         {
             va_list args;
-            instance().msg(
+            va_start( args, format );
+            instance().log(
                 DefaultSource, Warning, { &DefaultSink }, format, args );
+            va_end( args );
         };
 
-        static void error( const char* format... )
+        static void error( const char* format, ... )
         {
             va_list args;
-            instance().msg(
+            va_start( args, format );
+            instance().log(
                 DefaultSource, Error, { &DefaultSink }, format, args );
+            va_end( args );
         };
     };
 }
