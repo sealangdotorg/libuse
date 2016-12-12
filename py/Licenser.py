@@ -100,6 +100,7 @@ def searcher( dirpath, rootdir = True ) :
         ] \
         or filename in \
         [ "Makefile"
+        , "CMakeLists.txt"
         , ".clang-format"
         ] :
             relicense( filepath, "#" )
