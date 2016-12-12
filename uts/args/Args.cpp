@@ -182,7 +182,7 @@ TEST_P( cpp_Args, param )
 {
     Param const& param = GetParam();
 
-    ASSERT_LT( param.arguments.size(), 100 );
+    ASSERT_LT( (u32)param.arguments.size(), (u32)100 );
 
     u32 argc = param.arguments.size() + 1;
     char* argv[ 100 ];
