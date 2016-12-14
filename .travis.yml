@@ -23,29 +23,29 @@
 
 language: cpp
 
-addons:
-  apt:
-    sources:
-      - llvm-toolchain-precise
-      - ubuntu-toolchain-r-test
-    packages:
-      - clang-3.7
-      - g++-5
-      - gcc-5
+# addons:
+#   apt:
+#     sources:
+#       - llvm-toolchain-precise
+#       - ubuntu-toolchain-r-test
+#     packages:
+#       - clang-3.7
+#       - g++-5
+#       - gcc-5
 
 matrix:
   include:
     - os: linux
       dist: trusty
       sudo: required
+      compiler:
+        - clang
+        - gcc
     - os: osx
       osx_image: xcode7.2
-
-
-# compiler:
-#   - clang
-#   - gcc
-
+      compiler:
+        - clang
+        - gcc
 
 # before_install:
 #   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install cmake; fi
