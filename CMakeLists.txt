@@ -57,14 +57,13 @@ include_directories(
 
 
 set( CMAKE_C_FLAGS            "${CMAKE_C_FLAGS}            -std=c11   -Wall" )
-
 set( CMAKE_C_FLAGS_DEBUG      "${CMAKE_C_FLAGS_DEBUG}      -O0" )
 set( CMAKE_C_FLAGS_RELEASE    "${CMAKE_C_FLAGS_RELEASE}" )
 set( CMAKE_C_FLAGS_SANITIZE   "${CMAKE_C_FLAGS_SANITIZE}   -O1 -Wextra -g -fno-omit-frame-pointer -fno-optimize-sibling-calls -fsanitize=undefined -fsanitize=address" )
 
 set( CMAKE_CXX_FLAGS          "${CMAKE_CXX_FLAGS}          -std=c++11 -Wall" )
 set( CMAKE_CXX_FLAGS_DEBUG    "${CMAKE_CXX_FLAGS_DEBUG}    -O0" )
-set( CMAKE_C_FLAGS_RELEASE    "${CMAKE_CXX_FLAGS_RELEASE}" )
+set( CMAKE_CXX_FLAGS_RELEASE  "${CMAKE_CXX_FLAGS_RELEASE}" )
 set( CMAKE_CXX_FLAGS_SANITIZE "${CMAKE_CXX_FLAGS_SANITIZE} -O1 -Wextra -g -fno-omit-frame-pointer -fno-optimize-sibling-calls -fsanitize=undefined -fsanitize=address" )
 
 

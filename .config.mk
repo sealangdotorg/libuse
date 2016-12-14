@@ -106,3 +106,6 @@ $(BENCH):%-benchmark: %
 	-C $(OBJ) $(TARGET)-run
 	@echo "-- Running benchmark"
 	@./$(OBJ)/$(TARGET)-run
+
+full:
+	@$(MAKE) {debug,sanitize,release}-{all,test,benchmark}
