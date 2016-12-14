@@ -47,6 +47,7 @@ $(OBJ):
 
 clean:
 	@$(MAKE) $(MFLAGS) --no-print-directory -C $(OBJ) clean
+	@rm -f $(OBJ)/CMakeBuild_*
 
 clean-all:
 	@echo "-- Removing build directory" $(OBJ)
@@ -60,7 +61,8 @@ BENCH = $(TYPES:%=%-benchmark)
 ALL   = $(TYPES:%=%-all)
 
 
-$(OBJ)/Makefile: $(OBJ) 
+$(OBJ)/Makefile: $(OBJ)
+ifeq ("$(wildcard $(OBJ)/CMakeBuild_$(TYPE))","")
 	@(\
 	cd $(OBJ); \
 	cmake \
@@ -68,6 +70,11 @@ $(OBJ)/Makefile: $(OBJ)
 	-D CMAKE_CXX_COMPILER=$(CXX) \
 	-D CMAKE_BUILD_TYPE=$(TYPE) .. \
 	)
+	@rm -f $(OBJ)/CMakeBuild_*
+	@touch $(OBJ)/CMakeBuild_$(TYPE)
+else
+	@$(MAKE) $(MFLAGS) --no-print-directory -C $(OBJ) rebuild_cache
+endif
 
 $(SYNCS):%-sync: 
 	@$(MAKE) $(MFLAGS) --no-print-directory \
