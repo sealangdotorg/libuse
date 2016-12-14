@@ -46,6 +46,8 @@ before_install:
 install:
   - |
     echo ${TRAVIS_OS_NAME}
+    make  --version
+    cmake --version
     echo ${CC}
     echo ${CXX}
 
