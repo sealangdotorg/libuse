@@ -65,5 +65,12 @@ install:
 
 script:
   - |
-    make full
-    
+    make debug-all
+    make debug-test
+    make debug-benchmark
+    make sanitize-all
+    make sanitize-test
+    make sanitize-benchmark
+    make release-all
+    make release-test
+    make release-benchmark
