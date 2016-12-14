@@ -1,7 +1,4 @@
 /.attic
+/obj
 /py/*.pyc
 /py/*.pyo
-/libstdhlc.a
-/libstdhlcpp.a
-/obj
-/test*
