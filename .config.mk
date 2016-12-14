@@ -46,8 +46,9 @@ $(OBJ):
 	@mkdir -p $(OBJ)/uts
 
 clean:
+ifneq ("$(wildcard $(OBJ)/CMakeBuild_$(TYPE))","")
 	@$(MAKE) $(MFLAGS) --no-print-directory -C $(OBJ) clean
-	@rm -f $(OBJ)/CMakeBuild_*
+endif
 
 clean-all:
 	@echo "-- Removing build directory" $(OBJ)
@@ -62,7 +63,7 @@ ALL   = $(TYPES:%=%-all)
 
 
 $(OBJ)/Makefile: $(OBJ)
-ifeq ("$(wildcard $(OBJ)/CMakeBuild_$(TYPE))","")
+	@rm -f $(OBJ)/CMakeCache.txt
 	@(\
 	cd $(OBJ); \
 	cmake \
@@ -70,11 +71,6 @@ ifeq ("$(wildcard $(OBJ)/CMakeBuild_$(TYPE))","")
 	-D CMAKE_CXX_COMPILER=$(CXX) \
 	-D CMAKE_BUILD_TYPE=$(TYPE) .. \
 	)
-	@rm -f $(OBJ)/CMakeBuild_*
-	@touch $(OBJ)/CMakeBuild_$(TYPE)
-else
-	@$(MAKE) $(MFLAGS) --no-print-directory -C $(OBJ) rebuild_cache
-endif
 
 $(SYNCS):%-sync: 
 	@$(MAKE) $(MFLAGS) --no-print-directory \
