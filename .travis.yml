@@ -23,6 +23,15 @@
 
 language: cpp
 
+addons:
+  apt:
+    sources:
+      - llvm-toolchain-precise
+      - ubuntu-toolchain-r-test
+    packages:
+      - clang-3.7
+      - g++-5
+      - gcc-5
 
 matrix:
   include:
@@ -33,15 +42,14 @@ matrix:
       osx_image: xcode7.2
 
 
-compiler:
-  - clang
-  - gcc
+# compiler:
+#   - clang
+#   - gcc
 
 
-before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install cmake; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew update; fi
-
+# before_install:
+#   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install cmake; fi
+#   - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew update; fi
 
 install:
   - |
