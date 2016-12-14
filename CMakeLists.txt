@@ -21,7 +21,7 @@
 #   along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 #
 
-cmake_minimum_required( VERSION 3.6 )
+cmake_minimum_required( VERSION 3.1 )
 
 if( EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../gtest" )
   set( LIBS .. )
@@ -59,12 +59,12 @@ include_directories(
 set( CMAKE_C_FLAGS            "${CMAKE_C_FLAGS}            -std=c11   -Wall" )
 
 set( CMAKE_C_FLAGS_DEBUG      "${CMAKE_C_FLAGS_DEBUG}      -O0" )
-set( CMAKE_C_FLAGS_RELEASE    "${CMAKE_C_FLAGS_RELEASE}    -O3" )
+set( CMAKE_C_FLAGS_RELEASE    "${CMAKE_C_FLAGS_RELEASE}" )
 set( CMAKE_C_FLAGS_SANITIZE   "${CMAKE_C_FLAGS_SANITIZE}   -O1 -Wextra -g -fno-omit-frame-pointer -fno-optimize-sibling-calls -fsanitize=undefined -fsanitize=address" )
 
 set( CMAKE_CXX_FLAGS          "${CMAKE_CXX_FLAGS}          -std=c++11 -Wall" )
 set( CMAKE_CXX_FLAGS_DEBUG    "${CMAKE_CXX_FLAGS_DEBUG}    -O0" )
-set( CMAKE_CXX_FLAGS_RELEASE  "${CMAKE_CXX_FLAGS_RELEASE}  -O3" )
+set( CMAKE_C_FLAGS_RELEASE    "${CMAKE_CXX_FLAGS_RELEASE}" )
 set( CMAKE_CXX_FLAGS_SANITIZE "${CMAKE_CXX_FLAGS_SANITIZE} -O1 -Wextra -g -fno-omit-frame-pointer -fno-optimize-sibling-calls -fsanitize=undefined -fsanitize=address" )
 
 
