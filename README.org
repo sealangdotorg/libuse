@@ -1,5 +1,5 @@
 
-* libstdhl: a general purpose high-level library
+* libstdhl: General Purpose High-level Library
 
 This library includes some basic data-structures, classes, definitions etc.
 which are used in several projects for different languages.
