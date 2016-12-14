@@ -43,6 +43,7 @@ matrix:
       dist: trusty
       sudo: required
       compiler: gcc
+  allow_failures:
     - os: osx
       osx_image: xcode8
       compiler: clang
@@ -51,7 +52,7 @@ matrix:
       compiler: gcc
 
 # before_install:
-#   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install cmake; fi
+#   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get TODO; fi
 #   - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew update; fi
 
 install:
