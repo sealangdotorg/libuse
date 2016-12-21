@@ -46,14 +46,14 @@ namespace libstdhl
         {
         }
 
-        ~Labeling()
+        virtual ~Labeling()
         {
             if( label )
             {
                 free( label );
             }
         }
-
+        
         const char* getLabel( void )
         {
             if( label == 0 )

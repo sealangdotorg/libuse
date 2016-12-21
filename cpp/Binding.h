@@ -41,6 +41,8 @@ namespace libstdhl
         C* reference = 0;
 
       public:
+        virtual ~Binding() = default;
+        
         void bind( C* object )
         {
             assert( !reference && "already bounded to a reference" );
