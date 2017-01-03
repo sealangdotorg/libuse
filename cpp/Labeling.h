@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2014-2016 Philipp Paulweber
+//  Copyright (c) 2014-2017 Philipp Paulweber
 //  All rights reserved.
 //
 //  Developed by: Philipp Paulweber
@@ -53,7 +53,7 @@ namespace libstdhl
                 free( label );
             }
         }
-        
+
         const char* getLabel( void )
         {
             if( label == 0 )

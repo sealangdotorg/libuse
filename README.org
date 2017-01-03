@@ -18,7 +18,7 @@ is coming soon!
 
 #+begin_src
 
-Copyright (c) 2014-2016 Philipp Paulweber
+Copyright (c) 2014-2017 Philipp Paulweber
 All rights reserved.
 
 Developed by: Philipp Paulweber

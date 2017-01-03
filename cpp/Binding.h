@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2014-2016 Philipp Paulweber
+//  Copyright (c) 2014-2017 Philipp Paulweber
 //  All rights reserved.
 //
 //  Developed by: Philipp Paulweber
@@ -42,7 +42,7 @@ namespace libstdhl
 
       public:
         virtual ~Binding() = default;
-        
+
         void bind( C* object )
         {
             assert( !reference && "already bounded to a reference" );
