@@ -38,8 +38,8 @@ namespace libstdhl
     class Labeling
     {
       private:
-        char* label;
-
+        std::string* label;
+        
       public:
         Labeling()
         : label( 0 )
@@ -50,23 +50,26 @@ namespace libstdhl
         {
             if( label )
             {
-                free( label );
+                delete label;
             }
         }
 
-        const char* getLabel( void )
+        virtual const char* getLabel( void )
         {
             if( label == 0 )
             {
-                std::string s( "lbl" + std::to_string( getLabelID() ) );
-                label = (char*)malloc( s.size() );
+                label = new std::string( getLabelName() + std::to_string( getLabelID() ) );
                 assert( label );
-                strcpy( label, s.c_str() );
             }
-
-            return label;
+            
+            return label->c_str();
         }
-
+        
+        virtual const char* getLabelName( void )
+        {
+            return "lbl";
+        }
+        
         virtual u64 getLabelID( void )
         {
             return (u64)this;
