@@ -59,11 +59,6 @@ TEST( libstdhl_type_c, sizeof_u64 )
     ASSERT_EQ( sizeof( u64 ), 8 );
 }
 
-TEST( libstdhl_type_c, sizeof_i1 )
-{
-    ASSERT_EQ( sizeof( i1 ), 1 );
-}
-
 TEST( libstdhl_type_c, sizeof_i8 )
 {
     ASSERT_EQ( sizeof( i8 ), 1 );
