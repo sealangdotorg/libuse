@@ -100,6 +100,7 @@ def searcher( dirpath, rootdir = True ) :
         ] \
         or filename in \
         [ "Makefile"
+        , "Doxyfile"
         , "CMakeLists.txt"
         , ".clang-format"
         ] :
