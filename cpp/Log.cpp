@@ -25,7 +25,7 @@
 
 using namespace libstdhl;
 
-Log::Channel::Channel( function< const char*( void* ) > description )
+Log::Channel::Channel( std::function< const char*( void* ) > description )
 : description( description ){};
 
 Log::Channel Log::Info
@@ -35,7 +35,7 @@ Log::Channel Log::Warning
 Log::Channel Log::Error
     = Log::Channel( []( void* arg ) -> const char* { return "error"; } );
 
-Log::Source::Source( function< const char*( void* ) > description )
+Log::Source::Source( std::function< const char*( void* ) > description )
 : description( description ){};
 
 Log::Source Log::None
@@ -43,7 +43,7 @@ Log::Source Log::None
 Log::Source Log::DefaultSource
     = Log::Source( []( void* arg ) -> const char* { return "Log"; } );
 
-Log::Sink::Sink( function< FILE*( void* ) > stream )
+Log::Sink::Sink( std::function< FILE*( void* ) > stream )
 : stream( stream ){};
 
 Log::Sink Log::StdOut

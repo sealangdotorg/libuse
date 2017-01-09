@@ -52,14 +52,14 @@ namespace libstdhl
             OPTIONAL = 2
         };
 
-        function< void( void ) > usage;
-        function< void( const char*, const char* ) > message;
-        function< void( const char* ) > info;
-        function< void( const char* ) > warning;
-        function< void( int, const char* ) > error;
+        std::function< void( void ) > usage;
+        std::function< void( const char*, const char* ) > message;
+        std::function< void( const char* ) > info;
+        std::function< void( const char* ) > warning;
+        std::function< void( int, const char* ) > error;
 
-        function< void( const char* ) > error_arg_required;
-        function< void( const char* ) > error_arg_invalid;
+        std::function< void( const char* ) > error_arg_required;
+        std::function< void( const char* ) > error_arg_invalid;
 
       private:
         struct Option
@@ -67,7 +67,7 @@ namespace libstdhl
             option field;
             const char* description;
             const char* metatag;
-            function< void( const char* ) > action;
+            std::function< void( const char* ) > action;
         };
 
         int argc;
@@ -76,7 +76,7 @@ namespace libstdhl
 
         Mode mode;
 
-        function< void( const char* ) > process_non_option;
+        std::function< void( const char* ) > process_non_option;
 
         std::string format_str;
 
@@ -87,11 +87,11 @@ namespace libstdhl
 
       public:
         Args( int argc, const char** argv,
-            function< void( const char* ) > process_non_option
+            std::function< void( const char* ) > process_non_option
             = []( const char* arg ) {} );
 
         Args( int argc, const char** argv, Mode mode,
-            function< void( const char* ) > process_non_option
+            std::function< void( const char* ) > process_non_option
             = []( const char* arg ) {} );
 
         const char* getProgramName() const;
@@ -99,16 +99,16 @@ namespace libstdhl
         int parse( void );
 
         void add( const char arg_char, Kind kind, const char* description,
-            function< void( const char* ) > process_option,
+            std::function< void( const char* ) > process_option,
             const char* metatag = "arg" );
 
         void add( const char* arg_str, Kind kind, const char* description,
-            function< void( const char* ) > process_option,
+            std::function< void( const char* ) > process_option,
             const char* metatag = "arg" );
 
         void add( const char arg_char, const char* arg_str, Kind kind,
             const char* description,
-            function< void( const char* ) > process_option,
+            std::function< void( const char* ) > process_option,
             const char* metatag = "arg" );
     };
 }

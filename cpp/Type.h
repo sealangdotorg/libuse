@@ -33,8 +33,6 @@
 #include <unordered_set>
 #include <vector>
 
-using namespace std;
-
 #include "Default.h"
 #include "c/type.h"
 

@@ -41,10 +41,10 @@ namespace libstdhl
         class Channel
         {
           private:
-            function< const char*( void* ) > description;
+            std::function< const char*( void* ) > description;
 
           public:
-            Channel( function< const char*( void* ) > description );
+            Channel( std::function< const char*( void* ) > description );
 
             Channel( const char* description );
 
@@ -61,10 +61,10 @@ namespace libstdhl
         class Source
         {
           private:
-            function< const char*( void* ) > description;
+            std::function< const char*( void* ) > description;
 
           public:
-            Source( function< const char*( void* ) > description );
+            Source( std::function< const char*( void* ) > description );
 
             const char* get( void* args = 0 ) const
             {
@@ -78,10 +78,10 @@ namespace libstdhl
         class Sink
         {
           private:
-            function< FILE*( void* ) > stream;
+            std::function< FILE*( void* ) > stream;
 
           public:
-            Sink( function< FILE*( void* ) > stream );
+            Sink( std::function< FILE*( void* ) > stream );
 
             FILE* get( void* args = 0 ) const
             {

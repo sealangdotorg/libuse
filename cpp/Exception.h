@@ -21,11 +21,11 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_CPP_LABELING_H_
-#define _LIB_STDHL_CPP_LABELING_H_
+#ifndef _LIB_STDHL_CPP_EXCEPTION_H_
+#define _LIB_STDHL_CPP_EXCEPTION_H_
 
-#include "Allocator.h"
-#include "Type.h"
+#include <exception>
+#include <stdexcept>
 
 /**
    @brief    TODO
@@ -35,50 +35,9 @@
 
 namespace libstdhl
 {
-    class Labeling
-    {
-      private:
-        std::string* label;
-
-      public:
-        Labeling()
-        : label( 0 )
-        {
-        }
-
-        virtual ~Labeling()
-        {
-            if( label )
-            {
-                delete label;
-            }
-        }
-
-        virtual const char* getLabel( void )
-        {
-            if( label == 0 )
-            {
-                label = new std::string(
-                    getLabelName() + std::to_string( getLabelID() ) );
-                assert( label );
-            }
-
-            return label->c_str();
-        }
-
-        virtual const char* getLabelName( void )
-        {
-            return "lbl";
-        }
-
-        virtual u64 getLabelID( void )
-        {
-            return (u64)this;
-        }
-    };
 }
 
-#endif /* _LIB_STDHL_CPP_LABELING_H_ */
+#endif /* _LIB_STDHL_CPP_EXCEPTION_H_ */
 
 //
 //  Local variables:

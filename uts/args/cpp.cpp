@@ -220,8 +220,8 @@ TEST_P( cpp_Args, param )
         cnt_options_str[ std::string( param_opt.str ? param_opt.str : "" ) ]
             = 0;
 
-        function< void( const char* ) > hook = [param_opt, &cnt_options_chr,
-            &cnt_options_str]( const char* arg ) {
+        std::function< void( const char* ) > hook = [param_opt,
+            &cnt_options_chr, &cnt_options_str]( const char* arg ) {
             // printf("%s: '%c' \"%s\" {%u}\n", TEST_NAME, param_opt.chr,
             // param_opt.str, param_opt.req);
 

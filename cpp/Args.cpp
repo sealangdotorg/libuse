@@ -26,13 +26,13 @@
 using namespace libstdhl;
 
 Args::Args( int argc, const char** argv,
-    function< void( const char* ) > process_non_option )
+    std::function< void( const char* ) > process_non_option )
 : Args( argc, argv, DEFAULT, process_non_option )
 {
 }
 
 Args::Args( int argc, const char** argv, Mode mode,
-    function< void( const char* ) > process_non_option )
+    std::function< void( const char* ) > process_non_option )
 : argc( argc )
 , argv( argv )
 , mode( mode )
@@ -50,11 +50,11 @@ Args::Args( int argc, const char** argv, Mode mode,
     }
 
     usage = [this]() {
-        map< string, Option > sorted_options;
+        std::map< std::string, Option > sorted_options;
 
         for( auto& opt : this->options )
         {
-            string key;
+            std::string key;
 
             if( opt.second.field.val )
             {
@@ -71,7 +71,7 @@ Args::Args( int argc, const char** argv, Mode mode,
 
         for( auto& opt : sorted_options )
         {
-            string str = "-";
+            std::string str = "-";
 
             if( opt.second.field.val and ( not opt.second.field.name ) )
             {
@@ -327,19 +327,19 @@ int Args::parse( void )
 }
 
 void Args::add( const char arg_char, Kind kind, const char* description,
-    function< void( const char* ) > action, const char* metatag )
+    std::function< void( const char* ) > action, const char* metatag )
 {
     add( arg_char, 0, kind, description, action, metatag );
 }
 
 void Args::add( const char* arg_str, Kind kind, const char* description,
-    function< void( const char* ) > action, const char* metatag )
+    std::function< void( const char* ) > action, const char* metatag )
 {
     add( 0, arg_str, kind, description, action, metatag );
 }
 
 void Args::add( const char arg_char, const char* arg_str, Kind kind,
-    const char* description, function< void( const char* ) > action,
+    const char* description, std::function< void( const char* ) > action,
     const char* metatag )
 {
     assert( ( ( arg_char == 0 ) || ( arg_char == '+' )
