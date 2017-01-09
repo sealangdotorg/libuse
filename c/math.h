@@ -21,21 +21,10 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_CPP_TYPE_H_
-#define _LIB_STDHL_CPP_TYPE_H_
+#ifndef _LIB_STDHL_C_MATH_H_
+#define _LIB_STDHL_C_MATH_H_
 
-#include <list>
-#include <map>
-#include <memory>
-#include <set>
-#include <string>
-#include <type_traits>
-#include <unordered_map>
-#include <unordered_set>
-#include <vector>
-
-#include "Default.h"
-#include "c/type.h"
+#include <math.h>
 
 /**
    @brief    TODO
@@ -43,29 +32,16 @@
    TODO
 */
 
-namespace libstdhl
-{
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-    class Hash
-    {
-      public:
-        size_t operator()( const char* val ) const
-        {
-            return std::hash< std::string >()( val );
-        }
-    };
 
-    class Equal
-    {
-      public:
-        size_t operator()( const char* val1, const char* val2 ) const
-        {
-            return std::string( val1 ) == std::string( val2 );
-        }
-    };
+#ifdef __cplusplus
 }
+#endif
 
-#endif /* _LIB_STDHL_CPP_TYPE_H_ */
+#endif /* _LIB_STDHL_C_MATH_H_ */
 
 //
 //  Local variables:
