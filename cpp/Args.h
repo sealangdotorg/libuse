@@ -52,14 +52,14 @@ namespace libstdhl
             OPTIONAL = 2
         };
 
-        std::function< void( void ) > usage;
-        std::function< void( const char*, const char* ) > message;
-        std::function< void( const char* ) > info;
-        std::function< void( const char* ) > warning;
-        std::function< void( int, const char* ) > error;
+        std::function< void( void ) > m_usage;
+        std::function< void( const char*, const char* ) > m_message;
+        std::function< void( const char* ) > m_info;
+        std::function< void( const char* ) > m_warning;
+        std::function< void( int, const char* ) > m_error;
 
-        std::function< void( const char* ) > error_arg_required;
-        std::function< void( const char* ) > error_arg_invalid;
+        std::function< void( const char* ) > m_error_arg_required;
+        std::function< void( const char* ) > m_error_arg_invalid;
 
       private:
         struct Option
@@ -70,19 +70,19 @@ namespace libstdhl
             std::function< void( const char* ) > action;
         };
 
-        int argc;
+        int m_argc;
 
-        const char** argv;
+        const char** m_argv;
 
-        Mode mode;
+        Mode m_mode;
 
-        std::function< void( const char* ) > process_non_option;
+        std::function< void( const char* ) > m_process_non_option;
 
-        std::string format_str;
+        std::string m_format_str;
 
-        std::unordered_map< std::string, Option > options;
+        std::unordered_map< std::string, Option > m_options;
 
-        int ( *getopt_func )(
+        int ( *m_getopt_func )(
             int, char* const*, const char*, const option*, int* );
 
       public:
@@ -94,7 +94,7 @@ namespace libstdhl
             std::function< void( const char* ) > process_non_option
             = []( const char* arg ) {} );
 
-        const char* getProgramName() const;
+        const char* programName() const;
 
         int parse( void );
 

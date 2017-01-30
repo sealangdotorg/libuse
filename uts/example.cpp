@@ -23,6 +23,8 @@
 
 #include "gtest/gtest.h"
 
+#include "libstdhlcpp.h"
+
 TEST( libstdhl, example )
 {
 }

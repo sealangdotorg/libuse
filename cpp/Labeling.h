@@ -38,40 +38,40 @@ namespace libstdhl
     class Labeling
     {
       private:
-        std::string* label;
+        std::string* m_label;
 
       public:
         Labeling()
-        : label( 0 )
+        : m_label( 0 )
         {
         }
 
         virtual ~Labeling()
         {
-            if( label )
+            if( m_label )
             {
-                delete label;
+                delete m_label;
             }
         }
 
-        virtual const char* getLabel( void )
+        virtual const char* label( void )
         {
-            if( label == 0 )
+            if( m_label == 0 )
             {
-                label = new std::string(
-                    getLabelName() + std::to_string( getLabelID() ) );
-                assert( label );
+                m_label = new std::string(
+                    labelName() + std::to_string( labelId() ) );
+                assert( m_label );
             }
 
-            return label->c_str();
+            return m_label->c_str();
         }
 
-        virtual const char* getLabelName( void )
+        virtual const char* labelName( void )
         {
             return "lbl";
         }
 
-        virtual u64 getLabelID( void )
+        virtual u64 labelId( void )
         {
             return (u64)this;
         }

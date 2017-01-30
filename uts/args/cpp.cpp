@@ -205,11 +205,11 @@ TEST_P( cpp_Args, param )
 
     u32 cnt_err = 0;
 
-    options.error = [this, &options, &cnt_err](
-        int error_code, const char* msg ) {
-        // omit output
-        fprintf( stderr, "%s: error: %s\n", options.getProgramName(), msg );
-    };
+    options.m_error
+        = [this, &options, &cnt_err]( int error_code, const char* msg ) {
+              // omit output
+              fprintf( stderr, "%s: error: %s\n", options.programName(), msg );
+          };
 
     std::unordered_map< char, u32 > cnt_options_chr;
     std::unordered_map< std::string, u32 > cnt_options_str;

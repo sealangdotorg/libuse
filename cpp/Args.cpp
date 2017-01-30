@@ -33,26 +33,26 @@ Args::Args( int argc, const char** argv,
 
 Args::Args( int argc, const char** argv, Mode mode,
     std::function< void( const char* ) > process_non_option )
-: argc( argc )
-, argv( argv )
-, mode( mode )
-, process_non_option( process_non_option )
+: m_argc( argc )
+, m_argv( argv )
+, m_mode( mode )
+, m_process_non_option( process_non_option )
 {
-    format_str = "";
+    m_format_str = "";
 
-    if( mode == DEFAULT )
+    if( m_mode == DEFAULT )
     {
-        getopt_func = &getopt_long;
+        m_getopt_func = &getopt_long;
     }
     else
     {
-        getopt_func = &getopt_long_only;
+        m_getopt_func = &getopt_long_only;
     }
 
-    usage = [this]() {
+    m_usage = [this]() {
         std::map< std::string, Option > sorted_options;
 
-        for( auto& opt : this->options )
+        for( auto& opt : this->m_options )
         {
             std::string key;
 
@@ -118,21 +118,22 @@ Args::Args( int argc, const char** argv, Mode mode,
         }
     };
 
-    message = [this]( const char* kind, const char* msg ) {
+    m_message = [this]( const char* kind, const char* msg ) {
         assert( kind );
         assert( msg );
 
-        fprintf( stderr, "%s: %s: %s\n", this->argv[ 0 ], kind, msg );
+        fprintf( stderr, "%s: %s: %s\n", this->m_argv[ 0 ], kind, msg );
     };
 
-    info = [this]( const char* msg ) { this->message( "info", msg ); };
+    m_info = [this]( const char* msg ) { this->m_message( "info", msg ); };
 
-    warning = [this]( const char* msg ) { this->message( "warning", msg ); };
+    m_warning
+        = [this]( const char* msg ) { this->m_message( "warning", msg ); };
 
-    error = [this]( int error_code, const char* msg ) {
+    m_error = [this]( int error_code, const char* msg ) {
         if( msg )
         {
-            this->message( "error", msg );
+            this->m_message( "error", msg );
         }
 
         if( error_code != 0 )
@@ -141,38 +142,38 @@ Args::Args( int argc, const char** argv, Mode mode,
         }
     };
 
-    error_arg_required = [this]( const char* arg ) {
+    m_error_arg_required = [this]( const char* arg ) {
         std::string tmp;
         tmp.append( "option '" );
         tmp.append( arg );
         tmp.append( "' requires an argument" );
-        error( 0, tmp.c_str() );
+        m_error( 0, tmp.c_str() );
     };
 
-    error_arg_invalid = [this]( const char* arg ) {
+    m_error_arg_invalid = [this]( const char* arg ) {
         std::string tmp;
         tmp.append( "unrecognized option '" );
         tmp.append( arg );
         tmp.append( "'" );
-        error( 0, tmp.c_str() );
+        m_error( 0, tmp.c_str() );
     };
 }
 
-const char* Args::getProgramName() const
+const char* Args::programName() const
 {
-    return argv[ 0 ];
+    return m_argv[ 0 ];
 }
 
 int Args::parse( void )
 {
     int err = 0;
     int pos = 0;
-    int len = options.size();
+    int len = m_options.size();
 
     int getopt_ctrl;
     option getopt_options[ len + 1 ];
 
-    for( auto& opt : options )
+    for( auto& opt : m_options )
     {
         // printf( "%i: %s | %i:%s\n    %s | %s | %p\n"
         //         , pos, opt.first.c_str()
@@ -198,8 +199,8 @@ int Args::parse( void )
     {
         int getopt_index = 0;
 
-        getopt_ctrl = getopt_func( argc, (char* const*)argv,
-            (const char*)( format_str.c_str() ), getopt_options,
+        getopt_ctrl = m_getopt_func( m_argc, (char* const*)m_argv,
+            (const char*)( m_format_str.c_str() ), getopt_options,
             &getopt_index );
 
         // printf( "::: %i, %i, %i, '%s', \n", getopt_ctrl, getopt_index,
@@ -216,12 +217,13 @@ int Args::parse( void )
             {
                 if( optarg )
                 {
-                    options[ getopt_options[ getopt_index ].name ].action(
+                    m_options[ getopt_options[ getopt_index ].name ].action(
                         optarg );
                 }
                 else
                 {
-                    options[ getopt_options[ getopt_index ].name ].action( "" );
+                    m_options[ getopt_options[ getopt_index ].name ].action(
+                        "" );
                 }
             }
 
@@ -230,26 +232,26 @@ int Args::parse( void )
 
         if( getopt_ctrl == ':' )
         {
-            error_arg_required( argv[ optind - 1 ] );
+            m_error_arg_required( m_argv[ optind - 1 ] );
             err++;
             continue;
         }
 
         if( optind <= 1 )
         {
-            error_arg_invalid( argv[ optind ] );
+            m_error_arg_invalid( m_argv[ optind ] );
             err++;
             break;
         }
 
-        const char* arg = argv[ optind - 1 - ( optarg ? 1 : 0 ) ];
+        const char* arg = m_argv[ optind - 1 - ( optarg ? 1 : 0 ) ];
         const char* str = "";
 
         if( getopt_ctrl == '?' )
         {
             str = &arg[ 2 ];
 
-            if( mode == DEFAULT )
+            if( m_mode == DEFAULT )
             {
                 if( strlen( arg ) <= 2 )
                 {
@@ -260,7 +262,7 @@ int Args::parse( void )
                     if( arg[ 1 ] != '-' )
                     {
                         // printf("not default\n");
-                        error_arg_invalid( arg );
+                        m_error_arg_invalid( arg );
                         err++;
                         continue;
                     }
@@ -279,18 +281,18 @@ int Args::parse( void )
             str = &arg[ 1 ];
         }
 
-        auto result = options.find( str );
-        if( result == options.end() )
+        auto result = m_options.find( str );
+        if( result == m_options.end() )
         {
             if( str[ 0 ] == '-' )
             {
-                result = options.find( &str[ 1 ] );
+                result = m_options.find( &str[ 1 ] );
             }
         }
-        if( result == options.end() )
+        if( result == m_options.end() )
         {
             // printf("not found '%s'\n", str);
-            error_arg_invalid( arg );
+            m_error_arg_invalid( arg );
             err++;
             continue;
         }
@@ -303,7 +305,7 @@ int Args::parse( void )
         {
             if( result->second.field.has_arg == REQUIRED )
             {
-                error_arg_required( arg );
+                m_error_arg_required( arg );
                 err++;
             }
             else
@@ -313,14 +315,14 @@ int Args::parse( void )
         }
     }
 
-    for( int index = optind; index < argc; index++ )
+    for( int index = optind; index < m_argc; index++ )
     {
-        process_non_option( argv[ index ] );
+        m_process_non_option( m_argv[ index ] );
     }
 
     if( err > 0 )
     {
-        error( -1, 0 );
+        m_error( -1, 0 );
     }
 
     return err;
@@ -354,51 +356,51 @@ void Args::add( const char arg_char, const char* arg_str, Kind kind,
     {
         key.push_back( arg_char );
 
-        if( options.find( key ) != options.end() )
+        if( m_options.find( key ) != m_options.end() )
         {
             fprintf( stderr,
                 "%s: internal error: '%c' option argument is not unique\n",
-                argv[ 0 ], arg_char );
+                m_argv[ 0 ], arg_char );
             exit( -1 );
         }
     }
 
     if( arg_str )
     {
-        if( options.find( arg_str ) != options.end() )
+        if( m_options.find( arg_str ) != m_options.end() )
         {
             fprintf( stderr,
                 "%s: internal error: '%s' option argument is not unique\n",
-                argv[ 0 ], arg_str );
+                m_argv[ 0 ], arg_str );
             exit( -1 );
         }
 
         key = std::string( arg_str );
     }
 
-    options[ key ] = Option();
-    options[ key ].field.name = arg_str;
-    options[ key ].field.has_arg = kind;
-    options[ key ].field.flag = 0;
-    options[ key ].field.val = arg_char;
-    options[ key ].action = action;
-    options[ key ].description = description;
-    options[ key ].metatag = metatag;
+    m_options[ key ] = Option();
+    m_options[ key ].field.name = arg_str;
+    m_options[ key ].field.has_arg = kind;
+    m_options[ key ].field.flag = 0;
+    m_options[ key ].field.val = arg_char;
+    m_options[ key ].action = action;
+    m_options[ key ].description = description;
+    m_options[ key ].metatag = metatag;
 
     if( arg_str and arg_char )
     {
         std::string tmp;
         tmp.push_back( arg_char );
-        options[ tmp ] = options[ key ];
+        m_options[ tmp ] = m_options[ key ];
     }
 
     if( arg_char > 0 )
     {
-        format_str.push_back( arg_char );
+        m_format_str.push_back( arg_char );
 
         if( kind == REQUIRED or kind == OPTIONAL )
         {
-            format_str.push_back( ':' );
+            m_format_str.push_back( ':' );
         }
     }
 

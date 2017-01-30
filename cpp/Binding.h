@@ -38,37 +38,37 @@ namespace libstdhl
     class Binding
     {
       private:
-        C* reference = 0;
+        C* m_reference = 0;
 
       public:
         virtual ~Binding() = default;
 
         void bind( C* object )
         {
-            assert( !reference && "already bounded to a reference" );
+            assert( !m_reference && "already bounded to a reference" );
             assert( object && "invalid object reference to bind" );
 
-            reference = object;
+            m_reference = object;
         }
 
         C* unbind( void )
         {
-            assert( reference && "object reference was never bound" );
+            assert( m_reference && "object reference was never bound" );
 
-            C* tmp = reference;
-            reference = 0;
+            C* tmp = m_reference;
+            m_reference = 0;
             return tmp;
         }
 
-        C* getBound( void ) const
+        C* bound( void ) const
         {
-            assert( reference && "object reference was never bound" );
-            return reference;
+            assert( m_reference && "object reference was never bound" );
+            return m_reference;
         }
 
         const u1 isBound( void ) const
         {
-            return reference != 0;
+            return m_reference != 0;
         }
     };
 }

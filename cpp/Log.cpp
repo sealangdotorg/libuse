@@ -26,7 +26,7 @@
 using namespace libstdhl;
 
 Log::Channel::Channel( std::function< const char*( void* ) > description )
-: description( description ){};
+: m_description( description ){};
 
 Log::Channel Log::Info
     = Log::Channel( []( void* arg ) -> const char* { return "info"; } );
@@ -36,7 +36,7 @@ Log::Channel Log::Error
     = Log::Channel( []( void* arg ) -> const char* { return "error"; } );
 
 Log::Source::Source( std::function< const char*( void* ) > description )
-: description( description ){};
+: m_description( description ){};
 
 Log::Source Log::None
     = Log::Source( []( void* arg ) -> const char* { return 0; } );
@@ -44,7 +44,7 @@ Log::Source Log::DefaultSource
     = Log::Source( []( void* arg ) -> const char* { return "Log"; } );
 
 Log::Sink::Sink( std::function< FILE*( void* ) > stream )
-: stream( stream ){};
+: m_stream( stream ){};
 
 Log::Sink Log::StdOut
     = Log::Sink( []( void* arg ) -> FILE* { return stdout; } );
