@@ -24,7 +24,6 @@
 #ifndef _LIB_STDHL_CPP_LABELING_H_
 #define _LIB_STDHL_CPP_LABELING_H_
 
-#include "Allocator.h"
 #include "Type.h"
 
 /**
@@ -38,7 +37,7 @@ namespace libstdhl
     class Labeling
     {
       private:
-        std::string* m_label;
+        std::shared_ptr< std::string > m_label;
 
       public:
         Labeling()
@@ -46,19 +45,13 @@ namespace libstdhl
         {
         }
 
-        virtual ~Labeling()
-        {
-            if( m_label )
-            {
-                delete m_label;
-            }
-        }
+        virtual ~Labeling() = default;
 
         virtual const char* label( void )
         {
             if( m_label == 0 )
             {
-                m_label = new std::string(
+                m_label = std::make_shared< std::string >(
                     labelName() + std::to_string( labelId() ) );
                 assert( m_label );
             }
