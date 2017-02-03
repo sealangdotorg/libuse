@@ -27,7 +27,6 @@
 #include "c/default.h"
 
 #include <algorithm>
-#include <bitset>
 #include <chrono>
 #include <ctime>
 #include <fstream>
@@ -36,10 +35,7 @@
 #include <iterator>
 #include <regex>
 #include <sstream>
-#include <tuple>
 #include <utility>
-
-// using namespace std;
 
 /**
    @brief    TODO
@@ -49,6 +45,19 @@
 
 namespace libstdhl
 {
+    class Stdhl
+    {
+    };
+
+    //
+    // shared object creation utility
+    //
+
+    template < typename T, typename... Args >
+    typename T::Ptr make( Args&&... args )
+    {
+        return std::make_shared< T >( std::forward< Args >( args )... );
+    }
 }
 
 #endif /* _LIB_STDHL_CPP_DEFAULT_H_ */

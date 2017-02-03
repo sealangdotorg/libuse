@@ -21,20 +21,22 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_C_H_
-#define _LIB_STDHL_C_H_
+#include "gtest/gtest.h"
 
-#include "c/args.h"
-#include "c/default.h"
-#include "c/type.h"
+#include "cpp/Default.h"
 
-/**
-   @brief    TODO
+using namespace libstdhl;
 
-   TODO
-*/
+class TestClass
+{
+  public:
+    using Ptr = std::shared_ptr< TestClass >;
+};
 
-#endif /* _LIB_STDHL_C_H_ */
+TEST( libstdhl_cpp_Default, make )
+{
+    make< TestClass >();
+}
 
 //
 //  Local variables:
