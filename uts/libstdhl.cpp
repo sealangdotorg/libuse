@@ -23,8 +23,12 @@
 
 #include "gtest/gtest.h"
 
-#include "libstdhlcpp.h"
+#include "libstdhl.h"
 
-TEST( libstdhl, example )
+using namespace libstdhl;
+
+TEST( libstdhl, include_test )
 {
+    Stdhl x;
+    x = x;
 }
