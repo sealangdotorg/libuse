@@ -21,11 +21,14 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_CPP_FILE_H_
-#define _LIB_STDHL_CPP_FILE_H_
+#ifndef _LIB_STDHL_CPP_RANDOM_H_
+#define _LIB_STDHL_CPP_RANDOM_H_
 
 #include "Default.h"
+#include "Math.h"
 #include "Type.h"
+
+#include <random>
 
 /**
    @brief    TODO
@@ -35,41 +38,27 @@
 
 namespace libstdhl
 {
-    class File
+    class Random : public Stdhl
     {
       public:
-        static u1 exists( const char* file_name )
+        template < typename T >
+        static inline T uniform( T from = std::numeric_limits< T >::min(),
+            T to = std::numeric_limits< T >::max() )
         {
-            std::ifstream fd( file_name );
-            return (u1)fd;
-        };
+            std::random_device device;
+            std::default_random_engine engine( device() );
 
-        static u8 readLines( const char* file_name,
-            std::function< void( u32, const std::string& ) >
-                process_line )
-        {
-            u32 cnt = 0;
-            std::string line;
-            std::ifstream fd( file_name );
+            // std::seed_seq seed{ device(), device(), device(), device(),
+            //     device(), device(), device(), device() };
+            // std::mt19937_64 engine( seed );
 
-            if( not fd )
-            {
-                return -1;
-            }
-
-            while( getline( fd, line ) )
-            {
-                process_line( cnt, line );
-                cnt++;
-            }
-
-            fd.close();
-            return 0;
-        };
+            std::uniform_int_distribution< T > distribution( from, to );
+            return distribution( engine );
+        }
     };
 }
 
-#endif // _LIB_STDHL_CPP_FILE_H_
+#endif // _LIB_STDHL_CPP_RANDOM_H_
 
 //
 //  Local variables:

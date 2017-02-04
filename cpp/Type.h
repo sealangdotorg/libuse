@@ -27,6 +27,7 @@
 #include "c/type.h"
 
 #include <bitset>
+#include <limits>
 #include <list>
 #include <map>
 #include <memory>
