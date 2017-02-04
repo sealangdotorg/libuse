@@ -47,7 +47,10 @@
 
 namespace libstdhl
 {
+}
 
+namespace std
+{
     class Hash
     {
       public:

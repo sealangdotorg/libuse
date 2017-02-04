@@ -58,6 +58,28 @@ namespace libstdhl
     {
         return std::make_shared< T >( std::forward< Args >( args )... );
     }
+
+    //
+    // shared object creation utility which allocates only new objects
+    // if they are not already cached in the 'make_cache()' facility
+    // through 'make_hash()'
+    //
+    template < typename T, typename... Args >
+    static inline typename T::Ptr get( Args&&... args )
+    {
+        T tmp = T( std::forward< Args >( args )... );
+
+        auto cache = tmp.make_cache().find( tmp.make_hash() );
+        if( cache != tmp.make_cache().end() )
+        {
+            return std::static_pointer_cast< T >( cache->second );
+        }
+
+        auto ptr = make< T >( tmp );
+
+        return std::static_pointer_cast< T >(
+            tmp.make_cache().emplace( tmp.make_hash(), ptr ).first->second );
+    }
 }
 
 #endif /* _LIB_STDHL_CPP_DEFAULT_H_ */

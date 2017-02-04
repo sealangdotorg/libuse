@@ -23,7 +23,7 @@
 
 #include "gtest/gtest.h"
 
-#include "cpp/Default.h"
+#include "libstdhl.h"
 
 using namespace libstdhl;
 
@@ -31,11 +31,48 @@ class TestClass
 {
   public:
     using Ptr = std::shared_ptr< TestClass >;
+
+    TestClass( u32 value )
+    : m_value( value )
+    {
+    }
+
+    const u32 value() const
+    {
+        return m_value;
+    }
+
+    std::unordered_map< std::string, Ptr >& make_cache( void )
+    {
+        static std::unordered_map< std::string, Ptr > cache;
+        return cache;
+    }
+
+    const char* make_hash( void )
+    {
+        return Allocator::string( std::to_string( value() ) );
+    }
+
+  private:
+    u32 m_value;
 };
 
 TEST( libstdhl_cpp_Default, make )
 {
-    make< TestClass >();
+    auto a = make< TestClass >( 123 );
+    auto b = make< TestClass >( 123 );
+
+    ASSERT_NE( a, b );
+    ASSERT_EQ( a->value(), b->value() );
+}
+
+TEST( libstdhl_cpp_Default, get )
+{
+    auto a = get< TestClass >( 321 );
+    auto b = get< TestClass >( 321 );
+
+    ASSERT_EQ( a, b );
+    ASSERT_EQ( a->value(), b->value() );
 }
 
 //
