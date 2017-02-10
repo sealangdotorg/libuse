@@ -3,6 +3,7 @@
 //  All rights reserved.
 //
 //  Developed by: Philipp Paulweber
+//                Emmanuel Pescosta
 //                https://github.com/ppaulweber/libstdhl
 //
 //  This file is part of libstdhl.
