@@ -43,9 +43,14 @@ class TestClass
         return m_value;
     }
 
-    std::unordered_map< std::string, Ptr >& make_cache( void )
+    inline u1 operator==( const TestClass& rhs ) const
     {
-        static std::unordered_map< std::string, Ptr > cache;
+        return this->value() == rhs.value();
+    }
+
+    std::unordered_map< std::string, TestClass::Ptr >& make_cache( void )
+    {
+        static std::unordered_map< std::string, TestClass::Ptr > cache;
         return cache;
     }
 
@@ -63,8 +68,8 @@ TEST( libstdhl_cpp_Default, make )
     auto a = make< TestClass >( 123 );
     auto b = make< TestClass >( 123 );
 
-    ASSERT_NE( a, b );
-    ASSERT_EQ( a->value(), b->value() );
+    EXPECT_NE( a, b );
+    EXPECT_EQ( a->value(), b->value() );
 }
 
 TEST( libstdhl_cpp_Default, get )
@@ -72,8 +77,12 @@ TEST( libstdhl_cpp_Default, get )
     auto a = get< TestClass >( 321 );
     auto b = get< TestClass >( 321 );
 
-    ASSERT_EQ( a, b );
-    ASSERT_EQ( a->value(), b->value() );
+    EXPECT_TRUE( a != nullptr );
+    EXPECT_TRUE( b != nullptr );
+
+    EXPECT_EQ( a, b );
+    EXPECT_EQ( *a, *b );
+    EXPECT_EQ( a->value(), b->value() );
 }
 
 //

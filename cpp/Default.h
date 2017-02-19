@@ -66,7 +66,7 @@ namespace libstdhl
     // through 'make_hash()'
     //
     template < typename T, typename... Args >
-    static inline typename T::Ptr get( Args&&... args )
+    inline typename T::Ptr get( Args&&... args )
     {
         T tmp = T( std::forward< Args >( args )... );
 
@@ -77,13 +77,23 @@ namespace libstdhl
         }
 
         auto ptr = make< T >( tmp );
-
         return std::static_pointer_cast< T >(
             tmp.make_cache().emplace( tmp.make_hash(), ptr ).first->second );
     }
+
+    //
+    // shared object creation of stack object
+    //
+
+    template < typename T >
+    typename T::Ptr wrap( T& stack_object )
+    {
+        static auto no_dtor = []( T* ) {};
+        return std::shared_ptr< T >( &stack_object, no_dtor );
+    }
 }
 
-#endif /* _LIB_STDHL_CPP_DEFAULT_H_ */
+#endif // _LIB_STDHL_CPP_DEFAULT_H_
 
 //
 //  Local variables:

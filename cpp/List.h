@@ -45,9 +45,19 @@ namespace libstdhl
         {
         }
 
+        List( const std::vector< typename T::Ptr >& elements )
+        : m_elements( elements )
+        {
+        }
+
         std::size_t size() const
         {
             return m_elements.size();
+        }
+
+        typename T::Ptr at( size_t index ) const
+        {
+            return m_elements[ index ];
         }
 
         void add( const typename T::Ptr& node )
