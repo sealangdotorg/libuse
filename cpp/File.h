@@ -39,19 +39,19 @@ namespace libstdhl
     class File
     {
       public:
-        static u1 exists( const char* file_name )
+        static u1 exists( const std::string& filename )
         {
-            std::ifstream fd( file_name );
+            std::ifstream fd( filename );
             return (u1)fd;
         };
 
-        static u8 readLines( const char* file_name,
+        static u8 readLines( const std::string& filename,
             std::function< void( u32, const std::string& ) >
                 process_line )
         {
             u32 cnt = 0;
             std::string line;
-            std::ifstream fd( file_name );
+            std::ifstream fd( filename );
 
             if( not fd )
             {
