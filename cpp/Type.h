@@ -55,23 +55,23 @@ namespace std
     class Hash
     {
       public:
-        size_t operator()( const char* val ) const
+        size_t operator()( const char* value ) const
         {
-            return std::hash< std::string >()( val );
+            return std::hash< std::string >()( value );
         }
     };
 
     class Equal
     {
       public:
-        size_t operator()( const char* val1, const char* val2 ) const
+        size_t operator()( const char* lhs, const char* rhs ) const
         {
-            return std::string( val1 ) == std::string( val2 );
+            return strcmp( lhs, rhs ) == 0;
         }
     };
 }
 
-#endif /* _LIB_STDHL_CPP_TYPE_H_ */
+#endif // _LIB_STDHL_CPP_TYPE_H_
 
 //
 //  Local variables:

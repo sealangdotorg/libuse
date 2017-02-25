@@ -37,12 +37,11 @@
 extern "C" {
 #endif
 
-
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* _LIB_STDHL_C_MATH_H_ */
+#endif // _LIB_STDHL_C_MATH_H_
 
 //
 //  Local variables:

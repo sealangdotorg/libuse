@@ -44,7 +44,7 @@ extern "C" {
 }
 #endif
 
-#endif /* _LIB_STDHL_C_ARGS_H_ */
+#endif // _LIB_STDHL_C_ARGS_H_
 
 //
 //  Local variables:

@@ -56,7 +56,7 @@ typedef int64_t i64;
 }
 #endif
 
-#endif /* _LIB_STDHL_C_TYPE_H_ */
+#endif // _LIB_STDHL_C_TYPE_H_
 
 //
 //  Local variables:

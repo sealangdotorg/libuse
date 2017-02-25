@@ -41,7 +41,7 @@ namespace libstdhl
         using const_iterator =
             typename std::vector< typename T::Ptr >::const_iterator;
 
-        List()
+        List( void )
         {
         }
 
@@ -55,7 +55,7 @@ namespace libstdhl
             return m_elements.size();
         }
 
-        typename T::Ptr at( size_t index ) const
+        typename T::Ptr operator[]( std::size_t index ) const
         {
             return m_elements[ index ];
         }
@@ -70,22 +70,22 @@ namespace libstdhl
             m_elements.erase( it );
         }
 
-        iterator begin()
+        iterator begin( void )
         {
             return m_elements.begin();
         }
 
-        iterator end()
+        iterator end( void )
         {
             return m_elements.end();
         }
 
-        const_iterator cbegin() const
+        const_iterator cbegin( void ) const
         {
             return m_elements.cbegin();
         }
 
-        const_iterator cend() const
+        const_iterator cend( void ) const
         {
             return m_elements.cend();
         }

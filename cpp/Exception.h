@@ -38,7 +38,7 @@ namespace libstdhl
 {
 }
 
-#endif /* _LIB_STDHL_CPP_EXCEPTION_H_ */
+#endif // _LIB_STDHL_CPP_EXCEPTION_H_
 
 //
 //  Local variables:

@@ -39,7 +39,7 @@ namespace libstdhl
 {
 }
 
-#endif /* _LIB_STDHL_CPP_MATH_H_ */
+#endif // _LIB_STDHL_CPP_MATH_H_
 
 //
 //  Local variables:

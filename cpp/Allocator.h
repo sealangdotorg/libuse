@@ -64,7 +64,7 @@ namespace libstdhl
     };
 }
 
-#endif /* _LIB_STDHL_CPP_ALLOCATOR_H_ */
+#endif // _LIB_STDHL_CPP_ALLOCATOR_H_
 
 //
 //  Local variables:
