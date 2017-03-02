@@ -30,7 +30,37 @@ using namespace libstdhl;
 
 TEST( libstdhl_cpp_integer, u64 )
 {
-    auto example = Integer( 123456789 );
+    u64 number = 123456789;
+
+    auto i = Integer( number );
+
+    EXPECT_EQ( i.words().size(), 1 );
+    EXPECT_EQ( i.word( 0 ), number );
+}
+
+TEST( libstdhl_cpp_integer, u64_with_precision )
+{
+    u64 number = 0xfeed;
+    u64 precision = 300;
+
+    auto i = Integer( number, precision );
+
+    EXPECT_EQ(
+        i.words().size(), ( precision / 64 ) + ( precision % 64 ? 1 : 0 ) );
+    EXPECT_EQ( i.word( 0 ), number );
+}
+
+TEST( libstdhl_cpp_integer, u64_with_precision_loose_information )
+{
+    u64 number = 0xfeedfeed;
+    u64 precision = 16;
+
+    EXPECT_THROW( { Integer( number, precision ); }, std::domain_error );
+}
+
+TEST( libstdhl_cpp_integer, u64_with_precision_zero )
+{
+    EXPECT_THROW( { Integer( 123, 0 ); }, std::domain_error );
 }
 
 //
