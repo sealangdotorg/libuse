@@ -42,12 +42,7 @@ namespace libstdhl
 
         Integer( const std::string& value, const Radix radix = DECIMAL );
 
-        // ctor for u64 wrapping, creates a Type of wordsize = 1
         Integer( u64 value );
-
-        // generic ctor to create wordsize depending on precision, precision !=
-        // 0
-        Integer( u64 value, u64 precision );
 
         ~Integer( void ) = default;
     };

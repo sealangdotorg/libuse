@@ -37,33 +37,6 @@ Integer::Integer( u64 value )
 {
 }
 
-Integer::Integer( u64 value, const u64 precision )
-: Type(
-      std::vector< u64 >( ( precision / 64 ) + ( precision % 64 ? 1 : 0 ), 0 ) )
-{
-    if( precision == 0 )
-    {
-        throw std::domain_error( "Integer precision cannot be zero" );
-    }
-
-    if( precision < 64 )
-    {
-        u64 mask = ( ( u64 )( UINT64_MAX ) ) << precision;
-
-        if( ( value & mask ) != 0 )
-        {
-            throw std::domain_error( "value '" + std::to_string( value )
-                                     + "' does not fit into a precision of '"
-                                     + std::to_string( precision )
-                                     + "'" );
-        }
-
-        value &= ~mask;
-    }
-
-    set( 0, value );
-}
-
 //
 //  Local variables:
 //  mode: c++

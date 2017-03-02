@@ -75,7 +75,9 @@ namespace libstdhl
             UNIX = 20
         };
 
-        Type( const std::vector< u64 >& words, const u1 sign = false );
+        explicit Type( const std::vector< u64 >& words, const u1 sign = false );
+
+        explicit Type( u64 word, u64 precision, const u1 sign = false );
 
         Type( void );
 

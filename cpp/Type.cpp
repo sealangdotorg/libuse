@@ -40,6 +40,34 @@ Type::Type( void )
 {
 }
 
+Type::Type( u64 word, u64 precision, const u1 sign )
+: Type(
+      std::vector< u64 >( ( precision / 64 ) + ( precision % 64 ? 1 : 0 ), 0 ),
+      sign )
+{
+    if( precision == 0 )
+    {
+        throw std::domain_error( "Integer precision cannot be zero" );
+    }
+
+    if( precision < 64 )
+    {
+        u64 mask = ( ( u64 )( UINT64_MAX ) ) << precision;
+
+        if( ( word & mask ) != 0 )
+        {
+            throw std::domain_error( "word '" + std::to_string( word )
+                                     + "' does not fit into a precision of '"
+                                     + std::to_string( precision )
+                                     + "'" );
+        }
+
+        word &= ~mask;
+    }
+
+    m_words[ 0 ] = word;
+}
+
 void Type::add( u64 word )
 {
     m_words.push_back( word );
