@@ -25,7 +25,6 @@
 #include "gtest/gtest.h"
 
 #include "cpp/Math.h"
-#include "cpp/Type.h"
 
 using namespace libstdhl;
 

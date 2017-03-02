@@ -26,6 +26,7 @@
 #define _LIB_STDHL_CPP_MATH_H_
 
 #include "Default.h"
+#include "Type.h"
 
 #include "c/math.h"
 
