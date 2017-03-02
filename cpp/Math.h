@@ -37,6 +37,21 @@
 
 namespace libstdhl
 {
+    class Math : public Stdhl
+    {
+      public:
+        template < typename T >
+        static inline constexpr T pow( T const& x, std::size_t n )
+        {
+            return n > 0 ? ( x * pow( x, n - 1 ) ) : 1;
+        }
+
+        template < typename T = u64 >
+        static inline constexpr T gcd( T const& u, T const& v )
+        {
+            return ( v != 0 ) ? gcd( v, u % v ) : u;
+        }
+    };
 }
 
 #endif // _LIB_STDHL_CPP_MATH_H_
