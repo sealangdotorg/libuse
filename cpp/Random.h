@@ -46,6 +46,11 @@ namespace libstdhl
         static inline T uniform( T from = std::numeric_limits< T >::min(),
             T to = std::numeric_limits< T >::max() )
         {
+            if( from >= to )
+            {
+                std::domain_error( "invalid range" );
+            }
+
             std::random_device device;
             std::default_random_engine engine( device() );
 
