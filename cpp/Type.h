@@ -25,6 +25,8 @@
 #ifndef _LIB_STDHL_CPP_TYPE_H_
 #define _LIB_STDHL_CPP_TYPE_H_
 
+#include "cpp/Default.h"
+
 #include "c/type.h"
 
 #include <bitset>
@@ -48,26 +50,164 @@
 
 namespace libstdhl
 {
-}
-
-namespace std
-{
-    class Hash
+    class Type : public Stdhl
     {
       public:
-        size_t operator()( const char* value ) const
-        {
-            return std::hash< std::string >()( value );
-        }
-    };
+        using Ptr = std::shared_ptr< Type >;
 
-    class Equal
-    {
-      public:
-        size_t operator()( const char* lhs, const char* rhs ) const
+        enum Radix : u8
         {
-            return strcmp( lhs, rhs ) == 0;
+            BINARY = 2,
+            OCTAL = 8,
+            DECIMAL = 10,
+            HEXADECIMAL = 16,
+            SEXAGESIMAL = 60,
+            RADIX64 = 64,
+        };
+
+        enum Literal : u8
+        {
+            NONE = 0,
+            STDHL = 1,
+            C = 2,
+            CPP14 = 3,
+            BASE64 = 10,
+            UNIX = 20
+        };
+
+        Type( const std::vector< u64 >& words, const u1 sign = false );
+
+        Type( void );
+
+        ~Type( void ) = default;
+
+        void add( u64 word );
+
+        void set( std::size_t index, u64 word );
+
+        inline void setToZero( void )
+        {
+            m_words.assign( m_words.size(), 0 );
+            m_carry = 0;
+            m_sign = false;
         }
+
+        u64 word( std::size_t index ) const;
+
+        u64 carry( void ) const;
+
+        u1 sign( void ) const;
+
+        inline const u64* data( void ) const
+        {
+            return m_words.data();
+        }
+
+        const std::vector< u64 >& words( void ) const;
+
+        inline u1 operator==( const u64 rhs ) const
+        {
+            auto const size = this->words().size();
+
+            for( std::size_t c = 1; c < size; c++ )
+            {
+                if( this->words()[ c ] != 0 )
+                {
+                    return false;
+                }
+            }
+
+            return this->words()[ 0 ] == rhs;
+        }
+
+        inline u1 operator!=( const u64 rhs ) const
+        {
+            return !operator==( rhs );
+        }
+
+        inline u1 operator==( const std::vector< u64 >& rhs ) const
+        {
+            Type t( rhs );
+            return *this == t;
+        }
+
+        inline u1 operator!=( const std::vector< u64 >& rhs ) const
+        {
+            return !operator==( rhs );
+        }
+
+        inline u1 operator==( const Type& rhs ) const
+        {
+            auto const size = this->words().size();
+
+            if( size != rhs.words().size() )
+            {
+                return false;
+            }
+
+            for( std::size_t c = 0; c < size; c++ )
+            {
+                if( this->words()[ c ] != rhs.words()[ c ] )
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        inline u1 operator!=( const Type& rhs ) const
+        {
+            return !operator==( rhs );
+        }
+
+        u1 operator>( const u64 rhs ) const;
+
+        Type& operator-=( const u64 rhs );
+
+        friend Type operator-( Type lhs, const u64 rhs )
+        {
+            lhs -= rhs;
+            return lhs;
+        }
+
+        Type& operator*=( const u64 rhs );
+
+        friend inline Type operator*( Type lhs, const u64 rhs )
+        {
+            lhs *= rhs;
+            return lhs;
+        }
+
+        Type& operator/=( const u64 rhs );
+
+        friend Type operator/( Type lhs, const u64 rhs )
+        {
+            lhs -= rhs;
+            return lhs;
+        }
+
+        Type& operator%=( const u64 rhs );
+
+        friend Type operator%( Type lhs, const u64 rhs )
+        {
+            lhs %= rhs;
+            return lhs;
+        }
+
+        template < const Radix RADIX, const Literal LITERAL = STDHL >
+        inline std::string to( void ) const
+        {
+            return to_string( RADIX, LITERAL );
+        }
+
+        std::string to_string(
+            const Radix radix = DECIMAL, const Literal literal = NONE ) const;
+
+      private:
+        std::vector< u64 > m_words;
+        u64 m_carry;
+        u1 m_sign;
     };
 }
 
