@@ -70,19 +70,33 @@ namespace libstdhl
             m_elements.erase( it );
         }
 
+        // http://en.cppreference.com/w/cpp/container/vector/begin
+
         iterator begin( void )
         {
             return m_elements.begin();
         }
+
+        const_iterator begin( void ) const
+        {
+            return m_elements.cbegin();
+        }
+
+        const_iterator cbegin( void ) const
+        {
+            return m_elements.cbegin();
+        }
+
+        // http://en.cppreference.com/w/cpp/container/vector/end
 
         iterator end( void )
         {
             return m_elements.end();
         }
 
-        const_iterator cbegin( void ) const
+        const_iterator end( void ) const
         {
-            return m_elements.cbegin();
+            return m_elements.cend();
         }
 
         const_iterator cend( void ) const
