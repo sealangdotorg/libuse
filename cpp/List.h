@@ -65,6 +65,11 @@ namespace libstdhl
             m_elements.push_back( node );
         }
 
+        iterator add( const_iterator position, const typename T::Ptr& node )
+        {
+            return m_elements.insert( position, node );
+        }
+
         void remove( const iterator& it )
         {
             m_elements.erase( it );
