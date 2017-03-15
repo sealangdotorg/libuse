@@ -75,6 +75,9 @@ namespace libstdhl
             UNIX = 20
         };
 
+        explicit Type( const std::string& data, u64 precision,
+            const u1 sign = false, const Radix radix = BINARY );
+
         explicit Type( const std::vector< u64 >& words, const u1 sign = false );
 
         explicit Type( u64 word, u64 precision, const u1 sign = false );

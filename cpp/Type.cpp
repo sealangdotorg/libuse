@@ -28,6 +28,26 @@
 
 using namespace libstdhl;
 
+Type::Type(
+    const std::string& data, u64 precision, const u1 sign, const Radix radix )
+: m_words(
+      std::vector< u64 >( ( precision / 64 ) + ( precision % 64 ? 1 : 0 ), 0 ) )
+, m_carry( 0 )
+, m_sign( sign )
+{
+    if( radix != BINARY and radix != HEXADECIMAL and radix != RADIX64 )
+    {
+        throw std::domain_error( "unsupported radix '" + std::to_string( radix )
+                                 + "' to create Type data" );
+    }
+
+    const i64 offset
+        = ( radix == BINARY ? 64 : ( radix == HEXADECIMAL ? 16 : 1 ) );
+
+    // PPA: TODO: string slices to u64!
+    assert( !" TODO! " );
+}
+
 Type::Type( const std::vector< u64 >& words, const u1 sign )
 : m_words( words )
 , m_carry( 0 )
