@@ -44,6 +44,8 @@ namespace libstdhl
 
         Integer( u64 value );
 
+        Integer( i64 value );
+
         ~Integer( void ) = default;
     };
 }

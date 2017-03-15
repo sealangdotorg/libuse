@@ -37,6 +37,11 @@ Integer::Integer( u64 value )
 {
 }
 
+Integer::Integer( i64 value )
+: Type( ( value >= 0 ? (u64)value : ( u64 )( -value ) ), 63, true )
+{
+}
+
 //
 //  Local variables:
 //  mode: c++
