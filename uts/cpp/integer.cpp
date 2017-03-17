@@ -28,7 +28,7 @@
 
 using namespace libstdhl;
 
-TEST( libstdhl_cpp_integer, u64 )
+TEST( libstdhl_cpp_integer_u64, valid )
 {
     u64 number = 123456789;
 
@@ -36,6 +36,32 @@ TEST( libstdhl_cpp_integer, u64 )
 
     EXPECT_EQ( i.words().size(), 1 );
     EXPECT_EQ( i.word( 0 ), number );
+
+    EXPECT_EQ( i.sign(), false );
+}
+
+TEST( libstdhl_cpp_integer_i64, positive )
+{
+    i64 number = 123456789;
+
+    auto i = Integer( number );
+
+    EXPECT_EQ( i.words().size(), 1 );
+    EXPECT_EQ( i.word( 0 ), number * ( i.sign() ? -1 : 1 ) );
+
+    EXPECT_EQ( i.sign(), false );
+}
+
+TEST( libstdhl_cpp_integer_i64, negative )
+{
+    i64 number = -123456789;
+
+    auto i = Integer( number );
+
+    EXPECT_EQ( i.words().size(), 1 );
+    EXPECT_EQ( i.word( 0 ), number * ( i.sign() ? -1 : 1 ) );
+
+    EXPECT_EQ( i.sign(), true );
 }
 
 //
