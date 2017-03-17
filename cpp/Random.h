@@ -39,7 +39,10 @@
 
 namespace libstdhl
 {
-    class Random : public Stdhl
+    /**
+       @extends Stdhl
+    */
+    class Random
     {
       public:
         template < typename T >

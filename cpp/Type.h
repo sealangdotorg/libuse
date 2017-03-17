@@ -50,7 +50,10 @@
 
 namespace libstdhl
 {
-    class Type : public Stdhl
+    /**
+       @extends Stdhl
+    */
+    class Type
     {
       public:
         using Ptr = std::shared_ptr< Type >;

@@ -35,6 +35,10 @@
 
 namespace libstdhl
 {
+    /**
+       @class Binding
+       @extends Stdhl
+    */
     template < class C >
     class Binding
     {

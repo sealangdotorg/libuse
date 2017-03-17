@@ -37,6 +37,9 @@
 
 namespace libstdhl
 {
+    /**
+       @extends Stdhl
+    */
     class Args
     {
       public:

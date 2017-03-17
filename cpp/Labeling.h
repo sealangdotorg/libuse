@@ -35,6 +35,9 @@
 
 namespace libstdhl
 {
+    /**
+       @extends Stdhl
+    */
     class Labeling
     {
       private:

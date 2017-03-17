@@ -38,7 +38,10 @@
 
 namespace libstdhl
 {
-    class Math : public Stdhl
+    /**
+       @extends Stdhl
+    */
+    class Math
     {
       public:
         template < typename T >

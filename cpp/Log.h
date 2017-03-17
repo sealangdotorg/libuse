@@ -36,6 +36,9 @@
 
 namespace libstdhl
 {
+    /**
+       @extends Stdhl
+    */
     class Log
     {
       public:

@@ -30,8 +30,12 @@
 
 namespace libstdhl
 {
+    /**
+       @class List
+       @extends Stdhl
+    */
     template < typename T >
-    class List : public Stdhl
+    class List
     {
       public:
         using Ptr = std::shared_ptr< List >;
