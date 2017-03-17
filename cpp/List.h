@@ -41,6 +41,11 @@ namespace libstdhl
         using const_iterator =
             typename std::vector< typename T::Ptr >::const_iterator;
 
+        using reference = typename std::vector< typename T::Ptr >::reference;
+
+        using const_reference =
+            typename std::vector< typename T::Ptr >::const_reference;
+
         List( void )
         {
         }
@@ -107,6 +112,30 @@ namespace libstdhl
         const_iterator cend( void ) const
         {
             return m_elements.cend();
+        }
+
+        // http://en.cppreference.com/w/cpp/container/vector/front
+
+        reference front( void )
+        {
+            return m_elements.front();
+        }
+
+        const_reference front() const
+        {
+            return m_elements.front();
+        }
+
+        // http://en.cppreference.com/w/cpp/container/vector/back
+
+        reference back()
+        {
+            return m_elements.back();
+        }
+
+        const_reference back() const
+        {
+            return m_elements.back();
         }
 
       private:
