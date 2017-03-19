@@ -142,6 +142,13 @@ namespace libstdhl
             return m_elements.back();
         }
 
+        // http://en.cppreference.com/w/cpp/container/vector/clear
+
+        void clear( void )
+        {
+            m_elements.clear();
+        }
+
       private:
         std::vector< typename T::Ptr > m_elements;
     };
