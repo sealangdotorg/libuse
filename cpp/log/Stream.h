@@ -22,8 +22,10 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_H_
-#define _LIB_STDHL_H_
+#ifndef _LIB_STDHL_CPP_LOG_STREAM_H_
+#define _LIB_STDHL_CPP_LOG_STREAM_H_
+
+#include "Data.h"
 
 /**
    @brief    TODO
@@ -31,36 +33,46 @@
    TODO
 */
 
-#ifndef __cplusplus
-
-// C includes
-#include "c/args.h"
-#include "c/default.h"
-#include "c/type.h"
-
-#else // __cplusplus
-
-// C++ includes
-
-#include "cpp/Allocator.h"
-#include "cpp/Args.h"
-#include "cpp/Binding.h"
-#include "cpp/Default.h"
-#include "cpp/File.h"
-#include "cpp/Labeling.h"
-#include "cpp/List.h"
-#include "cpp/Log.h"
-#include "cpp/Random.h"
-#include "cpp/Type.h"
-#include "cpp/Log.h"
-
 namespace libstdhl
 {
+    /**
+       @extends Stdhl
+    */
+    namespace Log
+    {
+        class Channel;
+
+        class Stream final
+        {
+          public:
+            using Ptr = std::shared_ptr< Stream >;
+
+            Stream( void );
+
+            std::vector< Data > data( void ) const;
+
+            template < typename... Args >
+            void add( Args&&... args )
+            {
+                m_data.emplace_back( std::forward< Args >( args )... );
+            }
+
+            void flush( Channel& channel );
+
+          private:
+            std::vector< Data > m_data;
+
+          public:
+            static Stream::Ptr defaultStream( void )
+            {
+                static auto cache = make< Stream >();
+                return cache;
+            }
+        };
+    }
 }
 
-#endif // __cplusplus
-
-#endif // _LIB_STDHL_H_
+#endif // _LIB_STDHL_CPP_LOG_STREAM_H_
 
 //
 //  Local variables:

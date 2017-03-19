@@ -22,45 +22,31 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_H_
-#define _LIB_STDHL_H_
+#include "Router.h"
 
-/**
-   @brief    TODO
+using namespace libstdhl;
+using namespace Log;
 
-   TODO
-*/
+//
+// Router
+//
 
-#ifndef __cplusplus
-
-// C includes
-#include "c/args.h"
-#include "c/default.h"
-#include "c/type.h"
-
-#else // __cplusplus
-
-// C++ includes
-
-#include "cpp/Allocator.h"
-#include "cpp/Args.h"
-#include "cpp/Binding.h"
-#include "cpp/Default.h"
-#include "cpp/File.h"
-#include "cpp/Labeling.h"
-#include "cpp/List.h"
-#include "cpp/Log.h"
-#include "cpp/Random.h"
-#include "cpp/Type.h"
-#include "cpp/Log.h"
-
-namespace libstdhl
+Router::Router( void )
 {
 }
 
-#endif // __cplusplus
+// std::vector< Channel > Router::channels( void ) const
+// {
+//     return m_channels;
+// }
 
-#endif // _LIB_STDHL_H_
+void Router::process( Stream& stream )
+{
+    // for( auto channel : m_channels )
+    // {
+    //     channel.flush( stream );
+    // }
+}
 
 //
 //  Local variables:

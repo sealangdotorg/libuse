@@ -22,45 +22,31 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_H_
-#define _LIB_STDHL_H_
+#include "Stream.h"
 
-/**
-   @brief    TODO
+#include "Channel.h"
 
-   TODO
-*/
+using namespace libstdhl;
+using namespace Log;
 
-#ifndef __cplusplus
+//
+// Stream
+//
 
-// C includes
-#include "c/args.h"
-#include "c/default.h"
-#include "c/type.h"
-
-#else // __cplusplus
-
-// C++ includes
-
-#include "cpp/Allocator.h"
-#include "cpp/Args.h"
-#include "cpp/Binding.h"
-#include "cpp/Default.h"
-#include "cpp/File.h"
-#include "cpp/Labeling.h"
-#include "cpp/List.h"
-#include "cpp/Log.h"
-#include "cpp/Random.h"
-#include "cpp/Type.h"
-#include "cpp/Log.h"
-
-namespace libstdhl
+Stream::Stream( void )
 {
 }
 
-#endif // __cplusplus
+std::vector< Data > Stream::data( void ) const
+{
+    return m_data;
+}
 
-#endif // _LIB_STDHL_H_
+void Stream::flush( Channel& channel )
+{
+    channel.process( *this );
+    m_data.clear();
+}
 
 //
 //  Local variables:

@@ -22,8 +22,14 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_H_
-#define _LIB_STDHL_H_
+#ifndef _LIB_STDHL_CPP_LOG_FILTER_H_
+#define _LIB_STDHL_CPP_LOG_FILTER_H_
+
+#include "Channel.h"
+
+#include "Category.h"
+#include "Level.h"
+#include "Source.h"
 
 /**
    @brief    TODO
@@ -31,36 +37,50 @@
    TODO
 */
 
-#ifndef __cplusplus
-
-// C includes
-#include "c/args.h"
-#include "c/default.h"
-#include "c/type.h"
-
-#else // __cplusplus
-
-// C++ includes
-
-#include "cpp/Allocator.h"
-#include "cpp/Args.h"
-#include "cpp/Binding.h"
-#include "cpp/Default.h"
-#include "cpp/File.h"
-#include "cpp/Labeling.h"
-#include "cpp/List.h"
-#include "cpp/Log.h"
-#include "cpp/Random.h"
-#include "cpp/Type.h"
-#include "cpp/Log.h"
-
 namespace libstdhl
 {
+    /**
+       @extends Stdhl
+    */
+    namespace Log
+    {
+        class Filter final : public Channel
+        {
+          public:
+            Filter( Channel& channel );
+
+            void clear( void );
+
+            void setInverse( u1 inverse );
+
+            u1 inverse( void ) const;
+
+            void setSource( const Source::Ptr& source );
+
+            void setCategory( const Category::Ptr& category );
+
+            void setLevel( Level level );
+
+            void setLevel( Level::ID level );
+
+          private:
+            Channel& m_channel;
+
+            u1 m_inverse;
+
+            Sources m_sources;
+
+            Categories m_categories;
+
+            Levels m_levels;
+
+          public:
+            void process( Stream& stream ) override;
+        };
+    }
 }
 
-#endif // __cplusplus
-
-#endif // _LIB_STDHL_H_
+#endif // _LIB_STDHL_CPP_LOG_FILTER_H_
 
 //
 //  Local variables:

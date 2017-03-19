@@ -22,45 +22,56 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_H_
-#define _LIB_STDHL_H_
+#include "Timestamp.h"
 
-/**
-   @brief    TODO
+#include "Formatter.h"
 
-   TODO
-*/
+using namespace libstdhl;
+using namespace Log;
 
-#ifndef __cplusplus
+//
+// Timestamp
+//
 
-// C includes
-#include "c/args.h"
-#include "c/default.h"
-#include "c/type.h"
-
-#else // __cplusplus
-
-// C++ includes
-
-#include "cpp/Allocator.h"
-#include "cpp/Args.h"
-#include "cpp/Binding.h"
-#include "cpp/Default.h"
-#include "cpp/File.h"
-#include "cpp/Labeling.h"
-#include "cpp/List.h"
-#include "cpp/Log.h"
-#include "cpp/Random.h"
-#include "cpp/Type.h"
-#include "cpp/Log.h"
-
-namespace libstdhl
+Timestamp::Timestamp( void )
+: m_timestamp( std::chrono::system_clock::now() )
 {
 }
 
-#endif // __cplusplus
+std::chrono::system_clock::time_point Timestamp::timestamp( void ) const
+{
+    return m_timestamp;
+}
 
-#endif // _LIB_STDHL_H_
+std::time_t Timestamp::c_timestamp( void ) const
+{
+    return std::chrono::system_clock::to_time_t( m_timestamp );
+}
+
+std::string Timestamp::local( const std::string& format ) const
+{
+    const auto t = c_timestamp();
+
+    std::stringstream s;
+    s << std::put_time( std::localtime( &t ), format.c_str() );
+
+    return s.str();
+}
+
+std::string Timestamp::utc( const std::string& format ) const
+{
+    const auto t = c_timestamp();
+
+    std::stringstream s;
+    s << std::put_time( std::gmtime( &t ), format.c_str() );
+
+    return s.str();
+}
+
+std::string Timestamp::accept( Formatter& formatter )
+{
+    return formatter.visit( *this );
+}
 
 //
 //  Local variables:

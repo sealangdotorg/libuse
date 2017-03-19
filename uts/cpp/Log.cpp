@@ -22,45 +22,36 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_H_
-#define _LIB_STDHL_H_
+#include "gtest/gtest.h"
 
-/**
-   @brief    TODO
+#include "libstdhl.h"
 
-   TODO
-*/
+using namespace libstdhl;
 
-#ifndef __cplusplus
-
-// C includes
-#include "c/args.h"
-#include "c/default.h"
-#include "c/type.h"
-
-#else // __cplusplus
-
-// C++ includes
-
-#include "cpp/Allocator.h"
-#include "cpp/Args.h"
-#include "cpp/Binding.h"
-#include "cpp/Default.h"
-#include "cpp/File.h"
-#include "cpp/Labeling.h"
-#include "cpp/List.h"
-#include "cpp/Log.h"
-#include "cpp/Random.h"
-#include "cpp/Type.h"
-#include "cpp/Log.h"
-
-namespace libstdhl
+TEST( libstdhl_cpp_Log, example )
 {
+    Log::Stream c;
+
+    c.add( Log::Level::ID::ERROR, "seems to be an error" );
+    c.add( Log::Level::ID::INFORMATIONAL, "just a little info for you" );
+    c.add( Log::Level::ID::WARNING, "a possible warning detected" );
+    c.add( Log::Level::ID::ALERT, "this is an alert, please react" );
+
+    Log::StringFormatter sf;
+    Log::ConsoleFormatter cf;
+
+    Log::Switch sw;
+
+    Log::Filter ff( sw );
+
+    ff.setLevel( Log::Level::WARNING );
+
+    sw.add< Log::OutputStreamSink >( std::cerr, sf );
+    sw.add< Log::OutputStreamSink >( std::cout, cf );
+
+    c.flush( ff );
+    c.flush( ff );
 }
-
-#endif // __cplusplus
-
-#endif // _LIB_STDHL_H_
 
 //
 //  Local variables:

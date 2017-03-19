@@ -22,45 +22,37 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_H_
-#define _LIB_STDHL_H_
+#include "Source.h"
 
-/**
-   @brief    TODO
+#include "Formatter.h"
 
-   TODO
-*/
+using namespace libstdhl;
+using namespace Log;
 
-#ifndef __cplusplus
+//
+// Source
+//
 
-// C includes
-#include "c/args.h"
-#include "c/default.h"
-#include "c/type.h"
-
-#else // __cplusplus
-
-// C++ includes
-
-#include "cpp/Allocator.h"
-#include "cpp/Args.h"
-#include "cpp/Binding.h"
-#include "cpp/Default.h"
-#include "cpp/File.h"
-#include "cpp/Labeling.h"
-#include "cpp/List.h"
-#include "cpp/Log.h"
-#include "cpp/Random.h"
-#include "cpp/Type.h"
-#include "cpp/Log.h"
-
-namespace libstdhl
+Source::Source( const std::string& name, const std::string& description )
+: m_name( name )
+, m_description( description )
 {
 }
 
-#endif // __cplusplus
+std::string Source::name( void ) const
+{
+    return m_name;
+}
 
-#endif // _LIB_STDHL_H_
+std::string Source::description( void ) const
+{
+    return m_description;
+}
+
+std::string Source::accept( Formatter& formatter )
+{
+    return formatter.visit( *this );
+}
 
 //
 //  Local variables:

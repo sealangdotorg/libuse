@@ -22,8 +22,10 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_H_
-#define _LIB_STDHL_H_
+#ifndef _LIB_STDHL_CPP_LOG_SWITCH_H_
+#define _LIB_STDHL_CPP_LOG_SWITCH_H_
+
+#include "Channel.h"
 
 /**
    @brief    TODO
@@ -31,36 +33,38 @@
    TODO
 */
 
-#ifndef __cplusplus
-
-// C includes
-#include "c/args.h"
-#include "c/default.h"
-#include "c/type.h"
-
-#else // __cplusplus
-
-// C++ includes
-
-#include "cpp/Allocator.h"
-#include "cpp/Args.h"
-#include "cpp/Binding.h"
-#include "cpp/Default.h"
-#include "cpp/File.h"
-#include "cpp/Labeling.h"
-#include "cpp/List.h"
-#include "cpp/Log.h"
-#include "cpp/Random.h"
-#include "cpp/Type.h"
-#include "cpp/Log.h"
-
 namespace libstdhl
 {
+    /**
+       @extends Stdhl
+    */
+    namespace Log
+    {
+        class Switch final : public Channel
+        {
+          public:
+            Switch( void );
+
+            Channels channels( void ) const;
+
+            void addChannel( const Channel::Ptr& channel );
+
+            template < typename T, typename... Args >
+            void add( Args&&... args )
+            {
+                addChannel( make< T >( std::forward< Args >( args )... ) );
+            }
+
+          private:
+            Channels m_channels;
+
+          public:
+            void process( Stream& stream ) override;
+        };
+    }
 }
 
-#endif // __cplusplus
-
-#endif // _LIB_STDHL_H_
+#endif // _LIB_STDHL_CPP_LOG_SWITCH_H_
 
 //
 //  Local variables:

@@ -22,8 +22,10 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_H_
-#define _LIB_STDHL_H_
+#ifndef _LIB_STDHL_CPP_LOG_TIMESTAMP_H_
+#define _LIB_STDHL_CPP_LOG_TIMESTAMP_H_
+
+#include "Item.h"
 
 /**
    @brief    TODO
@@ -31,36 +33,40 @@
    TODO
 */
 
-#ifndef __cplusplus
-
-// C includes
-#include "c/args.h"
-#include "c/default.h"
-#include "c/type.h"
-
-#else // __cplusplus
-
-// C++ includes
-
-#include "cpp/Allocator.h"
-#include "cpp/Args.h"
-#include "cpp/Binding.h"
-#include "cpp/Default.h"
-#include "cpp/File.h"
-#include "cpp/Labeling.h"
-#include "cpp/List.h"
-#include "cpp/Log.h"
-#include "cpp/Random.h"
-#include "cpp/Type.h"
-#include "cpp/Log.h"
-
 namespace libstdhl
 {
+    /**
+       @extends Stdhl
+    */
+    namespace Log
+    {
+        class Timestamp : public Item
+        {
+          public:
+            using Ptr = std::shared_ptr< Timestamp >;
+
+            Timestamp( void );
+
+            std::chrono::system_clock::time_point timestamp( void ) const;
+
+            std::time_t c_timestamp( void ) const;
+
+            // format parameter
+            // http://en.cppreference.com/w/cpp/io/manip/put_time
+            std::string local( const std::string& format = "%c %Z" ) const;
+
+            std::string utc( const std::string& format = "%c %Z" ) const;
+
+          private:
+            std::chrono::system_clock::time_point m_timestamp;
+
+          public:
+            std::string accept( Formatter& formatter ) override;
+        };
+    }
 }
 
-#endif // __cplusplus
-
-#endif // _LIB_STDHL_H_
+#endif // _LIB_STDHL_CPP_LOG_TIMESTAMP_H_
 
 //
 //  Local variables:

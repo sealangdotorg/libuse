@@ -25,36 +25,67 @@
 #include "Log.h"
 
 using namespace libstdhl;
+using namespace Log;
 
-Log::Channel::Channel( std::function< const char*( void* ) > description )
-: m_description( description ){};
-
-Log::Channel Log::Info
-    = Log::Channel( []( void* arg ) -> const char* { return "info"; } );
-Log::Channel Log::Warning
-    = Log::Channel( []( void* arg ) -> const char* { return "warning"; } );
-Log::Channel Log::Error
-    = Log::Channel( []( void* arg ) -> const char* { return "error"; } );
-
-Log::Source::Source( std::function< const char*( void* ) > description )
-: m_description( description ){};
-
-Log::Source Log::None
-    = Log::Source( []( void* arg ) -> const char* { return 0; } );
-Log::Source Log::DefaultSource
-    = Log::Source( []( void* arg ) -> const char* { return "Log"; } );
-
-Log::Sink::Sink( std::function< FILE*( void* ) > stream )
-: m_stream( stream ){};
-
-Log::Sink Log::StdOut
-    = Log::Sink( []( void* arg ) -> FILE* { return stdout; } );
-Log::Sink Log::StdErr
-    = Log::Sink( []( void* arg ) -> FILE* { return stderr; } );
-Log::Sink Log::DefaultSink = StdErr;
-
-Log::Log()
+Source::Ptr libstdhl::Log::defaultSource( const Source::Ptr& source )
 {
+    static Source::Ptr cache = nullptr;
+
+    if( source )
+    {
+        cache = source;
+    }
+
+    if( not cache )
+    {
+        cache = Source::defaultSource();
+    }
+
+    return cache;
+}
+
+void libstdhl::Log::log( Level::ID level, const std::string& text )
+{
+    Log::Stream c;
+
+    c.add( level, text );
+
+    Log::ConsoleFormatter f;
+
+    Log::OutputStreamSink s( std::cerr, f );
+
+    c.flush( s );
+}
+
+static void va_log( Level::ID level, const char* format, va_list args )
+{
+    char buffer[ 4096 ];
+    vsprintf( buffer, format, args );
+    log( level, std::string( buffer ) );
+}
+
+void libstdhl::Log::error( const char* format, ... )
+{
+    va_list args;
+    va_start( args, format );
+    va_log( Level::ERROR, format, args );
+    va_end( args );
+}
+
+void libstdhl::Log::warning( const char* format, ... )
+{
+    va_list args;
+    va_start( args, format );
+    va_log( Level::WARNING, format, args );
+    va_end( args );
+}
+
+void libstdhl::Log::info( const char* format, ... )
+{
+    va_list args;
+    va_start( args, format );
+    va_log( Level::INFORMATIONAL, format, args );
+    va_end( args );
 }
 
 //

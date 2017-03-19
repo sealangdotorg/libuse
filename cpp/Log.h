@@ -34,127 +34,82 @@
    TODO
 */
 
+#include "log/Category.h"
+#include "log/Channel.h"
+#include "log/Data.h"
+#include "log/Filter.h"
+#include "log/Formatter.h"
+#include "log/Item.h"
+#include "log/Level.h"
+#include "log/Router.h"
+#include "log/Sink.h"
+#include "log/Source.h"
+#include "log/Stream.h"
+#include "log/Switch.h"
+#include "log/Timestamp.h"
+
 namespace libstdhl
 {
     /**
        @extends Stdhl
     */
-    class Log
+    namespace Log
     {
-      public:
-        class Channel
-        {
-          private:
-            std::function< const char*( void* ) > m_description;
+        Source::Ptr defaultSource( const Source::Ptr& source = nullptr );
 
-          public:
-            Channel( std::function< const char*( void* ) > description );
+        void log( Level::ID level, const std::string& text );
 
-            Channel( const char* description );
+        void error( const char* format, ... );
+        void warning( const char* format, ... );
+        void info( const char* format, ... );
 
-            const char* get( void* args = 0 ) const
-            {
-                return m_description( args );
-            };
-        };
+        //   private:
+        //     Log();
 
-        static Channel Info;
-        static Channel Warning;
-        static Channel Error;
+        //     void log( Source& source, Channel& channel,
+        //         const std::vector< Sink* >& sinks, const char* format,
+        //         va_list args ) const
+        //     {
+        //         char buffer[ 1024 ];
 
-        class Source
-        {
-          private:
-            std::function< const char*( void* ) > m_description;
+        //         vsprintf( buffer, format, args );
 
-          public:
-            Source( std::function< const char*( void* ) > description );
+        //         for( auto sink : sinks )
+        //         {
+        //             assert( sink );
+        //             fprintf( sink->get(), "%s: %s: %s\n", source.get(),
+        //                 channel.get(), buffer );
+        //         }
+        //     };
 
-            const char* get( void* args = 0 ) const
-            {
-                return m_description( args );
-            };
-        };
+        //     static Log& instance( void )
+        //     {
+        //         static Log singelton;
+        //         return singelton;
+        //     };
 
-        static Source None;
-        static Source DefaultSource;
+        //   public:
+        //     static void info( const char* format, ... )
+        //     {
+        //         va_list args;
+        //         va_start( args, format );
+        //         instance().log(
+        //             DefaultSource, Info, { &DefaultSink }, format, args );
+        //         va_end( args );
+        //     };
 
-        class Sink
-        {
-          private:
-            std::function< FILE*( void* ) > m_stream;
+        //     static void warning( const char* format, ... )
+        //     {
+        //         va_list args;
+        //         va_start( args, format );
+        //         instance().log(
+        //             DefaultSource, Warning, { &DefaultSink }, format, args );
+        //         va_end( args );
+        //     };
 
-          public:
-            Sink( std::function< FILE*( void* ) > stream );
-
-            FILE* get( void* args = 0 ) const
-            {
-                return m_stream( args );
-            };
-
-            const char* flush( void* args = 0 ) const
-            {
-                return ""; // description( args );
-            };
-        };
-
-        static Sink StdOut;
-        static Sink StdErr;
-        static Sink DefaultSink;
-
-      private:
-        Log();
-
-        void log( Source& source, Channel& channel,
-            const std::vector< Sink* >& sinks, const char* format,
-            va_list args ) const
-        {
-            char buffer[ 1024 ];
-
-            vsprintf( buffer, format, args );
-
-            for( auto sink : sinks )
-            {
-                assert( sink );
-                fprintf( sink->get(), "%s: %s: %s\n", source.get(),
-                    channel.get(), buffer );
-            }
-        };
-
-        static Log& instance( void )
-        {
-            static Log singelton;
-            return singelton;
-        };
-
-      public:
-        static void info( const char* format, ... )
-        {
-            va_list args;
-            va_start( args, format );
-            instance().log(
-                DefaultSource, Info, { &DefaultSink }, format, args );
-            va_end( args );
-        };
-
-        static void warning( const char* format, ... )
-        {
-            va_list args;
-            va_start( args, format );
-            instance().log(
-                DefaultSource, Warning, { &DefaultSink }, format, args );
-            va_end( args );
-        };
-
-        static void error( const char* format, ... )
-        {
-            va_list args;
-            va_start( args, format );
-            instance().log(
-                DefaultSource, Error, { &DefaultSink }, format, args );
-            va_end( args );
-        };
-    };
+        // };
+        // }
+    }
 }
 
 #endif // _LIB_STDHL_CPP_LOG_H_
