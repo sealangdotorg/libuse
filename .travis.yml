@@ -34,7 +34,7 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-4.0
+            - llvm-toolchain-trusty-4.0
           packages:
             - gcc-6
             - g++-6
@@ -61,7 +61,7 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.9
+            - llvm-toolchain-trusty-3.9
           packages:
             - gcc-6
             - g++-6
@@ -200,6 +200,9 @@ matrix:
     - os: osx
       osx_image: xcode8
       compiler: gcc
+
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -qq --yes --force-yes binutils; fi
 
 install:
   - echo ${TRAVIS_OS_NAME}
