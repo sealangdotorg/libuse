@@ -54,7 +54,7 @@ TEST( libstdhl_cpp_type, to_string )
 
 TEST( libstdhl_cpp_type, check_division )
 {
-    Type example( { 0x0000000044448888, 0x2 } );
+    Type example( std::initializer_list< u64 >{ 0x0000000044448888, 0x2 } );
 
     example /= 2;
 
@@ -69,7 +69,8 @@ TEST( libstdhl_cpp_type, check_division )
 
 TEST( libstdhl_cpp_type, divide_by_2_and_print_until_zero )
 {
-    Type example( { 0x0000000044448888, 0x2 } );
+    Type example( std::initializer_list< u64 >{ 0x0000000044448888, 0x2 } );
+
     printf( "%s\n", example.to_string( Type::HEXADECIMAL ).c_str() );
 
     while( example > 0 )
@@ -81,7 +82,8 @@ TEST( libstdhl_cpp_type, divide_by_2_and_print_until_zero )
 
 TEST( libstdhl_cpp_type, divide_by_3_and_print_until_zero )
 {
-    Type example( { 0x0000000044448888, 0x2 } );
+    Type example( std::initializer_list< u64 >{ 0x0000000044448888, 0x2 } );
+
     printf( "%s\n", example.to_string( Type::HEXADECIMAL ).c_str() );
 
     while( example > 0 )
@@ -93,8 +95,9 @@ TEST( libstdhl_cpp_type, divide_by_3_and_print_until_zero )
 
 TEST( libstdhl_cpp_type, check_to_string_of_big_value )
 {
-    EXPECT_STREQ(
-        Type( { 0x123, 0x456, 0x789 } ).to< Type::HEXADECIMAL >().c_str(),
+    EXPECT_STREQ( Type( std::initializer_list< u64 >{ 0x123, 0x456, 0x789 } )
+                      .to< Type::HEXADECIMAL >()
+                      .c_str(),
         "0x"
         "789"
         "0000000000000456"
@@ -105,7 +108,7 @@ TEST( libstdhl_cpp_type, operator_div )
 {
     for( u64 v = 1; v < UINT64_MAX / 2; v *= 123 )
     {
-        Type t( { v, 0 } );
+        Type t( std::initializer_list< u64 >{ v, 0 } );
 
         Type a;
         Type b;
