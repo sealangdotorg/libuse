@@ -29,6 +29,24 @@
 using namespace libstdhl;
 using namespace Log;
 
+static inline std::string time2str(
+    const std::tm* datetime, const char* format )
+{
+#if not __clang__ and __GNUC__ < 5
+    char buffer[ 512 ];
+    if( not strftime( buffer, sizeof( buffer ), format, datetime ) )
+    {
+        throw std::domain_error(
+            "unable to format the timestamp with 'strftime'" );
+    }
+    return std::string( buffer );
+#else
+    std::stringstream buffer;
+    buffer << std::put_time( datetime, format );
+    return buffer.str();
+#endif
+}
+
 //
 // Timestamp
 //
@@ -58,24 +76,6 @@ std::string Timestamp::utc( const std::string& format ) const
 {
     const auto t = c_timestamp();
     return time2str( std::gmtime( &t ), format.c_str() );
-}
-
-std::string Timestamp::time2str(
-    const std::tm* datetime, const char* format ) const
-{
-#if not __clang__ and __GNUC__ < 5
-    char buffer[ 512 ];
-    if( not strftime( buffer, sizeof( buffer ), format, datetime ) )
-    {
-        throw std::domain_error(
-            "unable to format the timestamp with 'strftime'" );
-    }
-    return std::string( buffer );
-#else
-    std::stringstream buffer;
-    buffer << std::put_time( datetime, format );
-    return buffer.str();
-#endif
 }
 
 std::string Timestamp::accept( Formatter& formatter )
