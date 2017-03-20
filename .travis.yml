@@ -24,26 +24,31 @@
 
 language: cpp
 
-# addons:
-#   apt:
-#     sources:
-#       - llvm-toolchain-precise
-#       - ubuntu-toolchain-r-test
-#     packages:
-#       - clang-3.7
-#       - g++-5
-#       - gcc-5
-
 matrix:
   include:
     - os: linux
       dist: trusty
       sudo: required
       compiler: clang
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-precise
+            - ubuntu-toolchain-r-test
+          packages:
+            - clang-3.7
     - os: linux
       dist: trusty
       sudo: required
       compiler: gcc
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-precise
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+            - gcc-5
   allow_failures:
     - os: osx
       osx_image: xcode8
