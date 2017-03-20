@@ -51,21 +51,31 @@ std::time_t Timestamp::c_timestamp( void ) const
 std::string Timestamp::local( const std::string& format ) const
 {
     const auto t = c_timestamp();
-
-    std::stringstream s;
-    s << std::put_time( std::localtime( &t ), format.c_str() );
-
-    return s.str();
+    return time2str( std::localtime( &t ), format.c_str() );
 }
 
 std::string Timestamp::utc( const std::string& format ) const
 {
     const auto t = c_timestamp();
+    return time2str( std::gmtime( &t ), format.c_str() );
+}
 
-    std::stringstream s;
-    s << std::put_time( std::gmtime( &t ), format.c_str() );
-
-    return s.str();
+std::string Timestamp::time2str(
+    const std::tm* datetime, const char* format ) const
+{
+#if not __clang__ and __GNUC__ < 5
+    char buffer[ 512 ];
+    if( not strftime( buffer, sizeof( buffer ), format, datetime ) )
+    {
+        throw std::domain_error(
+            "unable to format the timestamp with 'strftime'" );
+    }
+    return std::string( buffer );
+#else
+    std::stringstream buffer;
+    buffer << std::put_time( datetime, format );
+    return buffer.str();
+#endif
 }
 
 std::string Timestamp::accept( Formatter& formatter )

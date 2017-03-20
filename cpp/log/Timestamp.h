@@ -58,6 +58,9 @@ namespace libstdhl
             std::string utc( const std::string& format = "%c %Z" ) const;
 
           private:
+            std::string time2str(
+                const std::tm* datetime, const char* format ) const;
+
             std::chrono::system_clock::time_point m_timestamp;
 
           public:
