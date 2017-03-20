@@ -48,6 +48,19 @@ void Stream::flush( Channel& channel )
     m_data.clear();
 }
 
+void Stream::aggregate( const Stream& stream )
+{
+    const auto stream_data = stream.data();
+
+    m_data.insert( std::end( m_data ), std::begin( stream_data ),
+        std::end( stream_data ) );
+
+    std::sort(
+        m_data.begin(), m_data.end(), []( const Data& a, const Data& b ) {
+            return b.timestamp() >= a.timestamp();
+        } );
+}
+
 //
 //  Local variables:
 //  mode: c++

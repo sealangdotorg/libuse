@@ -59,6 +59,20 @@ namespace libstdhl
 
             void flush( Channel& channel );
 
+            void aggregate( const Stream& stream );
+
+            inline Stream& operator+=( const Stream& rhs )
+            {
+                this->aggregate( rhs );
+                return *this;
+            }
+
+            friend Stream operator+( Stream lhs, Stream rhs )
+            {
+                lhs += rhs;
+                return lhs;
+            }
+
           private:
             std::vector< Data > m_data;
 
