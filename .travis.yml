@@ -36,8 +36,21 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.7
           packages:
+            - gcc-6
             - clang-3.7
-      env: ENV_CC="clang-3.7" ENV_CXX="clang++-3.7"
+      env: ENV_CC="clang-3.7" ENV_CXX="clang++-3.7" BUILD="debug"
+    - os: linux
+      dist: trusty
+      sudo: required
+      compiler: clang
+      addons: *addons_clang_3_7
+      env: ENV_CC="clang-3.7" ENV_CXX="clang++-3.7" BUILD="sanitize"      
+    - os: linux
+      dist: trusty
+      sudo: required
+      compiler: clang
+      addons: *addons_clang_3_7
+      env: ENV_CC="clang-3.7" ENV_CXX="clang++-3.7" BUILD="release"      
     - os: linux
       dist: trusty
       sudo: required
@@ -49,10 +62,23 @@ matrix:
           packages:
             - g++-5
             - gcc-5
-      env: ENV_CC="gcc-5" ENV_CXX="g++-5"
+      env: ENV_CC="gcc-5" ENV_CXX="g++-5" BUILD="debug"
     - os: linux
+      dist: trusty
+      sudo: required
       compiler: gcc
-      env: 
+      addons: *addons_gcc_5
+      env: ENV_CC="gcc-5" ENV_CXX="g++-5" BUILD="sanitize"
+    - os: linux
+      dist: trusty
+      sudo: required
+      compiler: gcc
+      addons: *addons_gcc_5
+      env: ENV_CC="gcc-5" ENV_CXX="g++-5" BUILD="release"
+    - os: linux
+      dist: trusty
+      sudo: required
+      compiler: gcc
       addons: &addons_gcc_6
         apt:
           sources:
@@ -60,8 +86,19 @@ matrix:
           packages:
             - g++-6
             - gcc-6
-      before_install:
-      env: ENV_CC="gcc-6" ENV_CXX="g++-6"
+      env: ENV_CC="gcc-6" ENV_CXX="g++-6" BUILD="debug"
+    - os: linux
+      dist: trusty
+      sudo: required
+      compiler: gcc
+      addons: *addons_gcc_6
+      env: ENV_CC="gcc-6" ENV_CXX="g++-6" BUILD="sanitize"
+    - os: linux
+      dist: trusty
+      sudo: required
+      compiler: gcc
+      addons: *addons_gcc_6
+      env: ENV_CC="gcc-6" ENV_CXX="g++-6" BUILD="release"
   allow_failures:
     - os: osx
       osx_image: xcode8
@@ -71,22 +108,12 @@ matrix:
       compiler: gcc
 
 install:
-  - |
-    echo ${TRAVIS_OS_NAME}
-    make  --version
-    cmake --version
-    ${CC} --version
-    ${CXX} --version
-
+  - echo ${TRAVIS_OS_NAME}
+  - make  --version
+  - cmake --version
+  - ${CC} --version
+  - ${CXX} --version
+  - echo ${BUILD}
 
 script:
-  - |
-    make debug-all
-    make debug-test
-    make debug-benchmark
-    make sanitize-all
-    make sanitize-test
-    make sanitize-benchmark
-    make release-all
-    make release-test
-    make release-benchmark
+  - make ${BUILD}-all ${BUILD}-test ${BUILD}-benchmark
