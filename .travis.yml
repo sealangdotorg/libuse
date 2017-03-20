@@ -27,32 +27,40 @@ language: cpp
 matrix:
   include:
     - os: linux
-      dist: trusty
-      sudo: required
       compiler: clang
-      addons:
+      env: 
+      addons: &addons_clang_3_8
         apt:
           sources:
-            - llvm-toolchain-precise
-            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.8
           packages:
-            - clang-3.7
+            - clang-3.8
       before_install:
-        - export CXX="clang++-3.7" CC="clang-3.7"
+        - export CXX="clang++-3.8" CC="clang-3.8"
     - os: linux
-      dist: trusty
-      sudo: required
       compiler: gcc
-      addons:
+      env: 
+      addons: &addons_gcc_5
         apt:
           sources:
-            - llvm-toolchain-precise
             - ubuntu-toolchain-r-test
           packages:
             - g++-5
             - gcc-5
       before_install:
         - export CXX="g++-5" CC="gcc-5"
+    - os: linux
+      compiler: gcc
+      env: 
+      addons: &addons_gcc_6
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-6
+            - gcc-6
+      before_install:
+        - export CXX="g++-6" CC="gcc-6"
   allow_failures:
     - os: osx
       osx_image: xcode8
@@ -60,10 +68,6 @@ matrix:
     - os: osx
       osx_image: xcode8
       compiler: gcc
-
-# before_install:
-#   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get TODO; fi
-#   - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew update; fi
 
 install:
   - |
