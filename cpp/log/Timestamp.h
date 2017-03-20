@@ -57,6 +57,43 @@ namespace libstdhl
 
             std::string utc( const std::string& format = "%c %Z" ) const;
 
+            inline u1 operator==( const Timestamp& rhs ) const
+            {
+                if( this != &rhs )
+                {
+                    if( this->timestamp() != rhs.timestamp() )
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            inline u1 operator!=( const Timestamp& rhs ) const
+            {
+                return !operator==( rhs );
+            }
+
+            inline u1 operator<=( const Timestamp& rhs ) const
+            {
+                return this->timestamp() <= rhs.timestamp();
+            }
+
+            inline u1 operator<( const Timestamp& rhs ) const
+            {
+                return this->timestamp() < rhs.timestamp();
+            }
+
+            inline u1 operator>=( const Timestamp& rhs ) const
+            {
+                return not( *this < rhs );
+            }
+
+            inline u1 operator>( const Timestamp& rhs ) const
+            {
+                return not( *this <= rhs );
+            }
+
           private:
             std::chrono::system_clock::time_point m_timestamp;
 
