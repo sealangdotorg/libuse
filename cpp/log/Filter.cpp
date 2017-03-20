@@ -33,10 +33,21 @@ using namespace Log;
 // Filter
 //
 
-Filter::Filter( Channel& channel )
-: m_channel( channel )
+Filter::Filter( void )
+: m_channel( nullptr )
 , m_inverse( false )
 {
+}
+
+Channel::Ptr Filter::channel( void ) const
+{
+    return m_channel;
+}
+
+void Filter::setChannel( const Channel::Ptr& channel )
+{
+    assert( channel );
+    m_channel = channel;
 }
 
 void Filter::clear( void )
@@ -79,6 +90,11 @@ void Filter::setLevel( Level::ID level )
 void Filter::process( Stream& stream )
 {
     Stream filtered;
+
+    if( not m_channel )
+    {
+        return;
+    }
 
     if( not m_inverse )
     {
@@ -164,7 +180,7 @@ void Filter::process( Stream& stream )
         }
     }
 
-    m_channel.process( filtered );
+    m_channel->process( filtered );
 }
 
 //

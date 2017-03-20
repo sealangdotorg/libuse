@@ -40,17 +40,67 @@ TEST( libstdhl_cpp_Log, example )
     Log::StringFormatter sf;
     Log::ConsoleFormatter cf;
 
-    Log::Switch sw;
-
-    Log::Filter ff( sw );
+    Log::Filter ff;
 
     ff.setLevel( Log::Level::WARNING );
+    auto sw = ff.set< Log::Switch >();
 
-    sw.add< Log::OutputStreamSink >( std::cerr, sf );
-    sw.add< Log::OutputStreamSink >( std::cout, cf );
+    sw->add< Log::OutputStreamSink >( std::cerr, sf );
+    sw->add< Log::OutputStreamSink >( std::cout, cf );
 
     c.flush( ff );
     c.flush( ff );
+}
+
+TEST( libstdhl_cpp_Log, merging_two_streams_and_routing_them_to_two_sinks )
+{
+    /*
+
+      a --                      -- sf (warning, error)
+          \                    /
+           +--> s = (a+b) --> rr
+          /                    \
+      b --                      -- cf (alert)
+
+    */
+
+    Log::Stream a;
+    Log::Stream b;
+
+    a.add( Log::Level::ID::ERROR, "A0" );
+    a.add( Log::Level::ID::ERROR, "A1" );
+    a.add( Log::Level::ID::ALERT, "Alert A" );
+    b.add( Log::Level::ID::ERROR, "B0" );
+    b.add( Log::Level::ID::ERROR, "B1" );
+    a.add( Log::Level::ID::WARNING, "A2" );
+    b.add( Log::Level::ID::WARNING, "B1" );
+    b.add( Log::Level::ID::ALERT, "Alert B" );
+    b.add( Log::Level::ID::WARNING, "B2" );
+
+    // merge/aggregate the streams
+
+    Log::Stream s = a + b;
+
+    Log::StringFormatter sf;
+    Log::ConsoleFormatter cf;
+
+    Log::OutputStreamSink z( std::cerr, sf );
+    z.process( s );
+
+    std::cerr << "----\n";
+
+    Log::Router rr;
+
+    auto f0 = rr.add< Log::Filter >();
+    f0->setLevel( Log::Level::WARNING );
+    f0->setLevel( Log::Level::ERROR );
+    f0->set< Log::OutputStreamSink >( std::cerr, sf );
+
+    auto f1 = rr.add< Log::Filter >();
+    f1->setLevel( Log::Level::ALERT );
+    f1->set< Log::OutputStreamSink >( std::cout, cf );
+
+    s.flush( rr );
 }
 
 //

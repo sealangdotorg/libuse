@@ -43,6 +43,8 @@ namespace libstdhl
         class Switch final : public Channel
         {
           public:
+            using Ptr = std::shared_ptr< Switch >;
+
             Switch( void );
 
             Channels channels( void ) const;
@@ -50,9 +52,11 @@ namespace libstdhl
             void addChannel( const Channel::Ptr& channel );
 
             template < typename T, typename... Args >
-            void add( Args&&... args )
+            typename T::Ptr add( Args&&... args )
             {
-                addChannel( make< T >( std::forward< Args >( args )... ) );
+                const auto obj = make< T >( std::forward< Args >( args )... );
+                addChannel( obj );
+                return obj;
             }
 
           private:

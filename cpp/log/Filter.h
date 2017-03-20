@@ -47,7 +47,21 @@ namespace libstdhl
         class Filter final : public Channel
         {
           public:
-            Filter( Channel& channel );
+            using Ptr = std::shared_ptr< Filter >;
+
+            Filter( void );
+
+            Channel::Ptr channel( void ) const;
+
+            void setChannel( const Channel::Ptr& channel );
+
+            template < typename T, typename... Args >
+            typename T::Ptr set( Args&&... args )
+            {
+                const auto obj = make< T >( std::forward< Args >( args )... );
+                setChannel( obj );
+                return obj;
+            }
 
             void clear( void );
 
@@ -64,7 +78,7 @@ namespace libstdhl
             void setLevel( Level::ID level );
 
           private:
-            Channel& m_channel;
+            Channel::Ptr m_channel;
 
             u1 m_inverse;
 
@@ -77,6 +91,8 @@ namespace libstdhl
           public:
             void process( Stream& stream ) override;
         };
+
+        using Filters = List< Filter >;
     }
 }
 
