@@ -30,20 +30,18 @@ matrix:
       dist: trusty
       sudo: required
       compiler: clang
-      env: 
       addons: &addons_clang_3_7
         apt:
           sources:
+            - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.7
           packages:
             - clang-3.7
-      before_install:
-        - export CXX="clang++-3.7" CC="clang-3.7"
+      env: ENV_CC="clang-3.7" ENV_CXX="clang++-3.7"
     - os: linux
       dist: trusty
       sudo: required
       compiler: gcc
-      env: 
       addons: &addons_gcc_5
         apt:
           sources:
@@ -51,8 +49,7 @@ matrix:
           packages:
             - g++-5
             - gcc-5
-      before_install:
-        - export CXX="g++-5" CC="gcc-5"
+      env: ENV_CC="gcc-5" ENV_CXX="g++-5"
     - os: linux
       compiler: gcc
       env: 
@@ -64,7 +61,7 @@ matrix:
             - g++-6
             - gcc-6
       before_install:
-        - export CXX="g++-6" CC="gcc-6"
+      env: ENV_CC="gcc-6" ENV_CXX="g++-6"
   allow_failures:
     - os: osx
       osx_image: xcode8
