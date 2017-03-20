@@ -44,7 +44,7 @@ matrix:
     - os: linux
       compiler: clang
       addons: *addons_clang_4_0
-      env: ENV_CC="clang-4.0" ENV_CXX="clang++-4.0" BUILD="sanitize"  
+      env: ENV_CC="clang-4.0" ENV_CXX="clang++-4.0" BUILD="sanitize"
     - os: linux
       compiler: clang
       addons: *addons_clang_4_0
@@ -65,12 +65,8 @@ matrix:
     - os: linux
       compiler: clang
       addons: *addons_clang_3_9
-      env: ENV_CC="clang-3.9" ENV_CXX="clang++-3.9" BUILD="sanitize"  
-    - os: linux
-      compiler: clang
-      addons: *addons_clang_3_9
       env: ENV_CC="clang-3.9" ENV_CXX="clang++-3.9" BUILD="release"
-      
+
     - os: linux
       compiler: clang
       addons: &addons_clang_3_8
@@ -83,10 +79,6 @@ matrix:
             - g++-6
             - clang-3.8
       env: ENV_CC="clang-3.8" ENV_CXX="clang++-3.8" BUILD="debug"
-    - os: linux
-      compiler: clang
-      addons: *addons_clang_3_8
-      env: ENV_CC="clang-3.8" ENV_CXX="clang++-3.8" BUILD="sanitize"  
     - os: linux
       compiler: clang
       addons: *addons_clang_3_8
