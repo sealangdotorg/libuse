@@ -25,7 +25,11 @@
 #ifndef _LIB_STDHL_C_MATH_H_
 #define _LIB_STDHL_C_MATH_H_
 
+#ifdef __cplusplus
+#include <cmath>
+#else
 #include <math.h>
+#endif
 
 /**
    @brief    TODO
