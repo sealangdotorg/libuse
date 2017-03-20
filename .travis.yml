@@ -30,7 +30,61 @@ matrix:
       dist: trusty
       sudo: required
       compiler: clang
-      addons: &addons_gcc_6_clang_3_8
+      addons: &addons_clang_4_0
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-4.0
+          packages:
+            - gcc-6
+            - g++-6
+            - clang-4.0
+      env: ENV_CC="clang-4.0" ENV_CXX="clang++-4.0" BUILD="debug"
+    - os: linux
+      dist: trusty
+      sudo: required
+      compiler: clang
+      addons: *addons_clang_4_0
+      env: ENV_CC="clang-4.0" ENV_CXX="clang++-4.0" BUILD="sanitize"  
+    - os: linux
+      dist: trusty
+      sudo: required
+      compiler: clang
+      addons: *addons_clang_4_0
+      env: ENV_CC="clang-4.0" ENV_CXX="clang++-4.0" BUILD="release"
+
+    - os: linux
+      dist: trusty
+      sudo: required
+      compiler: clang
+      addons: &addons_clang_3_9
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.9
+          packages:
+            - gcc-6
+            - g++-6
+            - clang-3.9
+      env: ENV_CC="clang-3.9" ENV_CXX="clang++-3.9" BUILD="debug"
+    - os: linux
+      dist: trusty
+      sudo: required
+      compiler: clang
+      addons: *addons_clang_3_9
+      env: ENV_CC="clang-3.9" ENV_CXX="clang++-3.9" BUILD="sanitize"  
+    - os: linux
+      dist: trusty
+      sudo: required
+      compiler: clang
+      addons: *addons_clang_3_9
+      env: ENV_CC="clang-3.9" ENV_CXX="clang++-3.9" BUILD="release"
+      
+    - os: linux
+      dist: trusty
+      sudo: required
+      compiler: clang
+      addons: &addons_clang_3_8
         apt:
           sources:
             - ubuntu-toolchain-r-test
@@ -44,19 +98,20 @@ matrix:
       dist: trusty
       sudo: required
       compiler: clang
-      addons: *addons_gcc_6_clang_3_8
-      env: ENV_CC="clang-3.8" ENV_CXX="clang++-3.8" BUILD="sanitize"      
+      addons: *addons_clang_3_8
+      env: ENV_CC="clang-3.8" ENV_CXX="clang++-3.8" BUILD="sanitize"  
     - os: linux
       dist: trusty
       sudo: required
       compiler: clang
-      addons: *addons_gcc_6_clang_3_8
+      addons: *addons_clang_3_8
       env: ENV_CC="clang-3.8" ENV_CXX="clang++-3.8" BUILD="release"
+
     - os: linux
       dist: trusty
       sudo: required
       compiler: clang
-      addons: &addons_gcc_5_clang_3_7
+      addons: &addons_clang_3_7
         apt:
           sources:
             - ubuntu-toolchain-r-test
@@ -70,42 +125,78 @@ matrix:
       dist: trusty
       sudo: required
       compiler: clang
-      addons: *addons_gcc_5_clang_3_7
+      addons: *addons_clang_3_7
       env: ENV_CC="clang-3.7" ENV_CXX="clang++-3.7" BUILD="release"
+
     - os: linux
       dist: trusty
       sudo: required
       compiler: gcc
-      addons: &addons_gcc_6_clang_3_8
+      addons: &addons_gcc_6
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-6
+            - g++-6
       env: ENV_CC="gcc-6" ENV_CXX="g++-6" BUILD="debug"
     - os: linux
       dist: trusty
       sudo: required
       compiler: gcc
-      addons: *addons_gcc_6_clang_3_8
+      addons: *addons_gcc_6
       env: ENV_CC="gcc-6" ENV_CXX="g++-6" BUILD="sanitize"
     - os: linux
       dist: trusty
       sudo: required
       compiler: gcc
-      addons: *addons_gcc_6_clang_3_8
+      addons: *addons_gcc_6
       env: ENV_CC="gcc-6" ENV_CXX="g++-6" BUILD="release"
+
     - os: linux
       dist: trusty
       sudo: required
       compiler: gcc
-      addons: *addons_gcc_5_clang_3_7
+      addons: &addons_gcc_5
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-5
+            - g++-5
       env: ENV_CC="gcc-5" ENV_CXX="g++-5" BUILD="debug"
     - os: linux
       dist: trusty
       sudo: required
       compiler: gcc
-      addons: *addons_gcc_5_clang_3_7
+      addons: *addons_gcc_5
       env: ENV_CC="gcc-5" ENV_CXX="g++-5" BUILD="release"
+
+    - os: linux
+      dist: trusty
+      sudo: required
+      compiler: gcc
+      addons: &addons_gcc_4_9
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-4.9
+            - g++-4.9
+      env: ENV_CC="gcc-4.9" ENV_CXX="g++-4.9" BUILD="debug"
+    - os: linux
+      dist: trusty
+      sudo: required
+      compiler: gcc
+      addons: *addons_gcc_4_9
+      env: ENV_CC="gcc-4.9" ENV_CXX="g++-4.9" BUILD="release"
+
   allow_failures:
+
     - os: osx
       osx_image: xcode8
       compiler: clang
+
     - os: osx
       osx_image: xcode8
       compiler: gcc
