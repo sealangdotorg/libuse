@@ -35,17 +35,23 @@ Router::Router( void )
 {
 }
 
-// std::vector< Channel > Router::channels( void ) const
-// {
-//     return m_channels;
-// }
+Filters Router::filters( void ) const
+{
+    return m_filters;
+}
+
+void Router::addFilter( const Filter::Ptr& filter )
+{
+    assert( filter );
+    m_filters.add( filter );
+}
 
 void Router::process( Stream& stream )
 {
-    // for( auto channel : m_channels )
-    // {
-    //     channel.flush( stream );
-    // }
+    for( auto filter : m_filters )
+    {
+        filter->process( stream );
+    }
 }
 
 //

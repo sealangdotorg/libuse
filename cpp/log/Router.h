@@ -25,7 +25,7 @@
 #ifndef _LIB_STDHL_CPP_LOG_ROUTER_H_
 #define _LIB_STDHL_CPP_LOG_ROUTER_H_
 
-#include "Channel.h"
+#include "Filter.h"
 
 /**
    @brief    TODO
@@ -43,12 +43,24 @@ namespace libstdhl
         class Router final : public Channel
         {
           public:
+            using Ptr = std::shared_ptr< Router >;
+
             Router( void );
 
-            // std::vector< Channel > channels( void) const;
+            Filters filters( void ) const;
+
+            void addFilter( const Filter::Ptr& filter );
+
+            template < typename T, typename... Args >
+            typename T::Ptr add( Args&&... args )
+            {
+                const auto obj = make< T >( std::forward< Args >( args )... );
+                addFilter( obj );
+                return obj;
+            }
 
           private:
-            // std::vector< Channel > m_channels;
+            Filters m_filters;
 
           public:
             void process( Stream& stream ) override;
