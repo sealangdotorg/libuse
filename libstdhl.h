@@ -50,9 +50,10 @@
 #include "cpp/Labeling.h"
 #include "cpp/List.h"
 #include "cpp/Log.h"
-#include "cpp/Random.h"
-#include "cpp/Type.h"
 #include "cpp/Log.h"
+#include "cpp/Random.h"
+#include "cpp/String.h"
+#include "cpp/Type.h"
 
 namespace libstdhl
 {
