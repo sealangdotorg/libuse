@@ -33,9 +33,11 @@ FloatingPoint::FloatingPoint( const std::string& value )
 }
 
 FloatingPoint::FloatingPoint( double value )
-: Type()
+: Type( ( value >= 0 ? (u64)value : ( u64 )( -value ) ), 63, ( value < 0 ) )
 {
-    assert( !" TODO! " );
+    // IEEE 754 double-precision binary floating-point format
+    
+    static_assert( sizeof( double ) == 8, " TODO! " );
 }
 
 //
