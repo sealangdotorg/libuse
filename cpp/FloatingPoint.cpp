@@ -37,7 +37,7 @@ FloatingPoint::FloatingPoint( double value )
 {
     // IEEE 754 double-precision binary floating-point format
     
-    static_assert( sizeof( double ) == 8, " TODO! " );
+    static_assert( sizeof( double ) == 8, " double shall be a byte-size of 8 " );
 }
 
 //
