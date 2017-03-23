@@ -24,12 +24,43 @@
 
 #include "Rational.h"
 
+#include "Integer.h"
+#include "String.h"
+
 using namespace libstdhl;
 
-Rational::Rational( const std::string& value )
+Rational::Rational( const std::string& value, const Type::Radix radix )
 : Type()
 {
-    assert( !" TODO! " ); // TODO: PPA:
+    std::vector< std::string > parts;
+
+    String::split( value, "/", parts );
+
+    if( parts.size() == 0 )
+    {
+        throw std::invalid_argument(
+            "value '" + value + "' seems to be an invalid Rational literal" );
+    }
+    else if( parts.size() > 2 )
+    {
+        throw std::domain_error(
+            "value '" + value
+            + "' too many Rational '/' characters found in literal" );
+    }
+
+    const auto numerator = Integer( parts[ 0 ], radix );
+
+    m_meta = numerator.words().size();
+    m_words = numerator.words();
+
+    if( parts.size() > 1 )
+    {
+        const auto denominator = Integer( parts[ 1 ], radix );
+
+        m_words.insert( m_words.end(),
+            denominator.words().begin(),
+            denominator.words().end() );
+    }
 }
 
 //

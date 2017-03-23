@@ -47,6 +47,7 @@ Type::Type(
       std::vector< u64 >( ( precision / 64 ) + ( precision % 64 ? 1 : 0 ), 0 ) )
 , m_carry( 0 )
 , m_sign( sign )
+, m_meta( 0 )
 {
     if( radix != BINARY and radix != HEXADECIMAL and radix != RADIX64 )
     {
@@ -65,6 +66,7 @@ Type::Type( const std::vector< u64 >& words, const u1 sign )
 : m_words( words )
 , m_carry( 0 )
 , m_sign( sign )
+, m_meta( 0 )
 {
 }
 

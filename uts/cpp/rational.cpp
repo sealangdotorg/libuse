@@ -22,31 +22,30 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_CPP_RATIONAL_H_
-#define _LIB_STDHL_CPP_RATIONAL_H_
+#include "gtest/gtest.h"
 
-#include "Type.h"
+#include "cpp/Rational.h"
 
-/**
-   @brief    TODO
+using namespace libstdhl;
 
-   TODO
-*/
-
-namespace libstdhl
+TEST( libstdhl_cpp_rational, str_decimal1 )
 {
-    class Rational : public Type
-    {
-      public:
-        using Ptr = std::shared_ptr< Rational >;
+    auto i = Rational( "5", Type::Radix::DECIMAL );
 
-        Rational( const std::string& value, const Radix radix = DECIMAL );
-
-        ~Rational( void ) = default;
-    };
+    EXPECT_EQ( i.words().size(), 1 );
+    EXPECT_EQ( i.sign(), false );
+    EXPECT_EQ( i.word( 0 ), 5 );
 }
 
-#endif // _LIB_STDHL_CPP_RATIONAL_H_
+TEST( libstdhl_cpp_rational, str_decimal4 )
+{
+    auto i = Rational( "2/31", Type::Radix::DECIMAL );
+
+    EXPECT_EQ( i.words().size(), 2 );
+    EXPECT_EQ( i.sign(), false );
+    EXPECT_EQ( i.word( 0 ), 2 );
+    EXPECT_EQ( i.word( 1 ), 31 );
+}
 
 //
 //  Local variables:

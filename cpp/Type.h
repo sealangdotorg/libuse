@@ -237,6 +237,7 @@ namespace libstdhl
         std::vector< u64 > m_words;
         u64 m_carry;
         u1 m_sign;
+        u64 m_meta;
     };
 }
 
