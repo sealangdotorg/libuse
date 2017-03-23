@@ -50,8 +50,8 @@ TEST( libstdhl_cpp_String, split2 )
         {
             EXPECT_STREQ( s.c_str(), "bar" );
         }
-	
-	cnt++;
+
+        cnt++;
     }
 }
 
@@ -79,8 +79,8 @@ TEST( libstdhl_cpp_String, split3 )
         {
             EXPECT_STREQ( s.c_str(), "baz" );
         }
-	
-	cnt++;
+
+        cnt++;
     }
 
     EXPECT_EQ( splitted.size(), 3 );
