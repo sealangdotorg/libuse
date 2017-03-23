@@ -28,6 +28,19 @@
 
 using namespace libstdhl;
 
+#define NUMBER "0123456789"
+#define UPPER_CASE "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+#define LOWER_CASE "abcdefghijklmnopqrstuvwxyz"
+
+static constexpr const char* digits_definitions[] = {
+
+    NUMBER LOWER_CASE UPPER_CASE "@$", // general digit encoding
+
+    UPPER_CASE LOWER_CASE NUMBER "+/", // base64 encoding
+
+    "./" NUMBER UPPER_CASE LOWER_CASE, // unix radix 64 encoding
+};
+
 Type::Type(
     const std::string& data, u64 precision, const u1 sign, const Radix radix )
 : m_words(
@@ -112,11 +125,6 @@ u64 Type::word( std::size_t index ) const
     return m_words[ index ];
 }
 
-const std::vector< u64 >& Type::words( void ) const
-{
-    return m_words;
-}
-
 u64 Type::carry( void ) const
 {
     return m_carry;
@@ -125,6 +133,24 @@ u64 Type::carry( void ) const
 u1 Type::sign( void ) const
 {
     return m_sign;
+}
+
+const std::vector< u64 >& Type::words( void ) const
+{
+    return m_words;
+}
+
+void Type::shrink( void )
+{
+    const std::size_t size = m_words.size();
+
+    for( i64 c = size - 1; c > 0; c-- )
+    {
+        if( m_words[ c ] == 0 )
+        {
+            m_words.pop_back();
+        }
+    }
 }
 
 u1 Type::operator>( const u64 rhs ) const
@@ -139,7 +165,7 @@ u1 Type::operator>( const u64 rhs ) const
         }
         default:
         {
-            for( auto c = size - 1; c > 0; c-- )
+            for( i64 c = size - 1; c > 0; c-- )
             {
                 if( m_words[ c ] > 0 )
                 {
@@ -159,6 +185,21 @@ u1 Type::operator>( const u64 rhs ) const
     }
 }
 
+Type& Type::operator+=( const u64 rhs )
+{
+    u64 overflow = rhs;
+
+    for( std::size_t c = 0; c < m_words.size(); c++ )
+    {
+        overflow = __builtin_uaddl_overflow(
+            m_words.data()[ c ], overflow, (u64*)&m_words.data()[ c ] );
+    }
+
+    m_carry = overflow;
+
+    return *this;
+}
+
 Type& Type::operator-=( const u64 rhs )
 {
     u64 overflow = rhs;
@@ -176,7 +217,96 @@ Type& Type::operator-=( const u64 rhs )
 
 Type& Type::operator*=( const u64 rhs )
 {
-    assert( !" TODO! " ); // TODO: PPA:
+    const std::size_t size = m_words.size();
+
+    if( size == 0 )
+    {
+        throw std::domain_error( "no data to multiply" );
+    }
+
+    assert( m_sign == false ); // TODO: PPA:
+
+    if( *this == 0 )
+    {
+        return *this;
+    }
+
+    if( *this == 1 )
+    {
+        setToZero();
+        m_words[ 0 ] = rhs;
+        return *this;
+    }
+
+    if( rhs == 0 )
+    {
+        setToZero();
+        return *this;
+    }
+
+    if( rhs == 1 )
+    {
+        return *this;
+    }
+
+    if( size == 1 or ( size == 2 and m_words[ 1 ] == 0 ) )
+    {
+        u64 buffer[ 2 ] = { 0 };
+
+        m_carry = __builtin_umull_overflow( m_words[ 0 ], rhs, buffer );
+
+        m_words[ 0 ] = buffer[ 0 ];
+
+        if( buffer[ 1 ] != 0 )
+        {
+            m_words.push_back( buffer[ 1 ] );
+        }
+    }
+    else
+    {
+        assert( !" TODO! " ); // TODO: PPA:
+
+        // std::reverse( std::begin( m_words ), std::end( m_words ) );
+
+        // Type tmp( std::vector< u64 >( m_words.size() + 1, 0 ) );
+
+        // u32 v[ 2 ];
+        // v[ 1 ] = ( u32 )( rhs >> 32 );
+        // v[ 0 ] = ( u32 )( rhs );
+
+        // u32* u = (u32*)&m_words.data()[ 0 ];
+
+        // u32* w = (u32*)&tmp.data()[ 0 ];
+
+        // for( u8 j = 0; j < 2; j++ )
+        // {
+        //     u64 k = 0;
+
+        //     for( u32 i = 0; i < ( size * 2 ); i++ )
+        //     {
+        //         const u32 x = i + j;
+
+        //         u64 t = u[ i ] * v[ j ] + w[ x ] + k;
+
+        //         w[ x ] = t % UINT32_MAX;
+
+        //         k = t / UINT32_MAX;
+
+        //         printf(
+        //             "i=%u, j=%u, u[i]= %u, v[j]= %u --> x=%u, w[x]=%u, k=%u,
+        //             "
+        //             "t=%lu\n",
+        //             i, j, u[ i ], v[ j ], x, w[ x ], k, t );
+        //     }
+
+        //     w[ ( size * 2 ) - j ] = k;
+        // }
+
+        // m_words = tmp.words();
+
+        // shrink();
+    }
+
     return *this;
 }
 
@@ -206,7 +336,7 @@ Type& Type::operator/=( const u64 rhs )
         {
             // case: n words / 1 word
             //
-            // using an adapted version of the 'Single Limb Dision'
+            // using an adapted version of the 'Single Limb Division'
             // https://gmplib.org/manual/Single-Limb-Division.html#Single-Limb-Division
 
             using precision = long double;
@@ -263,23 +393,43 @@ Type& Type::operator%=( const u64 rhs )
     return *this;
 }
 
+Type& Type::operator<<=( const u64 rhs )
+{
+    const std::size_t size = m_words.size();
+
+    if( size == 0 )
+    {
+        throw std::domain_error( "no data to shift left" );
+    }
+
+    if( rhs == 0 )
+    {
+        return *this;
+    }
+
+    const u64 shift = rhs;
+    const u64 shinv = 64 - rhs;
+
+    u64 current = 0;
+    u64 previous = 0;
+
+    for( std::size_t c = 0; c < m_words.size(); c++ )
+    {
+        current = m_words[ c ] >> shinv;
+
+        m_words[ c ] = ( m_words[ c ] << shift ) | previous;
+
+        previous = current;
+    }
+
+    m_carry = current;
+
+    return *this;
+}
+
 std::string Type::to_string(
     const Type::Radix radix, const Literal literal ) const
 {
-
-#define NUMBER "0123456789"
-#define UPPER_CASE "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-#define LOWER_CASE "abcdefghijklmnopqrstuvwxyz"
-
-    static const char* digits_definitions[] = {
-
-        NUMBER LOWER_CASE UPPER_CASE "@$", // general digit encoding
-
-        UPPER_CASE LOWER_CASE NUMBER "+/", // base64 encoding
-
-        "./" NUMBER UPPER_CASE LOWER_CASE, // unix radix 64 encoding
-    };
-
     std::string prefix;
     std::string postfix;
 
@@ -421,6 +571,33 @@ std::string Type::to_string(
     std::reverse( format.begin(), format.end() );
 
     return prefix + format + postfix;
+}
+
+u64 Type::to_digit(
+    char character, const Type::Radix radix, const Type::Literal literal )
+{
+    const char* digits = digits_definitions[ literal / 10 ];
+
+    char* pos = strchr( digits, character );
+
+    if( not pos )
+    {
+        throw std::domain_error( "invalid character '"
+                                 + std::string( 1, character )
+                                 + "' to convert to a digit" );
+    }
+
+    u64 digit = pos - digits;
+
+    if( digit >= radix )
+    {
+        throw std::domain_error( "digit '" + std::to_string( digit )
+                                 + "' must be smaller than radix '"
+                                 + std::to_string( radix )
+                                 + "'" );
+    }
+
+    return digit;
 }
 
 //

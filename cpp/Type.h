@@ -113,6 +113,8 @@ namespace libstdhl
 
         const std::vector< u64 >& words( void ) const;
 
+        void shrink( void );
+
         inline u1 operator==( const u64 rhs ) const
         {
             auto const size = this->words().size();
@@ -171,6 +173,14 @@ namespace libstdhl
 
         u1 operator>( const u64 rhs ) const;
 
+        Type& operator+=( const u64 rhs );
+
+        friend Type operator+( Type lhs, const u64 rhs )
+        {
+            lhs += rhs;
+            return lhs;
+        }
+
         Type& operator-=( const u64 rhs );
 
         friend Type operator-( Type lhs, const u64 rhs )
@@ -191,7 +201,7 @@ namespace libstdhl
 
         friend Type operator/( Type lhs, const u64 rhs )
         {
-            lhs -= rhs;
+            lhs /= rhs;
             return lhs;
         }
 
@@ -200,6 +210,14 @@ namespace libstdhl
         friend Type operator%( Type lhs, const u64 rhs )
         {
             lhs %= rhs;
+            return lhs;
+        }
+
+        Type& operator<<=( const u64 rhs );
+
+        friend Type operator<<( Type lhs, const u64 rhs )
+        {
+            lhs <<= rhs;
             return lhs;
         }
 
@@ -212,7 +230,10 @@ namespace libstdhl
         std::string to_string(
             const Radix radix = DECIMAL, const Literal literal = NONE ) const;
 
-      private:
+        static u64 to_digit( char character, const Radix radix = DECIMAL,
+            const Literal literal = NONE );
+
+      protected:
         std::vector< u64 > m_words;
         u64 m_carry;
         u1 m_sign;
