@@ -24,13 +24,9 @@
 
 #include "Integer.h"
 
-using namespace libstdhl;
+#include "Math.h"
 
-Integer::Integer( const std::string& value, const Radix radix )
-: Type()
-{
-    assert( !" TODO! " ); // TODO: PPA:
-}
+using namespace libstdhl;
 
 Integer::Integer( u64 value )
 : Type( { value } )
@@ -40,6 +36,65 @@ Integer::Integer( u64 value )
 Integer::Integer( i64 value )
 : Type( ( value >= 0 ? (u64)value : ( u64 )( -value ) ), 63, ( value < 0 ) )
 {
+}
+
+Integer::Integer( const std::string& value, const Radix radix )
+: Type()
+{
+    const u64 shift
+        = ( radix == BINARY
+                ? 1
+                : ( radix == OCTAL
+                          ? 3
+                          : ( radix == HEXADECIMAL
+                                    ? 4
+                                    : ( radix == RADIX64 ? 6 : 0 ) ) ) );
+
+    i64 length = value.size();
+    u1 sign = false;
+
+    if( value[ 0 ] == '-' )
+    {
+        length--;
+        sign = true;
+    }
+    else if( value[ 0 ] == '+' )
+    {
+        length--;
+    }
+
+    if( length == 0 )
+    {
+        throw std::domain_error(
+            "unable to convert string '" + value + "' to a valid Integer" );
+    }
+
+    const i64 bound = ( i64 )( sign );
+
+    std::size_t precision
+        = ( std::size_t )( length * std::log2( (double)radix ) );
+
+    Type tmp( std::vector< u64 >(
+        ( precision / 64 ) + ( precision % 64 ? 1 : 0 ), 0 ) );
+
+    for( i64 c = bound; c < value.size(); c++ )
+    {
+        if( shift )
+        {
+            tmp <<= shift;
+        }
+        else
+        {
+            tmp *= radix;
+        }
+
+        tmp += Type::to_digit( value[ c ], radix );
+    }
+
+    tmp.shrink();
+
+    m_words = std::move( tmp.words() );
+    m_sign = sign;
 }
 
 //

@@ -40,11 +40,11 @@ namespace libstdhl
       public:
         using Ptr = std::shared_ptr< Integer >;
 
-        Integer( const std::string& value, const Radix radix = DECIMAL );
-
         Integer( u64 value );
 
         Integer( i64 value );
+
+        Integer( const std::string& value, const Radix radix = DECIMAL );
 
         ~Integer( void ) = default;
     };
