@@ -580,7 +580,7 @@ u64 Type::to_digit(
 {
     const char* digits = digits_definitions[ literal / 10 ];
 
-    char* pos = strchr( digits, character );
+    const char* pos = strchr( digits, character );
 
     if( not pos )
     {
