@@ -60,55 +60,10 @@ namespace libstdhl
         void log( Level::ID level, const std::string& text );
 
         void error( const char* format, ... );
+
         void warning( const char* format, ... );
+
         void info( const char* format, ... );
-
-        //   private:
-        //     Log();
-
-        //     void log( Source& source, Channel& channel,
-        //         const std::vector< Sink* >& sinks, const char* format,
-        //         va_list args ) const
-        //     {
-        //         char buffer[ 1024 ];
-
-        //         vsprintf( buffer, format, args );
-
-        //         for( auto sink : sinks )
-        //         {
-        //             assert( sink );
-        //             fprintf( sink->get(), "%s: %s: %s\n", source.get(),
-        //                 channel.get(), buffer );
-        //         }
-        //     };
-
-        //     static Log& instance( void )
-        //     {
-        //         static Log singelton;
-        //         return singelton;
-        //     };
-
-        //   public:
-        //     static void info( const char* format, ... )
-        //     {
-        //         va_list args;
-        //         va_start( args, format );
-        //         instance().log(
-        //             DefaultSource, Info, { &DefaultSink }, format, args );
-        //         va_end( args );
-        //     };
-
-        //     static void warning( const char* format, ... )
-        //     {
-        //         va_list args;
-        //         va_start( args, format );
-        //         instance().log(
-        //             DefaultSource, Warning, { &DefaultSink }, format, args );
-        //         va_end( args );
-        //     };
-
-        // };
-        // }
     }
 }
 
