@@ -103,6 +103,10 @@ TEST( libstdhl_cpp_Log, merging_two_streams_and_routing_them_to_two_sinks )
     s.flush( rr );
 }
 
+TEST( libstdhl_cpp_Logger, example )
+{
+}
+
 //
 //  Local variables:
 //  mode: c++

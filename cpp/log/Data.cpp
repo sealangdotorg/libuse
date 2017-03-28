@@ -34,24 +34,29 @@ using namespace Log;
 //
 
 Data::Data( const Level::ID level, const Source::Ptr& source,
-    const Category::Ptr& category, const Items& items )
+    const Category::Ptr& category )
 : m_timestamp()
 , m_level( level )
 , m_source( source )
 , m_category( category )
-, m_items( items )
+{
+}
+
+Data::Data( const Level::ID level, const Source::Ptr& source,
+    const Category::Ptr& category, const std::string& text )
+: Data( level, source, category )
+{
+    add< TextItem >( text );
+}
+
+Data::Data( const Level::ID level, const std::string& text )
+: Data( level, Source::defaultSource(), Category::defaultCategory(), text )
 {
 }
 
 Data::Data( const Level::ID level )
-: Data( level, Source::defaultSource(), Category::defaultCategory(), {} )
+: Data( level, Source::defaultSource(), Category::defaultCategory() )
 {
-}
-
-Data::Data( const Level::ID level, const std::string& text )
-: Data( level, Source::defaultSource(), Category::defaultCategory(), {} )
-{
-    add< TextItem >( text );
 }
 
 Timestamp Data::timestamp( void ) const

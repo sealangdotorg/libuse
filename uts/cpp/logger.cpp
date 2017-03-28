@@ -22,46 +22,26 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "Stream.h"
+#include "gtest/gtest.h"
 
-#include "Channel.h"
+#include "libstdhl.h"
 
 using namespace libstdhl;
 using namespace Log;
 
-//
-// Stream
-//
-
-Stream::Stream( void )
+TEST( libstdhl_cpp_logger, example )
 {
-}
+    Stream stream;
+    Logger log( stream );
 
-std::vector< Data >& Stream::data( void )
-{
-    return m_data;
-}
+    log.error( "example error message" );
+    log.warning( "example warning message" );
+    log.hint( "example hint message" );
+    log.debug( "example debug message" );
 
-const std::vector< Data >& Stream::data( void ) const
-{
-    return m_data;
-}
-
-void Stream::flush( Channel& channel )
-{
-    channel.process( *this );
-    m_data.clear();
-}
-
-void Stream::aggregate( const Stream& stream )
-{
-    m_data.insert( std::end( m_data ), std::begin( stream.data() ),
-        std::end( stream.data() ) );
-
-    std::sort(
-        m_data.begin(), m_data.end(), []( const Data& a, const Data& b ) {
-            return b.timestamp() >= a.timestamp();
-        } );
+    StringFormatter format;
+    OutputStreamSink sink( std::cerr, format );
+    stream.flush( sink );
 }
 
 //

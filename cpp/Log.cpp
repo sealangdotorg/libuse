@@ -47,13 +47,10 @@ Source::Ptr libstdhl::Log::defaultSource( const Source::Ptr& source )
 void libstdhl::Log::log( Level::ID level, const std::string& text )
 {
     Log::Stream c;
-
     c.add( level, text );
 
-    Log::ConsoleFormatter f;
-
+    Log::StringFormatter f;
     Log::OutputStreamSink s( std::cerr, f );
-
     c.flush( s );
 }
 
@@ -86,6 +83,115 @@ void libstdhl::Log::info( const char* format, ... )
     va_start( args, format );
     va_log( Level::INFORMATIONAL, format, args );
     va_end( args );
+}
+
+//
+// Logger
+//
+
+Logger::Logger( libstdhl::Log::Stream& stream )
+: m_stream( stream )
+, m_source( Source::defaultSource() )
+, m_category( Category::defaultCategory() )
+{
+}
+
+void Logger::error( const char* format, ... )
+{
+    va_list args;
+    va_start( args, format );
+    c_log( Log::Level::ERROR, format, args );
+    va_end( args );
+}
+
+void Logger::error( const std::string& text )
+{
+    log( Log::Level::ERROR, m_source, m_category, text );
+}
+
+void Logger::warning( const std::string& text )
+{
+    log( Log::Level::WARNING, m_source, m_category, text );
+}
+
+void Logger::warning( const char* format, ... )
+{
+    va_list args;
+    va_start( args, format );
+    c_log( Log::Level::WARNING, format, args );
+    va_end( args );
+}
+
+void Logger::info( const std::string& text )
+{
+    log( Log::Level::INFORMATIONAL, m_source, m_category, text );
+}
+
+void Logger::info( const char* format, ... )
+{
+    va_list args;
+    va_start( args, format );
+    c_log( Log::Level::INFORMATIONAL, format, args );
+    va_end( args );
+}
+
+void Logger::hint( const std::string& text )
+{
+    log( Log::Level::NOTICE, m_source, m_category, text );
+}
+
+void Logger::hint( const char* format, ... )
+{
+    va_list args;
+    va_start( args, format );
+    c_log( Log::Level::NOTICE, format, args );
+    va_end( args );
+}
+
+void Logger::debug( const std::string& text )
+{
+    log( Log::Level::DEBUG, m_source, m_category, text );
+}
+
+void Logger::debug( const char* format, ... )
+{
+    va_list args;
+    va_start( args, format );
+    c_log( Log::Level::DEBUG, format, args );
+    va_end( args );
+}
+
+void Logger::c_log( Log::Level::ID level, const char* format, va_list args )
+{
+    char buffer[ 4096 ];
+    vsprintf( buffer, format, args );
+    log( level, m_source, m_category, std::string( buffer ) );
+}
+
+Log::Stream& Logger::stream( void )
+{
+    return m_stream;
+}
+
+void Logger::setSource( const Log::Source::Ptr& source )
+{
+    assert( source );
+    m_source = source;
+}
+
+Source::Ptr Logger::source( void ) const
+{
+    return m_source;
+}
+
+void Logger::setCategory( const Log::Category::Ptr& category )
+{
+    m_category = category;
+}
+
+Category::Ptr Logger::category( void ) const
+{
+    return m_category;
 }
 
 //

@@ -50,11 +50,14 @@ namespace libstdhl
             using Ptr = std::shared_ptr< Data >;
 
             Data( Level::ID level, const Source::Ptr& source,
-                const Category::Ptr& category, const Items& items );
+                const Category::Ptr& category );
 
-            Data( Level::ID level );
+            Data( Level::ID level, const Source::Ptr& source,
+                const Category::Ptr& category, const std::string& text );
 
             Data( Level::ID level, const std::string& text );
+
+            Data( Level::ID level );
 
             Timestamp timestamp( void ) const;
 

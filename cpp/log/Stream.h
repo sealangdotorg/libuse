@@ -49,7 +49,9 @@ namespace libstdhl
 
             Stream( void );
 
-            std::vector< Data > data( void ) const;
+            std::vector< Data >& data( void );
+
+            const std::vector< Data >& data( void ) const;
 
             template < typename... Args >
             void add( Args&&... args )

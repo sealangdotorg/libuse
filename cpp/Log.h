@@ -53,6 +53,7 @@ namespace libstdhl
     /**
        @extends Stdhl
     */
+
     namespace Log
     {
         Source::Ptr defaultSource( const Source::Ptr& source = nullptr );
@@ -65,6 +66,54 @@ namespace libstdhl
 
         void info( const char* format, ... );
     }
+
+    /**
+       @extends Stdhl
+    */
+
+    class Logger
+    {
+      public:
+        Logger( Log::Stream& stream );
+
+        void error( const std::string& text );
+        void error( const char* format, ... );
+
+        void warning( const std::string& text );
+        void warning( const char* format, ... );
+
+        void info( const std::string& text );
+        void info( const char* format, ... );
+
+        void hint( const std::string& text );
+        void hint( const char* format, ... );
+
+        void debug( const std::string& text );
+        void debug( const char* format, ... );
+
+        void c_log( Log::Level::ID level, const char* format, va_list args );
+
+        template < typename... Args >
+        void log( Args&&... args )
+        {
+            m_stream.add( std::forward< Args >( args )... );
+        }
+
+        Log::Stream& stream( void );
+
+        void setSource( const Log::Source::Ptr& source );
+
+        Log::Source::Ptr source( void ) const;
+
+        void setCategory( const Log::Category::Ptr& category );
+
+        Log::Category::Ptr category( void ) const;
+
+      private:
+        Log::Stream& m_stream;
+        Log::Source::Ptr m_source;
+        Log::Category::Ptr m_category;
+    };
 }
 
 #endif // _LIB_STDHL_CPP_LOG_H_
