@@ -115,7 +115,7 @@ Args::Args( int argc, const char** argv, Mode mode,
             }
 
             fprintf( stderr, "  %-30.30s %s\n", str.c_str(),
-                opt.second.description );
+                opt.second.description.c_str() );
         }
     };
 
@@ -329,21 +329,21 @@ int Args::parse( void )
     return err;
 }
 
-void Args::add( const char arg_char, Kind kind, const char* description,
-    std::function< void( const char* ) > action, const char* metatag )
+void Args::add( const char arg_char, Kind kind, const std::string& description,
+    std::function< void( const char* ) > action, const std::string& metatag )
 {
     add( arg_char, 0, kind, description, action, metatag );
 }
 
-void Args::add( const char* arg_str, Kind kind, const char* description,
-    std::function< void( const char* ) > action, const char* metatag )
+void Args::add( const char* arg_str, Kind kind, const std::string& description,
+    std::function< void( const char* ) > action, const std::string& metatag )
 {
     add( 0, arg_str, kind, description, action, metatag );
 }
 
 void Args::add( const char arg_char, const char* arg_str, Kind kind,
-    const char* description, std::function< void( const char* ) > action,
-    const char* metatag )
+    const std::string& description, std::function< void( const char* ) > action,
+    const std::string& metatag )
 {
     assert( ( ( arg_char == 0 ) || ( arg_char == '+' )
                 || ( arg_char >= 'a' && arg_char <= 'z' )

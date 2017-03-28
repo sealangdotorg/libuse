@@ -69,8 +69,8 @@ namespace libstdhl
         struct Option
         {
             option field;
-            const char* description;
-            const char* metatag;
+            std::string description;
+            std::string metatag;
             std::function< void( const char* ) > action;
         };
 
@@ -102,18 +102,20 @@ namespace libstdhl
 
         int parse( void );
 
-        void add( const char arg_char, Kind kind, const char* description,
+        void add( const char arg_char, Kind kind,
+            const std::string& description,
             std::function< void( const char* ) > process_option,
-            const char* metatag = "arg" );
+            const std::string& metatag = "arg" );
 
-        void add( const char* arg_str, Kind kind, const char* description,
+        void add( const char* arg_str, Kind kind,
+            const std::string& description,
             std::function< void( const char* ) > process_option,
-            const char* metatag = "arg" );
+            const std::string& metatag = "arg" );
 
         void add( const char arg_char, const char* arg_str, Kind kind,
-            const char* description,
+            const std::string& description,
             std::function< void( const char* ) > process_option,
-            const char* metatag = "arg" );
+            const std::string& metatag = "arg" );
     };
 }
 
