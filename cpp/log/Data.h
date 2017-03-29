@@ -26,6 +26,7 @@
 #define _LIB_STDHL_CPP_LOG_DATA_H_
 
 #include "Category.h"
+#include "Chronograph.h"
 #include "Item.h"
 #include "Level.h"
 #include "Source.h"

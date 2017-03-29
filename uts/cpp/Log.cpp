@@ -103,8 +103,24 @@ TEST( libstdhl_cpp_Log, merging_two_streams_and_routing_them_to_two_sinks )
     s.flush( rr );
 }
 
-TEST( libstdhl_cpp_Logger, example )
+TEST( libstdhl_cpp_log, chronograph )
 {
+    Log::Chronograph c;
+
+    c.start();
+
+    Log::Stream s;
+    Log::StringFormatter f;
+    Log::OutputStreamSink z( std::cerr, f );
+
+    c.stop();
+
+    s.add( Log::Level::ID::INFORMATIONAL,
+        "setup took '" + std::string( c ) + "'" );
+
+    s.add( Log::Level::ID::INFORMATIONAL, c );
+
+    s.flush( z );
 }
 
 //

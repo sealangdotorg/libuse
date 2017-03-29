@@ -42,6 +42,7 @@ namespace libstdhl
     namespace Log
     {
         class Timestamp;
+        class Chronograph;
         class Source;
         class Category;
         class Level;
@@ -59,6 +60,7 @@ namespace libstdhl
         {
           public:
             virtual std::string visit( Timestamp& item ) = 0;
+            virtual std::string visit( Chronograph& item ) = 0;
             virtual std::string visit( Source& item ) = 0;
             virtual std::string visit( Category& item ) = 0;
             virtual std::string visit( Level& item ) = 0;
@@ -74,6 +76,7 @@ namespace libstdhl
         {
           public:
             std::string visit( Timestamp& item ) override;
+            std::string visit( Chronograph& item ) override;
             std::string visit( Source& item ) override;
             std::string visit( Category& item ) override;
             std::string visit( Level& item ) override;

@@ -40,7 +40,7 @@ namespace libstdhl
     */
     namespace Log
     {
-        class Timestamp : public Item
+        class Timestamp final : public Item
         {
           public:
             using Ptr = std::shared_ptr< Timestamp >;

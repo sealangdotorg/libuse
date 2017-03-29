@@ -38,6 +38,12 @@ std::string StringFormatter::visit( Timestamp& item )
     return item.local();
 }
 
+std::string StringFormatter::visit( Chronograph& item )
+{
+    return std::to_string( item.duration< std::chrono::nanoseconds >().count() )
+           + "ns";
+}
+
 std::string StringFormatter::visit( Source& item )
 {
     return item.name();
