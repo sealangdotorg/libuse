@@ -25,6 +25,7 @@
 #include "Stream.h"
 
 #include "Channel.h"
+#include "Sink.h"
 
 using namespace libstdhl;
 using namespace Log;
@@ -51,6 +52,13 @@ void Stream::flush( Channel& channel )
 {
     channel.process( *this );
     m_data.clear();
+}
+
+void Stream::dump( void )
+{
+    StringFormatter f;
+    OutputStreamSink s( std::cerr, f );
+    s.process( *this );
 }
 
 void Stream::aggregate( const Stream& stream )

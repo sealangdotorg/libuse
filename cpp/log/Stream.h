@@ -61,6 +61,8 @@ namespace libstdhl
 
             void flush( Channel& channel );
 
+            void dump( void );
+
             void aggregate( const Stream& stream );
 
             inline Stream& operator+=( const Stream& rhs )
