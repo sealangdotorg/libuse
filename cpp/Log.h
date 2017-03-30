@@ -88,8 +88,17 @@ namespace libstdhl
         void hint( const std::string& text );
         void hint( const char* format, ... );
 
+#ifndef NDEBUG
         void debug( const std::string& text );
         void debug( const char* format, ... );
+#else
+        inline void debug( const std::string& text )
+        {
+        }
+        inline void debug( const char* format, ... )
+        {
+        }
+#endif
 
         void c_log( Log::Level::ID level, const char* format, va_list args );
 

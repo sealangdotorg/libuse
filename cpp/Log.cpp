@@ -148,6 +148,7 @@ void Logger::hint( const char* format, ... )
     va_end( args );
 }
 
+#ifndef NDEBUG
 void Logger::debug( const std::string& text )
 {
     log( Log::Level::DEBUG, m_source, m_category, text );
@@ -160,6 +161,7 @@ void Logger::debug( const char* format, ... )
     c_log( Log::Level::DEBUG, format, args );
     va_end( args );
 }
+#endif
 
 void Logger::c_log( Log::Level::ID level, const char* format, va_list args )
 {
