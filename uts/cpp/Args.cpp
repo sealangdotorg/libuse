@@ -25,6 +25,9 @@
 #include "gtest/gtest.h"
 
 #include "cpp/Args.h"
+#include "cpp/Log.h"
+
+using namespace libstdhl;
 
 #define TEST_NAME                                                              \
     ( std::string(::testing::UnitTest::GetInstance()                           \
@@ -38,9 +41,14 @@
 TEST( libstdhl_args_cpp, no_files_default_processing )
 {
     const char* argv[] = { "program" };
-    libstdhl::Args options( 1, argv );
+    Args options( 1, argv );
 
-    options.parse();
+    Log::Stream s;
+    Logger log( s );
+
+    options.parse( log );
+
+    s.dump();
 }
 
 TEST( libstdhl_args_cpp, no_files_pass )
@@ -48,12 +56,19 @@ TEST( libstdhl_args_cpp, no_files_pass )
     u32 cnt = 0;
 
     const char* argv[] = { "program" };
-    libstdhl::Args options( 1, argv,
-        [&options, &cnt]( const char* arg ) { EXPECT_TRUE( false ); } );
+    Args options( 1, argv, [&options, &cnt]( const char* arg ) {
+        EXPECT_TRUE( false );
+        return 0;
+    } );
 
     EXPECT_EQ( cnt, 0 );
 
-    options.parse();
+    Log::Stream s;
+    Logger log( s );
+
+    options.parse( log );
+
+    s.dump();
 
     ASSERT_EQ( cnt, 0 );
 }
@@ -62,14 +77,20 @@ TEST( libstdhl_args_cpp, no_files_fail_one )
 {
     u32 cnt = 0;
     const char* argv[] = { "program", "file.txt" };
-    libstdhl::Args options( 2, argv, [&options, &cnt]( const char* arg ) {
+    Args options( 2, argv, [&options, &cnt]( const char* arg ) {
         EXPECT_TRUE( true );
         cnt++;
+        return 0;
     } );
 
     EXPECT_EQ( cnt, 0 );
 
-    options.parse();
+    Log::Stream s;
+    Logger log( s );
+
+    options.parse( log );
+
+    s.dump();
 
     ASSERT_EQ( cnt, 1 );
 }
@@ -78,14 +99,20 @@ TEST( libstdhl_args_cpp, no_files_fail_multiple )
 {
     u32 cnt = 0;
     const char* argv[] = { "program", "file.txt", "file.txt", "file.txt" };
-    libstdhl::Args options( 4, argv, [&options, &cnt]( const char* arg ) {
+    Args options( 4, argv, [&options, &cnt]( const char* arg ) {
         EXPECT_TRUE( true );
         cnt++;
+        return 0;
     } );
 
     EXPECT_EQ( cnt, 0 );
 
-    options.parse();
+    Log::Stream s;
+    Logger log( s );
+
+    options.parse( log );
+
+    s.dump();
 
     ASSERT_EQ( cnt, 3 );
 }
@@ -96,17 +123,22 @@ TEST( libstdhl_args_cpp, create_only_one_file )
     u32 cnt = 0;
 
     const char* argv[] = { "program", "input.txt" };
-    libstdhl::Args options(
-        2, argv, [&options, &argument, &cnt]( const char* arg ) {
-            cnt++;
-            EXPECT_LE( cnt, 1 );
-            argument = arg;
-        } );
+    Args options( 2, argv, [&options, &argument, &cnt]( const char* arg ) {
+        cnt++;
+        EXPECT_LE( cnt, 1 );
+        argument = arg;
+        return 0;
+    } );
 
     EXPECT_EQ( cnt, 0 );
     EXPECT_STRNE( "input.txt", argument );
 
-    options.parse();
+    Log::Stream s;
+    Logger log( s );
+
+    options.parse( log );
+
+    s.dump();
 
     EXPECT_EQ( cnt, 1 );
     ASSERT_STREQ( "input.txt", argument );
@@ -118,18 +150,24 @@ TEST( libstdhl_args_cpp, argument_once_required_parameter_short_no_metatag )
     u32 cnt = 0;
 
     const char* argv[] = { "program", "file.txt", "-a", "data", "file.txt" };
-    libstdhl::Args options( 5, argv );
+    Args options( 5, argv );
 
-    options.add( 'a', libstdhl::Args::REQUIRED, __FUNCTION__,
+    options.add( 'a', Args::REQUIRED, __FUNCTION__,
         [&options, &argument, &cnt]( const char* arg ) {
             cnt++;
             EXPECT_LE( cnt, 1 );
             argument = arg;
+            return 0;
         } );
 
     EXPECT_STRNE( "data", argument );
 
-    options.parse();
+    Log::Stream s;
+    Logger log( s );
+
+    options.parse( log );
+
+    s.dump();
 
     ASSERT_STREQ( "data", argument );
 }
@@ -140,18 +178,24 @@ TEST( libstdhl_args_cpp, argument_once_required_parameter_short_with_metatag )
     u32 cnt = 0;
 
     const char* argv[] = { "program", "file.txt", "-a", "data", "file.txt" };
-    libstdhl::Args options( 5, argv );
+    Args options( 5, argv );
 
-    options.add( 'a', libstdhl::Args::REQUIRED, __FUNCTION__,
+    options.add( 'a', Args::REQUIRED, __FUNCTION__,
         [&options, &argument, &cnt]( const char* arg ) {
             cnt++;
             EXPECT_LE( cnt, 1 );
             argument = arg;
+            return 0;
         } );
 
     EXPECT_STRNE( "data", argument );
 
-    options.parse();
+    Log::Stream s;
+    Logger log( s );
+
+    options.parse( log );
+
+    s.dump();
 
     ASSERT_STREQ( "data", argument );
 }
@@ -197,20 +241,13 @@ TEST_P( cpp_Args, param )
     u32 cnt_files = 0;
     const char* argument = "";
 
-    libstdhl::Args options( argc, (const char**)argv,
+    Args options( argc, (const char**)argv,
         [&param, &options, &argument, &cnt_files]( const char* arg ) {
             cnt_files++;
             EXPECT_LE( cnt_files, param.cnt_files );
             argument = arg;
+            return 0;
         } );
-
-    u32 cnt_err = 0;
-
-    options.m_error
-        = [this, &options, &cnt_err]( int error_code, const char* msg ) {
-              // omit output
-              fprintf( stderr, "%s: error: %s\n", options.programName(), msg );
-          };
 
     std::unordered_map< char, u32 > cnt_options_chr;
     std::unordered_map< std::string, u32 > cnt_options_str;
@@ -221,8 +258,8 @@ TEST_P( cpp_Args, param )
         cnt_options_str[ std::string( param_opt.str ? param_opt.str : "" ) ]
             = 0;
 
-        std::function< void( const char* ) > hook = [param_opt,
-            &cnt_options_chr, &cnt_options_str]( const char* arg ) {
+        std::function< i32( const char* ) > hook = [param_opt, &cnt_options_chr,
+            &cnt_options_str]( const char* arg ) {
             // printf("%s: '%c' \"%s\" {%u}\n", TEST_NAME, param_opt.chr,
             // param_opt.str, param_opt.req);
 
@@ -234,11 +271,12 @@ TEST_P( cpp_Args, param )
             {
                 cnt_options_str[ param_opt.str ? param_opt.str : "" ] += 1;
             }
+            return 0;
         };
 
         ASSERT_GE( param_opt.req, 0 );
         ASSERT_LE( param_opt.req, 2 );
-        libstdhl::Args::Kind kind = ( libstdhl::Args::Kind )( param_opt.req );
+        Args::Kind kind = ( Args::Kind )( param_opt.req );
 
         if( param_opt.chr != 0 and param_opt.str == 0 )
         {
@@ -266,7 +304,12 @@ TEST_P( cpp_Args, param )
         EXPECT_EQ( cnt_options_str[ param_opt.str ? param_opt.str : "" ], 0 );
     }
 
-    u32 res = options.parse();
+    Log::Stream s;
+    Logger log( s );
+
+    u32 res = options.parse( log );
+
+    s.dump();
 
     EXPECT_EQ( cnt_files, param.cnt_files );
 

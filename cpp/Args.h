@@ -27,6 +27,7 @@
 
 #include "c/args.h"
 
+#include "Log.h"
 #include "Type.h"
 
 /**
@@ -56,14 +57,35 @@ namespace libstdhl
             OPTIONAL = 2
         };
 
-        std::function< void( void ) > m_usage;
-        std::function< void( const char*, const char* ) > m_message;
-        std::function< void( const char* ) > m_info;
-        std::function< void( const char* ) > m_warning;
-        std::function< void( int, const char* ) > m_error;
+      public:
+        Args( int argc, const char** argv,
+            std::function< i32( const char* ) > process_non_option
+            = []( const char* arg ) { return 0; } );
 
-        std::function< void( const char* ) > m_error_arg_required;
-        std::function< void( const char* ) > m_error_arg_invalid;
+        Args( int argc, const char** argv, Mode mode,
+            std::function< i32( const char* ) > process_non_option
+            = []( const char* arg ) { return 0; } );
+
+        int parse( Logger& log );
+
+        void add( const char arg_char, Kind kind,
+            const std::string& description,
+            std::function< i32( const char* ) > process_option,
+            const std::string& metatag = "arg" );
+
+        void add( const char* arg_str, Kind kind,
+            const std::string& description,
+            std::function< i32( const char* ) > process_option,
+            const std::string& metatag = "arg" );
+
+        void add( const char arg_char, const char* arg_str, Kind kind,
+            const std::string& description,
+            std::function< i32( const char* ) > process_option,
+            const std::string& metatag = "arg" );
+
+        const char* programName( void ) const;
+
+        std::function< void( void ) > m_usage;
 
       private:
         struct Option
@@ -71,7 +93,7 @@ namespace libstdhl
             option field;
             std::string description;
             std::string metatag;
-            std::function< void( const char* ) > action;
+            std::function< i32( const char* ) > action;
         };
 
         int m_argc;
@@ -80,7 +102,7 @@ namespace libstdhl
 
         Mode m_mode;
 
-        std::function< void( const char* ) > m_process_non_option;
+        std::function< i32( const char* ) > m_process_non_option;
 
         std::string m_format_str;
 
@@ -88,34 +110,6 @@ namespace libstdhl
 
         int ( *m_getopt_func )(
             int, char* const*, const char*, const option*, int* );
-
-      public:
-        Args( int argc, const char** argv,
-            std::function< void( const char* ) > process_non_option
-            = []( const char* arg ) {} );
-
-        Args( int argc, const char** argv, Mode mode,
-            std::function< void( const char* ) > process_non_option
-            = []( const char* arg ) {} );
-
-        const char* programName() const;
-
-        int parse( void );
-
-        void add( const char arg_char, Kind kind,
-            const std::string& description,
-            std::function< void( const char* ) > process_option,
-            const std::string& metatag = "arg" );
-
-        void add( const char* arg_str, Kind kind,
-            const std::string& description,
-            std::function< void( const char* ) > process_option,
-            const std::string& metatag = "arg" );
-
-        void add( const char arg_char, const char* arg_str, Kind kind,
-            const std::string& description,
-            std::function< void( const char* ) > process_option,
-            const std::string& metatag = "arg" );
     };
 }
 

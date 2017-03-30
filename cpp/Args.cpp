@@ -27,13 +27,13 @@
 using namespace libstdhl;
 
 Args::Args( int argc, const char** argv,
-    std::function< void( const char* ) > process_non_option )
+    std::function< i32( const char* ) > process_non_option )
 : Args( argc, argv, DEFAULT, process_non_option )
 {
 }
 
 Args::Args( int argc, const char** argv, Mode mode,
-    std::function< void( const char* ) > process_non_option )
+    std::function< i32( const char* ) > process_non_option )
 : m_argc( argc )
 , m_argv( argv )
 , m_mode( mode )
@@ -118,54 +118,9 @@ Args::Args( int argc, const char** argv, Mode mode,
                 opt.second.description.c_str() );
         }
     };
-
-    m_message = [this]( const char* kind, const char* msg ) {
-        assert( kind );
-        assert( msg );
-
-        fprintf( stderr, "%s: %s: %s\n", this->m_argv[ 0 ], kind, msg );
-    };
-
-    m_info = [this]( const char* msg ) { this->m_message( "info", msg ); };
-
-    m_warning
-        = [this]( const char* msg ) { this->m_message( "warning", msg ); };
-
-    m_error = [this]( int error_code, const char* msg ) {
-        if( msg )
-        {
-            this->m_message( "error", msg );
-        }
-
-        if( error_code != 0 )
-        {
-            exit( error_code );
-        }
-    };
-
-    m_error_arg_required = [this]( const char* arg ) {
-        std::string tmp;
-        tmp.append( "option '" );
-        tmp.append( arg );
-        tmp.append( "' requires an argument" );
-        m_error( 0, tmp.c_str() );
-    };
-
-    m_error_arg_invalid = [this]( const char* arg ) {
-        std::string tmp;
-        tmp.append( "unrecognized option '" );
-        tmp.append( arg );
-        tmp.append( "'" );
-        m_error( 0, tmp.c_str() );
-    };
 }
 
-const char* Args::programName() const
-{
-    return m_argv[ 0 ];
-}
-
-int Args::parse( void )
+int Args::parse( Logger& log )
 {
     int err = 0;
     int pos = 0;
@@ -176,15 +131,6 @@ int Args::parse( void )
 
     for( auto& opt : m_options )
     {
-        // printf( "%i: %s | %i:%s\n    %s | %s | %p\n"
-        //         , pos, opt.first.c_str()
-        //         , opt.second.field.val
-        //         , opt.second.field.name
-        //         , opt.second.description
-        //         , opt.second.metatag
-        //         , &opt.second.action
-        //     );
-
         getopt_options[ pos ] = opt.second.field;
         pos++;
     }
@@ -193,9 +139,6 @@ int Args::parse( void )
     opterr = 0;
     optind = 0;
 
-    // printf( "format_str = 0x'%p', str'%s', size = '%i'\n", &format_str,
-    // format_str.c_str(), format_str.size() );
-
     while( true )
     {
         int getopt_index = 0;
@@ -203,9 +146,6 @@ int Args::parse( void )
         getopt_ctrl = m_getopt_func( m_argc, (char* const*)m_argv,
             (const char*)( m_format_str.c_str() ), getopt_options,
             &getopt_index );
-
-        // printf( "::: %i, %i, %i, '%s', \n", getopt_ctrl, getopt_index,
-        // optind, optarg );
 
         if( getopt_ctrl == -1 )
         {
@@ -216,31 +156,42 @@ int Args::parse( void )
         {
             if( getopt_options[ getopt_index ].flag == 0 )
             {
+                i32 ret = 0;
+
                 if( optarg )
                 {
-                    m_options[ getopt_options[ getopt_index ].name ].action(
-                        optarg );
+                    ret = m_options[ getopt_options[ getopt_index ].name ]
+                              .action( optarg );
                 }
                 else
                 {
-                    m_options[ getopt_options[ getopt_index ].name ].action(
-                        "" );
+                    ret = m_options[ getopt_options[ getopt_index ].name ]
+                              .action( "" );
+                }
+
+                if( ret >= 0 )
+                {
+                    err += ret;
+                }
+                else
+                {
+                    return -1;
                 }
             }
-
             continue;
         }
 
         if( getopt_ctrl == ':' )
         {
-            m_error_arg_required( m_argv[ optind - 1 ] );
+            log.error(
+                "option '%s' requires an argument", m_argv[ optind - 1 ] );
             err++;
             continue;
         }
 
         if( optind <= 1 )
         {
-            m_error_arg_invalid( m_argv[ optind ] );
+            log.error( "unrecognized option '%s'", m_argv[ optind ] );
             err++;
             break;
         }
@@ -262,8 +213,7 @@ int Args::parse( void )
                 {
                     if( arg[ 1 ] != '-' )
                     {
-                        // printf("not default\n");
-                        m_error_arg_invalid( arg );
+                        log.error( "unrecognized option '%s'", arg );
                         err++;
                         continue;
                     }
@@ -292,57 +242,75 @@ int Args::parse( void )
         }
         if( result == m_options.end() )
         {
-            // printf("not found '%s'\n", str);
-            m_error_arg_invalid( arg );
+            log.error( "unrecognized option '%s'", arg );
             err++;
             continue;
         }
 
         if( optarg )
         {
-            result->second.action( optarg );
+            i32 ret = result->second.action( optarg );
+            if( ret >= 0 )
+            {
+                err += ret;
+            }
+            else
+            {
+                return -1;
+            }
         }
         else
         {
             if( result->second.field.has_arg == REQUIRED )
             {
-                m_error_arg_required( arg );
+                log.error( "option '%s' requires an argument", arg );
                 err++;
             }
             else
             {
-                result->second.action( "" );
+                i32 ret = result->second.action( "" );
+                if( ret >= 0 )
+                {
+                    err += ret;
+                }
+                else
+                {
+                    return -1;
+                }
             }
         }
     }
 
     for( int index = optind; index < m_argc; index++ )
     {
-        m_process_non_option( m_argv[ index ] );
-    }
-
-    if( err > 0 )
-    {
-        m_error( -1, 0 );
+        i32 ret = m_process_non_option( m_argv[ index ] );
+        if( ret >= 0 )
+        {
+            err += ret;
+        }
+        else
+        {
+            return -1;
+        }
     }
 
     return err;
 }
 
 void Args::add( const char arg_char, Kind kind, const std::string& description,
-    std::function< void( const char* ) > action, const std::string& metatag )
+    std::function< i32( const char* ) > action, const std::string& metatag )
 {
     add( arg_char, 0, kind, description, action, metatag );
 }
 
 void Args::add( const char* arg_str, Kind kind, const std::string& description,
-    std::function< void( const char* ) > action, const std::string& metatag )
+    std::function< i32( const char* ) > action, const std::string& metatag )
 {
     add( 0, arg_str, kind, description, action, metatag );
 }
 
 void Args::add( const char arg_char, const char* arg_str, Kind kind,
-    const std::string& description, std::function< void( const char* ) > action,
+    const std::string& description, std::function< i32( const char* ) > action,
     const std::string& metatag )
 {
     assert( ( ( arg_char == 0 ) || ( arg_char == '+' )
@@ -359,10 +327,9 @@ void Args::add( const char arg_char, const char* arg_str, Kind kind,
 
         if( m_options.find( key ) != m_options.end() )
         {
-            fprintf( stderr,
-                "%s: internal error: '%c' option argument is not unique\n",
-                m_argv[ 0 ], arg_char );
-            exit( -1 );
+            throw std::domain_error( "option argument '"
+                                     + std::string( 1, arg_char )
+                                     + "' is not unique" );
         }
     }
 
@@ -370,10 +337,9 @@ void Args::add( const char arg_char, const char* arg_str, Kind kind,
     {
         if( m_options.find( arg_str ) != m_options.end() )
         {
-            fprintf( stderr,
-                "%s: internal error: '%s' option argument is not unique\n",
-                m_argv[ 0 ], arg_str );
-            exit( -1 );
+            throw std::domain_error( "option argument '"
+                                     + std::string( arg_str )
+                                     + "' is not unique" );
         }
 
         key = std::string( arg_str );
@@ -404,8 +370,11 @@ void Args::add( const char arg_char, const char* arg_str, Kind kind,
             m_format_str.push_back( ':' );
         }
     }
+}
 
-    // printf( "format_str: '%s'\n", format_str.c_str() );
+const char* Args::programName( void ) const
+{
+    return m_argv[ 0 ];
 }
 
 //
