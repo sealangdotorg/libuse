@@ -108,6 +108,14 @@ LocationItem::LocationItem( const TextItem& filename, const RangeItem& range )
 {
 }
 
+LocationItem::LocationItem( const std::string& filename, const u64 beginLine,
+    const u64 beginColumn, const u64 endLine, const u64 endColumn )
+: LocationItem(
+      TextItem( filename ), RangeItem( PositionItem( beginLine, beginColumn ),
+                                PositionItem( endLine, endColumn ) ) )
+{
+}
+
 TextItem LocationItem::filename( void ) const
 {
     return m_filename;

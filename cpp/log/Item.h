@@ -110,6 +110,9 @@ namespace libstdhl
           public:
             LocationItem( const TextItem& filename, const RangeItem& range );
 
+            LocationItem( const std::string& filename, const u64 beginLine,
+                const u64 beginColumn, const u64 endLine, const u64 endColumn );
+
             TextItem filename( void ) const;
 
             RangeItem range( void ) const;
