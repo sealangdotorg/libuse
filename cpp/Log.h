@@ -108,6 +108,13 @@ namespace libstdhl
             m_stream.add( std::forward< Args >( args )... );
         }
 
+        template < const Log::Level::ID LEVEL, typename... Args >
+        void log( Args&&... args )
+        {
+            m_stream.add( LEVEL, source(), category(),
+                Log::Items( { std::forward< Args >( args )... } ) );
+        }
+
         Log::Stream& stream( void );
 
         void setSource( const Log::Source::Ptr& source );
