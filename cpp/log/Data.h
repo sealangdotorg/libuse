@@ -51,6 +51,9 @@ namespace libstdhl
             using Ptr = std::shared_ptr< Data >;
 
             Data( Level::ID level, const Source::Ptr& source,
+                const Category::Ptr& category, const Items& items );
+
+            Data( Level::ID level, const Source::Ptr& source,
                 const Category::Ptr& category );
 
             Data( Level::ID level, const Source::Ptr& source,
