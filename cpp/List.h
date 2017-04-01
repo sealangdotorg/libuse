@@ -71,7 +71,7 @@ namespace libstdhl
 
         void add( const typename T::Ptr& node )
         {
-            m_elements.push_back( node );
+            m_elements.emplace_back( node );
         }
 
         iterator add( const_iterator position, const typename T::Ptr& node )
@@ -147,6 +147,13 @@ namespace libstdhl
         void clear( void )
         {
             m_elements.clear();
+        }
+
+        // http://en.cppreference.com/w/cpp/container/vector/empty
+
+        u1 empty( void ) const
+        {
+            return m_elements.empty();
         }
 
       private:
