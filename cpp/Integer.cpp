@@ -50,15 +50,18 @@ Integer::Integer( const std::string& value, const Radix radix )
                                     ? 4
                                     : ( radix == RADIX64 ? 6 : 0 ) ) ) );
 
-    i64 length = value.size();
+    std::string data = value;
+    data.erase( std::remove( data.begin(), data.end(), '\'' ), data.end() );
+
+    i64 length = data.size();
     u1 sign = false;
 
-    if( value[ 0 ] == '-' )
+    if( data[ 0 ] == '-' )
     {
         length--;
         sign = true;
     }
-    else if( value[ 0 ] == '+' )
+    else if( data[ 0 ] == '+' )
     {
         length--;
     }
@@ -66,7 +69,7 @@ Integer::Integer( const std::string& value, const Radix radix )
     if( length == 0 )
     {
         throw std::domain_error(
-            "unable to convert string '" + value + "' to a valid Integer" );
+            "unable to convert string '" + data + "' to a valid Integer" );
     }
 
     const i64 bound = ( i64 )( sign );
@@ -77,7 +80,7 @@ Integer::Integer( const std::string& value, const Radix radix )
     Type tmp( std::vector< u64 >(
         ( precision / 64 ) + ( precision % 64 ? 1 : 0 ), 0 ) );
 
-    for( i64 c = bound; c < value.size(); c++ )
+    for( i64 c = bound; c < data.size(); c++ )
     {
         if( shift )
         {
@@ -88,7 +91,7 @@ Integer::Integer( const std::string& value, const Radix radix )
             tmp *= radix;
         }
 
-        tmp += Type::to_digit( value[ c ], radix );
+        tmp += Type::to_digit( data[ c ], radix );
     }
 
     tmp.shrink();

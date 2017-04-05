@@ -55,11 +55,15 @@ Type::Type(
                                  + "' to create Type data" );
     }
 
+    std::string tmp = data;
+    tmp.erase( std::remove( tmp.begin(), tmp.end(), '\'' ), tmp.end() );
+
     const i64 offset
         = ( radix == BINARY ? 64 : ( radix == HEXADECIMAL ? 16 : 1 ) );
 
-    // PPA: TODO: string slices to u64!
-    assert( !" TODO! " );
+    assert( tmp.size() <= offset );
+    m_words[ 0 ] = std::stoull( tmp, nullptr, radix );
+    // TODO: PPA: exception handling
 }
 
 Type::Type( const std::vector< u64 >& words, const u1 sign )
