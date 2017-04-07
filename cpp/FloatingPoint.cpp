@@ -29,7 +29,7 @@ using namespace libstdhl;
 FloatingPoint::FloatingPoint( const std::string& value )
 : Type()
 {
-    assert( !" TODO! " );
+#warning "TODO"
 }
 
 FloatingPoint::FloatingPoint( double value )
