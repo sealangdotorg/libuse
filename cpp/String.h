@@ -71,9 +71,15 @@ namespace libstdhl
             const std::vector< std::string >& elements,
             const std::string& delimiter )
         {
-            std::ostringstream result;
-            std::copy( std::begin( elements ), std::end( elements ),
-                std::ostream_iterator< std::string >( result, delimiter.c_str() ) );
+            std::stringstream result;
+
+            u1 first = true;
+            for( const auto& element : elements )
+            {
+                result << ( first ? "" : delimiter ) << element;
+                first = false;
+            }
+
             return result.str();
         };
     };
