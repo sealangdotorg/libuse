@@ -66,6 +66,16 @@ namespace libstdhl
 
             return result;
         };
+
+        static inline std::string join(
+            const std::vector< std::string >& elements,
+            const std::string& delimiter )
+        {
+            std::ostringstream result;
+            std::copy( std::begin( elements ), std::end( elements ),
+                std::ostream_iterator< std::string >( result, delimiter.c_str() ) );
+            return result.str();
+        };
     };
 }
 
