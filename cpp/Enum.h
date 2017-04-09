@@ -43,13 +43,14 @@ namespace libstdhl
         /**
          * @brief Provides a type-safe way of storing enum value combinations.
          */
-        template< typename Enum >
+        template < typename Enum >
         class Flags
         {
             using UnderlyingType = typename std::underlying_type< Enum >::type;
 
           public:
-            static_assert( std::is_enum< Enum >::value, "Template parameter must be an enum" );
+            static_assert( std::is_enum< Enum >::value,
+                "Template parameter must be an enum" );
 
             /**
              * No flags will be set initially.
@@ -100,7 +101,7 @@ namespace libstdhl
              */
             bool isSet( Enum e ) const
             {
-                return (m_flags & asBitValue( e )) != 0;
+                return ( m_flags & asBitValue( e ) ) != 0;
             }
 
             /**
@@ -190,11 +191,13 @@ namespace libstdhl
     }
 }
 
-template< typename T >
-typename std::enable_if< std::is_enum< T >::value, libstdhl::Enum::Flags< T > >::type
+template < typename T >
+typename std::enable_if< std::is_enum< T >::value,
+    libstdhl::Enum::Flags< T > >::type
 operator|( T lhs, T rhs )
 {
-    return libstdhl::Enum::Flags< T >( lhs ) | libstdhl::Enum::Flags< T >( rhs );
+    return libstdhl::Enum::Flags< T >( lhs )
+           | libstdhl::Enum::Flags< T >( rhs );
 }
 
 #endif // _LIB_STDHL_CPP_ENUM_H_

@@ -130,7 +130,8 @@ TEST( libstdhl_cpp_Enum_Flags, flip_should_set_if_currently_unset )
     EXPECT_TRUE( colors.isSet( Color::Red ) );
 }
 
-TEST( libstdhl_cpp_Enum_Flags, caret_assign_operator_should_set_if_currently_unset )
+TEST( libstdhl_cpp_Enum_Flags,
+    caret_assign_operator_should_set_if_currently_unset )
 {
     // WHEN
     Colors colors;
@@ -164,7 +165,8 @@ TEST( libstdhl_cpp_Enum_Flags, flip_should_unset_if_currently_set )
     EXPECT_FALSE( colors.isSet( Color::Red ) );
 }
 
-TEST( libstdhl_cpp_Enum_Flags, caret_assign_operator_flip_should_unset_if_currently_set )
+TEST( libstdhl_cpp_Enum_Flags,
+    caret_assign_operator_flip_should_unset_if_currently_set )
 {
     // PREPARE
     Colors colors;
@@ -178,7 +180,8 @@ TEST( libstdhl_cpp_Enum_Flags, caret_assign_operator_flip_should_unset_if_curren
     EXPECT_FALSE( colors.isSet( Color::Red ) );
 }
 
-TEST( libstdhl_cpp_Enum_Flags, caret_operator_flip_should_unset_if_currently_set )
+TEST(
+    libstdhl_cpp_Enum_Flags, caret_operator_flip_should_unset_if_currently_set )
 {
     // PREPARE
     Colors colors;
