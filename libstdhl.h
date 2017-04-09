@@ -46,6 +46,7 @@
 #include "cpp/Args.h"
 #include "cpp/Binding.h"
 #include "cpp/Default.h"
+#include "cpp/Enum.h"
 #include "cpp/File.h"
 #include "cpp/Labeling.h"
 #include "cpp/List.h"
