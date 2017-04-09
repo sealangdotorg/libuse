@@ -64,7 +64,7 @@ namespace libstdhl
              * Sets the flag \a e on initialization, all other flags will be
              * cleared.
              */
-            Flags( const Enum e )
+            Flags( Enum e )
             : m_flags( asBitValue( e ) )
             {
             }
