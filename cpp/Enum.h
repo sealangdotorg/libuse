@@ -180,9 +180,11 @@ namespace libstdhl
             }
 
           private:
-            static constexpr UnderlyingType asBitValue( Enum e )
+            static UnderlyingType asBitValue( Enum e )
             {
-                return 2 << static_cast< UnderlyingType >( e );
+                assert( static_cast< UnderlyingType >( e )
+                        < ( sizeof( UnderlyingType ) * 8 ) );
+                return 1 << static_cast< UnderlyingType >( e );
             }
 
           private:
