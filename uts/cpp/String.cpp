@@ -86,6 +86,24 @@ TEST( libstdhl_cpp_String, split3 )
     EXPECT_EQ( splitted.size(), 3 );
 }
 
+TEST( libstdhl_cpp_String, join2 )
+{
+    std::vector< std::string > parts = { "foo", "bar" };
+
+    const auto joined = libstdhl::String::join( parts, "." );
+
+    EXPECT_STREQ( joined.c_str(), "foo.bar" );
+}
+
+TEST( libstdhl_cpp_String, join3 )
+{
+    std::vector< std::string > parts = { "foo", "bar", "qux" };
+
+    const auto joined = libstdhl::String::join( parts, "." );
+
+    EXPECT_STREQ( joined.c_str(), "foo.bar.qux" );
+}
+
 //
 //  Local variables:
 //  mode: c++

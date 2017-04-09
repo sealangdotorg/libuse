@@ -66,6 +66,22 @@ namespace libstdhl
 
             return result;
         };
+
+        static inline std::string join(
+            const std::vector< std::string >& elements,
+            const std::string& delimiter )
+        {
+            std::stringstream result;
+
+            u1 first = true;
+            for( const auto& element : elements )
+            {
+                result << ( first ? "" : delimiter ) << element;
+                first = false;
+            }
+
+            return result.str();
+        };
     };
 }
 
