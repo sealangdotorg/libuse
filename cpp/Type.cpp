@@ -191,6 +191,16 @@ u1 Type::operator>( const u64 rhs ) const
     }
 }
 
+u1 Type::operator>( const Type& rhs ) const
+{
+    const std::size_t size_lhs = m_words.size();
+    const std::size_t size_rhs = rhs.words().size();
+    assert( size_lhs == size_rhs );
+    assert( size_lhs == 1 );
+
+    return this->operator>( rhs.word( 0 ) );
+}
+
 Type& Type::operator+=( const u64 rhs )
 {
     u64 overflow = rhs;

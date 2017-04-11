@@ -132,7 +132,7 @@ namespace libstdhl
 
         inline u1 operator!=( const u64 rhs ) const
         {
-            return !operator==( rhs );
+            return not( operator==( rhs ) );
         }
 
         inline u1 operator==( const std::vector< u64 >& rhs ) const
@@ -143,7 +143,7 @@ namespace libstdhl
 
         inline u1 operator!=( const std::vector< u64 >& rhs ) const
         {
-            return !operator==( rhs );
+            return not( operator==( rhs ) );
         }
 
         inline u1 operator==( const Type& rhs ) const
@@ -168,10 +168,22 @@ namespace libstdhl
 
         inline u1 operator!=( const Type& rhs ) const
         {
-            return !operator==( rhs );
+            return not( operator==( rhs ) );
         }
 
         u1 operator>( const u64 rhs ) const;
+
+        inline u1 operator<=( const u64 rhs ) const
+        {
+            return not( operator>( rhs ) );
+        }
+
+        u1 operator>( const Type& rhs ) const;
+
+        inline u1 operator<=( const Type& rhs ) const
+        {
+            return not( operator>( rhs ) );
+        }
 
         Type& operator+=( const u64 rhs );
 
