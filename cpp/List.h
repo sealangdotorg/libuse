@@ -156,6 +156,11 @@ namespace libstdhl
             return m_elements.empty();
         }
 
+        const std::vector< typename T::Ptr >& data( void ) const
+        {
+            return m_elements;
+        }
+
       private:
         std::vector< typename T::Ptr > m_elements;
     };
