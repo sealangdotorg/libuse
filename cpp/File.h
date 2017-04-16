@@ -42,11 +42,37 @@ namespace libstdhl
     class File
     {
       public:
+        static std::ifstream open( const std::string& filename )
+        {
+            std::ifstream file( filename );
+
+            if( not exists( file ) )
+            {
+                throw std::invalid_argument(
+                    "filename '" + filename + "' does not exist" );
+            }
+
+            return file;
+        }
+
         static u1 exists( const std::string& filename )
         {
-            std::ifstream fd( filename );
-            return (u1)fd;
-        };
+            try
+            {
+                open( filename );
+            }
+            catch( const std::invalid_argument& e )
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        static u1 exists( const std::ifstream& file )
+        {
+            return file.is_open();
+        }
 
         static u8 readLines( const std::string& filename,
             std::function< void( u32, const std::string& ) >
@@ -56,12 +82,12 @@ namespace libstdhl
             std::string line;
             std::ifstream fd( filename );
 
-            if( not fd )
+            if( not exists( fd ) )
             {
                 return -1;
             }
 
-            while( getline( fd, line ) )
+            while( std::getline( fd, line ) )
             {
                 process_line( cnt, line );
                 cnt++;
@@ -69,7 +95,35 @@ namespace libstdhl
 
             fd.close();
             return 0;
-        };
+        }
+
+        static std::string readLine(
+            const std::string& filename, const u32 num )
+        {
+            std::string line;
+
+            auto file = open( filename );
+
+            gotoLine( file, num );
+
+            std::getline( file, line );
+
+            return line;
+        }
+
+        static std::ifstream& gotoLine(
+            std::ifstream& file, const std::size_t num )
+        {
+            file.seekg( std::ios::beg );
+
+            for( std::size_t c = 0; c < ( num - 1 ); c++ )
+            {
+                file.ignore(
+                    std::numeric_limits< std::streamsize >::max(), '\n' );
+            }
+
+            return file;
+        }
     };
 }
 
