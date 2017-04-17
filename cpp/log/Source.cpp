@@ -34,7 +34,8 @@ using namespace Log;
 //
 
 Source::Source( const std::string& name, const std::string& description )
-: m_name( name )
+: Item( Item::ID::SOURCE )
+, m_name( name )
 , m_description( description )
 {
 }

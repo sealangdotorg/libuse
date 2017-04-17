@@ -32,7 +32,8 @@ using namespace Log;
 //
 
 Chronograph::Chronograph( u1 autostart )
-: m_running( autostart )
+: Item( Item::ID::CHRONOGRAPH )
+, m_running( autostart )
 , m_start()
 , m_stop()
 {

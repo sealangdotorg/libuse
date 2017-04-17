@@ -35,7 +35,8 @@ using namespace Log;
 
 Data::Data( Level::ID level, const Source::Ptr& source,
     const Category::Ptr& category, const Items& items )
-: m_timestamp()
+: Item( Item::ID::DATA )
+, m_timestamp()
 , m_level( level )
 , m_source( source )
 , m_category( category )

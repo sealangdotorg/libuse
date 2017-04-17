@@ -52,7 +52,8 @@ static inline std::string time2str(
 //
 
 Timestamp::Timestamp( void )
-: m_timestamp( std::chrono::system_clock::now() )
+: Item( Item::ID::TIMESTAMP )
+, m_timestamp( std::chrono::system_clock::now() )
 {
 }
 

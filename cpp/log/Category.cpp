@@ -34,7 +34,8 @@ using namespace Log;
 //
 
 Category::Category( const std::string& name, const std::string& description )
-: m_name( name )
+: Item( Item::ID::CATEGORY )
+, m_name( name )
 , m_description( description )
 {
 }

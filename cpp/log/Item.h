@@ -52,7 +52,29 @@ namespace libstdhl
           public:
             using Ptr = std::shared_ptr< Item >;
 
+            enum class ID
+            {
+                TEXT,
+                POSITION,
+                RANGE,
+                LOCATION,
+
+                DATA,
+                LEVEL,
+                SOURCE,
+                CATEGORY,
+                TIMESTAMP,
+                CHRONOGRAPH,
+            };
+
+            Item( const ID id );
+
+            ID id( void ) const;
+
             virtual std::string accept( Formatter& formatter ) = 0;
+
+          private:
+            ID m_id;
         };
 
         using Items = List< Item >;

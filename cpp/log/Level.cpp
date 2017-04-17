@@ -34,7 +34,8 @@ using namespace Log;
 //
 
 Level::Level( Level::ID id )
-: m_id( id )
+: Item( Item::ID::LEVEL )
+, m_id( id )
 {
 }
 

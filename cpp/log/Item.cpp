@@ -29,12 +29,23 @@
 using namespace libstdhl;
 using namespace Log;
 
+Item::Item( const ID id )
+: m_id( id )
+{
+}
+
+Item::ID Item::id( void ) const
+{
+    return m_id;
+}
+
 //
 // TextItem
 //
 
 TextItem::TextItem( const std::string& text )
-: m_text( text )
+: Item( Item::ID::TEXT )
+, m_text( text )
 {
 }
 
@@ -53,7 +64,8 @@ std::string TextItem::accept( Formatter& formatter )
 //
 
 PositionItem::PositionItem( const u64 line, const u64 column )
-: m_line( line )
+: Item( Item::ID::POSITION )
+, m_line( line )
 , m_column( column )
 {
 }
@@ -78,7 +90,8 @@ std::string PositionItem::accept( Formatter& formatter )
 //
 
 RangeItem::RangeItem( const PositionItem& begin, const PositionItem& end )
-: m_begin( begin )
+: Item( Item::ID::RANGE )
+, m_begin( begin )
 , m_end( end )
 {
 }
@@ -103,7 +116,8 @@ std::string RangeItem::accept( Formatter& formatter )
 //
 
 LocationItem::LocationItem( const TextItem& filename, const RangeItem& range )
-: m_filename( filename )
+: Item( Item::ID::LOCATION )
+, m_filename( filename )
 , m_range( range )
 {
 }
