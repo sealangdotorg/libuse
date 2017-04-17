@@ -22,48 +22,16 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_H_
-#define _LIB_STDHL_H_
+#include "Ansi.h"
 
-/**
-   @brief    TODO
+using namespace libstdhl;
 
-   TODO
-*/
+static constexpr const char* ESC = "\x1B[";
 
-#ifndef __cplusplus
-
-// C includes
-#include "c/args.h"
-#include "c/default.h"
-#include "c/type.h"
-
-#else // __cplusplus
-
-// C++ includes
-
-#include "cpp/Allocator.h"
-#include "cpp/Ansi.h"
-#include "cpp/Args.h"
-#include "cpp/Binding.h"
-#include "cpp/Default.h"
-#include "cpp/Enum.h"
-#include "cpp/File.h"
-#include "cpp/Labeling.h"
-#include "cpp/List.h"
-#include "cpp/Log.h"
-#include "cpp/Log.h"
-#include "cpp/Random.h"
-#include "cpp/String.h"
-#include "cpp/Type.h"
-
-namespace libstdhl
+std::string Ansi::CSI( SGR command, const std::string& option )
 {
+    return ESC + std::to_string( (std::size_t)command ) + option + "m";
 }
-
-#endif // __cplusplus
-
-#endif // _LIB_STDHL_H_
 
 //
 //  Local variables:
