@@ -28,6 +28,15 @@
 
 using namespace libstdhl;
 
+#define TEST_NAME                                                              \
+    ( std::string(::testing::UnitTest::GetInstance()                           \
+                      ->current_test_info()                                    \
+                      ->test_case_name() )                                     \
+        + "."                                                                  \
+        + std::string(::testing::UnitTest::GetInstance()                       \
+                          ->current_test_info()                                \
+                          ->name() ) )
+
 TEST( libstdhl_cpp_Log, example )
 {
     Log::Stream c;
@@ -39,6 +48,7 @@ TEST( libstdhl_cpp_Log, example )
 
     Log::StringFormatter sf;
     Log::ConsoleFormatter cf;
+    Log::ApplicationFormatter af( TEST_NAME );
 
     Log::Filter ff;
 
@@ -47,6 +57,7 @@ TEST( libstdhl_cpp_Log, example )
 
     sw->add< Log::OutputStreamSink >( std::cerr, sf );
     sw->add< Log::OutputStreamSink >( std::cout, cf );
+    sw->add< Log::OutputStreamSink >( std::cout, af );
 
     c.flush( ff );
     c.flush( ff );

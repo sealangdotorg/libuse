@@ -26,6 +26,9 @@
 
 #include "Data.h"
 
+#include "../Ansi.h"
+#include "../File.h"
+
 using namespace libstdhl;
 using namespace Log;
 
@@ -160,6 +163,119 @@ std::string ConsoleFormatter::visit( Data& item )
     }
 
     return tmp;
+}
+
+//
+// ApplicationFormatter
+//
+
+ApplicationFormatter::ApplicationFormatter( const std::string& name )
+: m_name( name )
+{
+}
+
+std::string ApplicationFormatter::visit( Level& item )
+{
+    switch( item.id() )
+    {
+        case Level::EMERGENCY:
+        {
+            return "emergency:";
+        }
+        case Level::ALERT:
+        {
+            return "alert:";
+        }
+        case Level::CRITICAL:
+        {
+            return "critical:";
+        }
+        case Level::ERROR:
+        {
+            return Ansi::format< Ansi::Color::RED >( "error:" );
+        }
+        case Level::WARNING:
+        {
+            return Ansi::format< Ansi::Color::MAGENTA >( "warning:" );
+        }
+        case Level::NOTICE:
+        {
+            return "";
+        }
+        case Level::INFORMATIONAL:
+        {
+            return Ansi::format< Ansi::Color::YELLOW >( "info:" );
+        }
+        case Level::DEBUG:
+        {
+            return Ansi::format< Ansi::Color::CYAN >( "debug:" );
+        }
+    }
+}
+
+std::string ApplicationFormatter::visit( Data& item )
+{
+    std::string tmp = m_name + ": ";
+
+    tmp = Ansi::format< Ansi::Style::BOLD >(
+              tmp + item.level().accept( *this ) )
+          + " ";
+
+    u1 first = true;
+
+    for( auto i : item.items() )
+    {
+        tmp += ( first ? "" : ", " ) + i->accept( *this );
+
+        first = false;
+    }
+
+#ifndef NDEBUG
+    // auto tsp = item.timestamp().accept( *this );
+    auto src = item.source()->accept( *this );
+    auto cat = item.category()->accept( *this );
+
+    tmp += Ansi::format< Ansi::Style::FAINT >(
+        " [" + /*tsp +*/ src + ", " + cat + "]" );
+#endif
+
+    for( auto i : item.items() )
+    {
+        if( i->id() == Item::ID::LOCATION )
+        {
+            const auto& location = static_cast< const LocationItem& >( *i );
+
+            std::string line = File::readLine(
+                location.filename().text(), location.range().begin().line() );
+
+            tmp += "\n" + line + "\n";
+            tmp += std::string( location.range().begin().column() - 1, ' ' );
+
+            std::string underline;
+            if( location.range().begin().line()
+                == location.range().end().line() )
+            {
+                underline = std::string( location.range().end().column()
+                                             - location.range().begin().column()
+                                             - 1,
+                    '-' );
+            }
+            else
+            {
+                underline = std::string( line.size(), '-' );
+            }
+
+            tmp += Ansi::format< Ansi::Color::GREEN >(
+                Ansi::format< Ansi::Style::BOLD >( "^" ) + underline );
+        }
+    }
+
+    return tmp;
+}
+
+std::string ApplicationFormatter::visit( LocationItem& item )
+{
+    return Ansi::format< Ansi::Style::BOLD >( StringFormatter::visit( item ) );
 }
 
 //

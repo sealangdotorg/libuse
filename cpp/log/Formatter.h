@@ -93,6 +93,19 @@ namespace libstdhl
           public:
             std::string visit( Data& item ) override;
         };
+
+        class ApplicationFormatter : public StringFormatter
+        {
+          public:
+            ApplicationFormatter( const std::string& name );
+
+            std::string visit( Level& item ) override;
+            std::string visit( Data& item ) override;
+            std::string visit( LocationItem& item ) override;
+
+          private:
+            std::string m_name;
+        };
     }
 }
 
