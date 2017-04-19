@@ -88,7 +88,7 @@ def searcher( dirpath, rootdir = True ) :
         
         _fn, fileext = os.path.splitext( filepath )
         
-        if fileext in [ ".h", ".c", ".cc", ".cpp", ".casm" ] :
+        if fileext in [ ".h", ".c", ".cc", ".cpp", ".js", ".casm" ] :
             relicense( filepath, "//" )
         if fileext in [ ".ll" ] :
             relicense( filepath, ";;" )
