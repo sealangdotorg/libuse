@@ -76,6 +76,9 @@ namespace libstdhl
       public:
         Logger( Log::Stream& stream );
 
+        void output( const std::string& text );
+        void output( const char* format, ... );
+
         void error( const std::string& text );
         void error( const char* format, ... );
 

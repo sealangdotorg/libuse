@@ -49,19 +49,20 @@ TEST( libstdhl_cpp_logger, location_with_text )
     Stream stream;
     Logger log( stream );
 
-    // Data data( Level::ERROR,  );
+    // Data data( Level::ID::ERROR,  );
 
-    log.log( Level::ERROR, log.source(), log.category(),
+    log.log( Level::ID::ERROR, log.source(), log.category(),
         Items( { make< TextItem >( "ddxy" ) } ) );
 
-    log.log< Level::ERROR >( make< TextItem >( "ddxy" ) );
+    log.log< Level::ID::ERROR >( make< TextItem >( "ddxy" ) );
 
-    log.log< Level::ERROR >(
+    log.log< Level::ID::ERROR >(
         make< LocationItem >( TextItem( "file.txt" ),
             RangeItem( PositionItem( 1, 2 ), PositionItem( 3, 4 ) ) ),
         make< TextItem >( "nice range in a file :-)" ) );
 
-    log.log< Level::WARNING >( make< LocationItem >( "file.txt", 1, 2, 3, 4 ),
+    log.log< Level::ID::WARNING >(
+        make< LocationItem >( "file.txt", 1, 2, 3, 4 ),
         make< TextItem >( "nice range in a file :-)" ) );
 
     StringFormatter format;

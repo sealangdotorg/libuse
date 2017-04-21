@@ -48,7 +48,7 @@ namespace libstdhl
             // log severity level
             // https://tools.ietf.org/html/rfc5424#section-6.2.1
 
-            enum ID : u8
+            enum class ID
             {
                 EMERGENCY = 0,
                 ALERT,
@@ -58,6 +58,7 @@ namespace libstdhl
                 NOTICE,
                 INFORMATIONAL,
                 DEBUG,
+                OUTPUT,
             };
 
             // static constexpr std::size_t Size = DEBUG + 1;

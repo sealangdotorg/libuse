@@ -61,39 +61,46 @@ std::string StringFormatter::visit( Level& item )
 {
     switch( item.id() )
     {
-        case Level::EMERGENCY:
+        case Level::ID::EMERGENCY:
         {
             return "emergency";
         }
-        case Level::ALERT:
+        case Level::ID::ALERT:
         {
             return "alert";
         }
-        case Level::CRITICAL:
+        case Level::ID::CRITICAL:
         {
             return "critical";
         }
-        case Level::ERROR:
+        case Level::ID::ERROR:
         {
             return "error";
         }
-        case Level::WARNING:
+        case Level::ID::WARNING:
         {
             return "warning";
         }
-        case Level::NOTICE:
+        case Level::ID::NOTICE:
         {
-            return "";
+            return "notice";
         }
-        case Level::INFORMATIONAL:
+        case Level::ID::INFORMATIONAL:
         {
             return "info";
         }
-        case Level::DEBUG:
+        case Level::ID::DEBUG:
         {
             return "debug";
         }
+        case Level::ID::OUTPUT:
+        {
+            return "output";
+        }
     }
+
+    assert( !" internal error" );
+    return "";
 }
 
 std::string StringFormatter::visit( Data& item )
@@ -171,46 +178,59 @@ std::string ConsoleFormatter::visit( Data& item )
 
 ApplicationFormatter::ApplicationFormatter( const std::string& name )
 : m_name( name )
+, m_rawoutput( true )
 {
+}
+
+void ApplicationFormatter::setRawOutput( const u1 enable )
+{
+    m_rawoutput = enable;
 }
 
 std::string ApplicationFormatter::visit( Level& item )
 {
     switch( item.id() )
     {
-        case Level::EMERGENCY:
+        case Level::ID::EMERGENCY:
         {
             return "emergency:";
         }
-        case Level::ALERT:
+        case Level::ID::ALERT:
         {
             return "alert:";
         }
-        case Level::CRITICAL:
+        case Level::ID::CRITICAL:
         {
             return "critical:";
         }
-        case Level::ERROR:
+        case Level::ID::ERROR:
         {
             return Ansi::format< Ansi::Color::RED >( "error:" );
         }
-        case Level::WARNING:
+        case Level::ID::WARNING:
         {
             return Ansi::format< Ansi::Color::MAGENTA >( "warning:" );
         }
-        case Level::NOTICE:
+        case Level::ID::NOTICE:
         {
-            return "";
+            return "notice";
         }
-        case Level::INFORMATIONAL:
+        case Level::ID::INFORMATIONAL:
         {
             return Ansi::format< Ansi::Color::YELLOW >( "info:" );
         }
-        case Level::DEBUG:
+        case Level::ID::DEBUG:
         {
             return Ansi::format< Ansi::Color::CYAN >( "debug:" );
         }
+        case Level::ID::OUTPUT:
+        {
+            return "output";
+        }
     }
+
+    assert( !" internal error" );
+    return "";
 }
 
 std::string ApplicationFormatter::visit( Data& item )
@@ -220,6 +240,11 @@ std::string ApplicationFormatter::visit( Data& item )
     tmp = Ansi::format< Ansi::Style::BOLD >(
               tmp + item.level().accept( *this ) )
           + " ";
+
+    if( item.level() == Level::ID::OUTPUT and m_rawoutput )
+    {
+        tmp = "";
+    }
 
     u1 first = true;
 

@@ -45,6 +45,7 @@ TEST( libstdhl_cpp_Log, example )
     c.add( Log::Level::ID::INFORMATIONAL, "just a little info for you" );
     c.add( Log::Level::ID::WARNING, "a possible warning detected" );
     c.add( Log::Level::ID::ALERT, "this is an alert, please react" );
+    c.add( Log::Level::ID::OUTPUT, "this is an example output" );
 
     Log::StringFormatter sf;
     Log::ConsoleFormatter cf;
@@ -52,7 +53,8 @@ TEST( libstdhl_cpp_Log, example )
 
     Log::Filter ff;
 
-    ff.setLevel( Log::Level::WARNING );
+    ff.setLevel( Log::Level::ID::WARNING );
+    ff.setLevel( Log::Level::ID::OUTPUT );
     auto sw = ff.set< Log::Switch >();
 
     sw->add< Log::OutputStreamSink >( std::cerr, sf );
@@ -103,12 +105,12 @@ TEST( libstdhl_cpp_Log, merging_two_streams_and_routing_them_to_two_sinks )
     Log::Router rr;
 
     auto f0 = rr.add< Log::Filter >();
-    f0->setLevel( Log::Level::WARNING );
-    f0->setLevel( Log::Level::ERROR );
+    f0->setLevel( Log::Level::ID::WARNING );
+    f0->setLevel( Log::Level::ID::ERROR );
     f0->set< Log::OutputStreamSink >( std::cerr, sf );
 
     auto f1 = rr.add< Log::Filter >();
-    f1->setLevel( Log::Level::ALERT );
+    f1->setLevel( Log::Level::ID::ALERT );
     f1->set< Log::OutputStreamSink >( std::cout, cf );
 
     s.flush( rr );

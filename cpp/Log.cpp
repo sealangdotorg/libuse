@@ -65,7 +65,7 @@ void libstdhl::Log::error( const char* format, ... )
 {
     va_list args;
     va_start( args, format );
-    va_log( Level::ERROR, format, args );
+    va_log( Level::ID::ERROR, format, args );
     va_end( args );
 }
 
@@ -73,7 +73,7 @@ void libstdhl::Log::warning( const char* format, ... )
 {
     va_list args;
     va_start( args, format );
-    va_log( Level::WARNING, format, args );
+    va_log( Level::ID::WARNING, format, args );
     va_end( args );
 }
 
@@ -81,7 +81,7 @@ void libstdhl::Log::info( const char* format, ... )
 {
     va_list args;
     va_start( args, format );
-    va_log( Level::INFORMATIONAL, format, args );
+    va_log( Level::ID::INFORMATIONAL, format, args );
     va_end( args );
 }
 
@@ -96,69 +96,82 @@ Logger::Logger( libstdhl::Log::Stream& stream )
 {
 }
 
-void Logger::error( const char* format, ... )
+void Logger::output( const std::string& text )
+{
+    log( Log::Level::ID::OUTPUT, m_source, m_category, text );
+}
+
+void Logger::output( const char* format, ... )
 {
     va_list args;
     va_start( args, format );
-    c_log( Log::Level::ERROR, format, args );
+    c_log( Log::Level::ID::OUTPUT, format, args );
     va_end( args );
 }
 
 void Logger::error( const std::string& text )
 {
-    log( Log::Level::ERROR, m_source, m_category, text );
+    log( Log::Level::ID::ERROR, m_source, m_category, text );
+}
+
+void Logger::error( const char* format, ... )
+{
+    va_list args;
+    va_start( args, format );
+    c_log( Log::Level::ID::ERROR, format, args );
+    va_end( args );
 }
 
 void Logger::warning( const std::string& text )
 {
-    log( Log::Level::WARNING, m_source, m_category, text );
+    log( Log::Level::ID::WARNING, m_source, m_category, text );
 }
 
 void Logger::warning( const char* format, ... )
 {
     va_list args;
     va_start( args, format );
-    c_log( Log::Level::WARNING, format, args );
+    c_log( Log::Level::ID::WARNING, format, args );
     va_end( args );
 }
 
 void Logger::info( const std::string& text )
 {
-    log( Log::Level::INFORMATIONAL, m_source, m_category, text );
+    log( Log::Level::ID::INFORMATIONAL, m_source, m_category, text );
 }
 
 void Logger::info( const char* format, ... )
 {
     va_list args;
     va_start( args, format );
-    c_log( Log::Level::INFORMATIONAL, format, args );
+    c_log( Log::Level::ID::INFORMATIONAL, format, args );
     va_end( args );
 }
 
 void Logger::hint( const std::string& text )
 {
-    log( Log::Level::NOTICE, m_source, m_category, text );
+    log( Log::Level::ID::NOTICE, m_source, m_category, text );
 }
 
 void Logger::hint( const char* format, ... )
 {
     va_list args;
     va_start( args, format );
-    c_log( Log::Level::NOTICE, format, args );
+    c_log( Log::Level::ID::NOTICE, format, args );
     va_end( args );
 }
 
 #ifndef NDEBUG
 void Logger::debug( const std::string& text )
 {
-    log( Log::Level::DEBUG, m_source, m_category, text );
+    log( Log::Level::ID::DEBUG, m_source, m_category, text );
 }
 
 void Logger::debug( const char* format, ... )
 {
     va_list args;
     va_start( args, format );
-    c_log( Log::Level::DEBUG, format, args );
+    c_log( Log::Level::ID::DEBUG, format, args );
     va_end( args );
 }
 #endif

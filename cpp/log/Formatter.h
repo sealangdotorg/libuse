@@ -99,12 +99,15 @@ namespace libstdhl
           public:
             ApplicationFormatter( const std::string& name );
 
+            void setRawOutput( const u1 enable );
+
             std::string visit( Level& item ) override;
             std::string visit( Data& item ) override;
             std::string visit( LocationItem& item ) override;
 
           private:
             std::string m_name;
+            u1 m_rawoutput;
         };
     }
 }
