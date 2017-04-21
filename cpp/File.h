@@ -42,9 +42,12 @@ namespace libstdhl
     class File
     {
       public:
-        static std::fstream open( const std::string& filename )
+        static std::fstream open( const std::string& filename,
+            const std::ios_base::openmode mode = std::fstream::in )
         {
-            std::fstream file( filename );
+            std::fstream file;
+
+            file.open( filename, mode );
 
             if( not exists( file ) )
             {
@@ -53,6 +56,28 @@ namespace libstdhl
             }
 
             return file;
+        }
+
+        static void remove( const std::string& filename )
+        {
+            if( not exists( filename ) )
+            {
+                throw std::invalid_argument(
+                    "removing file '" + filename
+                    + "' failed, because it does not exist" );
+            }
+
+            auto result = std::remove( filename.c_str() );
+
+            if( result != 0 )
+            {
+                throw std::invalid_argument( "removing file '" + filename
+                                             + "' failed (error "
+                                             + std::to_string( result )
+                                             + ")" );
+            }
+
+            assert( not exists( filename ) );
         }
 
         static u1 exists( const std::string& filename )
