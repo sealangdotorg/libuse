@@ -42,9 +42,9 @@ namespace libstdhl
     class File
     {
       public:
-        static std::ifstream open( const std::string& filename )
+        static std::fstream open( const std::string& filename )
         {
-            std::ifstream file( filename );
+            std::fstream file( filename );
 
             if( not exists( file ) )
             {
@@ -69,7 +69,7 @@ namespace libstdhl
             return true;
         }
 
-        static u1 exists( const std::ifstream& file )
+        static u1 exists( const std::fstream& file )
         {
             return file.is_open();
         }
@@ -80,7 +80,7 @@ namespace libstdhl
         {
             u32 cnt = 0;
             std::string line;
-            std::ifstream fd( filename );
+            std::fstream fd( filename );
 
             if( not exists( fd ) )
             {
@@ -111,8 +111,8 @@ namespace libstdhl
             return line;
         }
 
-        static std::ifstream& gotoLine(
-            std::ifstream& file, const std::size_t num )
+        static std::fstream& gotoLine(
+            std::fstream& file, const std::size_t num )
         {
             file.seekg( std::ios::beg );
 
