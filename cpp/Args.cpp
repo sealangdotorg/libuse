@@ -49,75 +49,6 @@ Args::Args( int argc, const char** argv, Mode mode,
     {
         m_getopt_func = &getopt_long_only;
     }
-
-    m_usage = [this]() {
-        std::map< std::string, Option > sorted_options;
-
-        for( auto& opt : this->m_options )
-        {
-            std::string key;
-
-            if( opt.second.field.val )
-            {
-                key.push_back( '.' );
-                key.push_back( opt.second.field.val );
-            }
-            if( opt.second.field.name )
-            {
-                key.append( opt.second.field.name );
-            }
-
-            sorted_options[ key ] = opt.second;
-        }
-
-        for( auto& opt : sorted_options )
-        {
-            std::string str = "-";
-
-            if( opt.second.field.val and ( not opt.second.field.name ) )
-            {
-                // only short option provided
-                str.push_back( opt.second.field.val );
-            }
-            else
-            {
-                // long option provided
-                if( opt.second.field.val )
-                {
-                    // additionally short option provided
-                    str.push_back( opt.second.field.val );
-                    str.append( ", -" );
-                }
-
-                str.append( "-" );
-                str.append( opt.second.field.name );
-            }
-
-            if( opt.second.field.has_arg )
-            {
-                if( opt.second.field.has_arg == OPTIONAL )
-                {
-                    str.append( "[=" );
-                }
-                else
-                {
-                    str.append( " " );
-                }
-
-                str.append( "<" );
-                str.append( opt.second.metatag );
-                str.append( ">" );
-
-                if( opt.second.field.has_arg == OPTIONAL )
-                {
-                    str.append( "]" );
-                }
-            }
-
-            fprintf( stderr, "  %-30.30s %s\n", str.c_str(),
-                opt.second.description.c_str() );
-        }
-    };
 }
 
 int Args::parse( Logger& log )
@@ -372,7 +303,85 @@ void Args::add( const char arg_char, const char* arg_str, Kind kind,
     }
 }
 
-const char* Args::programName( void ) const
+std::string Args::usage( void ) const
+{
+    std::stringstream stream;
+
+    std::map< std::string, Option > sorted_options;
+
+    for( auto& opt : this->m_options )
+    {
+        std::string key;
+
+        if( opt.second.field.val )
+        {
+            key.push_back( '.' );
+            key.push_back( opt.second.field.val );
+        }
+        if( opt.second.field.name )
+        {
+            key.append( opt.second.field.name );
+        }
+
+        sorted_options[ key ] = opt.second;
+    }
+
+    for( auto& opt : sorted_options )
+    {
+        std::string str = "-";
+
+        if( opt.second.field.val and ( not opt.second.field.name ) )
+        {
+            // only short option provided
+            str.push_back( opt.second.field.val );
+        }
+        else
+        {
+            // long option provided
+            if( opt.second.field.val )
+            {
+                // additionally short option provided
+                str.push_back( opt.second.field.val );
+                str.append( ", -" );
+            }
+
+            str.append( "-" );
+            str.append( opt.second.field.name );
+        }
+
+        if( opt.second.field.has_arg )
+        {
+            if( opt.second.field.has_arg == OPTIONAL )
+            {
+                str.append( "[=" );
+            }
+            else
+            {
+                str.append( " " );
+            }
+
+            str.append( "<" );
+            str.append( opt.second.metatag );
+            str.append( ">" );
+
+            if( opt.second.field.has_arg == OPTIONAL )
+            {
+                str.append( "]" );
+            }
+        }
+
+        char buffer[ 256 ];
+
+        sprintf( buffer, "  %-30.30s %s\n", str.c_str(),
+            opt.second.description.c_str() );
+
+        stream << buffer;
+    }
+
+    return stream.str();
+}
+
+std::string Args::programName( void ) const
 {
     return m_argv[ 0 ];
 }

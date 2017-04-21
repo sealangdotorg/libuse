@@ -83,9 +83,9 @@ namespace libstdhl
             std::function< i32( const char* ) > process_option,
             const std::string& metatag = "arg" );
 
-        const char* programName( void ) const;
+        std::string usage( void ) const;
 
-        std::function< void( void ) > m_usage;
+        std::string programName( void ) const;
 
       private:
         struct Option
