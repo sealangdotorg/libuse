@@ -22,9 +22,7 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "gtest/gtest.h"
-
-#include "cpp/Rational.h"
+#include "uts/main.h"
 
 using namespace libstdhl;
 

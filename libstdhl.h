@@ -34,6 +34,7 @@
 #ifndef __cplusplus
 
 // C includes
+
 #include "c/args.h"
 #include "c/default.h"
 #include "c/type.h"
@@ -49,11 +50,14 @@
 #include "cpp/Default.h"
 #include "cpp/Enum.h"
 #include "cpp/File.h"
+#include "cpp/FloatingPoint.h"
+#include "cpp/Integer.h"
 #include "cpp/Labeling.h"
 #include "cpp/List.h"
 #include "cpp/Log.h"
 #include "cpp/Log.h"
 #include "cpp/Random.h"
+#include "cpp/Rational.h"
 #include "cpp/String.h"
 #include "cpp/Type.h"
 

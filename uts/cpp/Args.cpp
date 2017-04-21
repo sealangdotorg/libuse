@@ -22,21 +22,9 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "gtest/gtest.h"
-
-#include "cpp/Args.h"
-#include "cpp/Log.h"
+#include "uts/main.h"
 
 using namespace libstdhl;
-
-#define TEST_NAME                                                              \
-    ( std::string(::testing::UnitTest::GetInstance()                           \
-                      ->current_test_info()                                    \
-                      ->test_case_name() )                                     \
-        + "." + std::string(::testing::UnitTest::GetInstance()                 \
-                                ->current_test_info()                          \
-                                ->name() ) )                                   \
-        .c_str()
 
 TEST( libstdhl_args_cpp, no_files_default_processing )
 {
@@ -260,8 +248,6 @@ TEST_P( cpp_Args, param )
 
         std::function< i32( const char* ) > hook = [param_opt, &cnt_options_chr,
             &cnt_options_str]( const char* arg ) {
-            // printf("%s: '%c' \"%s\" {%u}\n", TEST_NAME, param_opt.chr,
-            // param_opt.str, param_opt.req);
 
             if( param_opt.chr )
             {
@@ -342,3 +328,13 @@ INSTANTIATE_TEST_CASE_P( libstdhl_cpp_Args_fail, cpp_Args,
         Param{ { "--long-option-name" }, 0, {}, 1 },
         Param{ { "--missing-argument", "bla" }, 0,
             { { 'a', "missing-argument", 1, 1 } } } ) );
+
+//
+//  Local variables:
+//  mode: c++
+//  indent-tabs-mode: nil
+//  c-basic-offset: 4
+//  tab-width: 4
+//  End:
+//  vim:noexpandtab:sw=4:ts=4:
+//
