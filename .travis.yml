@@ -157,4 +157,4 @@ install:
   - echo ${BUILD}
 
 script:
-  - make ${BUILD}-all ${BUILD}-test ${BUILD}-benchmark
+  - make ${BUILD} ${BUILD}-test ${BUILD}-benchmark
