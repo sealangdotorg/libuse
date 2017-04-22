@@ -25,8 +25,8 @@
 #ifndef _LIB_STDHL_CPP_XML_H_
 #define _LIB_STDHL_CPP_XML_H_
 
-#include "../xml/src/pugixml.cpp"
-#include "../xml/src/pugixml.hpp"
+#include "pugixml.cpp"
+#include "pugixml.hpp"
 
 /**
    @brief    C++ XML Wrapper
