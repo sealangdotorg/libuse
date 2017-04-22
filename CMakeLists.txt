@@ -54,8 +54,8 @@ include_directories(
   ${LIBS}/gtest/googletest
   ${LIBS}/gtest/googletest/include
   ${LIBS}/hayai/src
-  ${LIBS}/json/src
-  ${LIBS}/xml/src
+  ${LIBS}/json
+  ${LIBS}/xml
 )
 
 
