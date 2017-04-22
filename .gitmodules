@@ -4,3 +4,9 @@
 [submodule "lib/hayai"]
 	path = lib/hayai
 	url = https://github.com/nickbruun/hayai
+[submodule "lib/xml"]
+	path = lib/xml
+	url = https://github.com/zeux/pugixml
+[submodule "lib/json"]
+	path = lib/json
+	url = https://github.com/nlohmann/json

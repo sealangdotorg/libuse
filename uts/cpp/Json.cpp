@@ -22,61 +22,16 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_H_
-#define _LIB_STDHL_H_
+#define _LIB_STDHL_JSON_
 
-/**
-   @brief    TODO
+#include "uts/main.h"
 
-   TODO
-*/
+using namespace libstdhl;
 
-#ifndef __cplusplus
-
-// C includes
-
-#include "c/args.h"
-#include "c/default.h"
-#include "c/type.h"
-
-#else // __cplusplus
-
-// C++ includes
-
-#include "cpp/Allocator.h"
-#include "cpp/Ansi.h"
-#include "cpp/Args.h"
-#include "cpp/Binding.h"
-#include "cpp/Default.h"
-#include "cpp/File.h"
-#include "cpp/FloatingPoint.h"
-#include "cpp/Integer.h"
-#include "cpp/Labeling.h"
-#include "cpp/List.h"
-#include "cpp/Log.h"
-#include "cpp/Log.h"
-#include "cpp/Random.h"
-#include "cpp/Rational.h"
-#include "cpp/String.h"
-#include "cpp/Type.h"
-
-#ifdef _LIB_STDHL_JSON_
-#include "cpp/Json.h"
-#endif
-
-#ifdef _LIB_STDHL_XML_
-#include "cpp/Xml.h"
-#endif
-
-#include "cpp/Enum.h"
-
-namespace libstdhl
+TEST( libstdhl_cpp_Json, example )
 {
+    libstdhl::Json::Object obj = "{ \"key\" : true }"_json;
 }
-
-#endif // __cplusplus
-
-#endif // _LIB_STDHL_H_
 
 //
 //  Local variables:
