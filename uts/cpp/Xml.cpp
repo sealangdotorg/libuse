@@ -22,8 +22,6 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#define _LIB_STDHL_XML_
-
 #include "uts/main.h"
 
 using namespace libstdhl;

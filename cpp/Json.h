@@ -25,7 +25,7 @@
 #ifndef _LIB_STDHL_CPP_JSON_H_
 #define _LIB_STDHL_CPP_JSON_H_
 
-#include "../json/src/json.hpp"
+#include "json/json.hpp"
 
 /**
    @brief    C++ JSON Wrapper

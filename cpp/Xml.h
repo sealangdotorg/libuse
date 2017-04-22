@@ -25,12 +25,12 @@
 #ifndef _LIB_STDHL_CPP_XML_H_
 #define _LIB_STDHL_CPP_XML_H_
 
-#include "../xml/src/pugixml.hpp"
+#include "xml/pugixml.hpp"
 
 /**
    @brief    C++ XML Wrapper
 
-   https://github.com/zeux/pugixml/blob/master/src/pugixml.hpp
+   https://github.com/zeux/pugixml
 */
 
 namespace libstdhl
@@ -45,15 +45,6 @@ namespace libstdhl
 }
 
 #endif // _LIB_STDHL_CPP_XML_H_
-
-#ifndef _LIB_STDHL_CPP_XML_S_
-#define _LIB_STDHL_CPP_XML_S_
-
-#include "../xml/src/pugixml.cpp"
-
-#endif // _LIB_STDHL_CPP_XML_H_
-
-
 
 //
 //  Local variables:

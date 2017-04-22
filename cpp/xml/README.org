@@ -1,0 +1,5 @@
+
+* 3rd-Party C++ XML Library
+
+The content of this directory includes a C++ XML library, which was released under a MIT license. 
+For further information please see: https://github.com/zeux/pugixml

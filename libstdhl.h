@@ -48,9 +48,11 @@
 #include "cpp/Args.h"
 #include "cpp/Binding.h"
 #include "cpp/Default.h"
+#include "cpp/Enum.h"
 #include "cpp/File.h"
 #include "cpp/FloatingPoint.h"
 #include "cpp/Integer.h"
+#include "cpp/Json.h"
 #include "cpp/Labeling.h"
 #include "cpp/List.h"
 #include "cpp/Log.h"
@@ -59,16 +61,7 @@
 #include "cpp/Rational.h"
 #include "cpp/String.h"
 #include "cpp/Type.h"
-
-#ifdef _LIB_STDHL_JSON_
-#include "cpp/Json.h"
-#endif
-
-#ifdef _LIB_STDHL_XML_
 #include "cpp/Xml.h"
-#endif
-
-#include "cpp/Enum.h"
 
 namespace libstdhl
 {
