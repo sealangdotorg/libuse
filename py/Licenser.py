@@ -75,7 +75,9 @@ def relicense( filepath, comment, licensetext = licensetext ) :
 
 def searcher( dirpath, rootdir = True ) :
     if  not rootdir \
-    and os.path.exists( os.path.join( dirpath, ".git" ) ) :
+    and (  os.path.exists( os.path.join( dirpath, ".git" ) )
+        or os.path.exists( os.path.join( dirpath, ".3rd-party" ) )
+    ) :
         return
 
     
