@@ -61,12 +61,23 @@ class TestClass
     u32 m_value;
 };
 
+TEST( libstdhl_cpp_Default, make_unique )
+{
+    auto a = make_unique< TestClass >( 123 );
+    auto b = make_unique< TestClass >( 123 );
+
+    EXPECT_NE( a, b );
+    EXPECT_NE( a.get(), b.get() );
+    EXPECT_EQ( a->value(), b->value() );
+}
+
 TEST( libstdhl_cpp_Default, make )
 {
     auto a = make< TestClass >( 123 );
     auto b = make< TestClass >( 123 );
 
     EXPECT_NE( a, b );
+    EXPECT_NE( a.get(), b.get() );
     EXPECT_EQ( a->value(), b->value() );
 }
 
@@ -79,6 +90,7 @@ TEST( libstdhl_cpp_Default, get )
     EXPECT_TRUE( b != nullptr );
 
     EXPECT_EQ( a, b );
+    EXPECT_EQ( a.get(), b.get() );
     EXPECT_EQ( *a, *b );
     EXPECT_EQ( a->value(), b->value() );
 }

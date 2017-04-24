@@ -52,6 +52,19 @@ namespace libstdhl
     };
 
     //
+    // unique object creation utility
+    //
+
+    template < typename T, typename... Args >
+    typename T::Ptr make_unique( Args&&... args )
+    {
+        return std::unique_ptr< T >(
+            new T( std::forward< Args >( args )... ) ); // TODO: PPA: change
+                                                        // this when C++14
+                                                        // make_unique is ready
+    }
+
+    //
     // shared object creation utility
     //
 
