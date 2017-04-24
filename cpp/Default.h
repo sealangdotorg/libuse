@@ -56,7 +56,7 @@ namespace libstdhl
     //
 
     template < typename T, typename... Args >
-    typename T::Ptr make_unique( Args&&... args )
+    typename std::unique_ptr< T > make_unique( Args&&... args )
     {
         return std::unique_ptr< T >(
             new T( std::forward< Args >( args )... ) ); // TODO: PPA: change
@@ -69,7 +69,7 @@ namespace libstdhl
     //
 
     template < typename T, typename... Args >
-    typename T::Ptr make( Args&&... args )
+    typename std::shared_ptr< T > make( Args&&... args )
     {
         return std::make_shared< T >( std::forward< Args >( args )... );
     }
@@ -80,7 +80,7 @@ namespace libstdhl
     // through 'make_hash()'
     //
     template < typename T, typename... Args >
-    inline typename T::Ptr get( Args&&... args )
+    inline typename std::shared_ptr< T > get( Args&&... args )
     {
         T tmp = T( std::forward< Args >( args )... );
 
@@ -100,7 +100,7 @@ namespace libstdhl
     //
 
     template < typename T >
-    typename T::Ptr wrap( T& stack_object )
+    typename std::shared_ptr< T > wrap( T& stack_object )
     {
         static auto no_dtor = []( T* ) {};
         return std::shared_ptr< T >( &stack_object, no_dtor );
