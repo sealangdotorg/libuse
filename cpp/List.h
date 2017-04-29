@@ -42,8 +42,14 @@ namespace libstdhl
 
         using iterator = typename std::vector< typename T::Ptr >::iterator;
 
+        using reverse_iterator =
+            typename std::vector< typename T::Ptr >::reverse_iterator;
+
         using const_iterator =
             typename std::vector< typename T::Ptr >::const_iterator;
+
+        using const_reverse_iterator =
+            typename std::vector< typename T::Ptr >::const_reverse_iterator;
 
         using reference = typename std::vector< typename T::Ptr >::reference;
 
@@ -93,7 +99,7 @@ namespace libstdhl
 
         const_iterator begin( void ) const
         {
-            return m_elements.cbegin();
+            return m_elements.begin();
         }
 
         const_iterator cbegin( void ) const
@@ -110,12 +116,46 @@ namespace libstdhl
 
         const_iterator end( void ) const
         {
-            return m_elements.cend();
+            return m_elements.end();
         }
 
         const_iterator cend( void ) const
         {
             return m_elements.cend();
+        }
+
+        // http://en.cppreference.com/w/cpp/container/vector/rbegin
+
+        reverse_iterator rbegin( void )
+        {
+            return m_elements.rbegin();
+        }
+
+        const_reverse_iterator rbegin( void ) const
+        {
+            return m_elements.rbegin();
+        }
+
+        const_reverse_iterator crbegin( void ) const
+        {
+            return m_elements.crbegin();
+        }
+
+        // http://en.cppreference.com/w/cpp/container/vector/rend
+
+        reverse_iterator rend( void )
+        {
+            return m_elements.rend();
+        }
+
+        const_reverse_iterator rend( void ) const
+        {
+            return m_elements.rend();
+        }
+
+        const_reverse_iterator crend( void ) const
+        {
+            return m_elements.crend();
         }
 
         // http://en.cppreference.com/w/cpp/container/vector/front
