@@ -446,6 +446,18 @@ TEST( DISABLED_libstdhl_cpp_integer, str_decimal40_sign )
     EXPECT_EQ( i.word( 0 ), 0 );
 }
 
+TEST( libstdhl_cpp_integer, operator_add )
+{
+    const auto a = Integer( (i64)123 );
+    const auto b = Integer( (i64)321 );
+
+    const auto c = a + b;
+
+    EXPECT_EQ( c.words().size(), 1 );
+    EXPECT_EQ( c.sign(), false );
+    EXPECT_EQ( c.word( 0 ), 123 + 321 );
+}
+
 //
 //  Local variables:
 //  mode: c++

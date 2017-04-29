@@ -100,6 +100,18 @@ Integer::Integer( const std::string& value, const Radix radix )
     m_sign = sign;
 }
 
+Integer& Integer::operator+=( const Integer& rhs )
+{
+    assert( m_words.size() == rhs.words().size() );
+    assert( m_words.size() == 1 );
+
+#warning "HACK!"
+
+    m_words[ 0 ] += rhs.word( 0 );
+
+    return *this;
+}
+
 //
 //  Local variables:
 //  mode: c++

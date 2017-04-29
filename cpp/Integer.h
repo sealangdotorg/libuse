@@ -47,6 +47,14 @@ namespace libstdhl
         Integer( const std::string& value, const Radix radix = DECIMAL );
 
         ~Integer( void ) = default;
+
+        Integer& operator+=( const Integer& rhs );
+
+        friend Integer operator+( Integer lhs, const Integer& rhs )
+        {
+            lhs += rhs;
+            return lhs;
+        }
     };
 }
 
