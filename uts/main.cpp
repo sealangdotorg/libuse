@@ -22,26 +22,15 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_UTS_MAIN_H_
-#define _LIB_STDHL_UTS_MAIN_H_
+#include "uts/main.h"
 
-#include "gtest/gtest.h"
-#include "hayai.hpp"
+TEST( libstdhl, main )
+{
+}
 
-#include "libstdhl.h"
-
-#define TEST_CASE                                                              \
-    std::string(::testing::UnitTest::GetInstance()                             \
-                    ->current_test_info()                                      \
-                    ->test_case_name() )
-
-#define TEST_UNIT                                                              \
-    std::string(                                                               \
-        ::testing::UnitTest::GetInstance()->current_test_info()->name() )
-
-#define TEST_NAME ( TEST_CASE + "." + TEST_UNIT )
-
-#endif // _LIB_STDHL_UTS_MAIN_H_
+BENCHMARK( libstdhl, main, 0, 0 )
+{
+}
 
 //
 //  Local variables:
