@@ -35,12 +35,16 @@
 
 namespace libstdhl
 {
+    class Integer;
+
     class Rational : public Type
     {
       public:
         using Ptr = std::shared_ptr< Rational >;
 
         Rational( const std::string& value, const Radix radix = DECIMAL );
+
+        Rational( const Integer& numerator, const Integer& denominator );
 
         ~Rational( void ) = default;
     };
