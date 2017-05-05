@@ -25,8 +25,8 @@
 #ifndef _LIB_STDHL_UTS_MAIN_H_
 #define _LIB_STDHL_UTS_MAIN_H_
 
-#include "gtest/gtest.h"
 #include "hayai.hpp"
+#include "gtest/gtest.h"
 
 #include "libstdhl.h"
 
