@@ -250,6 +250,11 @@ std::string ApplicationFormatter::visit( Data& item )
 
     for( auto i : item.items() )
     {
+        if( i->id() == Item::ID::LOCATION )
+        {
+            continue;
+        }
+
         tmp += ( first ? "" : ", " ) + i->accept( *this );
 
         first = false;
@@ -268,12 +273,14 @@ std::string ApplicationFormatter::visit( Data& item )
     {
         if( i->id() == Item::ID::LOCATION )
         {
+            tmp += "\n" + i->accept( *this );
+
             const auto& location = static_cast< const LocationItem& >( *i );
 
             std::string line = File::readLine(
                 location.filename().text(), location.range().begin().line() );
 
-            tmp += "\n" + line + "\n";
+            tmp += "\n" + Ansi::format< 192, 192, 192 >( line ) + "\n";
             tmp += std::string( location.range().begin().column() - 1, ' ' );
 
             std::string underline;
