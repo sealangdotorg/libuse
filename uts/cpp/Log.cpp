@@ -26,15 +26,6 @@
 
 using namespace libstdhl;
 
-#define TEST_NAME                                                              \
-    ( std::string(::testing::UnitTest::GetInstance()                           \
-                      ->current_test_info()                                    \
-                      ->test_case_name() )                                     \
-        + "."                                                                  \
-        + std::string(::testing::UnitTest::GetInstance()                       \
-                          ->current_test_info()                                \
-                          ->name() ) )
-
 TEST( libstdhl_cpp_Log, example )
 {
     Log::Stream c;
