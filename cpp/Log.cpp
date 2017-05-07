@@ -93,6 +93,8 @@ Logger::Logger( libstdhl::Log::Stream& stream )
 : m_stream( stream )
 , m_source( Source::defaultSource() )
 , m_category( Category::defaultCategory() )
+, m_errors( 0 )
+, m_warnings( 0 )
 {
 }
 
@@ -122,6 +124,11 @@ void Logger::error( const char* format, ... )
     va_end( args );
 }
 
+u64 Logger::errors( void ) const
+{
+    return m_errors;
+}
+
 void Logger::warning( const std::string& text )
 {
     log( Log::Level::ID::WARNING, m_source, m_category, text );
@@ -133,6 +140,11 @@ void Logger::warning( const char* format, ... )
     va_start( args, format );
     c_log( Log::Level::ID::WARNING, format, args );
     va_end( args );
+}
+
+u64 Logger::warnings( void ) const
+{
+    return m_warnings;
 }
 
 void Logger::info( const std::string& text )
@@ -207,6 +219,18 @@ void Logger::setCategory( const Log::Category::Ptr& category )
 Category::Ptr Logger::category( void ) const
 {
     return m_category;
+}
+
+void Logger::diagnostic( const Log::Data& data )
+{
+    if( data.level().id() == Log::Level::ID::ERROR )
+    {
+        m_errors++;
+    }
+    else if( data.level().id() == Log::Level::ID::WARNING )
+    {
+        m_warnings++;
+    }
 }
 
 //

@@ -81,9 +81,11 @@ namespace libstdhl
 
         void error( const std::string& text );
         void error( const char* format, ... );
+        u64 errors( void ) const;
 
         void warning( const std::string& text );
         void warning( const char* format, ... );
+        u64 warnings( void ) const;
 
         void info( const std::string& text );
         void info( const char* format, ... );
@@ -109,6 +111,7 @@ namespace libstdhl
         void log( Args&&... args )
         {
             m_stream.add( std::forward< Args >( args )... );
+            diagnostic( m_stream.data().back() );
         }
 
         template < const Log::Level::ID LEVEL, typename... Args >
@@ -116,6 +119,7 @@ namespace libstdhl
         {
             m_stream.add( LEVEL, source(), category(),
                 Log::Items( { std::forward< Args >( args )... } ) );
+            diagnostic( m_stream.data().back() );
         }
 
         Log::Stream& stream( void );
@@ -129,9 +133,13 @@ namespace libstdhl
         Log::Category::Ptr category( void ) const;
 
       private:
+        void diagnostic( const Log::Data& data );
+
         Log::Stream& m_stream;
         Log::Source::Ptr m_source;
         Log::Category::Ptr m_category;
+        u64 m_errors;
+        u64 m_warnings;
     };
 }
 
