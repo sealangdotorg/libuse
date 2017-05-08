@@ -29,6 +29,7 @@
 
 #include "c/type.h"
 
+#include <array>
 #include <bitset>
 #include <limits>
 #include <list>
