@@ -22,54 +22,39 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_H_
-#define _LIB_STDHL_H_
+#include "uts/main.h"
 
-/**
-   @brief    TODO
+using namespace libstdhl;
 
-   TODO
-*/
-
-#ifndef __cplusplus
-
-// C includes
-
-#include "c/args.h"
-#include "c/default.h"
-#include "c/type.h"
-
-#else // __cplusplus
-
-// C++ includes
-
-#include "cpp/Allocator.h"
-#include "cpp/Ansi.h"
-#include "cpp/Args.h"
-#include "cpp/Binding.h"
-#include "cpp/Default.h"
-#include "cpp/Enum.h"
-#include "cpp/File.h"
-#include "cpp/FloatingPoint.h"
-#include "cpp/Integer.h"
-#include "cpp/Json.h"
-#include "cpp/Labeling.h"
-#include "cpp/List.h"
-#include "cpp/Log.h"
-#include "cpp/Random.h"
-#include "cpp/Rational.h"
-#include "cpp/String.h"
-#include "cpp/Type.h"
-#include "cpp/Variadic.h"
-#include "cpp/Xml.h"
-
-namespace libstdhl
+template < typename... Args >
+static std::size_t func_size( Args&&... args )
 {
+    return Variadic< Args... >::size;
 }
 
-#endif // __cplusplus
+TEST( libstdhl_cpp_Variadic, argument_size )
+{
+    EXPECT_EQ( func_size( 0, 1, 2, 3 ), 4 );
+    EXPECT_EQ( func_size( 10, "asdf", 'g', 4.8, true ), 5 );
+    EXPECT_EQ( func_size( true, false, true ), 3 );
+}
 
-#endif // _LIB_STDHL_H_
+// template < typename... Args >
+// static std::size_t func_sum( Args&&... args )
+// {
+//     std::size_t sum = 0;
+
+//     Variadic< Args... >::iterate(
+//         [&]( std::size_t index, i64&& value ) { sum += value; },
+//         std::forward< Args >( args )... );
+
+//     return sum;
+// }
+
+// TEST( libstdhl_cpp_Variadic, argument_sum )
+// {
+//     EXPECT_EQ( func_sum( 1, 2, 3, 4 ), 10 );
+// }
 
 //
 //  Local variables:
