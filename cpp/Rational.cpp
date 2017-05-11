@@ -50,16 +50,35 @@ Rational::Rational( const std::string& value, const Type::Radix radix )
 
     const auto numerator = Integer( parts[ 0 ], radix );
 
-    m_meta = numerator.words().size();
-    m_words = numerator.words();
+    m_meta = numerator.size();
+
+    numerator.foreach( [&]( const std::size_t index, const u64 value ) {
+        if( index < 2 )
+        {
+            m_words[ index ] = value;
+        }
+        else
+        {
+            m_words_ext.emplace_back( value );
+        }
+    } );
 
     if( parts.size() > 1 )
     {
         const auto denominator = Integer( parts[ 1 ], radix );
 
-        m_words.insert( m_words.end(),
-            denominator.words().begin(),
-            denominator.words().end() );
+        denominator.foreach( [&]( const std::size_t index, const u64 value ) {
+            const auto pos = m_meta + index;
+
+            if( pos < 2 )
+            {
+                m_words[ pos ] = value;
+            }
+            else
+            {
+                m_words_ext.emplace_back( value );
+            }
+        } );
     }
 }
 
@@ -71,11 +90,32 @@ Rational::Rational( const Integer& numerator, const Integer& denominator )
         throw std::domain_error( "denominator of Rational is zero" );
     }
 
-    m_meta = numerator.words().size();
-    m_words = numerator.words();
+    m_meta = numerator.size();
 
-    m_words.insert(
-        m_words.end(), denominator.words().begin(), denominator.words().end() );
+    numerator.foreach( [&]( const std::size_t index, const u64 value ) {
+        if( index < 2 )
+        {
+            m_words[ index ] = value;
+        }
+        else
+        {
+            m_words_ext.emplace_back( value );
+        }
+    } );
+
+    denominator.foreach( [&]( const std::size_t index, const u64 value ) {
+
+        const auto pos = m_meta + index;
+
+        if( pos < 2 )
+        {
+            m_words[ pos ] = value;
+        }
+        else
+        {
+            m_words_ext.emplace_back( value );
+        }
+    } );
 }
 
 //

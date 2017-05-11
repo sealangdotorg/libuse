@@ -30,7 +30,7 @@ TEST( libstdhl_cpp_rational, str_decimal1 )
 {
     auto i = Rational( "5", Type::Radix::DECIMAL );
 
-    EXPECT_EQ( i.words().size(), 1 );
+    EXPECT_EQ( i.size(), 1 );
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.word( 0 ), 5 );
 }
@@ -39,7 +39,7 @@ TEST( libstdhl_cpp_rational, str_decimal4 )
 {
     auto i = Rational( "2/31", Type::Radix::DECIMAL );
 
-    EXPECT_EQ( i.words().size(), 2 );
+    EXPECT_EQ( i.size(), 2 );
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.word( 0 ), 2 );
     EXPECT_EQ( i.word( 1 ), 31 );

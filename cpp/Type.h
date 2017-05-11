@@ -79,56 +79,104 @@ namespace libstdhl
             UNIX = 20
         };
 
-        explicit Type( const std::string& data, u64 precision, const u1 sign,
-            const Radix radix );
+        explicit Type(
+            const std::string& data, const u1 sign, const Radix radix );
 
         explicit Type( const std::vector< u64 >& words, const u1 sign = false );
 
-        explicit Type( u64 word, u64 precision, const u1 sign = false );
+        explicit Type( u64 word, const u1 sign = false );
 
         Type( void );
 
         ~Type( void ) = default;
 
-        void add( u64 word );
+        // void add( u64 word );
 
         void set( std::size_t index, u64 word );
 
         inline void setToZero( void )
         {
-            m_words.assign( m_words.size(), 0 );
+            m_words[ 0 ] = 0;
+            m_words[ 1 ] = 0;
+            m_words_ext.assign( m_words_ext.size(), 0 );
             m_carry = 0;
             m_sign = false;
         }
-
-        u64 word( std::size_t index ) const;
 
         u64 carry( void ) const;
 
         u1 sign( void ) const;
 
-        inline const u64* data( void ) const
+        inline void foreach(
+            const std::function< void( const std::size_t, const u64 ) >&
+                callback,
+            const u1 reverse = false ) const
         {
-            return m_words.data();
+            auto const size = this->size();
+
+            if( not reverse )
+            {
+                for( std::size_t c = 0; c < size; c++ )
+                {
+                    callback( c, word( c ) );
+                }
+            }
+            else
+            {
+                for( i64 c = size - 1; c >= 0; c-- )
+                {
+                    callback( c, word( c ) );
+                }
+            }
         }
 
-        const std::vector< u64 >& words( void ) const;
+        inline const std::size_t size( void ) const
+        {
+            const auto size = m_words_ext.size();
+
+            if( size == 0 )
+            {
+                return ( m_words[ 1 ] == 0 ) ? 1 : 2;
+            }
+            else
+            {
+                return 2 + size;
+            }
+        }
+
+        inline u64 word( std::size_t index ) const
+        {
+            assert( index < size() );
+            if( index < 2 )
+            {
+                return m_words[ index ];
+            }
+            else
+            {
+                return m_words_ext[ index - 2 ];
+            }
+        }
 
         void shrink( void );
 
         inline u1 operator==( const u64 rhs ) const
         {
-            auto const size = this->words().size();
+            const auto size = this->m_words_ext.size();
 
-            for( std::size_t c = 1; c < size; c++ )
+            for( std::size_t c = 0; c < size; c++ )
             {
-                if( this->words()[ c ] != 0 )
+                if( this->m_words_ext[ c ] != 0 )
                 {
                     return false;
                 }
             }
 
-            return this->words()[ 0 ] == rhs;
+            if( this->m_words[ 1 ] != 0 )
+            {
+                return false;
+            }
+
+            return this->m_words[ 0 ] == rhs;
         }
 
         inline u1 operator!=( const u64 rhs ) const
@@ -149,16 +197,16 @@ namespace libstdhl
 
         inline u1 operator==( const Type& rhs ) const
         {
-            auto const size = this->words().size();
+            auto const size = this->size();
 
-            if( size != rhs.words().size() )
+            if( size != rhs.size() )
             {
                 return false;
             }
 
             for( std::size_t c = 0; c < size; c++ )
             {
-                if( this->words()[ c ] != rhs.words()[ c ] )
+                if( this->word( c ) != rhs.word( c ) )
                 {
                     return false;
                 }
@@ -247,7 +295,8 @@ namespace libstdhl
             const Literal literal = NONE );
 
       protected:
-        std::vector< u64 > m_words;
+        std::array< u64, 2 > m_words;
+        std::vector< u64 > m_words_ext;
         u64 m_carry;
         u1 m_sign;
         u64 m_meta;

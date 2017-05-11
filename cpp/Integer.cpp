@@ -29,12 +29,12 @@
 using namespace libstdhl;
 
 Integer::Integer( u64 value )
-: Type( { value } )
+: Type( value )
 {
 }
 
 Integer::Integer( i64 value )
-: Type( ( value >= 0 ? (u64)value : ( u64 )( -value ) ), 63, ( value < 0 ) )
+: Type( ( value >= 0 ? (u64)value : ( u64 )( -value ) ), ( value < 0 ) )
 {
 }
 
@@ -96,14 +96,24 @@ Integer::Integer( const std::string& value, const Radix radix )
 
     tmp.shrink();
 
-    m_words = std::move( tmp.words() );
+    tmp.foreach( [&]( const std::size_t index, const u64 value ) {
+        if( index < 2 )
+        {
+            m_words[ index ] = value;
+        }
+        else
+        {
+            m_words_ext.push_back( value );
+        }
+    } );
+
     m_sign = sign;
 }
 
 Integer& Integer::operator+=( const Integer& rhs )
 {
-    assert( m_words.size() == rhs.words().size() );
-    assert( m_words.size() == 1 );
+    assert( size() == rhs.size() );
+    assert( size() == 1 );
 
 #warning "HACK!"
 

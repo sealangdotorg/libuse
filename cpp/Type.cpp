@@ -41,10 +41,8 @@ static constexpr const char* digits_definitions[] = {
     "./" NUMBER UPPER_CASE LOWER_CASE, // unix radix 64 encoding
 };
 
-Type::Type(
-    const std::string& data, u64 precision, const u1 sign, const Radix radix )
-: m_words(
-      std::vector< u64 >( ( precision / 64 ) + ( precision % 64 ? 1 : 0 ), 0 ) )
+Type::Type( const std::string& data, const u1 sign, const Radix radix )
+: m_words( { { 0 } } )
 , m_carry( 0 )
 , m_sign( sign )
 , m_meta( 0 )
@@ -67,68 +65,52 @@ Type::Type(
 }
 
 Type::Type( const std::vector< u64 >& words, const u1 sign )
-: m_words( words )
+: m_words( { { 0 } } )
+, m_words_ext()
+, m_carry( 0 )
+, m_sign( sign )
+, m_meta( 0 )
+{
+    const auto size = words.size();
+
+    if( size > 0 )
+    {
+        m_words[ 0 ] = words[ 0 ];
+
+        if( size > 1 )
+        {
+            m_words[ 1 ] = words[ 1 ];
+
+            for( std::size_t c = 2; c < size; c++ )
+            {
+                m_words_ext.push_back( words[ c ] );
+            }
+        }
+    }
+}
+
+Type::Type( void )
+: m_words( { { 0 } } )
+, m_words_ext()
+, m_carry( 0 )
+, m_sign( false )
+, m_meta( 0 )
+{
+}
+
+Type::Type( u64 word, const u1 sign )
+: m_words( { { word, 0 } } )
+, m_words_ext()
 , m_carry( 0 )
 , m_sign( sign )
 , m_meta( 0 )
 {
 }
 
-Type::Type( void )
-: Type( std::vector< u64 >() )
-{
-}
-
-Type::Type( u64 word, u64 precision, const u1 sign )
-: Type(
-      std::vector< u64 >( ( precision / 64 ) + ( precision % 64 ? 1 : 0 ), 0 ),
-      sign )
-{
-    if( precision == 0 )
-    {
-        throw std::domain_error( "Integer precision cannot be zero" );
-    }
-
-    if( precision < 64 )
-    {
-        u64 mask = ( ( u64 )( UINT64_MAX ) ) << precision;
-
-        if( ( word & mask ) != 0 )
-        {
-            throw std::domain_error( "word '" + std::to_string( word )
-                                     + "' does not fit into a precision of '"
-                                     + std::to_string( precision )
-                                     + "'" );
-        }
-
-        word &= ~mask;
-    }
-
-    m_words[ 0 ] = word;
-}
-
-void Type::add( u64 word )
-{
-    m_words.push_back( word );
-}
-
 void Type::set( std::size_t index, u64 word )
 {
     this->word( index );
     m_words[ index ] = word;
-}
-
-u64 Type::word( std::size_t index ) const
-{
-    if( index >= m_words.size() )
-    {
-        throw std::domain_error( "invalid index '" + std::to_string( index )
-                                 + "' of 'libstdhl::Type' with word size of '"
-                                 + std::to_string( m_words.size() )
-                                 + "'" );
-    }
-
-    return m_words[ index ];
 }
 
 u64 Type::carry( void ) const
@@ -141,29 +123,22 @@ u1 Type::sign( void ) const
     return m_sign;
 }
 
-const std::vector< u64 >& Type::words( void ) const
-{
-    return m_words;
-}
-
 void Type::shrink( void )
 {
-    const std::size_t size = m_words.size();
+    const std::size_t size = m_words_ext.size();
 
     for( i64 c = size - 1; c > 0; c-- )
     {
-        if( m_words[ c ] == 0 )
+        if( m_words_ext[ c ] == 0 )
         {
-            m_words.pop_back();
+            m_words_ext.pop_back();
         }
     }
 }
 
 u1 Type::operator>( const u64 rhs ) const
 {
-    const std::size_t size = m_words.size();
-
-    switch( size )
+    switch( size() )
     {
         case 0:
         {
@@ -171,32 +146,28 @@ u1 Type::operator>( const u64 rhs ) const
         }
         default:
         {
-            for( i64 c = size - 1; c > 0; c-- )
+            for( i64 c = m_words_ext.size() - 1; c > 0; c-- )
             {
-                if( m_words[ c ] > 0 )
+                if( m_words_ext[ c ] > 0 )
                 {
                     return true;
                 }
             }
 
-            if( m_words[ 0 ] > rhs )
+            if( m_words[ 1 ] > 0 )
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return m_words[ 0 ] > rhs;
         }
     }
 }
 
 u1 Type::operator>( const Type& rhs ) const
 {
-    const std::size_t size_lhs = m_words.size();
-    const std::size_t size_rhs = rhs.words().size();
-    assert( size_lhs == size_rhs );
-    assert( size_lhs == 1 );
+    assert( size() == rhs.size() );
+    assert( size() == 1 );
 
     return this->operator>( rhs.word( 0 ) );
 }
@@ -205,10 +176,19 @@ Type& Type::operator+=( const u64 rhs )
 {
     u64 overflow = rhs;
 
-    for( std::size_t c = 0; c < m_words.size(); c++ )
+    overflow = __builtin_uaddl_overflow(
+        m_words[ 0 ], overflow, (u64*)&m_words.data()[ 0 ] );
+
+    if( size() > 1 )
     {
         overflow = __builtin_uaddl_overflow(
-            m_words.data()[ c ], overflow, (u64*)&m_words.data()[ c ] );
+            m_words[ 1 ], overflow, (u64*)&m_words.data()[ 1 ] );
+
+        for( std::size_t c = 0; c < m_words_ext.size(); c++ )
+        {
+            overflow = __builtin_uaddl_overflow(
+                m_words_ext[ c ], overflow, (u64*)&m_words_ext.data()[ c ] );
+        }
     }
 
     m_carry = overflow;
@@ -220,13 +200,22 @@ Type& Type::operator-=( const u64 rhs )
 {
     u64 overflow = rhs;
 
-    for( std::size_t c = 0; c < m_words.size(); c++ )
+    overflow = __builtin_usubl_overflow(
+        m_words[ 0 ], overflow, (u64*)&m_words.data()[ 0 ] );
+
+    if( size() > 1 )
     {
         overflow = __builtin_usubl_overflow(
-            m_words.data()[ c ], overflow, (u64*)&m_words.data()[ c ] );
+            m_words[ 1 ], overflow, (u64*)&m_words.data()[ 1 ] );
+
+        for( std::size_t c = 0; c < m_words_ext.size(); c++ )
+        {
+            overflow = __builtin_usubl_overflow(
+                m_words_ext[ c ], overflow, (u64*)&m_words_ext.data()[ c ] );
+        }
     }
 
-    m_sign = overflow;
+    m_carry = overflow;
 
     return *this;
 }
@@ -267,16 +256,7 @@ Type& Type::operator*=( const u64 rhs )
 
     if( size == 1 or ( size == 2 and m_words[ 1 ] == 0 ) )
     {
-        u64 buffer[ 2 ] = { 0 };
-
-        m_carry = __builtin_umull_overflow( m_words[ 0 ], rhs, buffer );
-
-        m_words[ 0 ] = buffer[ 0 ];
-
-        if( buffer[ 1 ] != 0 )
-        {
-            m_words.push_back( buffer[ 1 ] );
-        }
+        m_carry = __builtin_umull_overflow( m_words[ 0 ], rhs, m_words.data() );
     }
     else
     {
@@ -328,7 +308,7 @@ Type& Type::operator*=( const u64 rhs )
 
 Type& Type::operator/=( const u64 rhs )
 {
-    const std::size_t size = m_words.size();
+    const std::size_t size = this->size();
 
     if( size == 0 )
     {
@@ -376,7 +356,22 @@ Type& Type::operator/=( const u64 rhs )
             u64 r = 0;
             u64 a = 0;
 
-            for( i64 c = size - 1; c >= 0; c-- )
+            for( i64 c = m_words_ext.size() - 1; c >= 0; c-- )
+            {
+                a = m_words_ext[ c ];
+                q = (precision)r * base + (precision)a;
+                u = ( u64 )( std::floor( q * inv_d ) );
+
+                r = a - u * d;
+
+                q = std::floor( (precision)r * inv_rhs );
+                u = u << s;
+                u = u + (u64)q;
+
+                m_words_ext[ c ] = u;
+            }
+
+            for( i64 c = m_words.size() - 1; c >= 0; c-- )
             {
                 a = m_words[ c ];
                 q = (precision)r * base + (precision)a;
@@ -411,13 +406,6 @@ Type& Type::operator%=( const u64 rhs )
 
 Type& Type::operator<<=( const u64 rhs )
 {
-    const std::size_t size = m_words.size();
-
-    if( size == 0 )
-    {
-        throw std::domain_error( "no data to shift left" );
-    }
-
     if( rhs == 0 )
     {
         return *this;
@@ -432,9 +420,14 @@ Type& Type::operator<<=( const u64 rhs )
     for( std::size_t c = 0; c < m_words.size(); c++ )
     {
         current = m_words[ c ] >> shinv;
-
         m_words[ c ] = ( m_words[ c ] << shift ) | previous;
+        previous = current;
+    }
 
+    for( std::size_t c = 0; c < m_words_ext.size(); c++ )
+    {
+        current = m_words_ext[ c ] >> shinv;
+        m_words_ext[ c ] = ( m_words_ext[ c ] << shift ) | previous;
         previous = current;
     }
 
@@ -449,7 +442,7 @@ std::string Type::to_string(
     std::string prefix;
     std::string postfix;
 
-    auto size = m_words.size();
+    auto size = this->size();
 
     if( size == 0 )
     {
@@ -561,7 +554,7 @@ std::string Type::to_string(
 
     if( size == 1 )
     {
-        u64 tmp = data()[ 0 ];
+        u64 tmp = m_words[ 0 ];
 
         do
         {
@@ -573,7 +566,7 @@ std::string Type::to_string(
     }
     else
     {
-        Type tmp( m_words );
+        Type tmp( *this );
 
         do
         {

@@ -33,10 +33,9 @@ FloatingPoint::FloatingPoint( const std::string& value )
 }
 
 FloatingPoint::FloatingPoint( double value )
-: Type( ( value >= 0 ? (u64)value : ( u64 )( -value ) ), 63, ( value < 0 ) )
+: Type( ( value >= 0 ? (u64)value : ( u64 )( -value ) ), ( value < 0 ) )
 {
     // IEEE 754 double-precision binary floating-point format
-
     static_assert(
         sizeof( double ) == 8, " double shall be a byte-size of 8 " );
 }

@@ -32,7 +32,7 @@ TEST( libstdhl_cpp_integer, u64_valid )
 
     auto i = Integer( number );
 
-    EXPECT_EQ( i.words().size(), 1 );
+    EXPECT_EQ( i.size(), 1 );
     EXPECT_EQ( i.word( 0 ), number );
 
     EXPECT_EQ( i.sign(), false );
@@ -44,7 +44,7 @@ TEST( libstdhl_cpp_integer, i64_positive )
 
     auto i = Integer( number );
 
-    EXPECT_EQ( i.words().size(), 1 );
+    EXPECT_EQ( i.size(), 1 );
     EXPECT_EQ( i.word( 0 ), number * ( i.sign() ? -1 : 1 ) );
 
     EXPECT_EQ( i.sign(), false );
@@ -56,7 +56,7 @@ TEST( libstdhl_cpp_integer, i64_negative )
 
     auto i = Integer( number );
 
-    EXPECT_EQ( i.words().size(), 1 );
+    EXPECT_EQ( i.size(), 1 );
     EXPECT_EQ( i.word( 0 ), number * ( i.sign() ? -1 : 1 ) );
 
     EXPECT_EQ( i.sign(), true );
@@ -66,7 +66,7 @@ TEST( libstdhl_cpp_integer, str_binary4 )
 {
     auto i = Integer( "0111", Type::Radix::BINARY );
 
-    EXPECT_EQ( i.words().size(), 1 );
+    EXPECT_EQ( i.size(), 1 );
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.word( 0 ), 7 );
 }
@@ -85,7 +85,7 @@ TEST( libstdhl_cpp_integer, str_binary64 )
         ,
         Type::Radix::BINARY );
 
-    EXPECT_EQ( i.words().size(), 1 );
+    EXPECT_EQ( i.size(), 1 );
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.word( 0 ), 0x7bf204ee7bf204ed );
 }
@@ -104,7 +104,7 @@ TEST( libstdhl_cpp_integer, str_binary64_max )
         ,
         Type::Radix::BINARY );
 
-    EXPECT_EQ( i.words().size(), 1 );
+    EXPECT_EQ( i.size(), 1 );
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.word( 0 ), UINT64_MAX );
 }
@@ -124,8 +124,8 @@ TEST( libstdhl_cpp_integer, str_binary70 )
         ,
         Type::Radix::BINARY );
 
-    EXPECT_EQ( i.words().size(), 2 );
     EXPECT_EQ( i.sign(), false );
+    ASSERT_EQ( i.size(), 2 );
     EXPECT_EQ( i.word( 1 ), 0x2a );
     EXPECT_EQ( i.word( 0 ), 0x7bf204ee7bf204ed );
 }
@@ -202,8 +202,8 @@ TEST( libstdhl_cpp_integer, str_binary522 )
         ,
         Type::Radix::BINARY );
 
-    EXPECT_EQ( i.words().size(), 9 );
     EXPECT_EQ( i.sign(), false );
+    ASSERT_EQ( i.size(), 9 );
     EXPECT_EQ( i.word( 8 ), 0x03f2 );
     EXPECT_EQ( i.word( 7 ), 0x7bf204ee7bf204ed );
     EXPECT_EQ( i.word( 6 ), 0x7bf204ee7bf204ed );
@@ -219,7 +219,7 @@ TEST( libstdhl_cpp_integer, str_octal5 )
 {
     auto i = Integer( "54321", Type::Radix::OCTAL );
 
-    EXPECT_EQ( i.words().size(), 1 );
+    EXPECT_EQ( i.size(), 1 );
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.word( 0 ), 054321 );
 }
@@ -228,7 +228,7 @@ TEST( libstdhl_cpp_integer, str_octal21 )
 {
     auto i = Integer( "543217060554321706053", Type::Radix::OCTAL );
 
-    EXPECT_EQ( i.words().size(), 1 );
+    EXPECT_EQ( i.size(), 1 );
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.word( 0 ), 0543217060554321706053 );
 }
@@ -237,7 +237,7 @@ TEST( libstdhl_cpp_integer, str_octal22_u64max )
 {
     auto i = Integer( "1777777777777777777777", Type::Radix::OCTAL );
 
-    EXPECT_EQ( i.words().size(), 1 );
+    EXPECT_EQ( i.size(), 1 );
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.word( 0 ), UINT64_MAX );
 }
@@ -246,7 +246,7 @@ TEST( libstdhl_cpp_integer, str_octal22_no_overlap )
 {
     auto i = Integer( "1543217060554321706053", Type::Radix::OCTAL );
 
-    EXPECT_EQ( i.words().size(), 1 );
+    EXPECT_EQ( i.size(), 1 );
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.word( 0 ), 01543217060554321706053 );
 }
@@ -255,8 +255,8 @@ TEST( libstdhl_cpp_integer, str_octal22_with_overlap )
 {
     auto i = Integer( "7543217060554321706053", Type::Radix::OCTAL );
 
-    EXPECT_EQ( i.words().size(), 2 );
     EXPECT_EQ( i.sign(), false );
+    ASSERT_EQ( i.size(), 2 );
     EXPECT_EQ( i.word( 1 ), 03 );
     EXPECT_EQ( i.word( 0 ), 01543217060554321706053 );
 }
@@ -265,8 +265,8 @@ TEST( libstdhl_cpp_integer, str_octal23 )
 {
     auto i = Integer( "337543217060554321706053", Type::Radix::OCTAL );
 
-    EXPECT_EQ( i.words().size(), 2 );
     EXPECT_EQ( i.sign(), false );
+    ASSERT_EQ( i.size(), 2 );
     EXPECT_EQ( i.word( 1 ), 0157 );
     EXPECT_EQ( i.word( 0 ), 01543217060554321706053 );
 }
@@ -275,7 +275,7 @@ TEST( libstdhl_cpp_integer, str_hexadecimal2 )
 {
     auto i = Integer( "e1", Type::Radix::HEXADECIMAL );
 
-    EXPECT_EQ( i.words().size(), 1 );
+    EXPECT_EQ( i.size(), 1 );
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.word( 0 ), 0xe1 );
 }
@@ -284,7 +284,7 @@ TEST( libstdhl_cpp_integer, str_hexadecimal16_max )
 {
     auto i = Integer( "ffffffffffffffff", Type::Radix::HEXADECIMAL );
 
-    EXPECT_EQ( i.words().size(), 1 );
+    EXPECT_EQ( i.size(), 1 );
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.word( 0 ), UINT64_MAX );
 }
@@ -296,8 +296,8 @@ TEST( libstdhl_cpp_integer, str_hexadecimal17 )
         "eedbee0123456789",
         Type::Radix::HEXADECIMAL );
 
-    EXPECT_EQ( i.words().size(), 2 );
     EXPECT_EQ( i.sign(), false );
+    ASSERT_EQ( i.size(), 2 );
     EXPECT_EQ( i.word( 1 ), 0xf );
     EXPECT_EQ( i.word( 0 ), 0xeedbee0123456789 );
 }
@@ -318,8 +318,8 @@ TEST( libstdhl_cpp_integer, str_hexadecimal140 )
         ,
         Type::Radix::HEXADECIMAL );
 
-    EXPECT_EQ( i.words().size(), 10 );
     EXPECT_EQ( i.sign(), false );
+    ASSERT_EQ( i.size(), 10 );
     EXPECT_EQ( i.word( 9 ), 0xaffe );
     EXPECT_EQ( i.word( 8 ), 0xfeedbeef13579024 ); //
     EXPECT_EQ( i.word( 7 ), 0x9024feedbeef1357 ); // 512, 128
@@ -336,7 +336,7 @@ TEST( libstdhl_cpp_integer, str_decimal3 )
 {
     auto i = Integer( "123", Type::Radix::DECIMAL );
 
-    EXPECT_EQ( i.words().size(), 1 );
+    EXPECT_EQ( i.size(), 1 );
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.word( 0 ), 123 );
 }
@@ -345,7 +345,7 @@ TEST( libstdhl_cpp_integer, str_decimal3_sign )
 {
     auto i = Integer( "-123", Type::Radix::DECIMAL );
 
-    EXPECT_EQ( i.words().size(), 1 );
+    EXPECT_EQ( i.size(), 1 );
     EXPECT_EQ( i.sign(), true );
     EXPECT_EQ( i.word( 0 ), 123 );
 }
@@ -354,7 +354,7 @@ TEST( libstdhl_cpp_integer, str_decimal8 )
 {
     auto i = Integer( "64242662", Type::Radix::DECIMAL );
 
-    EXPECT_EQ( i.words().size(), 1 );
+    EXPECT_EQ( i.size(), 1 );
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.word( 0 ), 64242662 );
 }
@@ -363,7 +363,7 @@ TEST( libstdhl_cpp_integer, str_decimal8_sign )
 {
     auto i = Integer( "-64242662", Type::Radix::DECIMAL );
 
-    EXPECT_EQ( i.words().size(), 1 );
+    EXPECT_EQ( i.size(), 1 );
     EXPECT_EQ( i.sign(), true );
     EXPECT_EQ( i.word( 0 ), 64242662 );
 }
@@ -376,7 +376,7 @@ TEST( libstdhl_cpp_integer, str_decimal20_u64max )
         ,
         Type::Radix::DECIMAL );
 
-    EXPECT_EQ( i.words().size(), 1 );
+    EXPECT_EQ( i.size(), 1 );
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.word( 0 ), UINT64_MAX );
 }
@@ -390,7 +390,7 @@ TEST( DISABLED_libstdhl_cpp_integer, str_decimal21 )
         ,
         Type::Radix::DECIMAL );
 
-    EXPECT_EQ( i.words().size(), 2 );
+    EXPECT_EQ( i.size(), 2 );
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.word( 1 ), UINT64_MAX ); // TODO: fix result checks!
     EXPECT_EQ( i.word( 0 ), UINT64_MAX );
@@ -405,7 +405,7 @@ TEST( DISABLED_libstdhl_cpp_integer, str_decimal21_sign )
         ,
         Type::Radix::DECIMAL );
 
-    EXPECT_EQ( i.words().size(), 2 );
+    EXPECT_EQ( i.size(), 2 );
     EXPECT_EQ( i.sign(), true );
     EXPECT_EQ( i.word( 1 ), UINT64_MAX ); // TODO: fix result checks!
     EXPECT_EQ( i.word( 0 ), UINT64_MAX );
@@ -421,7 +421,7 @@ TEST( DISABLED_libstdhl_cpp_integer, str_decimal40 )
         ,
         Type::Radix::DECIMAL );
 
-    EXPECT_EQ( i.words().size(), 3 );
+    EXPECT_EQ( i.size(), 3 );
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.word( 2 ), 0 ); // TODO: fix result checks!
     EXPECT_EQ( i.word( 1 ), 0 );
@@ -439,7 +439,7 @@ TEST( DISABLED_libstdhl_cpp_integer, str_decimal40_sign )
         ,
         Type::Radix::DECIMAL );
 
-    EXPECT_EQ( i.words().size(), 3 );
+    EXPECT_EQ( i.size(), 3 );
     EXPECT_EQ( i.sign(), true );
     EXPECT_EQ( i.word( 2 ), 0 ); // TODO: fix result checks!
     EXPECT_EQ( i.word( 1 ), 0 );
@@ -453,7 +453,7 @@ TEST( libstdhl_cpp_integer, operator_add )
 
     const auto c = a + b;
 
-    EXPECT_EQ( c.words().size(), 1 );
+    EXPECT_EQ( c.size(), 1 );
     EXPECT_EQ( c.sign(), false );
     EXPECT_EQ( c.word( 0 ), 123 + 321 );
 }
