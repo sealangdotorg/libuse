@@ -29,7 +29,7 @@ using namespace libstdhl;
 #define TEST_LIBSTDHL_CPP_TYPE__TO( RADIX, VALUE, STRING )                     \
     TEST( libstdhl_cpp_type, to_##RADIX )                                      \
     {                                                                          \
-        EXPECT_STREQ( Type( { VALUE } ).to< Type::RADIX >().c_str(), STRING ); \
+        EXPECT_STREQ( Type( VALUE ).to< Type::RADIX >().c_str(), STRING );     \
     }
 
 TEST_LIBSTDHL_CPP_TYPE__TO( BINARY, 123, "0b1111011" );
@@ -39,15 +39,12 @@ TEST_LIBSTDHL_CPP_TYPE__TO( HEXADECIMAL, 123, "0x7b" );
 
 TEST( libstdhl_cpp_type, to_string )
 {
-    EXPECT_STREQ(
-        Type( { 123 } ).to_string( Type::BINARY ).c_str(), "1111011" );
-    EXPECT_STREQ( Type( { 123 } ).to_string( Type::OCTAL ).c_str(), "173" );
-    EXPECT_STREQ( Type( { 123 } ).to_string( Type::DECIMAL ).c_str(), "123" );
-    EXPECT_STREQ(
-        Type( { 123 } ).to_string( Type::HEXADECIMAL ).c_str(), "7b" );
-    EXPECT_STREQ(
-        Type( { 123 } ).to_string( Type::SEXAGESIMAL ).c_str(), "23" );
-    EXPECT_STREQ( Type( { 123 } ).to_string( Type::RADIX64 ).c_str(), "1X" );
+    EXPECT_STREQ( Type( 123 ).to_string( Type::BINARY ).c_str(), "1111011" );
+    EXPECT_STREQ( Type( 123 ).to_string( Type::OCTAL ).c_str(), "173" );
+    EXPECT_STREQ( Type( 123 ).to_string( Type::DECIMAL ).c_str(), "123" );
+    EXPECT_STREQ( Type( 123 ).to_string( Type::HEXADECIMAL ).c_str(), "7b" );
+    EXPECT_STREQ( Type( 123 ).to_string( Type::SEXAGESIMAL ).c_str(), "23" );
+    EXPECT_STREQ( Type( 123 ).to_string( Type::RADIX64 ).c_str(), "1X" );
 }
 
 TEST( libstdhl_cpp_type, check_division )
