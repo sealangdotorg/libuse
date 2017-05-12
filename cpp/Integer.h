@@ -55,6 +55,59 @@ namespace libstdhl
             lhs += rhs;
             return lhs;
         }
+
+        Integer& operator-=( const Integer& rhs );
+
+        friend Integer operator-( Integer lhs, const Integer& rhs )
+        {
+            lhs -= rhs;
+            return lhs;
+        }
+
+        Integer& operator*=( const Integer& rhs );
+
+        friend Integer operator*( Integer lhs, const Integer& rhs )
+        {
+            lhs *= rhs;
+            return lhs;
+        }
+
+        Integer& operator%=( const Integer& rhs );
+
+        friend Integer operator%( Integer lhs, const Integer& rhs )
+        {
+            lhs %= rhs;
+            return lhs;
+        }
+
+        Integer& operator/=( const Integer& rhs );
+
+        friend Integer operator/( Integer lhs, const Integer& rhs )
+        {
+            lhs /= rhs;
+            return lhs;
+        }
+
+        u1 operator==( const Integer& rhs ) const;
+
+        inline u1 operator!=( const Integer& rhs ) const
+        {
+            return not( operator==( rhs ) );
+        }
+
+        u1 operator<( const Integer& rhs ) const;
+
+        inline u1 operator>=( const Integer& rhs ) const
+        {
+            return not( operator<( rhs ) );
+        }
+
+        u1 operator>( const Integer& rhs ) const;
+
+        inline u1 operator<=( const Integer& rhs ) const
+        {
+            return not( operator>( rhs ) );
+        }
     };
 }
 

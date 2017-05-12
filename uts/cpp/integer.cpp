@@ -448,14 +448,116 @@ TEST( DISABLED_libstdhl_cpp_integer, str_decimal40_sign )
 
 TEST( libstdhl_cpp_integer, operator_add )
 {
-    const auto a = Integer( (i64)123 );
-    const auto b = Integer( (i64)321 );
+    const auto a = Integer( (i64)321 );
+    const auto b = Integer( (i64)123 );
 
     const auto c = a + b;
 
     EXPECT_EQ( c.size(), 1 );
     EXPECT_EQ( c.sign(), false );
-    EXPECT_EQ( c.word( 0 ), 123 + 321 );
+    EXPECT_EQ( c.word( 0 ), 321 + 123 );
+}
+
+TEST( libstdhl_cpp_integer, operator_sub )
+{
+    const auto a = Integer( (i64)321 );
+    const auto b = Integer( (i64)123 );
+
+    const auto c = a - b;
+
+    EXPECT_EQ( c.size(), 1 );
+    EXPECT_EQ( c.sign(), false );
+    EXPECT_EQ( c.word( 0 ), 321 - 123 );
+}
+
+TEST( libstdhl_cpp_integer, operator_mul )
+{
+    const auto a = Integer( (i64)321 );
+    const auto b = Integer( (i64)123 );
+
+    const auto c = a * b;
+
+    EXPECT_EQ( c.size(), 1 );
+    EXPECT_EQ( c.sign(), false );
+    EXPECT_EQ( c.word( 0 ), 321 * 123 );
+}
+
+TEST( libstdhl_cpp_integer, operator_mod )
+{
+    const auto a = Integer( (i64)321 );
+    const auto b = Integer( (i64)123 );
+
+    const auto c = a % b;
+
+    EXPECT_EQ( c.size(), 1 );
+    EXPECT_EQ( c.sign(), false );
+    EXPECT_EQ( c.word( 0 ), 321 % 123 );
+}
+
+TEST( libstdhl_cpp_integer, operator_div )
+{
+    const auto a = Integer( (i64)321 );
+    const auto b = Integer( (i64)123 );
+
+    const auto c = a / b;
+
+    EXPECT_EQ( c.size(), 1 );
+    EXPECT_EQ( c.sign(), false );
+    EXPECT_EQ( c.word( 0 ), 321 / 123 );
+}
+
+TEST( libstdhl_cpp_integer, operator_equ )
+{
+    const auto a = Integer( (i64)321 );
+    const auto b = Integer( (i64)123 );
+
+    const auto c = a == b;
+    EXPECT_EQ( c, 321 == 123 );
+}
+
+TEST( libstdhl_cpp_integer, operator_neq )
+{
+    const auto a = Integer( (i64)321 );
+    const auto b = Integer( (i64)123 );
+
+    const auto c = a != b;
+    EXPECT_EQ( c, 321 != 123 );
+}
+
+TEST( libstdhl_cpp_integer, operator_les )
+{
+    const auto a = Integer( (i64)321 );
+    const auto b = Integer( (i64)123 );
+
+    const auto c = a < b;
+    EXPECT_EQ( c, 321 < 123 );
+}
+
+TEST( libstdhl_cpp_integer, operator_leq )
+{
+    const auto a = Integer( (i64)321 );
+    const auto b = Integer( (i64)123 );
+
+    const auto c = a <= b;
+    EXPECT_EQ( c, 321 <= 123 );
+}
+
+TEST( libstdhl_cpp_integer, operator_gre )
+{
+    const auto a = Integer( (i64)321 );
+    const auto b = Integer( (i64)123 );
+
+    const auto c = a > b;
+    EXPECT_EQ( c, 321 > 123 );
+}
+
+TEST( libstdhl_cpp_integer, operator_geq )
+{
+    const auto a = Integer( (i64)321 );
+    const auto b = Integer( (i64)123 );
+
+    const auto c = a >= b;
+    EXPECT_EQ( c, 321 >= 123 );
 }
 
 //

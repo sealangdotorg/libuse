@@ -234,6 +234,20 @@ namespace libstdhl
             return not( operator>( rhs ) );
         }
 
+        u1 operator<( const u64 rhs ) const;
+
+        inline u1 operator>=( const u64 rhs ) const
+        {
+            return not( operator<( rhs ) );
+        }
+
+        u1 operator<( const Type& rhs ) const;
+
+        inline u1 operator>=( const Type& rhs ) const
+        {
+            return not( operator<( rhs ) );
+        }
+
         Type& operator+=( const u64 rhs );
 
         friend Type operator+( Type lhs, const u64 rhs )

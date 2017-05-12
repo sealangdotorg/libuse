@@ -172,6 +172,42 @@ u1 Type::operator>( const Type& rhs ) const
     return this->operator>( rhs.word( 0 ) );
 }
 
+u1 Type::operator<( const u64 rhs ) const
+{
+    switch( size() )
+    {
+        case 0:
+        {
+            return false;
+        }
+        default:
+        {
+            for( i64 c = m_words_ext.size() - 1; c > 0; c-- )
+            {
+                if( m_words_ext[ c ] > 0 )
+                {
+                    return false;
+                }
+            }
+
+            if( m_words[ 1 ] > 0 )
+            {
+                return false;
+            }
+
+            return m_words[ 0 ] < rhs;
+        }
+    }
+}
+
+u1 Type::operator<( const Type& rhs ) const
+{
+    assert( size() == rhs.size() );
+    assert( size() == 1 );
+
+    return this->operator<( rhs.word( 0 ) );
+}
+
 Type& Type::operator+=( const u64 rhs )
 {
     u64 overflow = rhs;

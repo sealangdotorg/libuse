@@ -85,7 +85,7 @@ Rational::Rational( const std::string& value, const Type::Radix radix )
 Rational::Rational( const Integer& numerator, const Integer& denominator )
 : Type()
 {
-    if( denominator == 0 )
+    if( static_cast< const Type& >( denominator ) == 0 )
     {
         throw std::domain_error( "denominator of Rational is zero" );
     }
