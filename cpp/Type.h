@@ -288,6 +288,27 @@ namespace libstdhl
             return lhs;
         }
 
+        friend Type operator~( Type arg )
+        {
+            const auto size = arg.m_words_ext.size();
+
+            for( std::size_t c = 0; c < size; c++ )
+            {
+                arg.m_words_ext[ c ] = ~arg.m_words_ext[ c ];
+            }
+
+            arg.m_words[ 0 ] = ~arg.m_words[ 0 ];
+            arg.m_words[ 1 ] = ~arg.m_words[ 1 ];
+
+            return arg;
+        }
+
+        friend Type operator-( Type arg )
+        {
+            arg.m_sign = not arg.m_sign;
+            return arg;
+        }
+
         Type& operator<<=( const u64 rhs );
 
         friend Type operator<<( Type lhs, const u64 rhs )
