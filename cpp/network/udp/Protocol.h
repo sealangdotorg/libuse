@@ -22,55 +22,33 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_H_
-#define _LIB_STDHL_H_
+#ifndef _LIB_STDHL_CPP_NETWORK_UDP_PROTOCOL_H_
+#define _LIB_STDHL_CPP_NETWORK_UDP_PROTOCOL_H_
+
+#include "../Protocol.h"
+
+#include "../ipv4/Protocol.h"
 
 /**
-   @brief    TODO
+   @brief    TBD
 
-   TODO
+   TBD
 */
-
-#ifndef __cplusplus
-
-// C includes
-
-#include "c/args.h"
-#include "c/default.h"
-#include "c/type.h"
-
-#else // __cplusplus
-
-// C++ includes
-
-#include "cpp/Allocator.h"
-#include "cpp/Ansi.h"
-#include "cpp/Args.h"
-#include "cpp/Binding.h"
-#include "cpp/Default.h"
-#include "cpp/Enum.h"
-#include "cpp/File.h"
-#include "cpp/FloatingPoint.h"
-#include "cpp/Integer.h"
-#include "cpp/Json.h"
-#include "cpp/Labeling.h"
-#include "cpp/List.h"
-#include "cpp/Log.h"
-#include "cpp/Network.h"
-#include "cpp/Random.h"
-#include "cpp/Rational.h"
-#include "cpp/Standard.h"
-#include "cpp/String.h"
-#include "cpp/Type.h"
-#include "cpp/Xml.h"
 
 namespace libstdhl
 {
+    namespace Network
+    {
+        namespace UDP
+        {
+            static constexpr std::size_t ADDR = 2;
+
+            using Port = std::array< u8, ADDR >;
+        }
+    }
 }
 
-#endif // __cplusplus
-
-#endif // _LIB_STDHL_H_
+#endif // _LIB_STDHL_CPP_NETWORK_UDP_PROTOCOL_H_
 
 //
 //  Local variables:

@@ -22,55 +22,50 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_H_
-#define _LIB_STDHL_H_
+#include "Link.h"
 
-/**
-   @brief    TODO
+#include "Socket.h"
 
-   TODO
-*/
+using namespace libstdhl;
+using namespace Network;
+using namespace Ethernet;
 
-#ifndef __cplusplus
+static std::unordered_map< std::string, RawPosixSocket > phy;
 
-// C includes
-
-#include "c/args.h"
-#include "c/default.h"
-#include "c/type.h"
-
-#else // __cplusplus
-
-// C++ includes
-
-#include "cpp/Allocator.h"
-#include "cpp/Ansi.h"
-#include "cpp/Args.h"
-#include "cpp/Binding.h"
-#include "cpp/Default.h"
-#include "cpp/Enum.h"
-#include "cpp/File.h"
-#include "cpp/FloatingPoint.h"
-#include "cpp/Integer.h"
-#include "cpp/Json.h"
-#include "cpp/Labeling.h"
-#include "cpp/List.h"
-#include "cpp/Log.h"
-#include "cpp/Network.h"
-#include "cpp/Random.h"
-#include "cpp/Rational.h"
-#include "cpp/Standard.h"
-#include "cpp/String.h"
-#include "cpp/Type.h"
-#include "cpp/Xml.h"
-
-namespace libstdhl
+Link::Link( const std::string& name )
 {
+    auto result = phy.emplace( name, RawPosixSocket( name ) );
+    setSocket( result.first->second );
 }
 
-#endif // __cplusplus
+void Link::send( const std::string& data )
+{
+    send( std::vector< u8 >( data.begin(), data.end() ) );
+}
 
-#endif // _LIB_STDHL_H_
+void Link::send( const std::vector< u8 >& data )
+{
+    const auto size = data.size();
+    assert( size <= 1500 );
+
+    const Type type = { { ( u8 )( size >> 8 ), (u8)size } };
+
+    auto& link = static_cast< RawPosixSocket& >( socket() );
+
+    const auto frame = Packet( BROADCAST, link.address(), type, data );
+
+    link.send( frame );
+}
+
+void Link::receive( std::string& data )
+{
+    assert( !" TODO! " );
+}
+
+void Link::receive( std::vector< u8 >& data )
+{
+    assert( !" TODO! " );
+}
 
 //
 //  Local variables:

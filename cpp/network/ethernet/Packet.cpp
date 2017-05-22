@@ -22,55 +22,43 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_H_
-#define _LIB_STDHL_H_
+#include "Packet.h"
 
-/**
-   @brief    TODO
+using namespace libstdhl;
+using namespace Network;
+using namespace Ethernet;
 
-   TODO
-*/
-
-#ifndef __cplusplus
-
-// C includes
-
-#include "c/args.h"
-#include "c/default.h"
-#include "c/type.h"
-
-#else // __cplusplus
-
-// C++ includes
-
-#include "cpp/Allocator.h"
-#include "cpp/Ansi.h"
-#include "cpp/Args.h"
-#include "cpp/Binding.h"
-#include "cpp/Default.h"
-#include "cpp/Enum.h"
-#include "cpp/File.h"
-#include "cpp/FloatingPoint.h"
-#include "cpp/Integer.h"
-#include "cpp/Json.h"
-#include "cpp/Labeling.h"
-#include "cpp/List.h"
-#include "cpp/Log.h"
-#include "cpp/Network.h"
-#include "cpp/Random.h"
-#include "cpp/Rational.h"
-#include "cpp/Standard.h"
-#include "cpp/String.h"
-#include "cpp/Type.h"
-#include "cpp/Xml.h"
-
-namespace libstdhl
+Ethernet::Packet::Packet( const Address& destination, const Address& source,
+    const Type& type, const std::vector< u8 >& payload )
+: m_header( destination, source,
+      ( payload.size() < 64 ) ? RUNT : type ) // runt frame prevention
+, m_payload{}
+, m_size( ( payload.size() < 64 ) // runt frame prevention
+              ? 64
+              : payload.size() )
 {
+    std::copy( payload.begin(), payload.end(), m_payload.begin() );
 }
 
-#endif // __cplusplus
+const Ethernet::Protocol& Ethernet::Packet::header( void ) const
+{
+    return m_header;
+}
 
-#endif // _LIB_STDHL_H_
+const Data& Ethernet::Packet::payload( void ) const
+{
+    return m_payload;
+}
+
+const u8* Ethernet::Packet::buffer( void ) const
+{
+    return m_header.buffer();
+}
+
+std::size_t Ethernet::Packet::size( void ) const
+{
+    return m_header.size() + m_size;
+}
 
 //
 //  Local variables:

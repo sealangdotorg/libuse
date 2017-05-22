@@ -22,55 +22,51 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_H_
-#define _LIB_STDHL_H_
+#include "Protocol.h"
 
-/**
-   @brief    TODO
+#include "../../Array.h"
 
-   TODO
-*/
+using namespace libstdhl;
+using namespace Network;
+using namespace Ethernet;
 
-#ifndef __cplusplus
-
-// C includes
-
-#include "c/args.h"
-#include "c/default.h"
-#include "c/type.h"
-
-#else // __cplusplus
-
-// C++ includes
-
-#include "cpp/Allocator.h"
-#include "cpp/Ansi.h"
-#include "cpp/Args.h"
-#include "cpp/Binding.h"
-#include "cpp/Default.h"
-#include "cpp/Enum.h"
-#include "cpp/File.h"
-#include "cpp/FloatingPoint.h"
-#include "cpp/Integer.h"
-#include "cpp/Json.h"
-#include "cpp/Labeling.h"
-#include "cpp/List.h"
-#include "cpp/Log.h"
-#include "cpp/Network.h"
-#include "cpp/Random.h"
-#include "cpp/Rational.h"
-#include "cpp/Standard.h"
-#include "cpp/String.h"
-#include "cpp/Type.h"
-#include "cpp/Xml.h"
-
-namespace libstdhl
+Ethernet::Protocol::Protocol(
+    const Address& destination, const Address& source, const Type& type )
+: m_destination( destination )
+, m_source( source )
+, m_type( type )
 {
 }
 
-#endif // __cplusplus
+constexpr std::array< u8, HEADER > Ethernet::Protocol::data( void ) const
+{
+    return m_destination + m_source + m_type;
+}
 
-#endif // _LIB_STDHL_H_
+const Address& Ethernet::Protocol::destination( void ) const
+{
+    return m_destination;
+}
+
+const Address& Ethernet::Protocol::source( void ) const
+{
+    return m_source;
+}
+
+const Ethernet::Type& Ethernet::Protocol::type( void ) const
+{
+    return m_type;
+}
+
+const u8* Ethernet::Protocol::buffer( void ) const
+{
+    return m_destination.data();
+}
+
+std::size_t Ethernet::Protocol::size( void ) const
+{
+    return data().size();
+}
 
 //
 //  Local variables:
