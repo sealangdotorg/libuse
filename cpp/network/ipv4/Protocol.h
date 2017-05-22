@@ -27,6 +27,8 @@
 
 #include "../Protocol.h"
 
+#include "../../Array.h"
+
 namespace libstdhl
 {
     namespace Network
@@ -46,7 +48,7 @@ namespace libstdhl
             class Protocol final : public Network::Protocol
             {
               public:
-                Protocol( void );
+                constexpr Protocol( void );
 
                 constexpr std::array< u8, HEADER + N > data( void ) const
                 {

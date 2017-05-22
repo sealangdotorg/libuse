@@ -62,7 +62,7 @@ namespace libstdhl
             class Protocol final : public Network::Protocol
             {
               public:
-                Protocol( const Address& destination,
+                constexpr Protocol( const Address& destination,
                     const Address& source,
                     const Type& type );
 

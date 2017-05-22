@@ -30,7 +30,7 @@ using namespace libstdhl;
 using namespace Network;
 using namespace Ethernet;
 
-Ethernet::Protocol::Protocol(
+constexpr Ethernet::Protocol::Protocol(
     const Address& destination, const Address& source, const Type& type )
 : m_destination( destination )
 , m_source( source )
