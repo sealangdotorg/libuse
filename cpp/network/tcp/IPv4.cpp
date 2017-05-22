@@ -59,7 +59,8 @@ void TCP::IPv4::send( const std::vector< u8 >& data )
 
 void TCP::IPv4::receive( std::string& data )
 {
-    StringData packet( data );
+    data.resize( 1400 ); // TODO: PPA: FIXME: should be configured etc.
+    StringReferenceData packet( data );
 
     auto& link = static_cast< IPv4PosixSocket& >( socket() );
     link.receive( packet );

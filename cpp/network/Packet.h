@@ -70,8 +70,25 @@ namespace libstdhl
 
             u64 size( void ) const override;
 
+            std::string data( void ) const;
+
           private:
             std::string m_data;
+        };
+
+        class StringReferenceData final : public Packet
+        {
+          public:
+            StringReferenceData( std::string& data );
+
+            const u8* buffer( void ) const override;
+
+            u64 size( void ) const override;
+
+            std::string& data( void ) const;
+
+          private:
+            std::string& m_data;
         };
     }
 }

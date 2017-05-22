@@ -57,6 +57,31 @@ u64 StringData::size( void ) const
     return m_data.size();
 }
 
+std::string StringData::data( void ) const
+{
+    return m_data;
+}
+
+StringReferenceData::StringReferenceData( std::string& data )
+: m_data( data )
+{
+}
+
+const u8* StringReferenceData::buffer( void ) const
+{
+    return reinterpret_cast< const u8* >( m_data.data() );
+}
+
+u64 StringReferenceData::size( void ) const
+{
+    return m_data.size();
+}
+
+std::string& StringReferenceData::data( void ) const
+{
+    return m_data;
+}
+
 //
 //  Local variables:
 //  mode: c++
