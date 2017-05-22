@@ -47,6 +47,12 @@ namespace libstdhl
         Rational( const Integer& numerator, const Integer& denominator );
 
         ~Rational( void ) = default;
+
+        inline friend Rational operator-( Rational arg )
+        {
+            auto tmp = -static_cast< Type& >( arg );
+            return arg;
+        }
     };
 }
 

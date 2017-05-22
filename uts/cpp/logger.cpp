@@ -69,7 +69,7 @@ TEST( libstdhl_cpp_logger, location_with_text )
     StringFormatter format;
     OutputStreamSink sink( std::cerr, format );
     stream.flush( sink );
-    
+
     EXPECT_EQ( log.errors(), 3 );
     EXPECT_EQ( log.warnings(), 1 );
 }

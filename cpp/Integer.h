@@ -50,10 +50,76 @@ namespace libstdhl
 
         Integer& operator+=( const Integer& rhs );
 
-        friend Integer operator+( Integer lhs, const Integer& rhs )
+        inline friend Integer operator+( Integer lhs, const Integer& rhs )
         {
             lhs += rhs;
             return lhs;
+        }
+
+        Integer& operator-=( const Integer& rhs );
+
+        inline friend Integer operator-( Integer lhs, const Integer& rhs )
+        {
+            lhs -= rhs;
+            return lhs;
+        }
+
+        Integer& operator*=( const Integer& rhs );
+
+        inline friend Integer operator*( Integer lhs, const Integer& rhs )
+        {
+            lhs *= rhs;
+            return lhs;
+        }
+
+        Integer& operator%=( const Integer& rhs );
+
+        inline friend Integer operator%( Integer lhs, const Integer& rhs )
+        {
+            lhs %= rhs;
+            return lhs;
+        }
+
+        Integer& operator/=( const Integer& rhs );
+
+        inline friend Integer operator/( Integer lhs, const Integer& rhs )
+        {
+            lhs /= rhs;
+            return lhs;
+        }
+
+        inline friend Integer operator-( Integer arg )
+        {
+            auto tmp = -static_cast< Type& >( arg );
+            if( tmp == 0 )
+            {
+                return arg;
+            }
+            else
+            {
+                return static_cast< Integer& >( tmp );
+            }
+        }
+
+        u1 operator==( const Integer& rhs ) const;
+
+        inline u1 operator!=( const Integer& rhs ) const
+        {
+            return not( operator==( rhs ) );
+        }
+
+        u1 operator<( const Integer& rhs ) const;
+
+        inline u1 operator>=( const Integer& rhs ) const
+        {
+            return not( operator<( rhs ) );
+        }
+
+        u1 operator>( const Integer& rhs ) const;
+
+        inline u1 operator<=( const Integer& rhs ) const
+        {
+            return not( operator>( rhs ) );
         }
     };
 }

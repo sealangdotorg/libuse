@@ -26,24 +26,35 @@
 
 using namespace libstdhl;
 
-TEST( libstdhl_cpp_rational, str_decimal1 )
+template < typename... Args >
+static std::size_t func_size( Args&&... args )
 {
-    auto i = Rational( "5", Type::Radix::DECIMAL );
-
-    EXPECT_EQ( i.size(), 1 );
-    EXPECT_EQ( i.sign(), false );
-    EXPECT_EQ( i.word( 0 ), 5 );
+    return Variadic< Args... >::size;
 }
 
-TEST( libstdhl_cpp_rational, str_decimal4 )
+TEST( libstdhl_cpp_Variadic, argument_size )
 {
-    auto i = Rational( "2/31", Type::Radix::DECIMAL );
-
-    EXPECT_EQ( i.size(), 2 );
-    EXPECT_EQ( i.sign(), false );
-    EXPECT_EQ( i.word( 0 ), 2 );
-    EXPECT_EQ( i.word( 1 ), 31 );
+    EXPECT_EQ( func_size( 0, 1, 2, 3 ), 4 );
+    EXPECT_EQ( func_size( 10, "asdf", 'g', 4.8, true ), 5 );
+    EXPECT_EQ( func_size( true, false, true ), 3 );
 }
+
+// template < typename... Args >
+// static std::size_t func_sum( Args&&... args )
+// {
+//     std::size_t sum = 0;
+
+//     Variadic< Args... >::iterate(
+//         [&]( std::size_t index, i64&& value ) { sum += value; },
+//         std::forward< Args >( args )... );
+
+//     return sum;
+// }
+
+// TEST( libstdhl_cpp_Variadic, argument_sum )
+// {
+//     EXPECT_EQ( func_sum( 1, 2, 3, 4 ), 10 );
+// }
 
 //
 //  Local variables:

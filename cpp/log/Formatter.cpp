@@ -284,8 +284,10 @@ std::string ApplicationFormatter::visit( Data& item )
             tmp += std::string( location.range().begin().column() - 1, ' ' );
 
             std::string underline;
-            if( location.range().begin().line()
-                == location.range().end().line() )
+            if( ( location.range().begin().line()
+                    == location.range().end().line() )
+                and ( location.range().end().column()
+                        > location.range().begin().column() ) )
             {
                 underline = std::string( location.range().end().column()
                                              - location.range().begin().column()

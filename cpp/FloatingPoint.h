@@ -45,6 +45,19 @@ namespace libstdhl
         FloatingPoint( double value );
 
         ~FloatingPoint( void ) = default;
+
+        inline friend FloatingPoint operator-( FloatingPoint arg )
+        {
+            auto tmp = -static_cast< Type& >( arg );
+            if( tmp == 0 )
+            {
+                return arg;
+            }
+            else
+            {
+                return static_cast< FloatingPoint& >( tmp );
+            }
+        }
     };
 }
 

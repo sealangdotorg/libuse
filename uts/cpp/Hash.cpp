@@ -26,23 +26,10 @@
 
 using namespace libstdhl;
 
-TEST( libstdhl_cpp_rational, str_decimal1 )
+TEST( libstdhl_cpp_Hash, example )
 {
-    auto i = Rational( "5", Type::Radix::DECIMAL );
-
-    EXPECT_EQ( i.size(), 1 );
-    EXPECT_EQ( i.sign(), false );
-    EXPECT_EQ( i.word( 0 ), 5 );
-}
-
-TEST( libstdhl_cpp_rational, str_decimal4 )
-{
-    auto i = Rational( "2/31", Type::Radix::DECIMAL );
-
-    EXPECT_EQ( i.size(), 2 );
-    EXPECT_EQ( i.sign(), false );
-    EXPECT_EQ( i.word( 0 ), 2 );
-    EXPECT_EQ( i.word( 1 ), 31 );
+    EXPECT_EQ( libstdhl::Hash::combine( 123, 456 ),
+        libstdhl::Hash::combine( 123, 456 ) );
 }
 
 //

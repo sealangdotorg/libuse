@@ -29,7 +29,7 @@ using namespace libstdhl;
 #define TEST_LIBSTDHL_CPP_TYPE__TO( RADIX, VALUE, STRING )                     \
     TEST( libstdhl_cpp_type, to_##RADIX )                                      \
     {                                                                          \
-        EXPECT_STREQ( Type( { VALUE } ).to< Type::RADIX >().c_str(), STRING ); \
+        EXPECT_STREQ( Type( VALUE ).to< Type::RADIX >().c_str(), STRING );     \
     }
 
 TEST_LIBSTDHL_CPP_TYPE__TO( BINARY, 123, "0b1111011" );
@@ -39,15 +39,12 @@ TEST_LIBSTDHL_CPP_TYPE__TO( HEXADECIMAL, 123, "0x7b" );
 
 TEST( libstdhl_cpp_type, to_string )
 {
-    EXPECT_STREQ(
-        Type( { 123 } ).to_string( Type::BINARY ).c_str(), "1111011" );
-    EXPECT_STREQ( Type( { 123 } ).to_string( Type::OCTAL ).c_str(), "173" );
-    EXPECT_STREQ( Type( { 123 } ).to_string( Type::DECIMAL ).c_str(), "123" );
-    EXPECT_STREQ(
-        Type( { 123 } ).to_string( Type::HEXADECIMAL ).c_str(), "7b" );
-    EXPECT_STREQ(
-        Type( { 123 } ).to_string( Type::SEXAGESIMAL ).c_str(), "23" );
-    EXPECT_STREQ( Type( { 123 } ).to_string( Type::RADIX64 ).c_str(), "1X" );
+    EXPECT_STREQ( Type( 123 ).to_string( Type::BINARY ).c_str(), "1111011" );
+    EXPECT_STREQ( Type( 123 ).to_string( Type::OCTAL ).c_str(), "173" );
+    EXPECT_STREQ( Type( 123 ).to_string( Type::DECIMAL ).c_str(), "123" );
+    EXPECT_STREQ( Type( 123 ).to_string( Type::HEXADECIMAL ).c_str(), "7b" );
+    EXPECT_STREQ( Type( 123 ).to_string( Type::SEXAGESIMAL ).c_str(), "23" );
+    EXPECT_STREQ( Type( 123 ).to_string( Type::RADIX64 ).c_str(), "1X" );
 }
 
 TEST( libstdhl_cpp_type, check_division )
@@ -118,31 +115,6 @@ TEST( libstdhl_cpp_type, operator_div )
 
         EXPECT_TRUE( a == b );
     }
-}
-
-TEST( libstdhl_cpp_type, u64_with_precision )
-{
-    u64 number = 0xfeed;
-    u64 precision = 300;
-
-    auto i = Type( number, precision );
-
-    EXPECT_EQ(
-        i.words().size(), ( precision / 64 ) + ( precision % 64 ? 1 : 0 ) );
-    EXPECT_EQ( i.word( 0 ), number );
-}
-
-TEST( libstdhl_cpp_type, u64_with_precision_loose_information )
-{
-    u64 number = 0xfeedfeed;
-    u64 precision = 16;
-
-    EXPECT_THROW( { Type( number, precision ); }, std::domain_error );
-}
-
-TEST( libstdhl_cpp_type, u64_with_precision_zero )
-{
-    EXPECT_THROW( { Type( 123, 0 ); }, std::domain_error );
 }
 
 //

@@ -29,12 +29,12 @@
 using namespace libstdhl;
 
 Integer::Integer( u64 value )
-: Type( { value } )
+: Type( value )
 {
 }
 
 Integer::Integer( i64 value )
-: Type( ( value >= 0 ? (u64)value : ( u64 )( -value ) ), 63, ( value < 0 ) )
+: Type( ( value >= 0 ? (u64)value : ( u64 )( -value ) ), ( value < 0 ) )
 {
 }
 
@@ -96,20 +96,201 @@ Integer::Integer( const std::string& value, const Radix radix )
 
     tmp.shrink();
 
-    m_words = std::move( tmp.words() );
+    tmp.foreach( [&]( const std::size_t index, const u64 value ) {
+        if( index < 2 )
+        {
+            m_words[ index ] = value;
+        }
+        else
+        {
+            m_words_ext.push_back( value );
+        }
+    } );
+
     m_sign = sign;
 }
 
 Integer& Integer::operator+=( const Integer& rhs )
 {
-    assert( m_words.size() == rhs.words().size() );
-    assert( m_words.size() == 1 );
+    assert( size() == rhs.size() );
+    assert( size() == 1 );
 
-#warning "HACK!"
+    const auto lhs_neg = m_sign;
+    const auto rhs_neg = rhs.sign();
 
-    m_words[ 0 ] += rhs.word( 0 );
+    const auto a = m_words[ 0 ];
+    const auto b = rhs.word( 0 );
+
+    if( lhs_neg == rhs_neg )
+    {
+        m_words[ 0 ] = a + b;
+    }
+    else
+    {
+        if( a >= b )
+        {
+            m_words[ 0 ] = a - b;
+        }
+        else
+        {
+            m_words[ 0 ] = b - a;
+        }
+    }
+
+    m_sign = rhs_neg;
 
     return *this;
+}
+
+Integer& Integer::operator-=( const Integer& rhs )
+{
+    assert( size() == rhs.size() );
+    assert( size() == 1 );
+
+    const auto lhs_neg = m_sign;
+    const auto rhs_neg = rhs.sign();
+
+    const auto a = m_words[ 0 ];
+    const auto b = rhs.word( 0 );
+
+    if( lhs_neg == rhs_neg )
+    {
+        if( a >= b )
+        {
+            m_sign = not lhs_neg;
+            m_words[ 0 ] = a - b;
+        }
+        else
+        {
+            m_sign = lhs_neg;
+            m_words[ 0 ] = b - a;
+        }
+    }
+    else
+    {
+        m_sign = lhs_neg;
+        m_words[ 0 ] = a + b;
+    }
+
+    m_sign = rhs_neg;
+
+    return *this;
+}
+
+Integer& Integer::operator*=( const Integer& rhs )
+{
+    assert( size() == rhs.size() );
+    assert( size() == 1 );
+
+    const auto lhs_neg = m_sign;
+    const auto rhs_neg = rhs.sign();
+
+    const auto a = m_words[ 0 ];
+    const auto b = rhs.word( 0 );
+
+    m_words[ 0 ] = a * b;
+    m_sign = lhs_neg != rhs_neg;
+
+    return *this;
+}
+
+Integer& Integer::operator%=( const Integer& rhs )
+{
+    assert( size() == rhs.size() );
+    assert( size() == 1 );
+
+    const auto a = m_words[ 0 ];
+    const auto b = rhs.word( 0 );
+
+    m_words[ 0 ] = a % b;
+
+    return *this;
+}
+
+Integer& Integer::operator/=( const Integer& rhs )
+{
+    assert( size() == rhs.size() );
+    assert( size() == 1 );
+
+    const auto lhs_neg = m_sign;
+    const auto rhs_neg = rhs.sign();
+
+    const auto a = m_words[ 0 ];
+    const auto b = rhs.word( 0 );
+
+    m_words[ 0 ] = a / b;
+    m_sign = lhs_neg != rhs_neg;
+
+    return *this;
+}
+
+u1 Integer::operator==( const Integer& rhs ) const
+{
+    return m_sign == rhs.sign()
+           and static_cast< const Type& >( *this )
+                   == static_cast< const Type& >( rhs );
+}
+
+u1 Integer::operator<( const Integer& rhs ) const
+{
+    const auto lhs_neg = m_sign;
+    const auto rhs_neg = rhs.sign();
+
+    if( lhs_neg )
+    {
+        if( rhs_neg )
+        {
+            return static_cast< const Type& >( *this )
+                   >= static_cast< const Type& >( rhs );
+        }
+        else // rhs pos
+        {
+            return true;
+        }
+    }
+    else // lhs pos
+    {
+        if( rhs_neg )
+        {
+            return false;
+        }
+        else // rhs pos
+        {
+            return static_cast< const Type& >( *this )
+                   < static_cast< const Type& >( rhs );
+        }
+    }
+}
+
+u1 Integer::operator>( const Integer& rhs ) const
+{
+    const auto lhs_neg = m_sign;
+    const auto rhs_neg = rhs.sign();
+
+    if( lhs_neg )
+    {
+        if( rhs_neg )
+        {
+            return static_cast< const Type& >( *this )
+                   <= static_cast< const Type& >( rhs );
+        }
+        else // rhs pos
+        {
+            return false;
+        }
+    }
+    else // lhs pos
+    {
+        if( rhs_neg )
+        {
+            return true;
+        }
+        else // rhs pos
+        {
+            return static_cast< const Type& >( *this )
+                   > static_cast< const Type& >( rhs );
+        }
+    }
 }
 
 //

@@ -51,6 +51,7 @@
 #include "cpp/Enum.h"
 #include "cpp/File.h"
 #include "cpp/FloatingPoint.h"
+#include "cpp/Hash.h"
 #include "cpp/Integer.h"
 #include "cpp/Json.h"
 #include "cpp/Labeling.h"
@@ -62,6 +63,7 @@
 #include "cpp/Standard.h"
 #include "cpp/String.h"
 #include "cpp/Type.h"
+#include "cpp/Variadic.h"
 #include "cpp/Xml.h"
 
 namespace libstdhl
