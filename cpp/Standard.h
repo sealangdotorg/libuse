@@ -26,9 +26,11 @@
 #define _LIB_STDHL_CPP_STANDARD_H_
 
 #include "standard/ieee802.h"
+#include "standard/rfc3986.h"
 
 /**
    @brief    TBD
+
 
    TBD
 */

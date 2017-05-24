@@ -42,10 +42,6 @@ namespace libstdhl
         */
         namespace RFC3986
         {
-            class UniformResourceIdentifier;
-
-            using URI = UniformResourceIdentifier;
-
             /**
                http://tools.ietf.org/html/rfc3986
 
@@ -90,6 +86,8 @@ namespace libstdhl
                 std::string m_query;
                 std::string m_fragment;
             };
+
+            using URI = UniformResourceIdentifier;
         }
     }
 }

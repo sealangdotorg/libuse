@@ -25,10 +25,12 @@
 #include "uts/main.h"
 
 using namespace libstdhl;
+using namespace Standard;
+using namespace RFC3986;
 
 TEST( libstdhl_cpp_standard_rfc3986, https_link )
 {
-    const auto uri = Standard::RFC3986::URI(
+    const auto uri = UniformResourceIdentifier(
         "https://code.visualstudio.com/docs/extensions/overview#frag" );
 
     EXPECT_STREQ( uri.scheme().c_str(), "https" );
@@ -42,7 +44,8 @@ TEST( libstdhl_cpp_standard_rfc3986, https_link )
 
 TEST( libstdhl_cpp_standard_rfc3986, file_path_ascii_only )
 {
-    const auto uri = Standard::RFC3986::URI( "file:///users/me/c-projects/" );
+    const auto uri
+        = UniformResourceIdentifier( "file:///users/me/c-projects/" );
 
     EXPECT_STREQ( uri.scheme().c_str(), "file" );
     EXPECT_STREQ( uri.authority().c_str(), "" );
@@ -54,7 +57,8 @@ TEST( libstdhl_cpp_standard_rfc3986, file_path_ascii_only )
 
 TEST( DISABLED_libstdhl_cpp_standard_rfc3986, file_path_with_sharp )
 {
-    const auto uri = Standard::RFC3986::URI( "file:///users/me/c#-projects/" );
+    const auto uri
+        = UniformResourceIdentifier( "file:///users/me/c#-projects/" );
 
     EXPECT_STREQ( uri.scheme().c_str(), "file" );
     EXPECT_STREQ( uri.authority().c_str(), "" );
