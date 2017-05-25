@@ -41,8 +41,7 @@ namespace libstdhl
               public:
                 using Ptr = std::shared_ptr< IPv4PosixSocket >;
 
-                IPv4PosixSocket(
-                    const IPv4::Address& address, const UDP::Port& port );
+                IPv4PosixSocket( const Address& address, const Port& port );
 
                 IPv4PosixSocket( const std::string& name );
 
@@ -53,8 +52,8 @@ namespace libstdhl
                 void receive( Network::Packet& data ) const override;
 
               private:
-                IPv4::Address m_address;
-                UDP::Port m_port;
+                Address m_address;
+                Port m_port;
             };
         }
     }

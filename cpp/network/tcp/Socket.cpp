@@ -67,6 +67,14 @@ IPv4PosixSocket::IPv4PosixSocket( const std::string& name )
     m_port = { { ( u8 )( port >> 8 ), (u8)port } };
 }
 
+IPv4PosixSocket::IPv4PosixSocket( const PosixSocket< Network::Packet >& socket )
+: PosixSocket< Network::Packet >( socket )
+, m_address( { { 0 } } )
+, m_port( { { 0 } } )
+, m_server( false )
+{
+}
+
 void IPv4PosixSocket::connect( void )
 {
     if( connected() )
@@ -152,7 +160,7 @@ u1 IPv4PosixSocket::server( void ) const
    blocking call!
  */
 
-PosixSocket< Network::Packet > IPv4PosixSocket::accept( void ) const
+IPv4PosixSocket IPv4PosixSocket::accept( void ) const
 {
     if( not connected() )
     {
@@ -166,18 +174,18 @@ PosixSocket< Network::Packet > IPv4PosixSocket::accept( void ) const
     if( not server() )
     {
         throw std::domain_error(
-            "cannot accept new connection, because socket is not connected to "
-            "TCP address '"
-            + name()
+            "client cannot use accept functionality for TCP address '" + name()
             + "'" );
     }
 
     struct sockaddr_in configuration = { 0 };
+
     socklen_t len = sizeof( configuration );
 
     i32 connection = ::accept( id(), (struct sockaddr*)&configuration, &len );
 
-    return PosixSocket< Network::Packet >( *this, connection );
+    return IPv4PosixSocket(
+        PosixSocket< Network::Packet >( *this, connection ) );
 }
 
 //

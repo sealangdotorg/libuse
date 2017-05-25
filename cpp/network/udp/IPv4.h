@@ -27,8 +27,6 @@
 
 #include "../Interface.h"
 
-#include "Socket.h"
-
 namespace libstdhl
 {
     namespace Network
@@ -42,9 +40,13 @@ namespace libstdhl
 
                 IPv4( const std::string& name );
 
+                void send( const Network::Packet& data ) override;
+
                 void send( const std::string& data ) override;
 
                 void send( const std::vector< u8 >& data ) override;
+
+                void receive( Network::Packet& data ) override;
 
                 void receive( std::string& data ) override;
 

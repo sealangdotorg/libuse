@@ -22,57 +22,30 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_CPP_NETWORK_TCP_PACKET_H_
-#define _LIB_STDHL_CPP_NETWORK_TCP_PACKET_H_
+#ifndef _LIB_STDHL_CPP_NETWORK_TCP_SESSION_H_
+#define _LIB_STDHL_CPP_NETWORK_TCP_SESSION_H_
 
-#include "../Packet.h"
+#include "../Interface.h"
 
-#include "Protocol.h"
-
-/**
-   @brief    TBD
-
-   TBD
-*/
+#include "Socket.h"
 
 namespace libstdhl
 {
-    /**
-       @extends Stdhl
-    */
     namespace Network
     {
         namespace TCP
         {
-            /**
-               @extends TCP
-            */
-            // class Packet final : public Network::Packet
-            // {
-            // public:
-            //   using Ptr = std::shared_ptr< Packet >;
-
-            //   Packet( const Address& destination, const Address& source,
-            //       const Type& type, const std::vector< u8 >& payload );
-
-            //   const Protocol& header( void ) const;
-
-            //   const Data& payload( void ) const;
-
-            //   const u8* buffer( void ) const override;
-
-            //   std::size_t size( void ) const override;
-
-            // private:
-            //   const Protocol m_header;
-            //   Data m_payload;
-            //   const std::size_t m_size;
-            // };
+            template < typename T >
+            class Session
+            {
+              public:
+                virtual T session( void ) = 0;
+            };
         }
-    }
+    };
 }
 
-#endif // _LIB_STDHL_CPP_NETWORK_TCP_PACKET_H_
+#endif // _LIB_STDHL_CPP_NETWORK_TCP_SESSION_H_
 
 //
 //  Local variables:

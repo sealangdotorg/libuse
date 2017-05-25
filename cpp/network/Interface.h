@@ -25,6 +25,7 @@
 #ifndef _LIB_STDHL_CPP_NETWORK_INTERFACE_H_
 #define _LIB_STDHL_CPP_NETWORK_INTERFACE_H_
 
+#include "Packet.h"
 #include "Protocol.h"
 #include "Socket.h"
 
@@ -46,9 +47,13 @@ namespace libstdhl
         class Interface
         {
           public:
+            virtual void send( const T& data ) = 0;
+
             virtual void send( const std::string& data ) = 0;
 
             virtual void send( const std::vector< u8 >& data ) = 0;
+
+            virtual void receive( T& data ) = 0;
 
             virtual void receive( std::string& data ) = 0;
 
@@ -76,19 +81,19 @@ namespace libstdhl
                 m_socket->disconnect();
             }
 
-            void setSocket( Socket< T >& s )
+            void setSocket( typename Socket< T >::Ptr& socket )
             {
-                m_socket = &s;
+                m_socket = socket;
             }
 
-            Socket< T >& socket( void )
+            typename Socket< T >::Ptr socket( void )
             {
                 assert( m_socket );
-                return *m_socket;
+                return m_socket;
             }
 
           private:
-            Socket< T >* m_socket = 0;
+            typename Socket< T >::Ptr m_socket = nullptr;
         };
     }
 }

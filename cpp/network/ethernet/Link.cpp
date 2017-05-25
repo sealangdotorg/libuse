@@ -34,8 +34,15 @@ static std::unordered_map< std::string, RawPosixSocket > phy;
 
 Link::Link( const std::string& name )
 {
-    auto result = phy.emplace( name, RawPosixSocket( name ) );
-    setSocket( result.first->second );
+    auto socket = libstdhl::make< RawPosixSocket >( name );
+    auto link = std::static_pointer_cast< Socket< Packet > >( socket );
+    setSocket( link );
+}
+
+void Link::send( const Packet& data )
+{
+    auto& link = static_cast< RawPosixSocket& >( *socket() );
+    link.send( data );
 }
 
 void Link::send( const std::string& data )
@@ -48,13 +55,15 @@ void Link::send( const std::vector< u8 >& data )
     const auto size = data.size();
     assert( size <= 1500 );
 
+    auto& link = static_cast< RawPosixSocket& >( *socket() );
     const Type type = { { ( u8 )( size >> 8 ), (u8)size } };
-
-    auto& link = static_cast< RawPosixSocket& >( socket() );
-
     const auto frame = Packet( BROADCAST, link.address(), type, data );
+    send( frame );
+}
 
-    link.send( frame );
+void Link::receive( Packet& data )
+{
+    assert( !" TODO! " );
 }
 
 void Link::receive( std::string& data )

@@ -52,12 +52,14 @@ namespace libstdhl
         class Socket
         {
           public:
+            using Ptr = std::shared_ptr< Socket >;
+
             Socket( const std::string& name )
             : m_name( name )
             {
             }
 
-            ~Socket( void ) = default;
+            virtual ~Socket( void ) = default;
 
             std::string name( void ) const
             {
@@ -106,7 +108,7 @@ namespace libstdhl
             }
 
             PosixSocket( const PosixSocket& server, const i32 id )
-            : Network::Socket< T >( server.name() )
+            : Network::Socket< T >( server.name() + "@" + std::to_string( id ) )
             , m_domain( 0 )
             , m_type( 0 )
             , m_protocol( 0 )
@@ -130,7 +132,7 @@ namespace libstdhl
 
             u1 connected( void ) const override final
             {
-                return m_socket != 0 and m_connected;
+                return m_socket > 0 and m_connected;
             }
 
             void setConnected( const u1 connected )

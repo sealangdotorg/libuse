@@ -28,6 +28,7 @@
 #include "../Protocol.h"
 
 #include "../ipv4/Protocol.h"
+#include "../udp/Protocol.h"
 
 /**
    @brief    TBD
@@ -41,9 +42,9 @@ namespace libstdhl
     {
         namespace TCP
         {
-            static constexpr std::size_t ADDR = 2;
+            using Address = Network::IPv4::Address;
 
-            using Port = std::array< u8, ADDR >;
+            using Port = Network::UDP::Port;
         }
     }
 }

@@ -49,24 +49,24 @@ namespace libstdhl
             */
             // class Packet final : public Network::Packet
             // {
-              // public:
-              //   using Ptr = std::shared_ptr< Packet >;
+            // public:
+            //   using Ptr = std::shared_ptr< Packet >;
 
-              //   Packet( const Address& destination, const Address& source,
-              //       const Type& type, const std::vector< u8 >& payload );
+            //   Packet( const Address& destination, const Address& source,
+            //       const Type& type, const std::vector< u8 >& payload );
 
-              //   const Protocol& header( void ) const;
+            //   const Protocol& header( void ) const;
 
-              //   const Data& payload( void ) const;
+            //   const Data& payload( void ) const;
 
-              //   const u8* buffer( void ) const override;
+            //   const u8* buffer( void ) const override;
 
-              //   std::size_t size( void ) const override;
+            //   std::size_t size( void ) const override;
 
-              // private:
-              //   const Protocol m_header;
-              //   Data m_payload;
-              //   const std::size_t m_size;
+            // private:
+            //   const Protocol m_header;
+            //   Data m_payload;
+            //   const std::size_t m_size;
             // };
         }
     }

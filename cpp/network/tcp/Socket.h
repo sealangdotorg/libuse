@@ -28,6 +28,7 @@
 #include "../Socket.h"
 
 #include "Packet.h"
+#include "Protocol.h"
 
 namespace libstdhl
 {
@@ -40,10 +41,11 @@ namespace libstdhl
               public:
                 using Ptr = std::shared_ptr< IPv4PosixSocket >;
 
-                IPv4PosixSocket(
-                    const IPv4::Address& address, const Port& port );
+                IPv4PosixSocket( const Address& address, const Port& port );
 
                 IPv4PosixSocket( const std::string& name );
+
+                IPv4PosixSocket( const PosixSocket< Network::Packet >& socket );
 
               public:
                 void connect( void ) override;
@@ -56,10 +58,10 @@ namespace libstdhl
 
                 u1 server( void ) const;
 
-                PosixSocket< Network::Packet > accept( void ) const;
+                IPv4PosixSocket accept( void ) const;
 
               private:
-                IPv4::Address m_address;
+                Address m_address;
                 Port m_port;
                 u1 m_server;
             };

@@ -41,7 +41,9 @@ namespace libstdhl
     {
         namespace UDP
         {
-            static constexpr std::size_t ADDR = 2;
+            using Address = Network::IPv4::Address;
+
+            static constexpr const std::size_t ADDR = 2;
 
             using Port = std::array< u8, ADDR >;
         }

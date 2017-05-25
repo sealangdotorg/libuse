@@ -30,44 +30,47 @@ using namespace libstdhl;
 using namespace Network;
 using namespace UDP;
 
-static std::unordered_map< std::string, IPv4PosixSocket > phy;
-
 UDP::IPv4::IPv4( const std::string& name )
 {
-    auto result = phy.emplace( name, IPv4PosixSocket( name ) );
-    setSocket( result.first->second );
+    auto socket = libstdhl::make< IPv4PosixSocket >( name );
+    auto link = std::static_pointer_cast< Socket< Network::Packet > >( socket );
+    setSocket( link );
+}
+
+void UDP::IPv4::send( const Network::Packet& data )
+{
+    auto& link = static_cast< IPv4PosixSocket& >( *socket() );
+    link.send( data );
 }
 
 void UDP::IPv4::send( const std::string& data )
 {
     const auto packet = StringData{ data };
-
-    auto& link = static_cast< IPv4PosixSocket& >( socket() );
-    link.send( packet );
+    send( packet );
 }
 
 void UDP::IPv4::send( const std::vector< u8 >& data )
 {
     const auto packet = BinaryData{ data };
+    send( packet );
+}
 
-    auto& link = static_cast< IPv4PosixSocket& >( socket() );
-    link.send( packet );
+void UDP::IPv4::receive( Network::Packet& data )
+{
+    auto& link = static_cast< IPv4PosixSocket& >( *socket() );
+    link.receive( data );
 }
 
 void UDP::IPv4::receive( std::string& data )
 {
     StringData packet( data );
-
-    auto& link = static_cast< IPv4PosixSocket& >( socket() );
-    link.receive( packet );
+    receive( packet );
 }
 
 void UDP::IPv4::receive( std::vector< u8 >& data )
 {
     BinaryData packet( data );
-
-    auto& link = static_cast< IPv4PosixSocket& >( socket() );
-    link.receive( packet );
+    receive( packet );
 }
 
 //

@@ -42,6 +42,8 @@ namespace libstdhl
 
                 Link( const std::string& name );
 
+                void send( const Packet& data ) override;
+
                 void send( const std::string& data ) override;
 
                 void send( const std::vector< u8 >& data ) override;
@@ -49,6 +51,8 @@ namespace libstdhl
                 void receive( std::string& data ) override;
 
                 void receive( std::vector< u8 >& data ) override;
+
+                void receive( Packet& data ) override;
             };
         }
     };

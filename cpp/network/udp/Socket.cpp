@@ -28,8 +28,7 @@ using namespace libstdhl;
 using namespace Network;
 using namespace UDP;
 
-IPv4PosixSocket::IPv4PosixSocket(
-    const IPv4::Address& address, const Port& port )
+IPv4PosixSocket::IPv4PosixSocket( const Address& address, const Port& port )
 : PosixSocket< Network::Packet >( "IPv4", AF_INET, SOCK_DGRAM, IPPROTO_UDP )
 , m_address( address )
 , m_port( port )

@@ -27,7 +27,8 @@
 
 #include "../Interface.h"
 
-#include "Socket.h"
+#include "Session.h"
+// #include "Socket.h"
 
 namespace libstdhl
 {
@@ -35,20 +36,31 @@ namespace libstdhl
     {
         namespace TCP
         {
-            class IPv4 final : public Interface< Network::Packet >
+            class IPv4 final : public Interface< Network::Packet >,
+                               public Session< IPv4 >
             {
               public:
                 using Ptr = std::shared_ptr< IPv4 >;
 
                 IPv4( const std::string& name, const u1 server = false );
 
+              private:
+                IPv4( void );
+
+              public:
+                void send( const Network::Packet& data ) override;
+
                 void send( const std::string& data ) override;
 
                 void send( const std::vector< u8 >& data ) override;
 
+                void receive( Network::Packet& data ) override;
+
                 void receive( std::string& data ) override;
 
                 void receive( std::vector< u8 >& data ) override;
+
+                IPv4 session( void ) override;
             };
         }
     };

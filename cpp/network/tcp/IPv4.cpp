@@ -30,48 +30,97 @@ using namespace libstdhl;
 using namespace Network;
 using namespace TCP;
 
-static std::unordered_map< std::string, IPv4PosixSocket > phy;
-
 TCP::IPv4::IPv4( const std::string& name, const u1 server )
 {
-    auto result = phy.emplace( name, IPv4PosixSocket( name ) );
-    setSocket( result.first->second );
+    auto socket = libstdhl::make< IPv4PosixSocket >( name );
+    socket->setServer( server );
+    auto link = std::static_pointer_cast< Socket< Network::Packet > >( socket );
+    setSocket( link );
+}
 
-    auto& link = static_cast< IPv4PosixSocket& >( socket() );
-    link.setServer( server );
+TCP::IPv4::IPv4( void )
+{
+}
+
+void TCP::IPv4::send( const Network::Packet& data )
+{
+    auto& link = static_cast< IPv4PosixSocket& >( *socket() );
+
+    if( not link.server() )
+    {
+        link.send( data );
+    }
+    else
+    {
+        auto client = link.accept();
+        client.send( data );
+        client.disconnect();
+    }
 }
 
 void TCP::IPv4::send( const std::string& data )
 {
     const auto packet = StringData{ data };
-
-    auto& link = static_cast< IPv4PosixSocket& >( socket() );
-    link.send( packet );
+    send( packet );
 }
 
 void TCP::IPv4::send( const std::vector< u8 >& data )
 {
     const auto packet = BinaryData{ data };
+    send( packet );
+}
 
-    auto& link = static_cast< IPv4PosixSocket& >( socket() );
-    link.send( packet );
+void TCP::IPv4::receive( Network::Packet& data )
+{
+    auto& link = static_cast< IPv4PosixSocket& >( *socket() );
+
+    if( not link.server() )
+    {
+        link.receive( data );
+    }
+    else
+    {
+        auto client = link.accept();
+        client.receive( data );
+        client.disconnect();
+    }
 }
 
 void TCP::IPv4::receive( std::string& data )
 {
     data.resize( 1400 ); // TODO: PPA: FIXME: should be configured etc.
     StringReferenceData packet( data );
-
-    auto& link = static_cast< IPv4PosixSocket& >( socket() );
-    link.receive( packet );
+    receive( packet );
 }
 
 void TCP::IPv4::receive( std::vector< u8 >& data )
 {
+    data.resize( 1400 ); // TODO: PPA: FIXME: should be configured etc.
     BinaryData packet( data );
+    receive( packet );
+}
 
-    auto& link = static_cast< IPv4PosixSocket& >( socket() );
-    link.receive( packet );
+TCP::IPv4 TCP::IPv4::session( void )
+{
+    auto& link = static_cast< IPv4PosixSocket& >( *socket() );
+
+    if( not link.server() )
+    {
+        return *this;
+    }
+    else
+    {
+        auto client = link.accept();
+        auto socket = libstdhl::make< IPv4PosixSocket >( client );
+        socket->setServer( false );
+
+        auto link
+            = std::static_pointer_cast< Socket< Network::Packet > >( socket );
+        auto connection = TCP::IPv4();
+        connection.setSocket( link );
+
+        return connection;
+    }
 }
 
 //
