@@ -102,6 +102,35 @@ TEST( libstdhl_cpp_String, join3 )
     EXPECT_STREQ( joined.c_str(), "foo.bar.qux" );
 }
 
+TEST( libstdhl_cpp_String, value_over_switch_case )
+{
+    const auto v = String::value( "foo" );
+
+    switch( v )
+    {
+        case String::value( "bar" ):
+        {
+            ASSERT_TRUE( false );
+            break;
+        }
+        case String::value( "foo" ):
+        {
+            ASSERT_TRUE( true );
+            break;
+        }
+        case String::value( "baz" ):
+        {
+            ASSERT_TRUE( false );
+            break;
+        }
+        default:
+        {
+            ASSERT_TRUE( false );
+            break;
+        }
+    }
+}
+
 //
 //  Local variables:
 //  mode: c++
