@@ -24,6 +24,8 @@
 
 #include "rfc3986.h"
 
+#include "../String.h"
+
 /**
    @brief    TBD
 
@@ -34,38 +36,81 @@ using namespace libstdhl;
 using namespace Standard;
 using namespace RFC3986;
 
-UniformResourceIdentifier::UniformResourceIdentifier( const std::string& uri )
-: std::string( uri )
+UniformResourceIdentifier UniformResourceIdentifier::parse(
+    const std::string& uri )
 {
-    std::regex pattern(
+    std::regex uri_regex(
         // 1: scheme
         "(?:([[:alpha:]](?:[[:alnum:]]|[\\+]|[\\-]|[\\.])*)\\:)?"
         // 2: authority
         "(?://([^/\\?\\#]*))?"
         // 3: path
-        "([^\\?\\#]*)"
+        "([\\S][^\\?\\#]*)"
         // 4: query
         "(?:/[\\?]([^\\#]*))?"
         // 5: fragment
         "(?:[\\#]([\\S]*))?" );
 
-    std::sregex_iterator start( uri.begin(), uri.end(), pattern );
-    std::sregex_iterator end;
+    std::sregex_iterator uri_start( uri.begin(), uri.end(), uri_regex );
+    std::sregex_iterator uri_end;
 
-    if( start == end )
+    if( uri_start == uri_end )
     {
         throw std::invalid_argument(
             "invalid URI to parse from string '" + uri + "'" );
     }
 
-    auto match = *start;
+    auto match = *uri_start;
     assert( match.size() >= 5 );
 
-    m_scheme = match[ 1 ].str();
-    m_authority = match[ 2 ].str();
-    m_path = match[ 3 ].str();
-    m_query = match[ 4 ].str();
-    m_fragment = match[ 5 ].str();
+    const auto& scheme = match[ 1 ].str();
+    const auto& authority = match[ 2 ].str();
+    const auto& path = match[ 3 ].str();
+    const auto& query = match[ 4 ].str();
+    const auto& fragment = match[ 5 ].str();
+
+    std::regex path_regex( ".*([\\s]+).*" );
+    std::sregex_iterator path_start( path.begin(), path.end(), path_regex );
+    std::sregex_iterator path_end;
+
+    if( path_start != path_end )
+    {
+        throw std::invalid_argument(
+            "invalid URI path '" + path + "' found in string '" + uri + "'" );
+    }
+
+    return UniformResourceIdentifier(
+        scheme, authority, path, query, fragment );
+}
+
+UniformResourceIdentifier::UniformResourceIdentifier( const std::string& scheme,
+    const std::string& authority,
+    const std::string& path,
+    const std::string& query,
+    const std::string& fragment )
+: std::string( "" )
+, m_scheme( scheme )
+, m_authority( authority )
+, m_path( path )
+, m_query( query )
+, m_fragment( fragment )
+{
+    if( scheme.size() > 0 )
+    {
+        *this += scheme + "://" + authority;
+    }
+
+    *this += path;
+
+    if( query.size() > 0 )
+    {
+        *this += "?" + query;
+    }
+
+    if( fragment.size() > 0 )
+    {
+        *this += "#" + fragment;
+    }
 }
 
 std::string UniformResourceIdentifier::scheme( void ) const

@@ -31,6 +31,24 @@
    @brief    TBD
 
    TBD
+
+   http://tools.ietf.org/html/rfc3986
+
+   ~~~
+   URI         = scheme ":" hier-part [ "?" query ] [ "#" fragment ]
+
+   hier-part   = "//" authority path-abempty
+               / path-absolute
+               / path-rootless
+               / path-empty
+
+       foo://example.com:8042/over/there?name=ferret#nose
+       \_/   \______________/\_________/ \_________/ \__/
+        |           |            |            |        |
+     scheme     authority       path        query   fragment
+        |   _____________________|__
+       / \ /                        \
+       urn:example:animal:ferret:nose
 */
 
 namespace libstdhl
@@ -43,29 +61,19 @@ namespace libstdhl
         namespace RFC3986
         {
             /**
-               http://tools.ietf.org/html/rfc3986
-
-               ~~~
-               URI         = scheme ":" hier-part [ "?" query ] [ "#" fragment ]
-
-               hier-part   = "//" authority path-abempty
-                           / path-absolute
-                           / path-rootless
-                           / path-empty
-
-                   foo://example.com:8042/over/there?name=ferret#nose
-                   \_/   \______________/\_________/ \_________/ \__/
-                    |           |            |            |        |
-                 scheme     authority       path        query   fragment
-                    |   _____________________|__
-                   / \ /                        \
-                   urn:example:animal:ferret:nose
-             */
-
+               @extends RFC3986
+            */
             class UniformResourceIdentifier : public std::string
             {
               public:
-                UniformResourceIdentifier( const std::string& uri );
+                static UniformResourceIdentifier parse(
+                    const std::string& uri );
+
+                UniformResourceIdentifier( const std::string& scheme,
+                    const std::string& m_authority,
+                    const std::string& m_path,
+                    const std::string& m_query,
+                    const std::string& m_fragment );
 
                 std::string scheme( void ) const;
 
