@@ -74,15 +74,21 @@ def relicense( filepath, comment, licensetext = licensetext ) :
 # end def
 
 def searcher( dirpath, rootdir = True ) :
-    if  not rootdir \
-    and (  os.path.exists( os.path.join( dirpath, ".git" ) )
-        or os.path.exists( os.path.join( dirpath, ".3rd-party" ) )
-    ) :
+    if  not rootdir and \
+    (  os.path.exists( os.path.join( dirpath, ".git" ) )
+    or os.path.exists( os.path.join( dirpath, ".3rd-party" ) )
+    ):
         return
 
-    
     for filename in os.listdir( dirpath ) :
         filepath = os.path.join( dirpath, filename )
+
+        if  os.path.isdir( filepath ) \
+        and filename in \
+        [ "node_modules"
+        , "obj"
+        ] :
+            continue
 
         if os.path.isdir( filepath ) :
             searcher( filepath, False )
@@ -90,24 +96,42 @@ def searcher( dirpath, rootdir = True ) :
         
         _fn, fileext = os.path.splitext( filepath )
         
-        if fileext in [ ".h", ".c", ".cc", ".cpp", ".js", ".casm" ] :
-            relicense( filepath, "//" )
-        if fileext in [ ".ll" ] :
-            relicense( filepath, ";;" )
         if fileext in \
-        [ ".py"
-        , ".mk"
-        , ".yml"
-        , ".cfg"
-        , ".sh"
+        [ ".h"    # C and C++ Header
+        , ".hpp"  # C/C++ Header
+        , ".c"    # C Source
+        , ".cc"   # C++ Source
+        , ".cpp"  # C++ Source
+        , ".js"   # Javascript
+        , ".ts"   # Typescript
+        , ".casm" # CASM Specification
+        ] :
+            relicense( filepath, "//" )
+
+        if fileext in \
+        [ ".ll"   # LLVM Source
+        ] :
+            relicense( filepath, ";;" )
+
+        if fileext in \
+        [ ".py"   # Python Script
+        , ".mk"   # Makefile Script
+        , ".yml"  # YAML Configuration
+        , ".cfg"  # UNIX Configuration
+        , ".sh"   # BASH Shell Script
         ] \
         or filename in \
-        [ "Makefile"
-        , "Doxyfile"
-        , "CMakeLists.txt"
-        , ".clang-format"
+        [ "Makefile"        # Makefile Script
+        , "Doxyfile"        # Doxygen Configuration
+        , "CMakeLists.txt"  # CMake Script
+        , ".clang-format"   # Clang Format Configuration
         ] :
             relicense( filepath, "#" )
+
+        if fileext in \
+        [ ".html"   # HTML Source
+        ] :
+            relicense( filepath, "<!--" )
 # end def
 
 searcher( rootdir )
