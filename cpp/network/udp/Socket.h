@@ -36,7 +36,7 @@ namespace libstdhl
     {
         namespace UDP
         {
-            class IPv4PosixSocket final : public PosixSocket< Network::Packet >
+            class IPv4PosixSocket final : public PosixSocket< IPv4Packet >
             {
               public:
                 using Ptr = std::shared_ptr< IPv4PosixSocket >;
@@ -47,9 +47,9 @@ namespace libstdhl
 
                 void connect( void ) override;
 
-                void send( const Network::Packet& data ) const override;
+                void send( const IPv4Packet& data ) const override;
 
-                void receive( Network::Packet& data ) const override;
+                void receive( IPv4Packet& data ) const override;
 
               private:
                 Address m_address;

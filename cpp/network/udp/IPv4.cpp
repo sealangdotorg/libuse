@@ -33,44 +33,61 @@ using namespace UDP;
 UDP::IPv4::IPv4( const std::string& name )
 {
     auto socket = libstdhl::make< IPv4PosixSocket >( name );
-    auto link = std::static_pointer_cast< Socket< Network::Packet > >( socket );
+    auto link = std::static_pointer_cast< Socket< IPv4Packet > >( socket );
     setSocket( link );
 }
 
-void UDP::IPv4::send( const Network::Packet& data )
+void UDP::IPv4::send( const IPv4Packet& data )
 {
     auto& link = static_cast< IPv4PosixSocket& >( *socket() );
     link.send( data );
 }
 
-void UDP::IPv4::send( const std::string& data )
-{
-    const auto packet = StringData{ data };
-    send( packet );
-}
-
-void UDP::IPv4::send( const std::vector< u8 >& data )
-{
-    const auto packet = BinaryData{ data };
-    send( packet );
-}
-
-void UDP::IPv4::receive( Network::Packet& data )
+void UDP::IPv4::receive( IPv4Packet& data )
 {
     auto& link = static_cast< IPv4PosixSocket& >( *socket() );
     link.receive( data );
 }
 
-void UDP::IPv4::receive( std::string& data )
+void UDP::IPv4::send(
+    const std::string& data, const Address& address, const Port& port )
 {
-    StringData packet( data );
-    receive( packet );
+    auto packet = IPv4Packet{ Network::IPv4::Protocol{ address, address },
+        Network::UDP::Protocol{ port, port }, data };
+
+    send( packet );
 }
 
-void UDP::IPv4::receive( std::vector< u8 >& data )
+void UDP::IPv4::send(
+    const Network::Packet& data, const Address& address, const Port& port )
 {
-    BinaryData packet( data );
+    const std::string str( (const char*)data.buffer() );
+
+    auto packet = IPv4Packet{ Network::IPv4::Protocol{ address, address },
+        Network::UDP::Protocol{ port, port }, str };
+
+    send( packet );
+}
+
+void UDP::IPv4::send(
+    const Network::Packet& data, const IPv4Packet& destination )
+{
+    const std::string str( (const char*)data.buffer() );
+
+    auto packet = IPv4Packet{
+        Network::IPv4::Protocol{ destination.ip() },
+        Network::UDP::Protocol{ destination.udp() }, str,
+    };
+
+    send( packet );
+}
+
+IPv4Packet UDP::IPv4::receive( std::string& data )
+{
+    data.resize( 2048 ); // TODO: PPA: FIXME: should be configured etc.
+    auto packet = IPv4Packet{ data };
     receive( packet );
+    return packet;
 }
 
 //

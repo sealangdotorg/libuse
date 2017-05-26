@@ -46,6 +46,47 @@ namespace libstdhl
             static constexpr const std::size_t ADDR = 2;
 
             using Port = std::array< u8, ADDR >;
+
+            class Protocol final : public Network::Protocol
+            {
+              public:
+                Protocol( const Port& source, const Port& destination )
+                : m_source( source )
+                , m_destination( destination )
+                {
+                }
+
+                inline Protocol( void )
+                : Protocol( { { 0 } }, { { 0 } } )
+                {
+                }
+
+                const u8* buffer( void ) const override
+                {
+                    return 0; // m_source.data();
+                }
+
+                std::size_t size( void ) const override
+                {
+                    return 0; // m_header.size() + m_size;
+                }
+
+                const Port& source( void ) const
+                {
+                    return m_source;
+                }
+
+                const Port& destination( void ) const
+                {
+                    return m_destination;
+                }
+
+              private:
+                Port m_source;
+                Port m_destination;
+                // TODO length field
+                // TODO checksum field
+            };
         }
     }
 }

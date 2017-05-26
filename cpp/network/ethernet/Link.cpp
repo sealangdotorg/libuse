@@ -45,6 +45,11 @@ void Link::send( const Packet& data )
     link.send( data );
 }
 
+void Link::receive( Packet& data )
+{
+    assert( !" TODO! " );
+}
+
 void Link::send( const std::string& data )
 {
     send( std::vector< u8 >( data.begin(), data.end() ) );
@@ -59,11 +64,6 @@ void Link::send( const std::vector< u8 >& data )
     const Type type = { { ( u8 )( size >> 8 ), (u8)size } };
     const auto frame = Packet( BROADCAST, link.address(), type, data );
     send( frame );
-}
-
-void Link::receive( Packet& data )
-{
-    assert( !" TODO! " );
 }
 
 void Link::receive( std::string& data )

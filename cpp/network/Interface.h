@@ -49,15 +49,7 @@ namespace libstdhl
           public:
             virtual void send( const T& data ) = 0;
 
-            virtual void send( const std::string& data ) = 0;
-
-            virtual void send( const std::vector< u8 >& data ) = 0;
-
             virtual void receive( T& data ) = 0;
-
-            virtual void receive( std::string& data ) = 0;
-
-            virtual void receive( std::vector< u8 >& data ) = 0;
 
             inline u1 connected( void ) const
             {

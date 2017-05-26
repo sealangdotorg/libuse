@@ -50,17 +50,13 @@ namespace libstdhl
               public:
                 void send( const Network::Packet& data ) override;
 
-                void send( const std::string& data ) override;
-
-                void send( const std::vector< u8 >& data ) override;
-
                 void receive( Network::Packet& data ) override;
 
-                void receive( std::string& data ) override;
-
-                void receive( std::vector< u8 >& data ) override;
-
                 IPv4 session( void ) override;
+
+                void send( const std::string& data );
+
+                void receive( std::string& data );
             };
         }
     };

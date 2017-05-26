@@ -97,6 +97,7 @@ namespace libstdhl
             , m_socket( 0 )
             , m_ifridx( 0 )
             , m_connected( false )
+            , m_server( false )
             {
                 m_socket = socket( domain, type, protocol );
 
@@ -115,6 +116,7 @@ namespace libstdhl
             , m_socket( id )
             , m_ifridx( 0 )
             , m_connected( false )
+            , m_server( false )
             {
                 if( m_socket <= 0 )
                 {
@@ -170,19 +172,20 @@ namespace libstdhl
             {
                 if( connected() )
                 {
-                    const auto result
-                        = write( id(), (void*)( data.buffer() ), data.size() );
+                    const auto result = ::send(
+                        id(), (void*)( data.buffer() ), data.size(), 0 );
 
                     if( result < 0 )
                     {
-                        throw std::domain_error( "unable to send, failed with '"
-                                                 + std::to_string( result ) );
+                        throw std::domain_error(
+                            "SOCKET: unable to send, failed with '"
+                            + std::to_string( result ) );
                     }
                 }
                 else
                 {
                     throw std::domain_error(
-                        "unable to receive, not connected" );
+                        "SOCKET: unable to send, not connected" );
                 }
             }
 
@@ -190,21 +193,31 @@ namespace libstdhl
             {
                 if( connected() )
                 {
-                    const auto result
-                        = read( id(), (void*)( data.buffer() ), data.size() );
+                    const auto result = ::recv(
+                        id(), (void*)( data.buffer() ), data.size(), 0 );
 
                     if( result < 0 )
                     {
                         throw std::domain_error(
-                            "unable to receive, failed with '"
+                            "SOCKET: unable to receive, failed with '"
                             + std::to_string( result ) );
                     }
                 }
                 else
                 {
                     throw std::domain_error(
-                        "unable to receive, not connected" );
+                        "SOCKET: unable to receive, not connected" );
                 }
+            }
+
+            void setServer( const u1 enable )
+            {
+                m_server = true;
+            }
+
+            u1 server( void ) const
+            {
+                return m_server;
             }
 
           private:
@@ -214,6 +227,7 @@ namespace libstdhl
             i32 m_socket;
             i32 m_ifridx;
             u1 m_connected;
+            u1 m_server;
         };
     }
 }

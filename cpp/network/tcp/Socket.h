@@ -54,10 +54,6 @@ namespace libstdhl
 
                 void receive( Network::Packet& data ) const override;
 
-                void setServer( const u1 enable );
-
-                u1 server( void ) const;
-
                 IPv4PosixSocket accept( void ) const;
 
               private:

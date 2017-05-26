@@ -27,30 +27,35 @@
 
 #include "../Interface.h"
 
+#include "Packet.h"
+
 namespace libstdhl
 {
     namespace Network
     {
         namespace UDP
         {
-            class IPv4 final : public Interface< Network::Packet >
+            class IPv4 final : public Interface< IPv4Packet >
             {
               public:
                 using Ptr = std::shared_ptr< IPv4 >;
 
                 IPv4( const std::string& name );
 
-                void send( const Network::Packet& data ) override;
+                void send( const IPv4Packet& data ) override;
 
-                void send( const std::string& data ) override;
+                void receive( IPv4Packet& data ) override;
 
-                void send( const std::vector< u8 >& data ) override;
+                void send( const std::string& data, const Address& address,
+                    const Port& port );
 
-                void receive( Network::Packet& data ) override;
+                void send( const Network::Packet& data, const Address& address,
+                    const Port& port );
 
-                void receive( std::string& data ) override;
+                void send( const Network::Packet& data,
+                    const IPv4Packet& destination );
 
-                void receive( std::vector< u8 >& data ) override;
+                IPv4Packet receive( std::string& data );
             };
         }
     };

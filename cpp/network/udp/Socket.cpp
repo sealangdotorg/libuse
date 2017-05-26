@@ -29,14 +29,14 @@ using namespace Network;
 using namespace UDP;
 
 IPv4PosixSocket::IPv4PosixSocket( const Address& address, const Port& port )
-: PosixSocket< Network::Packet >( "IPv4", AF_INET, SOCK_DGRAM, IPPROTO_UDP )
+: PosixSocket< IPv4Packet >( "IPv4", AF_INET, SOCK_DGRAM, IPPROTO_UDP )
 , m_address( address )
 , m_port( port )
 {
 }
 
 IPv4PosixSocket::IPv4PosixSocket( const std::string& name )
-: PosixSocket< Network::Packet >( name, AF_INET, SOCK_DGRAM, IPPROTO_UDP )
+: PosixSocket< IPv4Packet >( name, AF_INET, SOCK_DGRAM, IPPROTO_UDP )
 , m_address( { { 0 } } )
 , m_port( { { 0 } } )
 {
@@ -44,14 +44,15 @@ IPv4PosixSocket::IPv4PosixSocket( const std::string& name )
 
     if( address.size() != 4 )
     {
-        throw std::invalid_argument( "invalid IPv4 address '" + name + "'" );
+        throw std::invalid_argument(
+            "UDP: invalid IPv4 address '" + name + "'" );
     }
 
     const auto addrPort = String::split( address[ 3 ], ":" );
 
     if( addrPort.size() != 2 )
     {
-        throw std::invalid_argument( "invalid IPv4 port '" + name + "'" );
+        throw std::invalid_argument( "UDP: invalid IPv4 port '" + name + "'" );
     }
 
     m_address = { {
@@ -74,7 +75,6 @@ void IPv4PosixSocket::connect( void )
     struct sockaddr_in configuration = { 0 };
 
     configuration.sin_family = AF_INET;
-
     configuration.sin_addr.s_addr
         = ( (u32)m_address[ 3 ] << 24 ) | ( (u32)m_address[ 2 ] << 16 )
           | ( (u32)m_address[ 1 ] << 8 ) | (u32)m_address[ 0 ];
@@ -85,45 +85,87 @@ void IPv4PosixSocket::connect( void )
         < 0 )
     {
         throw std::domain_error(
-            "unable to bind UDP address '" + name() + "'" );
+            "UDP: unable to bind address '" + name() + "'" );
     }
 
     setConnected( true );
 }
 
-void IPv4PosixSocket::send( const Network::Packet& data ) const
+void IPv4PosixSocket::send( const IPv4Packet& data ) const
 {
     if( not connected() )
     {
         throw std::logic_error(
-            "unable to send, socket '" + name() + "' is not connected" );
+            "UDP: unable to send, socket '" + name() + "' is not connected" );
     }
 
-    const auto result
-        = ::send( id(), data.buffer(), data.size(), MSG_DONTWAIT );
+    const auto& dest_addr = data.ip().destination();
+    const auto& dest_port = data.udp().destination();
+
+    struct sockaddr_in cfg = { 0 };
+
+    cfg.sin_family = AF_INET;
+    cfg.sin_addr.s_addr = ( (u32)dest_addr[ 3 ] << 24 )
+                          | ( (u32)dest_addr[ 2 ] << 16 )
+                          | ( (u32)dest_addr[ 1 ] << 8 ) | (u32)dest_addr[ 0 ];
+
+    cfg.sin_port = ( (u16)dest_port[ 1 ] << 8 ) | (u16)dest_port[ 0 ];
+
+    socklen_t len = sizeof( cfg );
+
+    const auto result = ::sendto( id(),
+        (void*)( data.buffer() ),
+        data.size(),
+        0,
+        (struct sockaddr*)&cfg,
+        len );
 
     if( result < 0 )
     {
         throw std::domain_error(
-            "unable to send, failed with '" + std::to_string( result ) );
+            "UDP: unable to send, failed with '" + std::to_string( result ) );
     }
 }
 
-void IPv4PosixSocket::receive( Network::Packet& data ) const
+void IPv4PosixSocket::receive( IPv4Packet& data ) const
 {
     if( not connected() )
     {
-        throw std::logic_error(
-            "unable to receive, socket '" + name() + "' is not connected" );
+        throw std::logic_error( "UDP: unable to receive, socket '" + name()
+                                + "' is not connected" );
     }
 
-    const auto result
-        = ::recv( id(), (void*)( data.buffer() ), data.size(), MSG_DONTWAIT );
+    struct sockaddr_in cfg;
+    socklen_t len = sizeof( cfg );
+
+    const auto result = ::recvfrom( id(),
+        (void*)( data.buffer() ),
+        data.size(),
+        0,
+        (struct sockaddr*)&cfg,
+        &len );
+
+    data.setIp( { m_address,
+        {
+            {
+                ( u8 )( cfg.sin_addr.s_addr ),
+                ( u8 )( cfg.sin_addr.s_addr >> 8 ),
+                ( u8 )( cfg.sin_addr.s_addr >> 16 ),
+                ( u8 )( cfg.sin_addr.s_addr >> 24 ),
+            },
+        } } );
+
+    data.setUdp( { m_port,
+        {
+            {
+                ( u8 )( cfg.sin_port ), ( u8 )( cfg.sin_port >> 8 ),
+            },
+        } } );
 
     if( result < 0 )
     {
-        throw std::domain_error(
-            "unable to receive, failed with '" + std::to_string( result ) );
+        throw std::domain_error( "UDP: unable to receive, failed with '"
+                                 + std::to_string( result ) );
     }
 }
 

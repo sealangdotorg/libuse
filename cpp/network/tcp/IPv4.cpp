@@ -58,18 +58,6 @@ void TCP::IPv4::send( const Network::Packet& data )
     }
 }
 
-void TCP::IPv4::send( const std::string& data )
-{
-    const auto packet = StringData{ data };
-    send( packet );
-}
-
-void TCP::IPv4::send( const std::vector< u8 >& data )
-{
-    const auto packet = BinaryData{ data };
-    send( packet );
-}
-
 void TCP::IPv4::receive( Network::Packet& data )
 {
     auto& link = static_cast< IPv4PosixSocket& >( *socket() );
@@ -86,20 +74,6 @@ void TCP::IPv4::receive( Network::Packet& data )
     }
 }
 
-void TCP::IPv4::receive( std::string& data )
-{
-    data.resize( 1400 ); // TODO: PPA: FIXME: should be configured etc.
-    StringReferenceData packet( data );
-    receive( packet );
-}
-
-void TCP::IPv4::receive( std::vector< u8 >& data )
-{
-    data.resize( 1400 ); // TODO: PPA: FIXME: should be configured etc.
-    BinaryData packet( data );
-    receive( packet );
-}
-
 TCP::IPv4 TCP::IPv4::session( void )
 {
     auto& link = static_cast< IPv4PosixSocket& >( *socket() );
@@ -111,6 +85,7 @@ TCP::IPv4 TCP::IPv4::session( void )
     else
     {
         auto client = link.accept();
+
         auto socket = libstdhl::make< IPv4PosixSocket >( client );
         socket->setServer( false );
 
@@ -121,6 +96,19 @@ TCP::IPv4 TCP::IPv4::session( void )
 
         return connection;
     }
+}
+
+void TCP::IPv4::send( const std::string& data )
+{
+    const auto packet = StringData{ data };
+    send( packet );
+}
+
+void TCP::IPv4::receive( std::string& data )
+{
+    data.resize( 1400 ); // TODO: PPA: FIXME: should be configured etc.
+    StringReferenceData packet( data );
+    receive( packet );
 }
 
 //

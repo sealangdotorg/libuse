@@ -44,15 +44,15 @@ namespace libstdhl
 
                 void send( const Packet& data ) override;
 
-                void send( const std::string& data ) override;
-
-                void send( const std::vector< u8 >& data ) override;
-
-                void receive( std::string& data ) override;
-
-                void receive( std::vector< u8 >& data ) override;
-
                 void receive( Packet& data ) override;
+
+                void send( const std::string& data );
+
+                void send( const std::vector< u8 >& data );
+
+                void receive( std::string& data );
+
+                void receive( std::vector< u8 >& data );
             };
         }
     };

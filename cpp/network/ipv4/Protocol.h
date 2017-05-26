@@ -44,23 +44,32 @@ namespace libstdhl
 
             using Address = std::array< u8, ADDR >;
 
-            template < std::size_t N >
+            // template < std::size_t N >
             class Protocol final : public Network::Protocol
             {
               public:
-                constexpr Protocol( void );
-
-                constexpr std::array< u8, HEADER + N > data( void ) const
+                Protocol( const Address& source, const Address& destination )
+                : m_source( source )
+                , m_destination( destination )
                 {
-                    return m_version4_ihl4 + m_dscp6_ecn2 + m_length
-                           + m_identification + m_flags3_fragmentoffset13
-                           + m_timetolive + m_protocol + m_headerchecksum
-                           + m_source + m_destination + m_options;
                 }
+
+                inline Protocol( void )
+                : Protocol( { { 0 } }, { { 0 } } )
+                {
+                }
+
+                // constexpr std::array< u8, HEADER + N > data( void ) const
+                // {
+                //     return m_version4_ihl4 + m_dscp6_ecn2 + m_length
+                //            + m_identification + m_flags3_fragmentoffset13
+                //            + m_timetolive + m_protocol + m_headerchecksum
+                //            + m_source + m_destination + m_options;
+                // }
 
                 const u8* buffer( void ) const override
                 {
-                    return m_version4_ihl4.data();
+                    return 0; // m_version4_ihl4.data();
                 }
 
                 std::size_t size( void ) const override
@@ -68,20 +77,30 @@ namespace libstdhl
                     return 0; // m_header.size() + m_size;
                 }
 
+                const Address& source( void ) const
+                {
+                    return m_source;
+                }
+
+                const Address& destination( void ) const
+                {
+                    return m_destination;
+                }
+
               private:
-                const std::array< u8, 1 > m_version4_ihl4;
-                const std::array< u8, 1 > m_dscp6_ecn2;
-                const std::array< u8, 2 > m_length;
-                const std::array< u8, 2 > m_identification;
-                const std::array< u8, 2 > m_flags3_fragmentoffset13;
-                const std::array< u8, 1 > m_timetolive;
-                const std::array< u8, 1 > m_protocol;
-                const std::array< u8, 2 > m_headerchecksum;
+                // const std::array< u8, 1 > m_version4_ihl4;
+                // const std::array< u8, 1 > m_dscp6_ecn2;
+                // const std::array< u8, 2 > m_length;
+                // const std::array< u8, 2 > m_identification;
+                // const std::array< u8, 2 > m_flags3_fragmentoffset13;
+                // const std::array< u8, 1 > m_timetolive;
+                // const std::array< u8, 1 > m_protocol;
+                // const std::array< u8, 2 > m_headerchecksum;
 
-                const Address m_source;
-                const Address m_destination;
+                Address m_source;
+                Address m_destination;
 
-                std::array< u8, N > m_options;
+                // std::array< u8, N > m_options;
             };
         }
     }

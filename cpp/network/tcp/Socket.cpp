@@ -30,18 +30,18 @@ using namespace TCP;
 
 IPv4PosixSocket::IPv4PosixSocket(
     const IPv4::Address& address, const Port& port )
-: PosixSocket< Network::Packet >( "IPv4", PF_INET, SOCK_STREAM, IPPROTO_TCP )
+: PosixSocket< Network::Packet >(
+      "IPv4", PF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP )
 , m_address( address )
 , m_port( port )
-, m_server( false )
 {
 }
 
 IPv4PosixSocket::IPv4PosixSocket( const std::string& name )
-: PosixSocket< Network::Packet >( name, PF_INET, SOCK_STREAM, IPPROTO_TCP )
+: PosixSocket< Network::Packet >(
+      name, PF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP )
 , m_address( { { 0 } } )
 , m_port( { { 0 } } )
-, m_server( false )
 {
     const auto address = String::split( name, "." );
 
@@ -71,7 +71,6 @@ IPv4PosixSocket::IPv4PosixSocket( const PosixSocket< Network::Packet >& socket )
 : PosixSocket< Network::Packet >( socket )
 , m_address( { { 0 } } )
 , m_port( { { 0 } } )
-, m_server( false )
 {
 }
 
@@ -146,16 +145,6 @@ void IPv4PosixSocket::receive( Network::Packet& data ) const
     }
 }
 
-void IPv4PosixSocket::setServer( const u1 enable )
-{
-    m_server = enable;
-}
-
-u1 IPv4PosixSocket::server( void ) const
-{
-    return m_server;
-}
-
 /**
    blocking call!
  */
@@ -182,7 +171,8 @@ IPv4PosixSocket IPv4PosixSocket::accept( void ) const
 
     socklen_t len = sizeof( configuration );
 
-    i32 connection = ::accept( id(), (struct sockaddr*)&configuration, &len );
+    i32 connection = ::accept4(
+        id(), (struct sockaddr*)&configuration, &len, SOCK_NONBLOCK );
 
     return IPv4PosixSocket(
         PosixSocket< Network::Packet >( *this, connection ) );
