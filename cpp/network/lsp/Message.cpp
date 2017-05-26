@@ -132,20 +132,21 @@ void Message::process( ServerInterface& interface ) const
     {
         case ID::REQUEST_MESSAGE:
         {
-            const auto& msg = static_cast< const RequestMessage& >( *this );
+            const auto msg = reinterpret_cast< const RequestMessage& >( *this );
             msg.process( interface );
             break;
         }
         case ID::NOTIFICATION_MESSAGE:
         {
-            const auto& msg
-                = static_cast< const NotificationMessage& >( *this );
+            const auto msg
+                = reinterpret_cast< const NotificationMessage& >( *this );
             msg.process( interface );
             break;
         }
         case ID::RESPONSE_MESSAGE:
         {
-            const auto& msg = static_cast< const ResponseMessage& >( *this );
+            const auto msg
+                = reinterpret_cast< const ResponseMessage& >( *this );
             msg.process( interface );
             break;
         }
