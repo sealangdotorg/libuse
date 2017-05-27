@@ -66,9 +66,6 @@ namespace libstdhl
             class UniformResourceIdentifier
             {
               public:
-                static UniformResourceIdentifier parse(
-                    const std::string& uri );
-
                 UniformResourceIdentifier( const std::string& scheme,
                     const std::string& m_authority,
                     const std::string& m_path,
@@ -85,7 +82,10 @@ namespace libstdhl
 
                 const std::string& fragment( void ) const;
 
-                const std::string& uri( void ) const;
+                std::string toString( void ) const;
+
+                static UniformResourceIdentifier fromString(
+                    const std::string& uri );
 
               private:
                 std::string m_scheme;
@@ -93,7 +93,6 @@ namespace libstdhl
                 std::string m_path;
                 std::string m_query;
                 std::string m_fragment;
-                std::string m_uri;
             };
 
             using URI = UniformResourceIdentifier;

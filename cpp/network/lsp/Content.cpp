@@ -206,14 +206,14 @@ Location::Location( const Data& data )
 Location::Location( const DocumentUri& uri, const Range& range )
 : Data( Data::object() )
 {
-    operator[]( URI ) = uri.uri();
+    operator[]( URI ) = uri.toString();
     auto& r = operator[]( RANGE );
     to_json( r, range );
 }
 
 DocumentUri Location::uri( void ) const
 {
-    return DocumentUri::parse( operator[]( URI ).get< std::string >() );
+    return DocumentUri::fromString( operator[]( URI ).get< std::string >() );
 }
 
 Range Location::range( void ) const
@@ -235,7 +235,7 @@ u1 Location::isValid( const Data& data )
 
         try
         {
-            DocumentUri::parse( data[ URI ].get< std::string >() );
+            DocumentUri::fromString( data[ URI ].get< std::string >() );
         }
         catch( const std::exception& e )
         {
@@ -514,12 +514,12 @@ TextDocumentIdentifier::TextDocumentIdentifier( const Data& data )
 TextDocumentIdentifier::TextDocumentIdentifier( const DocumentUri& uri )
 : Data( Data::object() )
 {
-    operator[]( URI ) = uri.uri();
+    operator[]( URI ) = uri.toString();
 }
 
 DocumentUri TextDocumentIdentifier::uri( void ) const
 {
-    return DocumentUri::parse( operator[]( URI ).get< std::string >() );
+    return DocumentUri::fromString( operator[]( URI ).get< std::string >() );
 }
 
 u1 TextDocumentIdentifier::isValid( const Data& data )
@@ -529,7 +529,7 @@ u1 TextDocumentIdentifier::isValid( const Data& data )
     {
         try
         {
-            DocumentUri::parse( data[ URI ].get< std::string >() );
+            DocumentUri::fromString( data[ URI ].get< std::string >() );
         }
         catch( const std::exception& e )
         {
@@ -732,7 +732,7 @@ TextDocumentItem::TextDocumentItem( const DocumentUri& uri,
     const std::string& text )
 : Data( Data::object() )
 {
-    operator[]( URI ) = uri.uri();
+    operator[]( URI ) = uri.toString();
     operator[]( LANGUAGE_ID ) = languageId;
     operator[]( VERSION ) = version;
     operator[]( TEXT ) = text;
@@ -740,7 +740,7 @@ TextDocumentItem::TextDocumentItem( const DocumentUri& uri,
 
 DocumentUri TextDocumentItem::uri( void ) const
 {
-    return DocumentUri::parse( operator[]( URI ).get< std::string >() );
+    return DocumentUri::fromString( operator[]( URI ).get< std::string >() );
 }
 
 std::string TextDocumentItem::languageId( void ) const
@@ -771,7 +771,7 @@ u1 TextDocumentItem::isValid( const Data& data )
     {
         try
         {
-            DocumentUri::parse( data[ URI ].get< std::string >() );
+            DocumentUri::fromString( data[ URI ].get< std::string >() );
         }
         catch( const std::exception& e )
         {
@@ -2962,7 +2962,7 @@ InitializeParams::InitializeParams( const std::size_t processId,
 : Data( Data::object() )
 {
     operator[]( PROCESS_ID ) = processId;
-    operator[]( ROOT_URI ) = rootUri.uri();
+    operator[]( ROOT_URI ) = rootUri.toString();
     operator[]( CAPABILITIES ) = capabilities;
 }
 
@@ -2973,7 +2973,8 @@ std::size_t InitializeParams::processId( void ) const
 
 DocumentUri InitializeParams::rootUri( void ) const
 {
-    return DocumentUri::parse( operator[]( PROCESS_ID ).get< std::string >() );
+    return DocumentUri::fromString( operator[](
+        PROCESS_ID ).get< std::string >() );
 }
 
 u1 InitializeParams::hasInitializationOptions( void ) const
@@ -3032,7 +3033,7 @@ u1 InitializeParams::isValid( const Data& data )
         {
             try
             {
-                DocumentUri::parse( data[ URI ].get< std::string >() );
+                DocumentUri::fromString( data[ URI ].get< std::string >() );
             }
             catch( const std::exception& e )
             {

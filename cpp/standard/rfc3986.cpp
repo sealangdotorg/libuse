@@ -36,7 +36,69 @@ using namespace libstdhl;
 using namespace Standard;
 using namespace RFC3986;
 
-UniformResourceIdentifier UniformResourceIdentifier::parse(
+UniformResourceIdentifier::UniformResourceIdentifier( const std::string& scheme,
+    const std::string& authority,
+    const std::string& path,
+    const std::string& query,
+    const std::string& fragment )
+: m_scheme( scheme )
+, m_authority( authority )
+, m_path( path )
+, m_query( query )
+, m_fragment( fragment )
+{
+}
+
+const std::string& UniformResourceIdentifier::scheme( void ) const
+{
+    return m_scheme;
+}
+
+const std::string& UniformResourceIdentifier::authority( void ) const
+{
+    return m_authority;
+}
+
+const std::string& UniformResourceIdentifier::path( void ) const
+{
+    return m_path;
+}
+
+const std::string& UniformResourceIdentifier::query( void ) const
+{
+    return m_query;
+}
+
+const std::string& UniformResourceIdentifier::fragment( void ) const
+{
+    return m_fragment;
+}
+
+std::string UniformResourceIdentifier::toString( void ) const
+{
+    std::string tmp = "";
+
+    if( scheme().size() > 0 )
+    {
+        tmp += scheme() + "://" + authority();
+    }
+
+    tmp += path();
+
+    if( query().size() > 0 )
+    {
+        tmp += "?" + query();
+    }
+
+    if( fragment().size() > 0 )
+    {
+        tmp += "#" + fragment();
+    }
+
+    return tmp;
+}
+
+UniformResourceIdentifier UniformResourceIdentifier::fromString(
     const std::string& uri )
 {
     std::regex uri_regex(
@@ -81,66 +143,6 @@ UniformResourceIdentifier UniformResourceIdentifier::parse(
 
     return UniformResourceIdentifier(
         scheme, authority, path, query, fragment );
-}
-
-UniformResourceIdentifier::UniformResourceIdentifier( const std::string& scheme,
-    const std::string& authority,
-    const std::string& path,
-    const std::string& query,
-    const std::string& fragment )
-: m_scheme( scheme )
-, m_authority( authority )
-, m_path( path )
-, m_query( query )
-, m_fragment( fragment )
-, m_uri( "" )
-{
-    if( scheme.size() > 0 )
-    {
-        m_uri += scheme + "://" + authority;
-    }
-
-    m_uri += path;
-
-    if( query.size() > 0 )
-    {
-        m_uri += "?" + query;
-    }
-
-    if( fragment.size() > 0 )
-    {
-        m_uri += "#" + fragment;
-    }
-}
-
-const std::string& UniformResourceIdentifier::scheme( void ) const
-{
-    return m_scheme;
-}
-
-const std::string& UniformResourceIdentifier::authority( void ) const
-{
-    return m_authority;
-}
-
-const std::string& UniformResourceIdentifier::path( void ) const
-{
-    return m_path;
-}
-
-const std::string& UniformResourceIdentifier::query( void ) const
-{
-    return m_query;
-}
-
-const std::string& UniformResourceIdentifier::fragment( void ) const
-{
-    return m_fragment;
-}
-
-const std::string& UniformResourceIdentifier::uri( void ) const
-{
-    return m_uri;
 }
 
 //
