@@ -30,8 +30,6 @@ using namespace libstdhl;
 using namespace Network;
 using namespace Ethernet;
 
-static std::unordered_map< std::string, RawPosixSocket > phy;
-
 Link::Link( const std::string& name )
 {
     auto socket = libstdhl::make< RawPosixSocket >( name );
@@ -39,15 +37,10 @@ Link::Link( const std::string& name )
     setSocket( link );
 }
 
-void Link::send( const Packet& data )
+void Link::send( const Ethernet::Packet& data )
 {
     auto& link = static_cast< RawPosixSocket& >( *socket() );
     link.send( data );
-}
-
-void Link::receive( Packet& data )
-{
-    assert( !" TODO! " );
 }
 
 void Link::send( const std::string& data )
@@ -66,7 +59,12 @@ void Link::send( const std::vector< u8 >& data )
     send( frame );
 }
 
-void Link::receive( std::string& data )
+void Link::receive( Ethernet::Packet& data )
+{
+    assert( !" TODO! " );
+}
+
+Ethernet::Packet Link::receive( std::string& data )
 {
     assert( !" TODO! " );
 }

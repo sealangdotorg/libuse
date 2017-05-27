@@ -64,7 +64,12 @@ namespace libstdhl
               public:
                 constexpr Protocol( const Address& destination,
                     const Address& source,
-                    const Type& type );
+                    const Type& type )
+                : m_destination( destination )
+                , m_source( source )
+                , m_type( type )
+                {
+                }
 
                 constexpr std::array< u8, HEADER > data( void ) const;
 

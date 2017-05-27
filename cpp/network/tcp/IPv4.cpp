@@ -34,7 +34,7 @@ TCP::IPv4::IPv4( const std::string& name, const u1 server )
 {
     auto socket = libstdhl::make< IPv4PosixSocket >( name );
     socket->setServer( server );
-    auto link = std::static_pointer_cast< Socket< Network::Packet > >( socket );
+    auto link = std::static_pointer_cast< Socket< IPv4Packet > >( socket );
     setSocket( link );
 }
 
@@ -42,7 +42,7 @@ TCP::IPv4::IPv4( void )
 {
 }
 
-void TCP::IPv4::send( const Network::Packet& data )
+void TCP::IPv4::send( const IPv4Packet& data )
 {
     auto& link = static_cast< IPv4PosixSocket& >( *socket() );
 
@@ -57,8 +57,14 @@ void TCP::IPv4::send( const Network::Packet& data )
         client.disconnect();
     }
 }
+void TCP::IPv4::send( const std::string& data )
+{
+    assert( !" TODO " );
+    // const auto packet = StringData{ data };
+    // send( packet );
+}
 
-void TCP::IPv4::receive( Network::Packet& data )
+void TCP::IPv4::receive( IPv4Packet& data )
 {
     auto& link = static_cast< IPv4PosixSocket& >( *socket() );
 
@@ -72,6 +78,16 @@ void TCP::IPv4::receive( Network::Packet& data )
         client.receive( data );
         client.disconnect();
     }
+}
+
+IPv4Packet TCP::IPv4::receive( std::string& data )
+{
+    data.resize( 2048 ); // TODO: PPA: FIXME: should be configured etc.
+
+    IPv4Packet packet{ data };
+    receive( packet );
+
+    return packet;
 }
 
 TCP::IPv4 TCP::IPv4::session( void )
@@ -89,26 +105,12 @@ TCP::IPv4 TCP::IPv4::session( void )
         auto socket = libstdhl::make< IPv4PosixSocket >( client );
         socket->setServer( false );
 
-        auto link
-            = std::static_pointer_cast< Socket< Network::Packet > >( socket );
+        auto link = std::static_pointer_cast< Socket< IPv4Packet > >( socket );
         auto connection = TCP::IPv4();
         connection.setSocket( link );
 
         return connection;
     }
-}
-
-void TCP::IPv4::send( const std::string& data )
-{
-    const auto packet = StringData{ data };
-    send( packet );
-}
-
-void TCP::IPv4::receive( std::string& data )
-{
-    data.resize( 1400 ); // TODO: PPA: FIXME: should be configured etc.
-    StringReferenceData packet( data );
-    receive( packet );
 }
 
 //

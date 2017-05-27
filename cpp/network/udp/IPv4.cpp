@@ -43,10 +43,12 @@ void UDP::IPv4::send( const IPv4Packet& data )
     link.send( data );
 }
 
-void UDP::IPv4::receive( IPv4Packet& data )
+void UDP::IPv4::send( const std::string& data )
 {
-    auto& link = static_cast< IPv4PosixSocket& >( *socket() );
-    link.receive( data );
+    auto packet = IPv4Packet{ Network::IPv4::Protocol{},
+        Network::UDP::Protocol{}, data };
+
+    send( packet );
 }
 
 void UDP::IPv4::send(
@@ -74,7 +76,7 @@ void UDP::IPv4::send(
 {
     const std::string str( (const char*)data.buffer() );
 
-    auto packet = IPv4Packet{
+    IPv4Packet packet{
         Network::IPv4::Protocol{ destination.ip() },
         Network::UDP::Protocol{ destination.udp() }, str,
     };
@@ -82,11 +84,19 @@ void UDP::IPv4::send(
     send( packet );
 }
 
+void UDP::IPv4::receive( IPv4Packet& data )
+{
+    auto& link = static_cast< IPv4PosixSocket& >( *socket() );
+    link.receive( data );
+}
+
 IPv4Packet UDP::IPv4::receive( std::string& data )
 {
     data.resize( 2048 ); // TODO: PPA: FIXME: should be configured etc.
-    auto packet = IPv4Packet{ data };
+
+    IPv4Packet packet{ data };
     receive( packet );
+
     return packet;
 }
 

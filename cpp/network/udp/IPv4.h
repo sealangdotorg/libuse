@@ -44,7 +44,7 @@ namespace libstdhl
 
                 void send( const IPv4Packet& data ) override;
 
-                void receive( IPv4Packet& data ) override;
+                void send( const std::string& data ) override;
 
                 void send( const std::string& data, const Address& address,
                     const Port& port );
@@ -55,7 +55,9 @@ namespace libstdhl
                 void send( const Network::Packet& data,
                     const IPv4Packet& destination );
 
-                IPv4Packet receive( std::string& data );
+                void receive( IPv4Packet& data ) override;
+
+                IPv4Packet receive( std::string& data ) override;
             };
         }
     };

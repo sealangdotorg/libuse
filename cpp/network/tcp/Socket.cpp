@@ -30,7 +30,7 @@ using namespace TCP;
 
 IPv4PosixSocket::IPv4PosixSocket(
     const IPv4::Address& address, const Port& port )
-: PosixSocket< Network::Packet >(
+: PosixSocket< IPv4Packet >(
       "IPv4", PF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP )
 , m_address( address )
 , m_port( port )
@@ -38,7 +38,7 @@ IPv4PosixSocket::IPv4PosixSocket(
 }
 
 IPv4PosixSocket::IPv4PosixSocket( const std::string& name )
-: PosixSocket< Network::Packet >(
+: PosixSocket< IPv4Packet >(
       name, PF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP )
 , m_address( { { 0 } } )
 , m_port( { { 0 } } )
@@ -67,8 +67,8 @@ IPv4PosixSocket::IPv4PosixSocket( const std::string& name )
     m_port = { { ( u8 )( port >> 8 ), (u8)port } };
 }
 
-IPv4PosixSocket::IPv4PosixSocket( const PosixSocket< Network::Packet >& socket )
-: PosixSocket< Network::Packet >( socket )
+IPv4PosixSocket::IPv4PosixSocket( const PosixSocket< IPv4Packet >& socket )
+: PosixSocket< IPv4Packet >( socket )
 , m_address( { { 0 } } )
 , m_port( { { 0 } } )
 {
@@ -117,7 +117,7 @@ void IPv4PosixSocket::connect( void )
     setConnected( true );
 }
 
-void IPv4PosixSocket::send( const Network::Packet& data ) const
+void IPv4PosixSocket::send( const IPv4Packet& data ) const
 {
     if( not server() )
     {
@@ -131,7 +131,7 @@ void IPv4PosixSocket::send( const Network::Packet& data ) const
     }
 }
 
-void IPv4PosixSocket::receive( Network::Packet& data ) const
+void IPv4PosixSocket::receive( IPv4Packet& data ) const
 {
     if( not server() )
     {
@@ -174,8 +174,7 @@ IPv4PosixSocket IPv4PosixSocket::accept( void ) const
     i32 connection = ::accept4(
         id(), (struct sockaddr*)&configuration, &len, SOCK_NONBLOCK );
 
-    return IPv4PosixSocket(
-        PosixSocket< Network::Packet >( *this, connection ) );
+    return IPv4PosixSocket( PosixSocket< IPv4Packet >( *this, connection ) );
 }
 
 //

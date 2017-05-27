@@ -27,6 +27,11 @@
 using namespace libstdhl;
 using namespace Network;
 
+//
+//
+// BinaryData
+//
+
 BinaryData::BinaryData( const std::vector< u8 >& data )
 : m_data( std::move( data ) )
 {
@@ -42,44 +47,46 @@ u64 BinaryData::size( void ) const
     return m_data.size();
 }
 
+const std::vector< u8 >& BinaryData::data( void ) const
+{
+    return m_data;
+}
+
+//
+//
+// StringData
+//
+
 StringData::StringData( const std::string& data )
-: m_data( std::move( data ) )
+: m_data( data )
+, m_ref( m_data )
+{
+}
+
+StringData::StringData( std::string& data )
+: m_data()
+, m_ref( data )
 {
 }
 
 const u8* StringData::buffer( void ) const
 {
-    return reinterpret_cast< const u8* >( m_data.data() );
+    return reinterpret_cast< const u8* >( m_ref.data() );
 }
 
 u64 StringData::size( void ) const
 {
-    return m_data.size();
+    return m_ref.size();
 }
 
 std::string StringData::data( void ) const
 {
-    return m_data;
+    return m_ref;
 }
 
-StringReferenceData::StringReferenceData( std::string& data )
-: m_data( data )
+std::string& StringData::data( void )
 {
-}
-
-const u8* StringReferenceData::buffer( void ) const
-{
-    return reinterpret_cast< const u8* >( m_data.data() );
-}
-
-u64 StringReferenceData::size( void ) const
-{
-    return m_data.size();
-}
-
-std::string& StringReferenceData::data( void ) const
-{
-    return m_data;
+    return m_ref;
 }
 
 //

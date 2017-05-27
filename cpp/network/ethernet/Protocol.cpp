@@ -30,14 +30,6 @@ using namespace libstdhl;
 using namespace Network;
 using namespace Ethernet;
 
-constexpr Ethernet::Protocol::Protocol(
-    const Address& destination, const Address& source, const Type& type )
-: m_destination( destination )
-, m_source( source )
-, m_type( type )
-{
-}
-
 constexpr std::array< u8, HEADER > Ethernet::Protocol::data( void ) const
 {
     return m_destination + m_source + m_type;

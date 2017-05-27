@@ -47,9 +47,15 @@ namespace libstdhl
         class Interface
         {
           public:
+            using Ptr = std::shared_ptr< Interface< T > >;
+
             virtual void send( const T& data ) = 0;
 
+            virtual void send( const std::string& data ) = 0;
+
             virtual void receive( T& data ) = 0;
+
+            virtual T receive( std::string& data ) = 0;
 
             inline u1 connected( void ) const
             {

@@ -47,27 +47,59 @@ namespace libstdhl
             /**
                @extends TCP
             */
-            // class Packet final : public Network::Packet
-            // {
-            // public:
-            //   using Ptr = std::shared_ptr< Packet >;
+            class IPv4Packet final : public Network::Packet
+            {
+              public:
+                IPv4Packet( const IPv4::Protocol& ip, const TCP::Protocol& tcp,
+                    const std::string& data )
+                : m_ip( ip )
+                , m_tcp( tcp )
+                , m_data( data )
+                {
+                }
 
-            //   Packet( const Address& destination, const Address& source,
-            //       const Type& type, const std::vector< u8 >& payload );
+                IPv4Packet( std::string& data )
+                : m_ip()
+                , m_tcp()
+                , m_data( data )
+                {
+                }
 
-            //   const Protocol& header( void ) const;
+                const u8* buffer( void ) const override
+                {
+                    return m_data.buffer();
+                }
 
-            //   const Data& payload( void ) const;
+                u64 size( void ) const override
+                {
+                    return m_data.size();
+                }
 
-            //   const u8* buffer( void ) const override;
+                const IPv4::Protocol& ip( void ) const
+                {
+                    return m_ip;
+                }
 
-            //   std::size_t size( void ) const override;
+                void setIp( const IPv4::Protocol& ip )
+                {
+                    m_ip = ip;
+                }
 
-            // private:
-            //   const Protocol m_header;
-            //   Data m_payload;
-            //   const std::size_t m_size;
-            // };
+                const TCP::Protocol& tcp( void ) const
+                {
+                    return m_tcp;
+                }
+
+                void setTcp( const TCP::Protocol& tcp )
+                {
+                    m_tcp = tcp;
+                }
+
+              private:
+                IPv4::Protocol m_ip;
+                TCP::Protocol m_tcp;
+                StringData m_data;
+            };
         }
     }
 }

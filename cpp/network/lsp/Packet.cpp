@@ -79,9 +79,8 @@ LSP::Packet::Packet( const std::string& data )
 LSP::Packet::Packet( const Message& payload )
 : m_header( payload.dump().size() )
 , m_payload( payload )
-, m_data{ "" }
+, m_data( m_header.data() + NL + payload.dump() )
 {
-    m_data = StringData{ m_header.data() + NL + payload.dump() };
 }
 
 const LSP::Protocol& LSP::Packet::header( void ) const

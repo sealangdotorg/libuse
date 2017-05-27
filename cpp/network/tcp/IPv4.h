@@ -36,7 +36,7 @@ namespace libstdhl
     {
         namespace TCP
         {
-            class IPv4 final : public Interface< Network::Packet >,
+            class IPv4 final : public Interface< IPv4Packet >,
                                public Session< IPv4 >
             {
               public:
@@ -48,15 +48,15 @@ namespace libstdhl
                 IPv4( void );
 
               public:
-                void send( const Network::Packet& data ) override;
+                void send( const IPv4Packet& data ) override;
 
-                void receive( Network::Packet& data ) override;
+                void send( const std::string& data ) override;
+
+                void receive( IPv4Packet& data ) override;
+
+                IPv4Packet receive( std::string& data ) override;
 
                 IPv4 session( void ) override;
-
-                void send( const std::string& data );
-
-                void receive( std::string& data );
             };
         }
     };
