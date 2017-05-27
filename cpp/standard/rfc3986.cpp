@@ -88,59 +88,59 @@ UniformResourceIdentifier::UniformResourceIdentifier( const std::string& scheme,
     const std::string& path,
     const std::string& query,
     const std::string& fragment )
-: std::string( "" )
-, m_scheme( scheme )
+: m_scheme( scheme )
 , m_authority( authority )
 , m_path( path )
 , m_query( query )
 , m_fragment( fragment )
+, m_uri( "" )
 {
     if( scheme.size() > 0 )
     {
-        *this += scheme + "://" + authority;
+        m_uri += scheme + "://" + authority;
     }
 
-    *this += path;
+    m_uri += path;
 
     if( query.size() > 0 )
     {
-        *this += "?" + query;
+        m_uri += "?" + query;
     }
 
     if( fragment.size() > 0 )
     {
-        *this += "#" + fragment;
+        m_uri += "#" + fragment;
     }
 }
 
-std::string UniformResourceIdentifier::scheme( void ) const
+const std::string& UniformResourceIdentifier::scheme( void ) const
 {
     return m_scheme;
 }
 
-std::string UniformResourceIdentifier::authority( void ) const
+const std::string& UniformResourceIdentifier::authority( void ) const
 {
     return m_authority;
 }
 
-std::string UniformResourceIdentifier::path( void ) const
+const std::string& UniformResourceIdentifier::path( void ) const
 {
     return m_path;
 }
 
-std::string UniformResourceIdentifier::query( void ) const
+const std::string& UniformResourceIdentifier::query( void ) const
 {
     return m_query;
 }
 
-std::string UniformResourceIdentifier::fragment( void ) const
+const std::string& UniformResourceIdentifier::fragment( void ) const
 {
     return m_fragment;
 }
 
-std::string UniformResourceIdentifier::uri( void ) const
+const std::string& UniformResourceIdentifier::uri( void ) const
 {
-    return *this;
+    return m_uri;
 }
 
 //

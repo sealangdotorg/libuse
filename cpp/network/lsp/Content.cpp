@@ -206,7 +206,7 @@ Location::Location( const Data& data )
 Location::Location( const DocumentUri& uri, const Range& range )
 : Data( Data::object() )
 {
-    operator[]( URI ) = uri;
+    operator[]( URI ) = uri.uri();
     auto& r = operator[]( RANGE );
     to_json( r, range );
 }
@@ -514,7 +514,7 @@ TextDocumentIdentifier::TextDocumentIdentifier( const Data& data )
 TextDocumentIdentifier::TextDocumentIdentifier( const DocumentUri& uri )
 : Data( Data::object() )
 {
-    operator[]( URI ) = uri;
+    operator[]( URI ) = uri.uri();
 }
 
 DocumentUri TextDocumentIdentifier::uri( void ) const
@@ -732,7 +732,7 @@ TextDocumentItem::TextDocumentItem( const DocumentUri& uri,
     const std::string& text )
 : Data( Data::object() )
 {
-    operator[]( URI ) = uri;
+    operator[]( URI ) = uri.uri();
     operator[]( LANGUAGE_ID ) = languageId;
     operator[]( VERSION ) = version;
     operator[]( TEXT ) = text;
@@ -2962,7 +2962,7 @@ InitializeParams::InitializeParams( const std::size_t processId,
 : Data( Data::object() )
 {
     operator[]( PROCESS_ID ) = processId;
-    operator[]( ROOT_URI ) = rootUri;
+    operator[]( ROOT_URI ) = rootUri.uri();
     operator[]( CAPABILITIES ) = capabilities;
 }
 
