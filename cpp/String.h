@@ -94,6 +94,25 @@ namespace libstdhl
             }
         }
 
+        inline u1 endsWith( const std::string& str, const std::string& pattern )
+        {
+            const i64 pos = str.size() - pattern.size();
+
+            if( pos < 0 )
+            {
+                return false;
+            }
+
+            if( strcmp( &str.c_str()[ pos ], pattern.c_str() ) == 0 )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         /**
            adopted from: https://stackoverflow.com/a/29962178
         */

@@ -131,6 +131,34 @@ TEST( libstdhl_cpp_String, value_over_switch_case )
     }
 }
 
+TEST( libstdhl_cpp_String, startsWith_true )
+{
+    EXPECT_EQ( true, String::startsWith( "foobarbaz", "foo" ) );
+    EXPECT_EQ( true, String::startsWith( "foobarbaz", "foobar" ) );
+    EXPECT_EQ( true, String::startsWith( "foobarbaz", "foobarbaz" ) );
+}
+
+TEST( libstdhl_cpp_String, startsWith_false )
+{
+    EXPECT_EQ( false, String::startsWith( "foobarbaz", "123" ) );
+    EXPECT_EQ( false, String::startsWith( "foobarbaz", "123bar" ) );
+    EXPECT_EQ( false, String::startsWith( "foobarbaz", "123barbaz" ) );
+}
+
+TEST( libstdhl_cpp_String, endsWith_true )
+{
+    EXPECT_EQ( true, String::endsWith( "foobarbaz", "baz" ) );
+    EXPECT_EQ( true, String::endsWith( "foobarbaz", "barbaz" ) );
+    EXPECT_EQ( true, String::endsWith( "foobarbaz", "foobarbaz" ) );
+}
+
+TEST( libstdhl_cpp_String, endsWith_false )
+{
+    EXPECT_EQ( false, String::endsWith( "foobarbaz", "123" ) );
+    EXPECT_EQ( false, String::endsWith( "foobarbaz", "asdf" ) );
+    EXPECT_EQ( false, String::endsWith( "foobarbaz", "fffffffffffffffff" ) );
+}
+
 //
 //  Local variables:
 //  mode: c++
