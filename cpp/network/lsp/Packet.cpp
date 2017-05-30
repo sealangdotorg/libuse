@@ -69,11 +69,6 @@ LSP::Packet::Packet( const std::string& data )
                 "LSP: invalid packet content '" + p + "'" );
         }
     }
-
-    // if( length == 0 )
-    // {
-    //     throw std::domain_error( "LSP: content length cannot be 0" );
-    // }
 }
 
 LSP::Packet::Packet( const Message& payload )

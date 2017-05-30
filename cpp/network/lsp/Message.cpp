@@ -155,7 +155,7 @@ void Message::process( ServerInterface& interface ) const
         {
             auto msg = ResponseMessage();
             msg.setError( ErrorCode::InternalError, "invalid message" );
-            interface.response( msg );
+            interface.respond( msg );
             break;
         }
     };
@@ -242,49 +242,53 @@ void RequestMessage::process( ServerInterface& interface ) const
     const auto& m = method();
     const auto mv = String::value( m );
 
-    switch( mv )
+    try
     {
-        case String::value( INITIALIZE ):
+        switch( mv )
         {
-            try
+            // default
+            case String::value( INITIALIZE ):
             {
                 const auto& parameters = InitializeParams( params() );
                 const auto& result = interface.initialize( parameters );
                 response.setResult( result );
+                break;
             }
-            catch( const Exception& e )
-            {
-                response.setError( e.code(), e.message(), e.data() );
-            }
-            catch( const std::invalid_argument& e )
-            {
-                response.setError( ErrorCode::ParseError,
-                    "parse error: '" + std::string( e.what() ) + "'" );
-            }
-            break;
-        }
-        case String::value( SHUTDOWN ):
-        {
-            try
+            case String::value( SHUTDOWN ):
             {
                 interface.shutdown();
                 response.setResult( nullptr );
+                break;
             }
-            catch( const Exception& e )
+            // document
+            case String::value( Identifier::textDocument_codeAction ):
             {
-                response.setError( e.code(), e.message(), e.data() );
+                const auto& parameters = CodeActionParams( params() );
+                const auto& result
+                    = interface.textDocument_codeAction( parameters );
+                response.setResult( result );
+                break;
             }
-            break;
-        }
-        default:
-        {
-            response.setError( ErrorCode::MethodNotFound,
-                "request method '" + m + "' not implemented" );
-            break;
-        }
-    };
+            default:
+            {
+                response.setError( ErrorCode::MethodNotFound,
+                    "request method '" + m
+                        + "' not specified in interface implementation" );
+                break;
+            }
+        };
+    }
+    catch( const Exception& e )
+    {
+        response.setError( e.code(), e.message(), e.data() );
+    }
+    catch( const std::invalid_argument& e )
+    {
+        response.setError( ErrorCode::ParseError,
+            "parse error: '" + std::string( e.what() ) + "'" );
+    }
 
-    interface.response( response );
+    interface.respond( response );
 }
 
 u1 RequestMessage::isValid( const Data& data )
@@ -318,7 +322,7 @@ NotificationMessage::NotificationMessage( const Data& data )
 {
 }
 
-NotificationMessage::NotificationMessage( const std::string method )
+NotificationMessage::NotificationMessage( const std::string& method )
 : Message( ID::NOTIFICATION_MESSAGE )
 {
     operator[]( METHOD ) = method;
@@ -347,30 +351,61 @@ void NotificationMessage::setParams( const Data& data )
 
 void NotificationMessage::process( ServerInterface& interface ) const
 {
+    auto response = ResponseMessage();
+
     const auto& m = method();
     const auto mv = String::value( m );
 
-    switch( mv )
+    try
     {
-        case String::value( INITIALIZED ):
+        switch( mv )
         {
-            interface.initialized();
-            break;
-        }
-        case String::value( EXIT ):
-        {
-            interface.exit();
-            break;
-        }
-        default:
-        {
-            auto response = ResponseMessage();
-            response.setError( ErrorCode::MethodNotFound,
-                "notification method '" + m + "' not implemented" );
-            interface.response( response );
-            break;
-        }
-    };
+            // general
+            case String::value( INITIALIZED ):
+            {
+                interface.initialized();
+                break;
+            }
+            case String::value( EXIT ):
+            {
+                interface.exit();
+                break;
+            }
+            // document
+            case String::value( Identifier::textDocument_didOpen ):
+            {
+                const auto& parameters = DidOpenTextDocumentParams( params() );
+                interface.textDocument_didOpen( parameters );
+                break;
+            }
+            case String::value( Identifier::textDocument_didChange ):
+            {
+                const auto& parameters
+                    = DidChangeTextDocumentParams( params() );
+                interface.textDocument_didChange( parameters );
+                break;
+            }
+            default:
+            {
+                response.setError( ErrorCode::MethodNotFound,
+                    "notification method '" + m
+                        + "' not specified in interface implementation" );
+                break;
+            }
+        };
+    }
+    catch( const std::invalid_argument& e )
+    {
+        response.setError( ErrorCode::ParseError,
+            "notification method '" + m + "': parse error: '"
+                + std::string( e.what() )
+                + "'" );
+    }
+
+    if( response.hasError() )
+    {
+        interface.respond( response );
+    }
 }
 
 u1 NotificationMessage::isValid( const Data& data )

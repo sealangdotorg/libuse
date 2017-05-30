@@ -167,6 +167,26 @@ namespace libstdhl
 
             constexpr const char* SHUTDOWN = "shutdown";
             constexpr const char* EXIT = "exit";
+
+            constexpr const char* RANGE_LENGTH = "rangeLength";
+            constexpr const char* CONTENT_CHANGES = "contentChanges";
+            constexpr const char* DIAGNOSTICS = "diagnostics";
+            constexpr const char* CONTEXT = "context";
+
+            namespace Identifier
+            {
+                constexpr const char* textDocument_publishDiagnostics
+                    = "textDocument/publishDiagnostics";
+
+                constexpr const char* textDocument_didOpen
+                    = "textDocument/didOpen";
+
+                constexpr const char* textDocument_didChange
+                    = "textDocument/didChange";
+
+                constexpr const char* textDocument_codeAction
+                    = "textDocument/codeAction";
+            }
         }
     }
 }

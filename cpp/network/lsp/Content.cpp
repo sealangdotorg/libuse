@@ -160,8 +160,8 @@ Range::Range( const Data& data )
 Range::Range( const Position& start, const Position& end )
 : Data( Data::object() )
 {
-    operator[]( START ) = start;
-    operator[]( END ) = end;
+    operator[]( START ) = Data::from_cbor( Data::to_cbor( start ) );
+    operator[]( END ) = Data::from_cbor( Data::to_cbor( end ) );
 }
 
 Position Range::start( void ) const
@@ -177,8 +177,8 @@ Position Range::end( void ) const
 u1 Range::isValid( const Data& data )
 {
     return data.is_object() and data.find( START ) != data.end()
-           and data[ START ].is_object() and data.find( END ) != data.end()
-           and data[ END ].is_object() and Position::isValid( data[ START ] )
+           and Position::isValid( data[ START ] )
+           and data.find( END ) != data.end()
            and Position::isValid( data[ END ] );
 }
 
@@ -268,8 +268,7 @@ Diagnostic::Diagnostic( const Data& data )
 Diagnostic::Diagnostic( const Range& range, const std::string& message )
 : Data( Data::object() )
 {
-    auto& r = operator[]( RANGE );
-    to_json( r, range );
+    operator[]( RANGE ) = Data::from_cbor( Data::to_cbor( range ) );
     operator[]( MESSAGE ) = message;
 }
 
@@ -344,7 +343,7 @@ u1 Diagnostic::isValid( const Data& data )
         and data.find( MESSAGE ) != data.end()
         and data[ MESSAGE ].is_string() )
     {
-        if( not Position::isValid( data[ RANGE ] ) )
+        if( not Range::isValid( data[ RANGE ] ) )
         {
             return false;
         }
@@ -574,15 +573,19 @@ std::size_t VersionedTextDocumentIdentifier::version( void ) const
 
 u1 VersionedTextDocumentIdentifier::isValid( const Data& data )
 {
-    if( TextDocumentIdentifier( data ) and data.find( VERSION ) != data.end()
-        and data[ VERSION ].is_number() )
-    {
-        return true;
-    }
-    else
+    // if( TextDocumentIdentifier::isValid( data ) )
+    // {
+    if( data.find( VERSION ) != data.end() and not data[ VERSION ].is_number() )
     {
         return false;
     }
+
+    return true;
+    // }
+    // else
+    // {
+    //     return false;
+    // }
 }
 
 //
@@ -2498,14 +2501,21 @@ u1 ServerCapabilities::hasTextDocumentSync( void ) const
 
 TextDocumentSyncOptions ServerCapabilities::textDocumentSync( void ) const
 {
-    assert( hasTextDocumentSync() );
-    return operator[]( TEXT_DOCUMENT_SYNC );
+    return at( TEXT_DOCUMENT_SYNC );
 }
 
 void ServerCapabilities::setTextDocumentSync(
     const TextDocumentSyncOptions& textDocumentSync )
 {
-    operator[]( TEXT_DOCUMENT_SYNC ) = textDocumentSync;
+    operator[]( TEXT_DOCUMENT_SYNC )
+        = Data::from_cbor( Data::to_cbor( textDocumentSync ) );
+}
+
+void ServerCapabilities::setTextDocumentSync(
+    const TextDocumentSyncKind& textDocumentSync )
+{
+    operator[]( TEXT_DOCUMENT_SYNC )
+        = static_cast< std::size_t >( textDocumentSync );
 }
 
 u1 ServerCapabilities::hasHoverProvider( void ) const
@@ -3078,7 +3088,8 @@ InitializeResult::InitializeResult( const Data& data )
 InitializeResult::InitializeResult( const ServerCapabilities& capabilities )
 : Data( Data::object() )
 {
-    operator[]( CAPABILITIES ) = capabilities;
+    operator[]( CAPABILITIES )
+        = Data::from_cbor( Data::to_cbor( capabilities ) );
 }
 
 ServerCapabilities InitializeResult::capabilities( void ) const
@@ -3135,6 +3146,436 @@ u1 InitializeError::isValid( const Data& data )
     if( data.is_object() and data.find( RETRY ) != data.end()
         and data[ RETRY ].is_boolean() )
     {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+//
+//
+// DidOpenTextDocumentParams
+//
+
+DidOpenTextDocumentParams::DidOpenTextDocumentParams( const Data& data )
+: Data( data )
+{
+    if( not isValid( data ) )
+    {
+        throw std::invalid_argument(
+            "invalid data for interface 'DidOpenTextDocumentParams'" );
+    }
+}
+
+DidOpenTextDocumentParams::DidOpenTextDocumentParams(
+    const TextDocumentItem& textDocument )
+: Data( Data::object() )
+{
+    operator[]( TEXT_DOCUMENT )
+        = Data::from_cbor( Data::to_cbor( textDocument ) );
+}
+
+TextDocumentItem DidOpenTextDocumentParams::textDocument( void ) const
+{
+    return operator[]( TEXT_DOCUMENT );
+}
+
+u1 DidOpenTextDocumentParams::isValid( const Data& data )
+{
+    if( data.is_object() and data.find( TEXT_DOCUMENT ) != data.end()
+        and TextDocumentItem::isValid( data[ TEXT_DOCUMENT ] ) )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+//
+//
+// TextDocumentContentChangeEvent
+//
+
+TextDocumentContentChangeEvent::TextDocumentContentChangeEvent(
+    const Data& data )
+: Data( data )
+{
+    if( not isValid( data ) )
+    {
+        throw std::invalid_argument(
+            "invalid data for interface 'TextDocumentContentChangeEvent'" );
+    }
+}
+
+TextDocumentContentChangeEvent::TextDocumentContentChangeEvent(
+    const std::string& text )
+: Data( Data::object() )
+{
+    operator[]( TEXT ) = text;
+}
+
+u1 TextDocumentContentChangeEvent::hasRange( void ) const
+{
+    return find( RANGE ) != end();
+}
+
+Range TextDocumentContentChangeEvent::range( void ) const
+{
+    assert( hasRange() );
+    return operator[]( RANGE );
+}
+
+void TextDocumentContentChangeEvent::setRange( const Range& range )
+{
+    operator[]( RANGE ) = Data::from_cbor( Data::to_cbor( range ) );
+}
+
+u1 TextDocumentContentChangeEvent::hasRangeLength( void ) const
+{
+    return find( RANGE_LENGTH ) != end();
+}
+
+std::size_t TextDocumentContentChangeEvent::rangeLength( void ) const
+{
+    return operator[]( RANGE_LENGTH ).get< std::size_t >();
+}
+
+void TextDocumentContentChangeEvent::setRangeLength(
+    const std::size_t rangeLength )
+{
+    operator[]( RANGE_LENGTH ) = rangeLength;
+}
+
+std::string TextDocumentContentChangeEvent::text( void ) const
+{
+    return operator[]( TEXT ).get< std::string >();
+}
+
+u1 TextDocumentContentChangeEvent::isValid( const Data& data )
+{
+    if( data.is_object() and data.find( TEXT ) != data.end()
+        and data[ TEXT ].is_string() )
+    {
+        if( data.find( RANGE ) != data.end()
+            and not Range::isValid( data[ RANGE ] ) )
+        {
+            return false;
+        }
+
+        if( data.find( RANGE_LENGTH ) != data.end()
+            and not data[ RANGE_LENGTH ].is_number() )
+        {
+            return false;
+        }
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+//
+//
+// DidChangeTextDocumentParams
+//
+
+DidChangeTextDocumentParams::DidChangeTextDocumentParams( const Data& data )
+: Data( data )
+{
+    if( not isValid( data ) )
+    {
+        throw std::invalid_argument(
+            "invalid data for interface 'DidChangeTextDocumentParams'" );
+    }
+}
+
+DidChangeTextDocumentParams::DidChangeTextDocumentParams(
+    const VersionedTextDocumentIdentifier& textDocument,
+    const std::vector< TextDocumentContentChangeEvent >& contentChanges )
+: Data( Data::object() )
+{
+    operator[]( TEXT_DOCUMENT )
+        = Data::from_cbor( Data::to_cbor( TEXT_DOCUMENT ) );
+    operator[]( CONTENT_CHANGES ) = Data::array();
+
+    for( auto contentChange : contentChanges )
+    {
+        operator[]( CONTENT_CHANGES ).push_back( contentChange );
+    }
+}
+
+VersionedTextDocumentIdentifier DidChangeTextDocumentParams::textDocument(
+    void ) const
+{
+    return operator[]( TEXT_DOCUMENT );
+}
+
+Data DidChangeTextDocumentParams::contentChanges( void ) const
+{
+    return operator[]( CONTENT_CHANGES );
+}
+
+u1 DidChangeTextDocumentParams::isValid( const Data& data )
+{
+    if( data.is_object() and data.find( TEXT_DOCUMENT ) != data.end()
+        and data[ TEXT_DOCUMENT ].is_object()
+        and data.find( CONTENT_CHANGES ) != data.end()
+        and data[ CONTENT_CHANGES ].is_array() )
+    {
+        if( not VersionedTextDocumentIdentifier::isValid(
+                data[ TEXT_DOCUMENT ] ) )
+        {
+            return false;
+        }
+
+        for( auto contentChange : data[ CONTENT_CHANGES ] )
+        {
+            if( not TextDocumentContentChangeEvent::isValid( contentChange ) )
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+//
+//
+// CodeActionContext
+//
+
+CodeActionContext::CodeActionContext( const Data& data )
+: Data( data )
+{
+    if( not isValid( data ) )
+    {
+        throw std::invalid_argument(
+            "invalid data for interface 'CodeActionContext'" );
+    }
+}
+
+CodeActionContext::CodeActionContext(
+    const std::vector< Diagnostic >& diagnostics )
+: Data( Data::object() )
+{
+    operator[]( DIAGNOSTICS ) = Data::array();
+
+    for( auto diagnostic : diagnostics )
+    {
+        operator[]( DIAGNOSTICS ).push_back( diagnostic );
+    }
+}
+
+Data CodeActionContext::diagnostics( void ) const
+{
+    return operator[]( DIAGNOSTICS );
+}
+
+u1 CodeActionContext::isValid( const Data& data )
+{
+    if( data.is_object() and data.find( DIAGNOSTICS ) != data.end()
+        and data[ DIAGNOSTICS ].is_array() )
+    {
+        for( auto diagnostic : data[ DIAGNOSTICS ] )
+        {
+            if( not TextDocumentContentChangeEvent::isValid( diagnostic ) )
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+//
+//
+// CodeActionParams
+//
+
+CodeActionParams::CodeActionParams( const Data& data )
+: Data( data )
+{
+    if( not isValid( data ) )
+    {
+        throw std::invalid_argument(
+            "invalid data for interface 'CodeActionParams'" );
+    }
+}
+
+CodeActionParams::CodeActionParams( const TextDocumentIdentifier& textDocument,
+    const Range& range, const CodeActionContext& context )
+: Data( Data::object() )
+{
+    operator[]( TEXT_DOCUMENT )
+        = Data::from_cbor( Data::to_cbor( TEXT_DOCUMENT ) );
+    operator[]( RANGE ) = Data::from_cbor( Data::to_cbor( RANGE ) );
+    operator[]( CONTEXT ) = Data::from_cbor( Data::to_cbor( CONTEXT ) );
+}
+
+TextDocumentIdentifier CodeActionParams::textDocument( void ) const
+{
+    return operator[]( TEXT_DOCUMENT );
+}
+
+Range CodeActionParams::range( void ) const
+{
+    return operator[]( RANGE );
+}
+
+CodeActionContext CodeActionParams::context( void ) const
+{
+    return operator[]( CONTEXT );
+}
+
+u1 CodeActionParams::isValid( const Data& data )
+{
+    if( data.is_object() and data.find( TEXT_DOCUMENT ) != data.end()
+        and data[ TEXT_DOCUMENT ].is_object()
+        and data.find( RANGE ) != data.end()
+        and data[ RANGE ].is_object()
+        and data.find( CONTEXT ) != data.end()
+        and data[ CONTEXT ].is_object() )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+//
+//
+// CodeActionResult
+//
+
+CodeActionResult::CodeActionResult( const Data& data )
+: Data( data )
+{
+    if( not isValid( data ) )
+    {
+        throw std::invalid_argument(
+            "invalid data for interface 'CodeActionResult'" );
+    }
+}
+
+CodeActionResult::CodeActionResult( const std::vector< Command >& commands )
+: CodeActionResult()
+{
+    for( auto command : commands )
+    {
+        addCommand( command );
+    }
+}
+
+CodeActionResult::CodeActionResult( void )
+: Data( Data::array() )
+{
+}
+
+void CodeActionResult::addCommand( const Command& command )
+{
+    this->push_back( command );
+}
+
+u1 CodeActionResult::isValid( const Data& data )
+{
+    if( data.is_array() )
+    {
+        for( auto command : data )
+        {
+            if( not Command::isValid( command ) )
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+//
+//
+// PublishDiagnosticsParams
+//
+
+PublishDiagnosticsParams::PublishDiagnosticsParams( const Data& data )
+: Data( data )
+{
+    if( not isValid( data ) )
+    {
+        throw std::invalid_argument(
+            "invalid data for interface 'PublishDiagnosticsParams'" );
+    }
+}
+
+PublishDiagnosticsParams::PublishDiagnosticsParams(
+    const DocumentUri& uri, const std::vector< Diagnostic >& diagnostics )
+: Data( Data::object() )
+{
+    operator[]( URI ) = uri.toString();
+    operator[]( DIAGNOSTICS ) = Data::array();
+
+    for( auto diagnostic : diagnostics )
+    {
+        operator[]( DIAGNOSTICS ).push_back( diagnostic );
+    }
+}
+
+DocumentUri PublishDiagnosticsParams::uri( void ) const
+{
+    return DocumentUri::fromString( operator[]( URI ).get< std::string >() );
+}
+
+Data PublishDiagnosticsParams::diagnostics( void ) const
+{
+    return operator[]( DIAGNOSTICS );
+}
+
+u1 PublishDiagnosticsParams::isValid( const Data& data )
+{
+    if( data.is_object() and data.find( URI ) != data.end()
+        and data[ URI ].is_string()
+        and data.find( DIAGNOSTICS ) != data.end()
+        and data[ DIAGNOSTICS ].is_array() )
+    {
+        try
+        {
+            DocumentUri::fromString( data[ URI ].get< std::string >() );
+        }
+        catch( const std::exception& e )
+        {
+            return false;
+        }
+
+        for( auto diagnostic : data[ DIAGNOSTICS ] )
+        {
+            if( not Diagnostic::isValid( diagnostic ) )
+            {
+                return false;
+            }
+        }
+
         return true;
     }
     else

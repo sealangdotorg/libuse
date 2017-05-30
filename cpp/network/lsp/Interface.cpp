@@ -24,6 +24,8 @@
 
 #include "Interface.h"
 
+#include "Identifier.h"
+
 using namespace libstdhl;
 using namespace Network;
 using namespace LSP;
@@ -31,36 +33,67 @@ using namespace LSP;
 ServerInterface::ServerInterface( void )
 : m_responseBuffer()
 , m_responseBufferSlot( 0 )
-, m_responseBufferLockAccess()
-, m_responseBufferLockFlush()
+, m_responseBufferLock()
+, m_notificationBuffer()
+, m_notificationBufferSlot( 0 )
+, m_notificationBufferLock()
+, m_serverFlushLock()
 {
 }
 
-void ServerInterface::response( const Message& message )
+void ServerInterface::respond( const ResponseMessage& message )
 {
-    std::lock_guard< std::mutex > guard( m_responseBufferLockAccess );
+    std::lock_guard< std::mutex > guard( m_responseBufferLock );
     m_responseBuffer[ m_responseBufferSlot ].emplace_back( message );
+}
+
+void ServerInterface::notify( const NotificationMessage& message )
+{
+    std::lock_guard< std::mutex > guard( m_notificationBufferLock );
+    m_notificationBuffer[ m_notificationBufferSlot ].emplace_back( message );
 }
 
 void ServerInterface::flush(
     const std::function< void( const Message& ) >& callback )
 {
-    std::lock_guard< std::mutex > guard( m_responseBufferLockFlush );
+    std::lock_guard< std::mutex > guard( m_serverFlushLock );
 
     std::size_t pos = -1;
 
     {
-        std::lock_guard< std::mutex > guard( m_responseBufferLockAccess );
+        std::lock_guard< std::mutex > guard( m_responseBufferLock );
         pos = m_responseBufferSlot;
         m_responseBufferSlot = ( pos + 1 ) % 2;
     }
 
-    for( auto response : m_responseBuffer[ pos ] )
+    for( auto msg : m_responseBuffer[ pos ] )
     {
-        callback( response );
+        callback( msg );
     }
 
     m_responseBuffer[ pos ].clear();
+
+    {
+        std::lock_guard< std::mutex > guard( m_notificationBufferLock );
+        pos = m_notificationBufferSlot;
+        m_notificationBufferSlot = ( pos + 1 ) % 2;
+    }
+
+    for( auto msg : m_notificationBuffer[ pos ] )
+    {
+        callback( msg );
+    }
+
+    m_notificationBuffer[ pos ].clear();
+}
+
+void ServerInterface::textDocument_publishDiagnostics(
+    const PublishDiagnosticsParams& params ) noexcept
+{
+    NotificationMessage msg(
+        std::string{ Identifier::textDocument_publishDiagnostics } );
+    msg.setParams( params );
+    notify( msg );
 }
 
 //

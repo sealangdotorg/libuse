@@ -50,6 +50,21 @@ namespace libstdhl
 
                 virtual ~ServerInterface( void ) = default;
 
+                /**
+                   user interface for message interactions
+                */
+
+                void respond( const ResponseMessage& message );
+
+                void notify( const NotificationMessage& message );
+
+                void flush(
+                    const std::function< void( const Message& ) >& callback );
+
+                /**
+                   general
+                */
+
                 virtual InitializeResult initialize(
                     const InitializeParams& params )
                     = 0;
@@ -60,16 +75,91 @@ namespace libstdhl
 
                 virtual void exit( void ) noexcept = 0;
 
-                void response( const Message& message );
+                // virtual void dollar_cancelRequest( void ) noexcept = 0;
 
-                void flush(
-                    const std::function< void( const Message& ) >& callback );
+                /**
+                   window
+                */
+
+                // :arrow_left: window/showMessage
+                // :arrow_right_hook: window/showMessageRequest
+                // :arrow_left: window/logMessage
+                // :arrow_left: telemetry/event
+
+                /**
+                   new client
+                */
+
+                // :arrow_right_hook: client/registerCapability
+                // :arrow_right_hook: client/unregisterCapability
+
+                /**
+                   workspace
+                */
+
+                // :arrow_right: workspace/didChangeConfiguration
+                // :arrow_right: workspace/didChangeWatchedFiles
+                // :leftwards_arrow_with_hook: workspace/symbol
+                // New :leftwards_arrow_with_hook: workspace/executeCommand
+                // New :arrow_right_hook: workspace/applyEdit
+
+                /**
+                    document
+                 */
+
+                // :arrow_left: textDocument/publishDiagnostics
+                virtual void textDocument_publishDiagnostics(
+                    const PublishDiagnosticsParams& params ) noexcept final;
+
+                // :arrow_right: textDocument/didOpen
+                virtual void textDocument_didOpen(
+                    const DidOpenTextDocumentParams& params ) noexcept
+                    = 0;
+
+                // :arrow_right: textDocument/didChange
+                virtual void textDocument_didChange(
+                    const DidChangeTextDocumentParams& params ) noexcept
+                    = 0;
+
+                // :arrow_right: textDocument/willSave
+                // New :leftwards_arrow_with_hook:
+                // textDocument/willSaveWaitUntil
+                // New :arrow_right: textDocument/didSave
+                // :arrow_right: textDocument/didClose
+                // :leftwards_arrow_with_hook: textDocument/completion
+                // :leftwards_arrow_with_hook: completionItem/resolve
+                // :leftwards_arrow_with_hook: textDocument/hover
+                // :leftwards_arrow_with_hook: textDocument/signatureHelp
+                // :leftwards_arrow_with_hook: textDocument/references
+                // :leftwards_arrow_with_hook:
+                // textDocument/documentHighlight
+                // :leftwards_arrow_with_hook: textDocument/documentSymbol
+                // :leftwards_arrow_with_hook: textDocument/formatting
+                // :leftwards_arrow_with_hook: textDocument/rangeFormatting
+                // :leftwards_arrow_with_hook: textDocument/onTypeFormatting
+                // :leftwards_arrow_with_hook: textDocument/definition
+
+                // :leftwards_arrow_with_hook: textDocument/codeAction
+                virtual CodeActionResult textDocument_codeAction(
+                    const CodeActionParams& params )
+                    = 0;
+
+                // :leftwards_arrow_with_hook: textDocument/codeLens
+                // :leftwards_arrow_with_hook: codeLens/resolve
+                // :leftwards_arrow_with_hook: textDocument/documentLink
+                // :leftwards_arrow_with_hook: documentLink/resolve
+                // :leftwards_arrow_with_hook: textDocument/rename
 
               private:
                 std::vector< Message > m_responseBuffer[ 2 ];
                 std::size_t m_responseBufferSlot;
-                std::mutex m_responseBufferLockAccess;
-                std::mutex m_responseBufferLockFlush;
+                std::mutex m_responseBufferLock;
+
+                std::vector< Message > m_notificationBuffer[ 2 ];
+                std::size_t m_notificationBufferSlot;
+                std::mutex m_notificationBufferLock;
+
+                std::mutex m_serverFlushLock;
             };
         }
     }

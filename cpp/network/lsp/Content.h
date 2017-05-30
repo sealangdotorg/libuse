@@ -796,6 +796,9 @@ namespace libstdhl
                 void setTextDocumentSync(
                     const TextDocumentSyncOptions& textDocumentSync );
 
+                void setTextDocumentSync(
+                    const TextDocumentSyncKind& textDocumentSync );
+
                 u1 hasHoverProvider( void ) const;
 
                 u1 hoverProvider( void ) const;
@@ -967,6 +970,119 @@ namespace libstdhl
                 InitializeError( const u1 retry );
 
                 u1 retry( void ) const;
+
+                static u1 isValid( const Data& data );
+            };
+
+            class DidOpenTextDocumentParams : public Data
+            {
+              public:
+                DidOpenTextDocumentParams( const Data& data );
+
+                DidOpenTextDocumentParams(
+                    const TextDocumentItem& textDocument );
+
+                TextDocumentItem textDocument( void ) const;
+
+                static u1 isValid( const Data& data );
+            };
+
+            class TextDocumentContentChangeEvent : public Data
+            {
+              public:
+                TextDocumentContentChangeEvent( const Data& data );
+
+                TextDocumentContentChangeEvent( const std::string& text );
+
+                u1 hasRange( void ) const;
+
+                Range range( void ) const;
+
+                void setRange( const Range& range );
+
+                u1 hasRangeLength( void ) const;
+
+                std::size_t rangeLength( void ) const;
+
+                void setRangeLength( const std::size_t rangeLength );
+
+                std::string text( void ) const;
+
+                static u1 isValid( const Data& data );
+            };
+
+            class DidChangeTextDocumentParams : public Data
+            {
+              public:
+                DidChangeTextDocumentParams( const Data& data );
+
+                DidChangeTextDocumentParams(
+                    const VersionedTextDocumentIdentifier& textDocument,
+                    const std::vector< TextDocumentContentChangeEvent >&
+                        contentChanges );
+
+                VersionedTextDocumentIdentifier textDocument( void ) const;
+
+                Data contentChanges( void ) const;
+
+                static u1 isValid( const Data& data );
+            };
+
+            class CodeActionContext : public Data
+            {
+              public:
+                CodeActionContext( const Data& data );
+
+                CodeActionContext(
+                    const std::vector< Diagnostic >& diagnostics );
+
+                Data diagnostics( void ) const;
+
+                static u1 isValid( const Data& data );
+            };
+
+            class CodeActionParams : public Data
+            {
+              public:
+                CodeActionParams( const Data& data );
+
+                CodeActionParams( const TextDocumentIdentifier& textDocument,
+                    const Range& range, const CodeActionContext& context );
+
+                TextDocumentIdentifier textDocument( void ) const;
+
+                Range range( void ) const;
+
+                CodeActionContext context( void ) const;
+
+                static u1 isValid( const Data& data );
+            };
+
+            class CodeActionResult : public Data
+            {
+              public:
+                CodeActionResult( const Data& data );
+
+                CodeActionResult( const std::vector< Command >& commands );
+
+                CodeActionResult( void );
+
+                void addCommand( const Command& command );
+
+                static u1 isValid( const Data& data );
+            };
+
+            class PublishDiagnosticsParams : public Data
+            {
+              public:
+                PublishDiagnosticsParams( const Data& data );
+
+                PublishDiagnosticsParams( const DocumentUri& uri,
+                    const std::vector< Diagnostic >& diagnostics );
+
+                DocumentUri uri( void ) const;
+
+                Data diagnostics( void ) const;
 
                 static u1 isValid( const Data& data );
             };

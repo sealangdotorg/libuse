@@ -148,7 +148,7 @@ namespace libstdhl
               public:
                 NotificationMessage( const Data& data );
 
-                NotificationMessage( const std::string method );
+                NotificationMessage( const std::string& method );
 
                 std::string method( void ) const;
 

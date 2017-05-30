@@ -39,8 +39,7 @@ class TestInterface final : public ServerInterface
 
     InitializeResult initialize( const InitializeParams& params ) override
     {
-        // throw Exception( "init req did not work!",
-        // InitializeError( false ) );
+        // throw Exception( "init failed", InitializeError( false ) );
         return InitializeResult( ServerCapabilities() );
     }
 
@@ -54,6 +53,22 @@ class TestInterface final : public ServerInterface
 
     void exit( void ) noexcept override
     {
+    }
+
+    void textDocument_didOpen(
+        const DidOpenTextDocumentParams& params ) noexcept override
+    {
+    }
+
+    void textDocument_didChange(
+        const DidChangeTextDocumentParams& params ) noexcept override
+    {
+    }
+
+    CodeActionResult textDocument_codeAction(
+        const CodeActionParams& params ) override
+    {
+        return CodeActionResult();
     }
 };
 
@@ -96,7 +111,7 @@ TEST( libstdhl_cpp_network_lsp, parse_packet_request_initialize )
         ack += "\r\n";
         ack += "{\"id\":\"0\"";
         ack += ",\"jsonrpc\":\"2.0\"";
-        ack += ",\"result\":{\"capabilities\":[]}";
+        ack += ",\"result\":{\"capabilities\":{}}";
         ack += "}";
 
         EXPECT_STREQ( packet.dump().c_str(), ack.c_str() );
