@@ -296,7 +296,7 @@ std::string ApplicationFormatter::visit( Data& item )
             }
             else
             {
-                underline = std::string( line.size(), '-' );
+                underline = std::string( line.size(), '-' ) + "...";
             }
 
             tmp += Ansi::format< Ansi::Color::GREEN >(
