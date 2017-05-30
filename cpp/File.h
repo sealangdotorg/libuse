@@ -39,10 +39,14 @@ namespace libstdhl
     /**
        @extends Stdhl
     */
-    class File
+    namespace File
     {
-      public:
-        static std::fstream open( const std::string& filename,
+        inline u1 exists( const std::fstream& file )
+        {
+            return file.is_open();
+        }
+
+        inline std::fstream open( const std::string& filename,
             const std::ios_base::openmode mode = std::fstream::in )
         {
             std::fstream file;
@@ -58,7 +62,21 @@ namespace libstdhl
             return file;
         }
 
-        static void remove( const std::string& filename )
+        inline u1 exists( const std::string& filename )
+        {
+            try
+            {
+                open( filename );
+            }
+            catch( const std::invalid_argument& e )
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        inline void remove( const std::string& filename )
         {
             if( not exists( filename ) )
             {
@@ -80,26 +98,7 @@ namespace libstdhl
             assert( not exists( filename ) );
         }
 
-        static u1 exists( const std::string& filename )
-        {
-            try
-            {
-                open( filename );
-            }
-            catch( const std::invalid_argument& e )
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        static u1 exists( const std::fstream& file )
-        {
-            return file.is_open();
-        }
-
-        static u8 readLines( const std::string& filename,
+        inline u8 readLines( const std::string& filename,
             std::function< void( u32, const std::string& ) >
                 process_line )
         {
@@ -122,21 +121,7 @@ namespace libstdhl
             return 0;
         }
 
-        static std::string readLine(
-            const std::string& filename, const u32 num )
-        {
-            std::string line;
-
-            auto file = open( filename );
-
-            gotoLine( file, num );
-
-            std::getline( file, line );
-
-            return line;
-        }
-
-        static std::fstream& gotoLine(
+        inline std::fstream& gotoLine(
             std::fstream& file, const std::size_t num )
         {
             file.seekg( std::ios::beg );
@@ -149,7 +134,21 @@ namespace libstdhl
 
             return file;
         }
-    };
+
+        inline std::string readLine(
+            const std::string& filename, const u32 num )
+        {
+            std::string line;
+
+            auto file = open( filename );
+
+            gotoLine( file, num );
+
+            std::getline( file, line );
+
+            return line;
+        }
+    }
 }
 
 #endif // _LIB_STDHL_CPP_FILE_H_
