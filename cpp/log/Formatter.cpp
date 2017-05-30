@@ -178,13 +178,19 @@ std::string ConsoleFormatter::visit( Data& item )
 
 ApplicationFormatter::ApplicationFormatter( const std::string& name )
 : m_name( name )
-, m_rawoutput( true )
+, m_rawOutput( true )
+, m_detailedLocation( true )
 {
 }
 
 void ApplicationFormatter::setRawOutput( const u1 enable )
 {
-    m_rawoutput = enable;
+    m_rawOutput = enable;
+}
+
+void ApplicationFormatter::setDetailedLocation( const u1 enable )
+{
+    m_detailedLocation = enable;
 }
 
 std::string ApplicationFormatter::visit( Level& item )
@@ -241,7 +247,7 @@ std::string ApplicationFormatter::visit( Data& item )
               tmp + item.level().accept( *this ) )
           + " ";
 
-    if( item.level() == Level::ID::OUTPUT and m_rawoutput )
+    if( item.level() == Level::ID::OUTPUT and m_rawOutput )
     {
         tmp = "";
     }
@@ -274,6 +280,11 @@ std::string ApplicationFormatter::visit( Data& item )
         if( i->id() == Item::ID::LOCATION )
         {
             tmp += "\n" + i->accept( *this );
+
+            if( not m_detailedLocation )
+            {
+                continue;
+            }
 
             const auto& location = static_cast< const LocationItem& >( *i );
 

@@ -102,6 +102,63 @@ TEST( libstdhl_cpp_String, join3 )
     EXPECT_STREQ( joined.c_str(), "foo.bar.qux" );
 }
 
+TEST( libstdhl_cpp_String, value_over_switch_case )
+{
+    const auto v = String::value( "foo" );
+
+    switch( v )
+    {
+        case String::value( "bar" ):
+        {
+            ASSERT_TRUE( false );
+            break;
+        }
+        case String::value( "foo" ):
+        {
+            ASSERT_TRUE( true );
+            break;
+        }
+        case String::value( "baz" ):
+        {
+            ASSERT_TRUE( false );
+            break;
+        }
+        default:
+        {
+            ASSERT_TRUE( false );
+            break;
+        }
+    }
+}
+
+TEST( libstdhl_cpp_String, startsWith_true )
+{
+    EXPECT_EQ( true, String::startsWith( "foobarbaz", "foo" ) );
+    EXPECT_EQ( true, String::startsWith( "foobarbaz", "foobar" ) );
+    EXPECT_EQ( true, String::startsWith( "foobarbaz", "foobarbaz" ) );
+}
+
+TEST( libstdhl_cpp_String, startsWith_false )
+{
+    EXPECT_EQ( false, String::startsWith( "foobarbaz", "123" ) );
+    EXPECT_EQ( false, String::startsWith( "foobarbaz", "123bar" ) );
+    EXPECT_EQ( false, String::startsWith( "foobarbaz", "123barbaz" ) );
+}
+
+TEST( libstdhl_cpp_String, endsWith_true )
+{
+    EXPECT_EQ( true, String::endsWith( "foobarbaz", "baz" ) );
+    EXPECT_EQ( true, String::endsWith( "foobarbaz", "barbaz" ) );
+    EXPECT_EQ( true, String::endsWith( "foobarbaz", "foobarbaz" ) );
+}
+
+TEST( libstdhl_cpp_String, endsWith_false )
+{
+    EXPECT_EQ( false, String::endsWith( "foobarbaz", "123" ) );
+    EXPECT_EQ( false, String::endsWith( "foobarbaz", "asdf" ) );
+    EXPECT_EQ( false, String::endsWith( "foobarbaz", "fffffffffffffffff" ) );
+}
+
 //
 //  Local variables:
 //  mode: c++

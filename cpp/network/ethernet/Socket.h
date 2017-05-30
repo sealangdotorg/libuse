@@ -22,57 +22,55 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_H_
-#define _LIB_STDHL_H_
+#ifndef _LIB_STDHL_CPP_NETWORK_ETHERNET_SOCKET_H_
+#define _LIB_STDHL_CPP_NETWORK_ETHERNET_SOCKET_H_
+
+#include "../Socket.h"
+
+#include "Packet.h"
 
 /**
-   @brief    TODO
+   @brief    TBD
 
-   TODO
+   TBD
 */
-
-#ifndef __cplusplus
-
-// C includes
-
-#include "c/args.h"
-#include "c/default.h"
-#include "c/type.h"
-
-#else // __cplusplus
-
-// C++ includes
-
-#include "cpp/Allocator.h"
-#include "cpp/Ansi.h"
-#include "cpp/Args.h"
-#include "cpp/Binding.h"
-#include "cpp/Default.h"
-#include "cpp/Enum.h"
-#include "cpp/File.h"
-#include "cpp/FloatingPoint.h"
-#include "cpp/Hash.h"
-#include "cpp/Integer.h"
-#include "cpp/Json.h"
-#include "cpp/Labeling.h"
-#include "cpp/List.h"
-#include "cpp/Log.h"
-#include "cpp/Network.h"
-#include "cpp/Random.h"
-#include "cpp/Rational.h"
-#include "cpp/Standard.h"
-#include "cpp/String.h"
-#include "cpp/Type.h"
-#include "cpp/Variadic.h"
-#include "cpp/Xml.h"
 
 namespace libstdhl
 {
+    /**
+       @extends Stdhl
+    */
+    namespace Network
+    {
+        namespace Ethernet
+        {
+            /**
+               @extends Ethernet
+            */
+            class RawPosixSocket final : public PosixSocket< Packet >
+            {
+              public:
+                using Ptr = std::shared_ptr< RawPosixSocket >;
+
+                RawPosixSocket( const std::string& name );
+
+                const Address& address( void ) const;
+
+                void connect( void ) override;
+
+                void send( const Packet& data ) const override;
+
+                void receive( Packet& data ) const override;
+
+              private:
+                Address m_address;
+                i32 m_ifridx;
+            };
+        }
+    }
 }
 
-#endif // __cplusplus
-
-#endif // _LIB_STDHL_H_
+#endif // _LIB_STDHL_CPP_NETWORK_ETHERNET_SOCKET_H_
 
 //
 //  Local variables:

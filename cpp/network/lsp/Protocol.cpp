@@ -22,57 +22,43 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_H_
-#define _LIB_STDHL_H_
+#include "Protocol.h"
 
-/**
-   @brief    TODO
+#include "../../Array.h"
 
-   TODO
-*/
+using namespace libstdhl;
+using namespace Network;
+using namespace LSP;
 
-#ifndef __cplusplus
-
-// C includes
-
-#include "c/args.h"
-#include "c/default.h"
-#include "c/type.h"
-
-#else // __cplusplus
-
-// C++ includes
-
-#include "cpp/Allocator.h"
-#include "cpp/Ansi.h"
-#include "cpp/Args.h"
-#include "cpp/Binding.h"
-#include "cpp/Default.h"
-#include "cpp/Enum.h"
-#include "cpp/File.h"
-#include "cpp/FloatingPoint.h"
-#include "cpp/Hash.h"
-#include "cpp/Integer.h"
-#include "cpp/Json.h"
-#include "cpp/Labeling.h"
-#include "cpp/List.h"
-#include "cpp/Log.h"
-#include "cpp/Network.h"
-#include "cpp/Random.h"
-#include "cpp/Rational.h"
-#include "cpp/Standard.h"
-#include "cpp/String.h"
-#include "cpp/Type.h"
-#include "cpp/Variadic.h"
-#include "cpp/Xml.h"
-
-namespace libstdhl
+LSP::Protocol::Protocol( const u64 length )
+: m_length( length )
 {
 }
 
-#endif // __cplusplus
+std::string LSP::Protocol::data( void ) const
+{
+    return CL + ": " + std::to_string( length() ) + NL + CT + ": " + TYPE + NL;
+}
 
-#endif // _LIB_STDHL_H_
+const u8* LSP::Protocol::buffer( void ) const
+{
+    return 0;
+}
+
+std::size_t LSP::Protocol::size( void ) const
+{
+    return 0;
+}
+
+u64 LSP::Protocol::length( void ) const
+{
+    return m_length;
+}
+
+std::string LSP::Protocol::type( void ) const
+{
+    return m_type;
+}
 
 //
 //  Local variables:

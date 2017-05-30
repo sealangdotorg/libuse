@@ -69,6 +69,7 @@ TYPES = debug sanitize release
 SYNCS = $(TYPES:%=%-sync)
 TESTS = $(TYPES:%=%-test)
 BENCH = $(TYPES:%=%-benchmark)
+ANALY = $(TYPES:%=%-analyze)
 ALL   = $(TYPES:%=%-all)
 
 
@@ -116,3 +117,78 @@ $(BENCH):%-benchmark: %
 	-C $(OBJ) $(TARGET)-run
 	@echo "-- Running benchmark"
 	@$(ENV_FLAGS) ./$(OBJ)/$(TARGET)-run -o console -o json:obj/report.json $(ENV_ARGS)
+
+
+analyze: debug-analyze
+
+analyze-all: $(TYPES:%=%-analyze)
+
+$(ANALY):%-analyze: %
+	@echo "-- Running analysis tools"
+	$(MAKE) $(MFLAGS) $@-cppcheck
+	$(MAKE) $(MFLAGS) $@-iwyu
+	$(MAKE) $(MFLAGS) $@-scan-build
+
+
+analyze-cppcheck: debug-analyze-cppcheck
+
+CPPCHECK_REPORT = ./$(OBJ)/.cppcheck.xml
+
+%-analyze-cppcheck:
+	@echo "-- Running 'cppcheck' $(patsubst %-analyze-cppcheck,%,$@)"
+	@echo -n "" > $(CPPCHECK_REPORT)
+	cppcheck \
+	-v \
+	--template=gcc \
+	--force \
+	--report-progress \
+	--enable=all \
+	-I . \
+	./c**
+
+	cppcheck \
+	-v \
+	--template=gcc \
+	--errorlist \
+	--xml-version=2 \
+	--force \
+	--enable=all \
+	-I . \
+	./c** > $(CPPCHECK_REPORT)
+
+
+analyze-iwyu: debug-analyze-iwyu
+
+IWYU_REPORT = ./$(OBJ)/.iwyu.txt
+
+%-analyze-iwyu:
+	@echo "-- Running 'iwyu' $(patsubst %-analyze-iwyu,%,$@)"
+	@echo -n "" > $(IWYU_REPORT)
+	@for i in `find ./c*`; do include-what-you-use $$i; done
+	@for i in `find ./c*`; do include-what-you-use $$i >> $(IWYU_REPORT); done
+
+
+analyze-scan-build: debug-analyze-scan-build
+
+SCAN_BUILD_REPORT = ./$(OBJ)/.scan-build
+SCAN_BUILD_REPORT_ATTIC = $(SCAN_BUILD_REPORT).attic
+
+%-analyze-scan-build: clean
+	@echo "-- Running 'scan-build' $(patsubst %-analyze-scan-build,%,$@)"
+	@mkdir -p $(SCAN_BUILD_REPORT_ATTIC)
+
+	scan-build \
+	-v \
+	-o $(SCAN_BUILD_REPORT).attic \
+	-stats \
+	-plist-html \
+	-analyzer-config stable-report-filename=true \
+	-enable-checker llvm.Conventions \
+	--force-analyze-debug-code \
+	--keep-going \
+	--keep-empty \
+	$(MAKE) $(MFLAGS) $(patsubst %-analyze-scan-build,%,$@)
+
+	@ln -f -s \
+	$(SCAN_BUILD_REPORT_ATTIC)/`ls -t $(SCAN_BUILD_REPORT_ATTIC) | head -1` \
+	$(SCAN_BUILD_REPORT)

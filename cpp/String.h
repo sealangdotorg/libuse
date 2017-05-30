@@ -39,11 +39,10 @@ namespace libstdhl
     /**
        @extends Stdhl
     */
-    class String
+    namespace String
     {
-      public:
-        static inline void split( const std::string& str,
-            const std::string& delimiter, std::vector< std::string >& result )
+        inline void split( const std::string& str, const std::string& delimiter,
+            std::vector< std::string >& result )
         {
             std::string input( str );
 
@@ -55,9 +54,9 @@ namespace libstdhl
 
                 token = std::strtok( NULL, delimiter.c_str() );
             }
-        };
+        }
 
-        static inline std::vector< std::string > split(
+        inline std::vector< std::string > split(
             const std::string& str, const std::string& delimiter )
         {
             std::vector< std::string > result;
@@ -65,10 +64,9 @@ namespace libstdhl
             split( str, delimiter, result );
 
             return result;
-        };
+        }
 
-        static inline std::string join(
-            const std::vector< std::string >& elements,
+        inline std::string join( const std::vector< std::string >& elements,
             const std::string& delimiter )
         {
             std::stringstream result;
@@ -81,15 +79,118 @@ namespace libstdhl
             }
 
             return result.str();
-        };
+        }
+
+        inline u1 startsWith(
+            const std::string& str, const std::string& pattern )
+        {
+            if( strncmp( str.c_str(), pattern.c_str(), pattern.size() ) == 0 )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        inline u1 endsWith( const std::string& str, const std::string& pattern )
+        {
+            const i64 pos = str.size() - pattern.size();
+
+            if( pos < 0 )
+            {
+                return false;
+            }
+
+            if( strcmp( &str.c_str()[ pos ], pattern.c_str() ) == 0 )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         /**
-         * From http://stackoverflow.com/a/26221725
+           adopted from: https://stackoverflow.com/a/29962178
+        */
+
+        inline std::string urlEncode( std::string str )
+        {
+            std::string new_str = "";
+            char c;
+            int ic;
+            const char* chars = str.c_str();
+            char bufHex[ 10 ];
+            int len = strlen( chars );
+
+            for( int i = 0; i < len; i++ )
+            {
+                c = chars[ i ];
+                ic = c;
+
+                if( isalnum( c ) or c == '-' or c == '_' or c == '.'
+                    or c == '~' )
+                {
+                    new_str += c;
+                }
+                else
+                {
+                    sprintf( bufHex, "%X", c );
+                    if( ic < 16 )
+                    {
+                        new_str += "%0";
+                    }
+                    else
+                    {
+                        new_str += "%";
+                    }
+                    new_str += bufHex;
+                }
+            }
+            return new_str;
+        }
+
+        /**
+           adopted from https://stackoverflow.com/a/16388610
+        */
+        inline constexpr std::size_t value( const char* str, int h = 0 )
+        {
+            return !str[ h ] ? 5381 : ( value( str, h + 1 ) * 33 ) ^ str[ h ];
+        }
+
+        inline std::size_t value( const std::string str )
+        {
+            return value( str.c_str(), 0 );
+        }
+
+        /**
+           adopted from https://stackoverflow.com/a/33122042
+         */
+        inline std::string trim( const std::string& str )
+        {
+            std::size_t first = str.find_first_not_of( ' ' );
+
+            if( first == std::string::npos )
+            {
+                return "";
+            }
+
+            std::size_t last = str.find_last_not_of( ' ' );
+
+            return str.substr( first, ( last - first + 1 ) );
+        }
+
+        /**
+           adopted from http://stackoverflow.com/a/26221725
          */
         template < typename... Args >
-        static std::string format( const std::string& format, Args... args )
+        inline std::string format( const std::string& format, Args... args )
         {
-            std::size_t size = std::snprintf( nullptr, 0, format.c_str(), args... ) + 1;
+            std::size_t size
+                = std::snprintf( nullptr, 0, format.c_str(), args... ) + 1;
             std::unique_ptr< char[] > buf( new char[ size ] );
             std::snprintf( buf.get(), size, format.c_str(), args... );
             return std::string( buf.get(), buf.get() + size - 1 );

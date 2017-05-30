@@ -157,4 +157,9 @@ install:
   - echo ${BUILD}
 
 script:
-  - make ${BUILD} ${BUILD}-test ${BUILD}-benchmark
+  - make ${BUILD}
+  - make ${BUILD}-test
+  - make ${BUILD}-benchmark
+
+after_success:
+  - make ${BUILD}-analyze
