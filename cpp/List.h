@@ -65,12 +65,12 @@ namespace libstdhl
         {
         }
 
-        std::size_t size() const
+        std::size_t size( void ) const
         {
             return m_elements.size();
         }
 
-        typename T::Ptr operator[]( std::size_t index ) const
+        typename T::Ptr operator[]( const std::size_t index ) const
         {
             return m_elements[ index ];
         }
@@ -165,21 +165,33 @@ namespace libstdhl
             return m_elements.front();
         }
 
-        const_reference front() const
+        const_reference front( void ) const
         {
             return m_elements.front();
         }
 
         // http://en.cppreference.com/w/cpp/container/vector/back
 
-        reference back()
+        reference back( void )
         {
             return m_elements.back();
         }
 
-        const_reference back() const
+        const_reference back( void ) const
         {
             return m_elements.back();
+        }
+
+        // http://en.cppreference.com/w/cpp/container/vector/at
+
+        reference at( const std::size_t index )
+        {
+            return m_elements.at( index );
+        }
+
+        const_reference at( const std::size_t index ) const
+        {
+            return m_elements.at( index );
         }
 
         // http://en.cppreference.com/w/cpp/container/vector/clear
