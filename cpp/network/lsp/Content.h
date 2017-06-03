@@ -1086,6 +1086,43 @@ namespace libstdhl
 
                 static u1 isValid( const Data& data );
             };
+
+            using HoverParams = TextDocumentPositionParams;
+
+            class MarkedString : public Data
+            {
+              public:
+                MarkedString( const Data& data );
+
+                MarkedString(
+                    const std::string& language, const std::string& value );
+
+                std::string language( void ) const;
+
+                std::string value( void ) const;
+
+                static u1 isValid( const Data& data );
+            };
+
+            class HoverResult : public Data
+            {
+              public:
+                HoverResult( const Data& data );
+
+                HoverResult( const std::vector< MarkedString >& contents = {} );
+
+                Data contents( void ) const;
+
+                void addContent( const MarkedString& content );
+
+                u1 hasRange( void ) const;
+
+                Range range( void ) const;
+
+                void setRange( const Range& range );
+
+                static u1 isValid( const Data& data );
+            };
         }
     }
 }

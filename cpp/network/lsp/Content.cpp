@@ -3586,13 +3586,135 @@ u1 PublishDiagnosticsParams::isValid( const Data& data )
 
 //
 //
+// MarkedString
 //
-//
+
+MarkedString::MarkedString( const Data& data )
+: Data( data )
+{
+    if( not isValid( data ) )
+    {
+        throw std::invalid_argument(
+            "invalid data for interface 'MarkedString'" );
+    }
+}
+
+MarkedString::MarkedString(
+    const std::string& language, const std::string& value )
+: Data( Data::object() )
+{
+    operator[]( LANGUAGE ) = language;
+    operator[]( VALUE ) = value;
+}
+
+std::string MarkedString::language( void ) const
+{
+    return operator[]( LANGUAGE ).get< std::string >();
+}
+
+std::string MarkedString::value( void ) const
+{
+    return operator[]( VALUE ).get< std::string >();
+}
+
+u1 MarkedString::isValid( const Data& data )
+{
+    if( data.is_string() )
+    {
+        return true;
+    }
+    else if( data.is_object() and data.find( LANGUAGE ) != data.end()
+             and data[ LANGUAGE ].is_string()
+             and data.find( VALUE ) != data.end()
+             and data[ VALUE ].is_string() )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 
 //
 //
+// HoverResult
 //
-//
+
+HoverResult::HoverResult( const Data& data )
+: Data( data )
+{
+    if( not isValid( data ) )
+    {
+        throw std::invalid_argument(
+            "invalid data for interface 'HoverResult'" );
+    }
+}
+
+HoverResult::HoverResult( const std::vector< MarkedString >& contents )
+{
+    operator[]( CONTENTS ) = Data::array();
+
+    for( auto content : contents )
+    {
+        addContent( content );
+    }
+}
+
+Data HoverResult::contents( void ) const
+{
+    return operator[]( CONTENTS );
+}
+
+void HoverResult::addContent( const MarkedString& content )
+{
+    operator[]( CONTENTS ).push_back( content );
+}
+
+u1 HoverResult::hasRange( void ) const
+{
+    return find( RANGE ) != end();
+}
+
+Range HoverResult::range( void ) const
+{
+    return Range( operator[]( RANGE ) );
+}
+
+void HoverResult::setRange( const Range& range )
+{
+    operator[]( RANGE ) = Data::from_cbor( Data::to_cbor( range ) );
+}
+
+u1 HoverResult::isValid( const Data& data )
+{
+    if( data.is_object() and data.find( CONTENTS ) != data.end()
+        and ( data[ CONTENTS ].is_object() or data[ CONTENTS ].is_array() ) )
+    {
+        if( data[ CONTENTS ].is_object()
+            and not MarkedString::isValid( data[ CONTENTS ] ) )
+        {
+            return false;
+        }
+
+        if( data[ CONTENTS ].is_array() )
+        {
+            for( auto content : data[ CONTENTS ] )
+            {
+                if( not MarkedString::isValid( content ) )
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 
 //
 //

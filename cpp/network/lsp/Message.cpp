@@ -232,7 +232,7 @@ Data RequestMessage::params( void ) const
 
 void RequestMessage::setParams( const Data& data )
 {
-    operator[]( PARAMS ) = data;
+    operator[]( PARAMS ) = Data::from_cbor( Data::to_cbor( data ) );
 }
 
 void RequestMessage::process( ServerInterface& interface ) const
@@ -261,6 +261,13 @@ void RequestMessage::process( ServerInterface& interface ) const
                 break;
             }
             // document
+            case String::value( Identifier::textDocument_hover ):
+            {
+                const auto& parameters = HoverParams( params() );
+                const auto& result = interface.textDocument_hover( parameters );
+                response.setResult( result );
+                break;
+            }
             case String::value( Identifier::textDocument_codeAction ):
             {
                 const auto& parameters = CodeActionParams( params() );
@@ -346,7 +353,7 @@ Data NotificationMessage::params( void ) const
 
 void NotificationMessage::setParams( const Data& data )
 {
-    operator[]( PARAMS ) = data;
+    operator[]( PARAMS ) = Data::from_cbor( Data::to_cbor( data ) );
 }
 
 void NotificationMessage::process( ServerInterface& interface ) const
@@ -472,7 +479,7 @@ Data ResponseMessage::result( void ) const
 
 void ResponseMessage::setResult( const Data& result )
 {
-    operator[]( RESULT ) = result;
+    operator[]( RESULT ) = Data::from_cbor( Data::to_cbor( result ) );
 }
 
 u1 ResponseMessage::hasError( void ) const
@@ -493,7 +500,7 @@ ResponseError ResponseMessage::error( void ) const
 
 void ResponseMessage::setError( const ResponseError& error )
 {
-    operator[]( ERROR ) = error;
+    operator[]( ERROR ) = Data::from_cbor( Data::to_cbor( error ) );
 }
 
 void ResponseMessage::setError( const ErrorCode code, const std::string& name )

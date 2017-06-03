@@ -173,6 +173,9 @@ namespace libstdhl
             constexpr const char* DIAGNOSTICS = "diagnostics";
             constexpr const char* CONTEXT = "context";
 
+            constexpr const char* VALUE = "value";
+            constexpr const char* CONTENTS = "contents";
+
             namespace Identifier
             {
                 constexpr const char* textDocument_publishDiagnostics
@@ -183,6 +186,8 @@ namespace libstdhl
 
                 constexpr const char* textDocument_didChange
                     = "textDocument/didChange";
+
+                constexpr const char* textDocument_hover = "textDocument/hover";
 
                 constexpr const char* textDocument_codeAction
                     = "textDocument/codeAction";

@@ -128,7 +128,12 @@ namespace libstdhl
                 // :arrow_right: textDocument/didClose
                 // :leftwards_arrow_with_hook: textDocument/completion
                 // :leftwards_arrow_with_hook: completionItem/resolve
+
                 // :leftwards_arrow_with_hook: textDocument/hover
+                virtual HoverResult textDocument_hover(
+                    const HoverParams& params )
+                    = 0;
+
                 // :leftwards_arrow_with_hook: textDocument/signatureHelp
                 // :leftwards_arrow_with_hook: textDocument/references
                 // :leftwards_arrow_with_hook:
