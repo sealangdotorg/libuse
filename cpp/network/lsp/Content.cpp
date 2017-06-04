@@ -54,44 +54,45 @@ ResponseError::ResponseError( const Data& data )
 ResponseError::ResponseError( const ErrorCode code, const std::string& message )
 : Data( Data::object() )
 {
-    operator[]( CODE ) = static_cast< i32 >( code );
-    operator[]( MESSAGE ) = message;
+    operator[]( Identifier::code ) = static_cast< i32 >( code );
+    operator[]( Identifier::message ) = message;
 }
 
 ErrorCode ResponseError::code( void ) const
 {
-    const auto c = at( CODE ).get< i32 >();
+    const auto c = at( Identifier::code ).get< i32 >();
     return static_cast< ErrorCode >( c );
 }
 
 std::string ResponseError::message( void ) const
 {
-    return at( MESSAGE );
+    return at( Identifier::message );
 }
 
 u1 ResponseError::hasData( void ) const
 {
-    return find( DATA ) != end();
+    return find( Identifier::data ) != end();
 }
 
 Data ResponseError::data( void ) const
 {
-    return at( DATA );
+    return at( Identifier::data );
 }
 
 void ResponseError::setData( const Data& data )
 {
-    operator[]( DATA ) = Data::from_cbor( Data::to_cbor( data ) );
+    operator[]( Identifier::data ) = Data::from_cbor( Data::to_cbor( data ) );
 }
 
 u1 ResponseError::isValid( const Data& data )
 {
-    if( data.is_object() and data.find( CODE ) != data.end()
-        and data[ CODE ].is_number()
-        and data.find( MESSAGE ) != data.end()
-        and data[ MESSAGE ].is_string() )
+    if( data.is_object() and data.find( Identifier::code ) != data.end()
+        and data[ Identifier::code ].is_number()
+        and data.find( Identifier::message ) != data.end()
+        and data[ Identifier::message ].is_string() )
     {
-        if( data.find( DATA ) != data.end() and not data[ DATA ].is_object() )
+        if( data.find( Identifier::data ) != data.end()
+            and not data[ Identifier::data ].is_object() )
         {
             return false;
         }
@@ -121,25 +122,26 @@ Position::Position( const Data& data )
 Position::Position( const std::size_t line, const std::size_t character )
 : Data( Data::object() )
 {
-    operator[]( LINE ) = line;
-    operator[]( CHARACTER ) = character;
+    operator[]( Identifier::line ) = line;
+    operator[]( Identifier::character ) = character;
 }
 
 std::size_t Position::line( void ) const
 {
-    return at( LINE ).get< std::size_t >();
+    return at( Identifier::line ).get< std::size_t >();
 }
 
 std::size_t Position::character( void ) const
 {
-    return at( CHARACTER ).get< std::size_t >();
+    return at( Identifier::character ).get< std::size_t >();
 }
 
 u1 Position::isValid( const Data& data )
 {
-    return data.is_object() and data.find( LINE ) != data.end()
-           and data[ LINE ].is_number() and data.find( CHARACTER ) != data.end()
-           and data[ CHARACTER ].is_number();
+    return data.is_object() and data.find( Identifier::line ) != data.end()
+           and data[ Identifier::line ].is_number()
+           and data.find( Identifier::character ) != data.end()
+           and data[ Identifier::character ].is_number();
 }
 
 //
@@ -159,26 +161,26 @@ Range::Range( const Data& data )
 Range::Range( const Position& start, const Position& end )
 : Data( Data::object() )
 {
-    operator[]( START ) = Data::from_cbor( Data::to_cbor( start ) );
-    operator[]( END ) = Data::from_cbor( Data::to_cbor( end ) );
+    operator[]( Identifier::start ) = Data::from_cbor( Data::to_cbor( start ) );
+    operator[]( Identifier::end ) = Data::from_cbor( Data::to_cbor( end ) );
 }
 
 Position Range::start( void ) const
 {
-    return at( START );
+    return at( Identifier::start );
 }
 
 Position Range::end( void ) const
 {
-    return at( END );
+    return at( Identifier::end );
 }
 
 u1 Range::isValid( const Data& data )
 {
-    return data.is_object() and data.find( START ) != data.end()
-           and Position::isValid( data[ START ] )
-           and data.find( END ) != data.end()
-           and Position::isValid( data[ END ] );
+    return data.is_object() and data.find( Identifier::start ) != data.end()
+           and Position::isValid( data[ Identifier::start ] )
+           and data.find( Identifier::end ) != data.end()
+           and Position::isValid( data[ Identifier::end ] );
 }
 
 //
@@ -198,35 +200,37 @@ Location::Location( const Data& data )
 Location::Location( const DocumentUri& uri, const Range& range )
 : Data( Data::object() )
 {
-    operator[]( URI ) = uri.toString();
-    operator[]( RANGE ) = Data::from_cbor( Data::to_cbor( range ) );
+    operator[]( Identifier::uri ) = uri.toString();
+    operator[]( Identifier::range ) = Data::from_cbor( Data::to_cbor( range ) );
 }
 
 DocumentUri Location::uri( void ) const
 {
-    return DocumentUri::fromString( at( URI ).get< std::string >() );
+    return DocumentUri::fromString(
+        at( Identifier::uri ).get< std::string >() );
 }
 
 Range Location::range( void ) const
 {
-    return at( RANGE );
+    return at( Identifier::range );
 }
 
 u1 Location::isValid( const Data& data )
 {
-    if( data.is_object() and data.find( URI ) != data.end()
-        and data[ URI ].is_string()
-        and data.find( RANGE ) != data.end()
-        and data[ RANGE ].is_object() )
+    if( data.is_object() and data.find( Identifier::uri ) != data.end()
+        and data[ Identifier::uri ].is_string()
+        and data.find( Identifier::range ) != data.end()
+        and data[ Identifier::range ].is_object() )
     {
-        if( not Position::isValid( data[ RANGE ] ) )
+        if( not Position::isValid( data[ Identifier::range ] ) )
         {
             return false;
         }
 
         try
         {
-            DocumentUri::fromString( data[ URI ].get< std::string >() );
+            DocumentUri::fromString(
+                data[ Identifier::uri ].get< std::string >() );
         }
         catch( const std::exception& e )
         {
@@ -259,97 +263,98 @@ Diagnostic::Diagnostic( const Data& data )
 Diagnostic::Diagnostic( const Range& range, const std::string& message )
 : Data( Data::object() )
 {
-    operator[]( RANGE ) = Data::from_cbor( Data::to_cbor( range ) );
-    operator[]( MESSAGE ) = message;
+    operator[]( Identifier::range ) = Data::from_cbor( Data::to_cbor( range ) );
+    operator[]( Identifier::message ) = message;
 }
 
 Range Diagnostic::range( void ) const
 {
-    return at( RANGE );
+    return at( Identifier::range );
 }
 
 std::string Diagnostic::message( void ) const
 {
-    return at( MESSAGE ).get< std::string >();
+    return at( Identifier::message ).get< std::string >();
 }
 
 u1 Diagnostic::hasSeverity( void ) const
 {
-    return find( SEVERITY ) != end();
+    return find( Identifier::severity ) != end();
 }
 
 DiagnosticSeverity Diagnostic::severity( void ) const
 {
     return static_cast< DiagnosticSeverity >(
-        at( SEVERITY ).get< std::size_t >() );
+        at( Identifier::severity ).get< std::size_t >() );
 }
 
 void Diagnostic::setSeverity( const DiagnosticSeverity& severity )
 {
-    operator[]( SEVERITY ) = static_cast< std::size_t >( severity );
+    operator[]( Identifier::severity ) = static_cast< std::size_t >( severity );
 }
 
 u1 Diagnostic::hasCode( void ) const
 {
-    return find( CODE ) != end();
+    return find( Identifier::code ) != end();
 }
 
 std::string Diagnostic::code( void ) const
 {
-    return at( CODE ).get< std::string >();
+    return at( Identifier::code ).get< std::string >();
 }
 
 void Diagnostic::setCode( const std::string& code )
 {
-    operator[]( CODE ) = code;
+    operator[]( Identifier::code ) = code;
 }
 
 void Diagnostic::setCode( const std::size_t code )
 {
-    operator[]( CODE ) = code;
+    operator[]( Identifier::code ) = code;
 }
 
 u1 Diagnostic::hasSource( void ) const
 {
-    return find( SOURCE ) != end();
+    return find( Identifier::source ) != end();
 }
 
 std::string Diagnostic::source( void ) const
 {
-    return at( SOURCE ).get< std::string >();
+    return at( Identifier::source ).get< std::string >();
 }
 
 void Diagnostic::setSource( const std::string& source )
 {
-    operator[]( SOURCE ) = source;
+    operator[]( Identifier::source ) = source;
 }
 
 u1 Diagnostic::isValid( const Data& data )
 {
-    if( data.is_object() and data.find( RANGE ) != data.end()
-        and data[ RANGE ].is_object()
-        and data.find( MESSAGE ) != data.end()
-        and data[ MESSAGE ].is_string() )
+    if( data.is_object() and data.find( Identifier::range ) != data.end()
+        and data[ Identifier::range ].is_object()
+        and data.find( Identifier::message ) != data.end()
+        and data[ Identifier::message ].is_string() )
     {
-        if( not Range::isValid( data[ RANGE ] ) )
+        if( not Range::isValid( data[ Identifier::range ] ) )
         {
             return false;
         }
 
-        if( data.find( SEVERITY ) != data.end()
-            and not data[ SEVERITY ].is_number() )
+        if( data.find( Identifier::severity ) != data.end()
+            and not data[ Identifier::severity ].is_number() )
         {
             return false;
         }
 
-        if( data.find( CODE ) != data.end()
-            and not( data[ CODE ].is_string() or data[ CODE ].is_number() ) )
+        if( data.find( Identifier::code ) != data.end()
+            and not( data[ Identifier::code ].is_string()
+                     or data[ Identifier::code ].is_number() ) )
         {
             return false;
         }
 
-        if( data.find( SOURCE ) != data.end()
-            and not data[ SOURCE ].is_string() )
+        if( data.find( Identifier::source ) != data.end()
+            and not data[ Identifier::source ].is_string() )
         {
             return false;
         }
@@ -379,45 +384,45 @@ Command::Command( const Data& data )
 Command::Command( const std::string& title, const std::string& command )
 : Data( Data::object() )
 {
-    operator[]( TITLE ) = title;
-    operator[]( COMMAND ) = command;
-    operator[]( ARGUMENTS ) = Data::array();
+    operator[]( Identifier::title ) = title;
+    operator[]( Identifier::command ) = command;
+    operator[]( Identifier::arguments ) = Data::array();
 }
 
 std::string Command::title( void ) const
 {
-    return at( TITLE ).get< std::string >();
+    return at( Identifier::title ).get< std::string >();
 }
 
 std::string Command::command( void ) const
 {
-    return at( COMMAND ).get< std::string >();
+    return at( Identifier::command ).get< std::string >();
 }
 
 u1 Command::hasArguments( void ) const
 {
-    return find( ARGUMENTS ) != end();
+    return find( Identifier::arguments ) != end();
 }
 
 Data Command::arguments( void ) const
 {
-    return at( ARGUMENTS );
+    return at( Identifier::arguments );
 }
 
 void Command::addArgument( const Data& argument )
 {
-    operator[]( ARGUMENTS ).push_back( argument );
+    operator[]( Identifier::arguments ).push_back( argument );
 }
 
 u1 Command::isValid( const Data& data )
 {
-    if( data.is_object() and data.find( TITLE ) != data.end()
-        and data[ TITLE ].is_string()
-        and data.find( COMMAND ) != data.end()
-        and data[ COMMAND ].is_string() )
+    if( data.is_object() and data.find( Identifier::title ) != data.end()
+        and data[ Identifier::title ].is_string()
+        and data.find( Identifier::command ) != data.end()
+        and data[ Identifier::command ].is_string() )
     {
-        if( data.find( ARGUMENTS ) != data.end()
-            and not data[ ARGUMENTS ].is_array() )
+        if( data.find( Identifier::arguments ) != data.end()
+            and not data[ Identifier::arguments ].is_array() )
         {
             return false;
         }
@@ -447,28 +452,28 @@ TextEdit::TextEdit( const Data& data )
 TextEdit::TextEdit( const Range& range, const std::string newText )
 : Data( Data::object() )
 {
-    operator[]( RANGE ) = Data::from_cbor( Data::to_cbor( range ) );
-    operator[]( NEW_TEXT ) = newText;
+    operator[]( Identifier::range ) = Data::from_cbor( Data::to_cbor( range ) );
+    operator[]( Identifier::newText ) = newText;
 }
 
 Range TextEdit::range( void ) const
 {
-    return at( RANGE );
+    return at( Identifier::range );
 }
 
 std::string TextEdit::newText( void ) const
 {
-    return at( NEW_TEXT ).get< std::string >();
+    return at( Identifier::newText ).get< std::string >();
 }
 
 u1 TextEdit::isValid( const Data& data )
 {
-    if( data.is_object() and data.find( RANGE ) != data.end()
-        and data[ RANGE ].is_object()
-        and data.find( NEW_TEXT ) != data.end()
-        and data[ NEW_TEXT ].is_string() )
+    if( data.is_object() and data.find( Identifier::range ) != data.end()
+        and data[ Identifier::range ].is_object()
+        and data.find( Identifier::newText ) != data.end()
+        and data[ Identifier::newText ].is_string() )
     {
-        if( not Range::isValid( data[ RANGE ] ) )
+        if( not Range::isValid( data[ Identifier::range ] ) )
         {
             return false;
         }
@@ -499,22 +504,24 @@ TextDocumentIdentifier::TextDocumentIdentifier( const Data& data )
 TextDocumentIdentifier::TextDocumentIdentifier( const DocumentUri& uri )
 : Data( Data::object() )
 {
-    operator[]( URI ) = uri.toString();
+    operator[]( Identifier::uri ) = uri.toString();
 }
 
 DocumentUri TextDocumentIdentifier::uri( void ) const
 {
-    return DocumentUri::fromString( at( URI ).get< std::string >() );
+    return DocumentUri::fromString(
+        at( Identifier::uri ).get< std::string >() );
 }
 
 u1 TextDocumentIdentifier::isValid( const Data& data )
 {
-    if( data.is_object() and data.find( URI ) != data.end()
-        and data[ URI ].is_string() )
+    if( data.is_object() and data.find( Identifier::uri ) != data.end()
+        and data[ Identifier::uri ].is_string() )
     {
         try
         {
-            DocumentUri::fromString( data[ URI ].get< std::string >() );
+            DocumentUri::fromString(
+                data[ Identifier::uri ].get< std::string >() );
         }
         catch( const std::exception& e )
         {
@@ -549,19 +556,20 @@ VersionedTextDocumentIdentifier::VersionedTextDocumentIdentifier(
     const DocumentUri& uri, const std::size_t version )
 : TextDocumentIdentifier( uri )
 {
-    operator[]( VERSION ) = version;
+    operator[]( Identifier::version ) = version;
 }
 
 std::size_t VersionedTextDocumentIdentifier::version( void ) const
 {
-    return at( VERSION ).get< std::size_t >();
+    return at( Identifier::version ).get< std::size_t >();
 }
 
 u1 VersionedTextDocumentIdentifier::isValid( const Data& data )
 {
     // if( TextDocumentIdentifier::isValid( data ) )
     // {
-    if( data.find( VERSION ) != data.end() and not data[ VERSION ].is_number() )
+    if( data.find( Identifier::version ) != data.end()
+        and not data[ Identifier::version ].is_number() )
     {
         return false;
     }
@@ -594,40 +602,40 @@ TextDocumentEdit::TextDocumentEdit(
     const std::vector< TextEdit >& edits )
 : Data( Data::object() )
 {
-    operator[]( TEXT_DOCUMENT )
+    operator[]( Identifier::textDocument )
         = Data::from_cbor( Data::to_cbor( textDocument ) );
-    operator[]( EDITS ) = Data::array();
+    operator[]( Identifier::edits ) = Data::array();
 
     for( auto edit : edits )
     {
-        operator[]( EDITS ).push_back( edit );
+        operator[]( Identifier::edits ).push_back( edit );
     }
 }
 
 VersionedTextDocumentIdentifier TextDocumentEdit::textDocument( void ) const
 {
-    return at( TEXT_DOCUMENT );
+    return at( Identifier::textDocument );
 }
 
 Data TextDocumentEdit::edits( void ) const
 {
-    return at( EDITS );
+    return at( Identifier::edits );
 }
 
 u1 TextDocumentEdit::isValid( const Data& data )
 {
-    if( data.is_object() and data.find( TEXT_DOCUMENT ) != data.end()
-        and data[ TEXT_DOCUMENT ].is_object()
-        and data.find( EDITS ) != data.end()
-        and data[ EDITS ].is_array() )
+    if( data.is_object() and data.find( Identifier::textDocument ) != data.end()
+        and data[ Identifier::textDocument ].is_object()
+        and data.find( Identifier::edits ) != data.end()
+        and data[ Identifier::edits ].is_array() )
     {
         if( not VersionedTextDocumentIdentifier::isValid(
-                data[ TEXT_DOCUMENT ] ) )
+                data[ Identifier::textDocument ] ) )
         {
             return false;
         }
 
-        for( auto edit : data[ EDITS ] )
+        for( auto edit : data[ Identifier::edits ] )
         {
             if( not TextEdit::isValid( edit ) )
             {
@@ -661,30 +669,31 @@ WorkspaceEdit::WorkspaceEdit( const Data& data )
 WorkspaceEdit::WorkspaceEdit( void )
 : Data( Data::object() )
 {
-    operator[]( DOCUMENT_CHANGES ) = Data::array();
+    operator[]( Identifier::documentChanges ) = Data::array();
 }
 
 u1 WorkspaceEdit::hasDocumentChanges( void ) const
 {
-    return find( DOCUMENT_CHANGES ) != end();
+    return find( Identifier::documentChanges ) != end();
 }
 
 Data WorkspaceEdit::documentChanges( void ) const
 {
-    return at( DOCUMENT_CHANGES );
+    return at( Identifier::documentChanges );
 }
 
 void WorkspaceEdit::addDocumentChange( const TextDocumentEdit& documentChange )
 {
-    operator[]( DOCUMENT_CHANGES ).push_back( documentChange );
+    operator[]( Identifier::documentChanges ).push_back( documentChange );
 }
 
 u1 WorkspaceEdit::isValid( const Data& data )
 {
-    if( data.is_object() and data.find( DOCUMENT_CHANGES ) != data.end()
-        and data[ DOCUMENT_CHANGES ].is_array() )
+    if( data.is_object()
+        and data.find( Identifier::documentChanges ) != data.end()
+        and data[ Identifier::documentChanges ].is_array() )
     {
-        for( auto documentChange : data[ DOCUMENT_CHANGES ] )
+        for( auto documentChange : data[ Identifier::documentChanges ] )
         {
             if( not TextDocumentEdit::isValid( documentChange ) )
             {
@@ -721,46 +730,48 @@ TextDocumentItem::TextDocumentItem( const DocumentUri& uri,
     const std::string& text )
 : Data( Data::object() )
 {
-    operator[]( URI ) = uri.toString();
-    operator[]( LANGUAGE_ID ) = languageId;
-    operator[]( VERSION ) = version;
-    operator[]( TEXT ) = text;
+    operator[]( Identifier::uri ) = uri.toString();
+    operator[]( Identifier::languageId ) = languageId;
+    operator[]( Identifier::version ) = version;
+    operator[]( Identifier::text ) = text;
 }
 
 DocumentUri TextDocumentItem::uri( void ) const
 {
-    return DocumentUri::fromString( at( URI ).get< std::string >() );
+    return DocumentUri::fromString(
+        at( Identifier::uri ).get< std::string >() );
 }
 
 std::string TextDocumentItem::languageId( void ) const
 {
-    return at( LANGUAGE_ID ).get< std::string >();
+    return at( Identifier::languageId ).get< std::string >();
 }
 
 std::size_t TextDocumentItem::version( void ) const
 {
-    return at( VERSION ).get< std::size_t >();
+    return at( Identifier::version ).get< std::size_t >();
 }
 
 std::string TextDocumentItem::text( void ) const
 {
-    return at( TEXT ).get< std::string >();
+    return at( Identifier::text ).get< std::string >();
 }
 
 u1 TextDocumentItem::isValid( const Data& data )
 {
-    if( data.is_object() and data.find( URI ) != data.end()
-        and data[ URI ].is_string()
-        and data.find( LANGUAGE_ID ) != data.end()
-        and data[ LANGUAGE_ID ].is_string()
-        and data.find( VERSION ) != data.end()
-        and data[ VERSION ].is_number()
-        and data.find( TEXT ) != data.end()
-        and data[ TEXT ].is_string() )
+    if( data.is_object() and data.find( Identifier::uri ) != data.end()
+        and data[ Identifier::uri ].is_string()
+        and data.find( Identifier::languageId ) != data.end()
+        and data[ Identifier::languageId ].is_string()
+        and data.find( Identifier::version ) != data.end()
+        and data[ Identifier::version ].is_number()
+        and data.find( Identifier::text ) != data.end()
+        and data[ Identifier::text ].is_string() )
     {
         try
         {
-            DocumentUri::fromString( data[ URI ].get< std::string >() );
+            DocumentUri::fromString(
+                data[ Identifier::uri ].get< std::string >() );
         }
         catch( const std::exception& e )
         {
@@ -794,34 +805,36 @@ TextDocumentPositionParams::TextDocumentPositionParams(
     const TextDocumentIdentifier& textDocument, const Position& position )
 : Data( Data::object() )
 {
-    operator[]( TEXT_DOCUMENT )
+    operator[]( Identifier::textDocument )
         = Data::from_cbor( Data::to_cbor( textDocument ) );
-    operator[]( POSITION ) = Data::from_cbor( Data::to_cbor( position ) );
+    operator[]( Identifier::position )
+        = Data::from_cbor( Data::to_cbor( position ) );
 }
 
 TextDocumentIdentifier TextDocumentPositionParams::textDocument( void ) const
 {
-    return at( TEXT_DOCUMENT );
+    return at( Identifier::textDocument );
 }
 
 Position TextDocumentPositionParams::position( void ) const
 {
-    return at( POSITION );
+    return at( Identifier::position );
 }
 
 u1 TextDocumentPositionParams::isValid( const Data& data )
 {
-    if( data.is_object() and data.find( TEXT_DOCUMENT ) != data.end()
-        and data[ TEXT_DOCUMENT ].is_object()
-        and data.find( POSITION ) != data.end()
-        and data[ POSITION ].is_object() )
+    if( data.is_object() and data.find( Identifier::textDocument ) != data.end()
+        and data[ Identifier::textDocument ].is_object()
+        and data.find( Identifier::position ) != data.end()
+        and data[ Identifier::position ].is_object() )
     {
-        if( not TextDocumentIdentifier::isValid( data[ TEXT_DOCUMENT ] ) )
+        if( not TextDocumentIdentifier::isValid(
+                data[ Identifier::textDocument ] ) )
         {
             return false;
         }
 
-        if( not Position::isValid( data[ POSITION ] ) )
+        if( not Position::isValid( data[ Identifier::position ] ) )
         {
             return false;
         }
@@ -856,67 +869,67 @@ DocumentFilter::DocumentFilter( void )
 
 u1 DocumentFilter::hasLanguage( void ) const
 {
-    return find( LANGUAGE ) != end();
+    return find( Identifier::language ) != end();
 }
 
 std::string DocumentFilter::language( void ) const
 {
-    return at( LANGUAGE ).get< std::string >();
+    return at( Identifier::language ).get< std::string >();
 }
 
 void DocumentFilter::setLanguage( const std::string& language )
 {
-    operator[]( LANGUAGE ) = language;
+    operator[]( Identifier::language ) = language;
 }
 
 u1 DocumentFilter::hasScheme( void ) const
 {
-    return find( SCHEME ) != end();
+    return find( Identifier::scheme ) != end();
 }
 
 std::string DocumentFilter::scheme( void ) const
 {
-    return at( SCHEME ).get< std::string >();
+    return at( Identifier::scheme ).get< std::string >();
 }
 
 void DocumentFilter::setScheme( const std::string& scheme )
 {
-    operator[]( SCHEME ) = scheme;
+    operator[]( Identifier::scheme ) = scheme;
 }
 
 u1 DocumentFilter::hasPattern( void ) const
 {
-    return find( PATTERN ) != end();
+    return find( Identifier::pattern ) != end();
 }
 
 std::string DocumentFilter::pattern( void ) const
 {
-    return at( PATTERN ).get< std::string >();
+    return at( Identifier::pattern ).get< std::string >();
 }
 
 void DocumentFilter::setPattern( const std::string& pattern )
 {
-    operator[]( PATTERN ) = pattern;
+    operator[]( Identifier::pattern ) = pattern;
 }
 
 u1 DocumentFilter::isValid( const Data& data )
 {
     if( data.is_object() )
     {
-        if( data.find( LANGUAGE ) != data.end()
-            and not data[ LANGUAGE ].is_string() )
+        if( data.find( Identifier::language ) != data.end()
+            and not data[ Identifier::language ].is_string() )
         {
             return false;
         }
 
-        if( data.find( SCHEME ) != data.end()
-            and not data[ SCHEME ].is_string() )
+        if( data.find( Identifier::scheme ) != data.end()
+            and not data[ Identifier::scheme ].is_string() )
         {
             return false;
         }
 
-        if( data.find( PATTERN ) != data.end()
-            and not data[ PATTERN ].is_string() )
+        if( data.find( Identifier::pattern ) != data.end()
+            and not data[ Identifier::pattern ].is_string() )
         {
             return false;
         }
@@ -996,25 +1009,25 @@ DynamicRegistration::DynamicRegistration( void )
 
 u1 DynamicRegistration::hasDynamicRegistration( void ) const
 {
-    return find( DYNAMIC_REGISTRATION ) != end();
+    return find( Identifier::dynamicRegistration ) != end();
 }
 
 u1 DynamicRegistration::dynamicRegistration( void ) const
 {
-    return at( DYNAMIC_REGISTRATION ).get< u1 >();
+    return at( Identifier::dynamicRegistration ).get< u1 >();
 }
 
 void DynamicRegistration::setDynamicRegistration( const u1 dynamicRegistration )
 {
-    operator[]( DYNAMIC_REGISTRATION ) = dynamicRegistration;
+    operator[]( Identifier::dynamicRegistration ) = dynamicRegistration;
 }
 
 u1 DynamicRegistration::isValid( const Data& data )
 {
     if( data.is_object() )
     {
-        if( data.find( DYNAMIC_REGISTRATION ) != data.end()
-            and not data[ DYNAMIC_REGISTRATION ].is_boolean() )
+        if( data.find( Identifier::dynamicRegistration ) != data.end()
+            and not data[ Identifier::dynamicRegistration ].is_boolean() )
         {
             return false;
         }
@@ -1049,101 +1062,102 @@ WorkspaceClientCapabilities::WorkspaceClientCapabilities( void )
 
 u1 WorkspaceClientCapabilities::hasApplyEdit( void ) const
 {
-    return find( APPLY_EDIT ) != end();
+    return find( Identifier::applyEdit ) != end();
 }
 
 u1 WorkspaceClientCapabilities::applyEdit( void ) const
 {
-    return at( APPLY_EDIT ).get< u1 >();
+    return at( Identifier::applyEdit ).get< u1 >();
 }
 
 void WorkspaceClientCapabilities::setApplyEdit( const u1 applyEdit )
 {
-    operator[]( APPLY_EDIT ) = applyEdit;
+    operator[]( Identifier::applyEdit ) = applyEdit;
 }
 
 u1 WorkspaceClientCapabilities::hasWorkspaceEdit( void ) const
 {
-    return find( WORKSPACE_EDIT ) != end();
+    return find( Identifier::workspaceEdit ) != end();
 }
 
 WorkspaceEdit WorkspaceClientCapabilities::workspaceEdit( void ) const
 {
-    return at( WORKSPACE_EDIT );
+    return at( Identifier::workspaceEdit );
 }
 
 void WorkspaceClientCapabilities::setWorkspaceEdit(
     const WorkspaceEdit& workspaceEdit )
 {
-    operator[]( WORKSPACE_EDIT )
+    operator[]( Identifier::workspaceEdit )
         = Data::from_cbor( Data::to_cbor( workspaceEdit ) );
 }
 
 u1 WorkspaceClientCapabilities::hasDidChangeConfiguration( void ) const
 {
-    return find( DID_CHANGE_CONFIGURATION ) != end();
+    return find( Identifier::didChangeConfiguration ) != end();
 }
 
 DynamicRegistration WorkspaceClientCapabilities::didChangeConfiguration(
     void ) const
 {
-    return at( DID_CHANGE_CONFIGURATION );
+    return at( Identifier::didChangeConfiguration );
 }
 
 void WorkspaceClientCapabilities::setDidChangeConfiguration(
     const DynamicRegistration& didChangeConfiguration )
 {
-    operator[]( DID_CHANGE_CONFIGURATION )
+    operator[]( Identifier::didChangeConfiguration )
         = Data::from_cbor( Data::to_cbor( didChangeConfiguration ) );
 }
 
 u1 WorkspaceClientCapabilities::hasDidChangeWatchedFiles( void ) const
 {
-    return find( DID_CHANGE_WATCHED_FILES ) != end();
+    return find( Identifier::didChangeWatchedFiles ) != end();
 }
 
 DynamicRegistration WorkspaceClientCapabilities::didChangeWatchedFiles(
     void ) const
 {
-    return at( DID_CHANGE_WATCHED_FILES );
+    return at( Identifier::didChangeWatchedFiles );
 }
 
 void WorkspaceClientCapabilities::didChangeWatchedFiles(
     const DynamicRegistration& didChangeWatchedFiles )
 {
-    operator[]( DID_CHANGE_WATCHED_FILES )
+    operator[]( Identifier::didChangeWatchedFiles )
         = Data::from_cbor( Data::to_cbor( didChangeWatchedFiles ) );
 }
 
 u1 WorkspaceClientCapabilities::hasSymbol( void ) const
 {
-    return find( SYMBOL ) != end();
+    return find( Identifier::symbol ) != end();
 }
 
 DynamicRegistration WorkspaceClientCapabilities::symbol( void ) const
 {
-    return at( SYMBOL );
+    return at( Identifier::symbol );
 }
 
 void WorkspaceClientCapabilities::setSymbol( const DynamicRegistration& symbol )
 {
-    operator[]( SYMBOL ) = Data::from_cbor( Data::to_cbor( symbol ) );
+    operator[]( Identifier::symbol )
+        = Data::from_cbor( Data::to_cbor( symbol ) );
 }
 
 u1 WorkspaceClientCapabilities::hasExecuteCommand( void ) const
 {
-    return find( EXECUTE_COMMAND ) != end();
+    return find( Identifier::executeCommand ) != end();
 }
 
 DynamicRegistration WorkspaceClientCapabilities::executeCommand( void ) const
 {
-    return at( EXECUTE_COMMAND );
+    return at( Identifier::executeCommand );
 }
 
 void WorkspaceClientCapabilities::executeCommand(
     const DynamicRegistration& executeCommand )
 {
-    operator[]( EXECUTE_COMMAND )
+    operator[]( Identifier::executeCommand )
         = Data::from_cbor( Data::to_cbor( executeCommand ) );
 }
 
@@ -1151,40 +1165,42 @@ u1 WorkspaceClientCapabilities::isValid( const Data& data )
 {
     if( data.is_object() )
     {
-        if( data.find( APPLY_EDIT ) != data.end()
-            and not data[ APPLY_EDIT ].is_boolean() )
+        if( data.find( Identifier::applyEdit ) != data.end()
+            and not data[ Identifier::applyEdit ].is_boolean() )
         {
             return false;
         }
 
-        if( data.find( WORKSPACE_EDIT ) != data.end()
-            and not WorkspaceEdit::isValid( data[ WORKSPACE_EDIT ] ) )
+        if( data.find( Identifier::workspaceEdit ) != data.end()
+            and not WorkspaceEdit::isValid(
+                    data[ Identifier::workspaceEdit ] ) )
         {
             return false;
         }
 
-        if( data.find( DID_CHANGE_CONFIGURATION ) != data.end()
+        if( data.find( Identifier::didChangeConfiguration ) != data.end()
             and not DynamicRegistration::isValid(
-                    data[ DID_CHANGE_CONFIGURATION ] ) )
+                    data[ Identifier::didChangeConfiguration ] ) )
         {
             return false;
         }
 
-        if( data.find( DID_CHANGE_WATCHED_FILES ) != data.end()
+        if( data.find( Identifier::didChangeWatchedFiles ) != data.end()
             and not DynamicRegistration::isValid(
-                    data[ DID_CHANGE_WATCHED_FILES ] ) )
+                    data[ Identifier::didChangeWatchedFiles ] ) )
         {
             return false;
         }
 
-        if( data.find( SYMBOL ) != data.end()
-            and not DynamicRegistration::isValid( data[ SYMBOL ] ) )
+        if( data.find( Identifier::symbol ) != data.end()
+            and not DynamicRegistration::isValid( data[ Identifier::symbol ] ) )
         {
             return false;
         }
 
-        if( data.find( EXECUTE_COMMAND ) != data.end()
-            and not DynamicRegistration::isValid( data[ EXECUTE_COMMAND ] ) )
+        if( data.find( Identifier::executeCommand ) != data.end()
+            and not DynamicRegistration::isValid(
+                    data[ Identifier::executeCommand ] ) )
         {
             return false;
         }
@@ -1219,88 +1235,88 @@ Synchronization::Synchronization( void )
 
 u1 Synchronization::hasDynamicRegistration( void ) const
 {
-    return find( DYNAMIC_REGISTRATION ) != end();
+    return find( Identifier::dynamicRegistration ) != end();
 }
 
 u1 Synchronization::dynamicRegistration( void ) const
 {
-    return at( DYNAMIC_REGISTRATION ).get< u1 >();
+    return at( Identifier::dynamicRegistration ).get< u1 >();
 }
 
 void Synchronization::setDynamicRegistration( const u1 dynamicRegistration )
 {
-    operator[]( DYNAMIC_REGISTRATION ) = dynamicRegistration;
+    operator[]( Identifier::dynamicRegistration ) = dynamicRegistration;
 }
 
 u1 Synchronization::hasWillSave( void ) const
 {
-    return find( WILL_SAVE ) != end();
+    return find( Identifier::willSave ) != end();
 }
 
 u1 Synchronization::willSave( void ) const
 {
-    return at( WILL_SAVE ).get< u1 >();
+    return at( Identifier::willSave ).get< u1 >();
 }
 
 void Synchronization::setWillSave( const u1 willSave )
 {
-    operator[]( WILL_SAVE ) = willSave;
+    operator[]( Identifier::willSave ) = willSave;
 }
 
 u1 Synchronization::hasWillSaveWaitUntil( void ) const
 {
-    return find( WILL_SAVE_WAIT_UNITL ) != end();
+    return find( Identifier::willSaveWaitUntil ) != end();
 }
 
 u1 Synchronization::willSaveWaitUntil( void ) const
 {
-    return at( WILL_SAVE_WAIT_UNITL ).get< u1 >();
+    return at( Identifier::willSaveWaitUntil ).get< u1 >();
 }
 
 void Synchronization::setWillSaveWaitUntil( const u1 willSaveWaitUntil )
 {
-    operator[]( WILL_SAVE_WAIT_UNITL ) = willSaveWaitUntil;
+    operator[]( Identifier::willSaveWaitUntil ) = willSaveWaitUntil;
 }
 
 u1 Synchronization::hasDidSave( void ) const
 {
-    return find( DID_SAVE ) != end();
+    return find( Identifier::didSave ) != end();
 }
 
 u1 Synchronization::didSave( void ) const
 {
-    return at( DID_SAVE ).get< u1 >();
+    return at( Identifier::didSave ).get< u1 >();
 }
 
 void Synchronization::setDidSave( const u1 didSave )
 {
-    operator[]( DID_SAVE ) = didSave;
+    operator[]( Identifier::didSave ) = didSave;
 }
 
 u1 Synchronization::isValid( const Data& data )
 {
     if( data.is_object() )
     {
-        if( data.find( DYNAMIC_REGISTRATION ) != data.end()
-            and not data[ DYNAMIC_REGISTRATION ].is_boolean() )
+        if( data.find( Identifier::dynamicRegistration ) != data.end()
+            and not data[ Identifier::dynamicRegistration ].is_boolean() )
         {
             return false;
         }
 
-        if( data.find( WILL_SAVE ) != data.end()
-            and not data[ WILL_SAVE ].is_boolean() )
+        if( data.find( Identifier::willSave ) != data.end()
+            and not data[ Identifier::willSave ].is_boolean() )
         {
             return false;
         }
 
-        if( data.find( WILL_SAVE_WAIT_UNITL ) != data.end()
-            and not data[ WILL_SAVE_WAIT_UNITL ].is_boolean() )
+        if( data.find( Identifier::willSaveWaitUntil ) != data.end()
+            and not data[ Identifier::willSaveWaitUntil ].is_boolean() )
         {
             return false;
         }
 
-        if( data.find( DID_SAVE ) != data.end()
-            and not data[ DID_SAVE ].is_boolean() )
+        if( data.find( Identifier::didSave ) != data.end()
+            and not data[ Identifier::didSave ].is_boolean() )
         {
             return false;
         }
@@ -1335,25 +1351,25 @@ CompletionItem::CompletionItem( void )
 
 u1 CompletionItem::hasSnippetSupport( void ) const
 {
-    return find( SNIPPET_SUPPORT ) != end();
+    return find( Identifier::snippetSupport ) != end();
 }
 
 u1 CompletionItem::snippetSupport( void ) const
 {
-    return at( SNIPPET_SUPPORT ).get< u1 >();
+    return at( Identifier::snippetSupport ).get< u1 >();
 }
 
 void CompletionItem::setSnippetSupport( const u1 snippetSupport )
 {
-    operator[]( SNIPPET_SUPPORT ) = snippetSupport;
+    operator[]( Identifier::snippetSupport ) = snippetSupport;
 }
 
 u1 CompletionItem::isValid( const Data& data )
 {
     if( data.is_object() )
     {
-        if( data.find( SNIPPET_SUPPORT ) != data.end()
-            and not data[ SNIPPET_SUPPORT ].is_boolean() )
+        if( data.find( Identifier::snippetSupport ) != data.end()
+            and not data[ Identifier::snippetSupport ].is_boolean() )
         {
             return false;
         }
@@ -1388,32 +1404,32 @@ Completion::Completion( void )
 
 u1 Completion::hasDynamicRegistration( void ) const
 {
-    return find( DYNAMIC_REGISTRATION ) != end();
+    return find( Identifier::dynamicRegistration ) != end();
 }
 
 u1 Completion::dynamicRegistration( void ) const
 {
-    return at( DYNAMIC_REGISTRATION ).get< u1 >();
+    return at( Identifier::dynamicRegistration ).get< u1 >();
 }
 
 void Completion::setDynamicRegistration( const u1 dynamicRegistration )
 {
-    operator[]( DYNAMIC_REGISTRATION ) = dynamicRegistration;
+    operator[]( Identifier::dynamicRegistration ) = dynamicRegistration;
 }
 
 u1 Completion::hasCompletionItem( void ) const
 {
-    return find( COMPLETION_ITEM ) != end();
+    return find( Identifier::completionItem ) != end();
 }
 
 CompletionItem Completion::completionItem( void ) const
 {
-    return at( COMPLETION_ITEM );
+    return at( Identifier::completionItem );
 }
 
 void Completion::completionItem( const CompletionItem& completionItem )
 {
-    operator[]( COMPLETION_ITEM )
+    operator[]( Identifier::completionItem )
         = Data::from_cbor( Data::to_cbor( completionItem ) );
 }
 
@@ -1421,14 +1437,15 @@ u1 Completion::isValid( const Data& data )
 {
     if( data.is_object() )
     {
-        if( data.find( DYNAMIC_REGISTRATION ) != data.end()
-            and not data[ DYNAMIC_REGISTRATION ].is_boolean() )
+        if( data.find( Identifier::dynamicRegistration ) != data.end()
+            and not data[ Identifier::dynamicRegistration ].is_boolean() )
         {
             return false;
         }
 
-        if( data.find( COMPLETION_ITEM ) != data.end()
-            and not CompletionItem::isValid( data[ COMPLETION_ITEM ] ) )
+        if( data.find( Identifier::completionItem ) != data.end()
+            and not CompletionItem::isValid(
+                    data[ Identifier::completionItem ] ) )
         {
             return false;
         }
@@ -1464,344 +1481,363 @@ TextDocumentClientCapabilities::TextDocumentClientCapabilities( void )
 
 u1 TextDocumentClientCapabilities::hasSynchronization( void ) const
 {
-    return find( SYNCHRONIZATION ) != end();
+    return find( Identifier::synchronization ) != end();
 }
 
 Synchronization TextDocumentClientCapabilities::synchronization( void ) const
 {
-    return at( SYNCHRONIZATION );
+    return at( Identifier::synchronization );
 }
 
 void TextDocumentClientCapabilities::setSynchronization(
     const Synchronization& synchronization )
 {
-    operator[]( SYNCHRONIZATION )
+    operator[]( Identifier::synchronization )
         = Data::from_cbor( Data::to_cbor( synchronization ) );
 }
 
 u1 TextDocumentClientCapabilities::hasCompletion( void ) const
 {
-    return find( COMPLETION ) != end();
+    return find( Identifier::completion ) != end();
 }
 
 Completion TextDocumentClientCapabilities::completion( void ) const
 {
-    return at( COMPLETION );
+    return at( Identifier::completion );
 }
 
 void TextDocumentClientCapabilities::setCompletion(
     const Completion& completion )
 {
-    operator[]( COMPLETION ) = Data::from_cbor( Data::to_cbor( completion ) );
+    operator[]( Identifier::completion )
+        = Data::from_cbor( Data::to_cbor( completion ) );
 }
 
 u1 TextDocumentClientCapabilities::hasHover( void ) const
 {
-    return find( HOVER ) != end();
+    return find( Identifier::hover ) != end();
 }
 
 DynamicRegistration TextDocumentClientCapabilities::hover( void ) const
 {
-    return at( HOVER );
+    return at( Identifier::hover );
 }
 
 void TextDocumentClientCapabilities::setHover(
     const DynamicRegistration& hover )
 {
-    operator[]( HOVER ) = Data::from_cbor( Data::to_cbor( hover ) );
+    operator[]( Identifier::hover ) = Data::from_cbor( Data::to_cbor( hover ) );
 }
 
 u1 TextDocumentClientCapabilities::hasSignatureHelp( void ) const
 {
-    return find( SIGNATURE_HELP ) != end();
+    return find( Identifier::signatureHelp ) != end();
 }
 
 DynamicRegistration TextDocumentClientCapabilities::signatureHelp( void ) const
 {
-    return at( SIGNATURE_HELP );
+    return at( Identifier::signatureHelp );
 }
 
 void TextDocumentClientCapabilities::setSignatureHelp(
     const DynamicRegistration& signatureHelp )
 {
-    operator[]( SIGNATURE_HELP )
+    operator[]( Identifier::signatureHelp )
         = Data::from_cbor( Data::to_cbor( signatureHelp ) );
 }
 
 u1 TextDocumentClientCapabilities::hasReferences( void ) const
 {
-    return find( REFERENCES ) != end();
+    return find( Identifier::references ) != end();
 }
 
 DynamicRegistration TextDocumentClientCapabilities::references( void ) const
 {
-    return at( REFERENCES );
+    return at( Identifier::references );
 }
 
 void TextDocumentClientCapabilities::setReferences(
     const DynamicRegistration& references )
 {
-    operator[]( REFERENCES ) = Data::from_cbor( Data::to_cbor( references ) );
+    operator[]( Identifier::references )
+        = Data::from_cbor( Data::to_cbor( references ) );
 }
 
 u1 TextDocumentClientCapabilities::hasDocumentHighlight( void ) const
 {
-    return find( DOCUMENT_HIGHLIGHT ) != end();
+    return find( Identifier::documentHighlight ) != end();
 }
 
 DynamicRegistration TextDocumentClientCapabilities::documentHighlight(
     void ) const
 {
-    return at( DOCUMENT_HIGHLIGHT );
+    return at( Identifier::documentHighlight );
 }
 
 void TextDocumentClientCapabilities::setDocumentHighlight(
     const DynamicRegistration& documentHighlight )
 {
-    operator[]( DOCUMENT_HIGHLIGHT )
+    operator[]( Identifier::documentHighlight )
         = Data::from_cbor( Data::to_cbor( documentHighlight ) );
 }
 
 u1 TextDocumentClientCapabilities::hasDocumentSymbol( void ) const
 {
-    return find( DOCUMENT_SYMBOL ) != end();
+    return find( Identifier::documentSymbol ) != end();
 }
 
 DynamicRegistration TextDocumentClientCapabilities::documentSymbol( void ) const
 {
-    return at( DOCUMENT_SYMBOL );
+    return at( Identifier::documentSymbol );
 }
 
 void TextDocumentClientCapabilities::setDocumentSymbol(
     const DynamicRegistration& documentSymbol )
 {
-    operator[]( DOCUMENT_SYMBOL )
+    operator[]( Identifier::documentSymbol )
         = Data::from_cbor( Data::to_cbor( documentSymbol ) );
 }
 
 u1 TextDocumentClientCapabilities::hasFormatting( void ) const
 {
-    return find( FORMATTING ) != end();
+    return find( Identifier::formatting ) != end();
 }
 
 DynamicRegistration TextDocumentClientCapabilities::formatting( void ) const
 {
-    return at( FORMATTING );
+    return at( Identifier::formatting );
 }
 
 void TextDocumentClientCapabilities::setFormatting(
     const DynamicRegistration& formatting )
 {
-    operator[]( FORMATTING ) = Data::from_cbor( Data::to_cbor( formatting ) );
+    operator[]( Identifier::formatting )
+        = Data::from_cbor( Data::to_cbor( formatting ) );
 }
 
 u1 TextDocumentClientCapabilities::hasRangeFormatting( void ) const
 {
-    return find( RANGE_FORMATTING ) != end();
+    return find( Identifier::rangeFormatting ) != end();
 }
 
 DynamicRegistration TextDocumentClientCapabilities::rangeFormatting(
     void ) const
 {
-    return at( RANGE_FORMATTING );
+    return at( Identifier::rangeFormatting );
 }
 
 void TextDocumentClientCapabilities::setRangeFormatting(
     const DynamicRegistration& rangeFormatting )
 {
-    operator[]( RANGE_FORMATTING )
+    operator[]( Identifier::rangeFormatting )
         = Data::from_cbor( Data::to_cbor( rangeFormatting ) );
 }
 
 u1 TextDocumentClientCapabilities::hasOnTypeFormatting( void ) const
 {
-    return find( ON_TYPE_FORMATTING ) != end();
+    return find( Identifier::onTypeFormatting ) != end();
 }
 
 DynamicRegistration TextDocumentClientCapabilities::onTypeFormatting(
     void ) const
 {
-    return at( ON_TYPE_FORMATTING );
+    return at( Identifier::onTypeFormatting );
 }
 
 void TextDocumentClientCapabilities::setOnTypeFormatting(
     const DynamicRegistration& onTypeFormatting )
 {
-    operator[]( ON_TYPE_FORMATTING )
+    operator[]( Identifier::onTypeFormatting )
         = Data::from_cbor( Data::to_cbor( onTypeFormatting ) );
 }
 
 u1 TextDocumentClientCapabilities::hasDefinition( void ) const
 {
-    return find( DEFINITION ) != end();
+    return find( Identifier::definition ) != end();
 }
 
 DynamicRegistration TextDocumentClientCapabilities::definition( void ) const
 {
-    return at( DEFINITION );
+    return at( Identifier::definition );
 }
 
 void TextDocumentClientCapabilities::setDefinition(
     const DynamicRegistration& definition )
 {
-    operator[]( DEFINITION ) = Data::from_cbor( Data::to_cbor( definition ) );
+    operator[]( Identifier::definition )
+        = Data::from_cbor( Data::to_cbor( definition ) );
 }
 
 u1 TextDocumentClientCapabilities::hasCodeAction( void ) const
 {
-    return find( CODE_ACTION ) != end();
+    return find( Identifier::codeAction ) != end();
 }
 
 DynamicRegistration TextDocumentClientCapabilities::codeAction( void ) const
 {
-    return at( CODE_ACTION );
+    return at( Identifier::codeAction );
 }
 
 void TextDocumentClientCapabilities::setCodeAction(
     const DynamicRegistration& codeAction )
 {
-    operator[]( CODE_ACTION ) = Data::from_cbor( Data::to_cbor( codeAction ) );
+    operator[]( Identifier::codeAction )
+        = Data::from_cbor( Data::to_cbor( codeAction ) );
 }
 
 u1 TextDocumentClientCapabilities::hasCodeLens( void ) const
 {
-    return find( CODE_LENS ) != end();
+    return find( Identifier::codeLens ) != end();
 }
 
 DynamicRegistration TextDocumentClientCapabilities::codeLens( void ) const
 {
-    return at( CODE_LENS );
+    return at( Identifier::codeLens );
 }
 
 void TextDocumentClientCapabilities::setCodeLens(
     const DynamicRegistration& codeLens )
 {
-    operator[]( CODE_LENS ) = Data::from_cbor( Data::to_cbor( codeLens ) );
+    operator[]( Identifier::codeLens )
+        = Data::from_cbor( Data::to_cbor( codeLens ) );
 }
 
 u1 TextDocumentClientCapabilities::hasDocumentLink( void ) const
 {
-    return find( DOCUMENT_LINK ) != end();
+    return find( Identifier::documentLink ) != end();
 }
 
 DynamicRegistration TextDocumentClientCapabilities::documentLink( void ) const
 {
-    return at( DOCUMENT_LINK );
+    return at( Identifier::documentLink );
 }
 
 void TextDocumentClientCapabilities::setDocumentLink(
     const DynamicRegistration& documentLink )
 {
-    operator[]( DOCUMENT_LINK )
+    operator[]( Identifier::documentLink )
         = Data::from_cbor( Data::to_cbor( documentLink ) );
 }
 
 u1 TextDocumentClientCapabilities::hasRename( void ) const
 {
-    return find( RENAME ) != end();
+    return find( Identifier::rename ) != end();
 }
 
 DynamicRegistration TextDocumentClientCapabilities::rename( void ) const
 {
-    return at( RENAME );
+    return at( Identifier::rename );
 }
 
 void TextDocumentClientCapabilities::setRename(
     const DynamicRegistration& rename )
 {
-    operator[]( RENAME ) = Data::from_cbor( Data::to_cbor( rename ) );
+    operator[]( Identifier::rename )
+        = Data::from_cbor( Data::to_cbor( rename ) );
 }
 
 u1 TextDocumentClientCapabilities::isValid( const Data& data )
 {
     if( data.is_object() )
     {
-        if( data.find( SYNCHRONIZATION ) != data.end()
-            and not Synchronization::isValid( data[ SYNCHRONIZATION ] ) )
+        if( data.find( Identifier::synchronization ) != data.end()
+            and not Synchronization::isValid(
+                    data[ Identifier::synchronization ] ) )
         {
             return false;
         }
 
-        if( data.find( COMPLETION ) != data.end()
-            and not Completion::isValid( data[ COMPLETION ] ) )
+        if( data.find( Identifier::completion ) != data.end()
+            and not Completion::isValid( data[ Identifier::completion ] ) )
         {
             return false;
         }
 
-        if( data.find( HOVER ) != data.end()
-            and not DynamicRegistration::isValid( data[ HOVER ] ) )
+        if( data.find( Identifier::hover ) != data.end()
+            and not DynamicRegistration::isValid( data[ Identifier::hover ] ) )
         {
             return false;
         }
 
-        if( data.find( SIGNATURE_HELP ) != data.end()
-            and not DynamicRegistration::isValid( data[ SIGNATURE_HELP ] ) )
+        if( data.find( Identifier::signatureHelp ) != data.end()
+            and not DynamicRegistration::isValid(
+                    data[ Identifier::signatureHelp ] ) )
         {
             return false;
         }
 
-        if( data.find( REFERENCES ) != data.end()
-            and not DynamicRegistration::isValid( data[ REFERENCES ] ) )
+        if( data.find( Identifier::references ) != data.end()
+            and not DynamicRegistration::isValid(
+                    data[ Identifier::references ] ) )
         {
             return false;
         }
 
-        if( data.find( DOCUMENT_HIGHLIGHT ) != data.end()
-            and not DynamicRegistration::isValid( data[ DOCUMENT_HIGHLIGHT ] ) )
+        if( data.find( Identifier::documentHighlight ) != data.end()
+            and not DynamicRegistration::isValid(
+                    data[ Identifier::documentHighlight ] ) )
         {
             return false;
         }
 
-        if( data.find( DOCUMENT_SYMBOL ) != data.end()
-            and not DynamicRegistration::isValid( data[ DOCUMENT_SYMBOL ] ) )
+        if( data.find( Identifier::documentSymbol ) != data.end()
+            and not DynamicRegistration::isValid(
+                    data[ Identifier::documentSymbol ] ) )
         {
             return false;
         }
 
-        if( data.find( FORMATTING ) != data.end()
-            and not DynamicRegistration::isValid( data[ FORMATTING ] ) )
+        if( data.find( Identifier::formatting ) != data.end()
+            and not DynamicRegistration::isValid(
+                    data[ Identifier::formatting ] ) )
         {
             return false;
         }
 
-        if( data.find( RANGE_FORMATTING ) != data.end()
-            and not DynamicRegistration::isValid( data[ RANGE_FORMATTING ] ) )
+        if( data.find( Identifier::rangeFormatting ) != data.end()
+            and not DynamicRegistration::isValid(
+                    data[ Identifier::rangeFormatting ] ) )
         {
             return false;
         }
 
-        if( data.find( ON_TYPE_FORMATTING ) != data.end()
-            and not DynamicRegistration::isValid( data[ ON_TYPE_FORMATTING ] ) )
+        if( data.find( Identifier::onTypeFormatting ) != data.end()
+            and not DynamicRegistration::isValid(
+                    data[ Identifier::onTypeFormatting ] ) )
         {
             return false;
         }
 
-        if( data.find( DEFINITION ) != data.end()
-            and not DynamicRegistration::isValid( data[ DEFINITION ] ) )
+        if( data.find( Identifier::definition ) != data.end()
+            and not DynamicRegistration::isValid(
+                    data[ Identifier::definition ] ) )
         {
             return false;
         }
 
-        if( data.find( CODE_ACTION ) != data.end()
-            and not DynamicRegistration::isValid( data[ CODE_ACTION ] ) )
+        if( data.find( Identifier::codeAction ) != data.end()
+            and not DynamicRegistration::isValid(
+                    data[ Identifier::codeAction ] ) )
         {
             return false;
         }
 
-        if( data.find( CODE_LENS ) != data.end()
-            and not DynamicRegistration::isValid( data[ CODE_LENS ] ) )
+        if( data.find( Identifier::codeLens ) != data.end()
+            and not DynamicRegistration::isValid(
+                    data[ Identifier::codeLens ] ) )
         {
             return false;
         }
 
-        if( data.find( DOCUMENT_LINK ) != data.end()
-            and not DynamicRegistration::isValid( data[ DOCUMENT_LINK ] ) )
+        if( data.find( Identifier::documentLink ) != data.end()
+            and not DynamicRegistration::isValid(
+                    data[ Identifier::documentLink ] ) )
         {
             return false;
         }
 
-        if( data.find( RENAME ) != data.end()
-            and not DynamicRegistration::isValid( data[ RENAME ] ) )
+        if( data.find( Identifier::rename ) != data.end()
+            and not DynamicRegistration::isValid( data[ Identifier::rename ] ) )
         {
             return false;
         }
@@ -1836,50 +1872,51 @@ ClientCapabilities::ClientCapabilities( void )
 
 u1 ClientCapabilities::hasWorkspace( void ) const
 {
-    return find( WORKSPACE ) != end();
+    return find( Identifier::workspace ) != end();
 }
 
 WorkspaceClientCapabilities ClientCapabilities::workspace( void ) const
 {
-    return at( WORKSPACE );
+    return at( Identifier::workspace );
 }
 
 void ClientCapabilities::setWorkspace(
     const WorkspaceClientCapabilities& workspace )
 {
-    operator[]( WORKSPACE ) = Data::from_cbor( Data::to_cbor( workspace ) );
+    operator[]( Identifier::workspace )
+        = Data::from_cbor( Data::to_cbor( workspace ) );
 }
 
 u1 ClientCapabilities::hasTextDocument( void ) const
 {
-    return find( TEXT_DOCUMENT ) != end();
+    return find( Identifier::textDocument ) != end();
 }
 
 TextDocumentClientCapabilities ClientCapabilities::textDocument( void ) const
 {
-    return at( TEXT_DOCUMENT );
+    return at( Identifier::textDocument );
 }
 
 void ClientCapabilities::setTextDocument(
     const TextDocumentClientCapabilities& textDocument )
 {
-    operator[]( TEXT_DOCUMENT )
+    operator[]( Identifier::textDocument )
         = Data::from_cbor( Data::to_cbor( textDocument ) );
 }
 
 u1 ClientCapabilities::hasExperimental( void ) const
 {
-    return find( EXPERIMENTAL ) != end();
+    return find( Identifier::experimental ) != end();
 }
 
 Data ClientCapabilities::experimental( void ) const
 {
-    return at( EXPERIMENTAL );
+    return at( Identifier::experimental );
 }
 
 void ClientCapabilities::setExperimental( const Data& experimental )
 {
-    operator[]( EXPERIMENTAL )
+    operator[]( Identifier::experimental )
         = Data::from_cbor( Data::to_cbor( experimental ) );
 }
 
@@ -1887,21 +1924,22 @@ u1 ClientCapabilities::isValid( const Data& data )
 {
     if( data.is_object() )
     {
-        if( data.find( WORKSPACE ) != data.end()
-            and not WorkspaceClientCapabilities::isValid( data[ WORKSPACE ] ) )
+        if( data.find( Identifier::workspace ) != data.end()
+            and not WorkspaceClientCapabilities::isValid(
+                    data[ Identifier::workspace ] ) )
         {
             return false;
         }
 
-        if( data.find( TEXT_DOCUMENT ) != data.end()
+        if( data.find( Identifier::textDocument ) != data.end()
             and not TextDocumentClientCapabilities::isValid(
-                    data[ TEXT_DOCUMENT ] ) )
+                    data[ Identifier::textDocument ] ) )
         {
             return false;
         }
 
-        if( data.find( EXPERIMENTAL ) != data.end()
-            and not data[ EXPERIMENTAL ].is_object() )
+        if( data.find( Identifier::experimental ) != data.end()
+            and not data[ Identifier::experimental ].is_object() )
         {
             return false;
         }
@@ -1936,25 +1974,25 @@ SaveOptions::SaveOptions( void )
 
 u1 SaveOptions::hasIncludeText( void ) const
 {
-    return find( INCLUDE_TEXT ) != end();
+    return find( Identifier::includeText ) != end();
 }
 
 u1 SaveOptions::includeText( void ) const
 {
-    return at( INCLUDE_TEXT ).get< u1 >();
+    return at( Identifier::includeText ).get< u1 >();
 }
 
 void SaveOptions::setIncludeText( const u1 includeText )
 {
-    operator[]( INCLUDE_TEXT ) = includeText;
+    operator[]( Identifier::includeText ) = includeText;
 }
 
 u1 SaveOptions::isValid( const Data& data )
 {
     if( data.is_object() )
     {
-        if( data.find( INCLUDE_TEXT ) != data.end()
-            and not data[ INCLUDE_TEXT ].is_boolean() )
+        if( data.find( Identifier::includeText ) != data.end()
+            and not data[ Identifier::includeText ].is_boolean() )
         {
             return false;
         }
@@ -1989,111 +2027,111 @@ TextDocumentSyncOptions::TextDocumentSyncOptions( void )
 
 u1 TextDocumentSyncOptions::hasOpenClose( void ) const
 {
-    return find( OPEN_CLOSE ) != end();
+    return find( Identifier::openClose ) != end();
 }
 
 u1 TextDocumentSyncOptions::openClose( void ) const
 {
-    return at( OPEN_CLOSE ).get< u1 >();
+    return at( Identifier::openClose ).get< u1 >();
 }
 
 void TextDocumentSyncOptions::setOpenClose( const u1 openClose )
 {
-    operator[]( OPEN_CLOSE ) = openClose;
+    operator[]( Identifier::openClose ) = openClose;
 }
 
 u1 TextDocumentSyncOptions::hasChange( void ) const
 {
-    return find( CHANGE ) != end();
+    return find( Identifier::change ) != end();
 }
 
 TextDocumentSyncKind TextDocumentSyncOptions::change( void ) const
 {
     assert( hasChange() );
     return static_cast< TextDocumentSyncKind >(
-        at( CHANGE ).get< std::size_t >() );
+        at( Identifier::change ).get< std::size_t >() );
 }
 
 void TextDocumentSyncOptions::setChange( const TextDocumentSyncKind& change )
 {
-    operator[]( CHANGE ) = static_cast< std::size_t >( change );
+    operator[]( Identifier::change ) = static_cast< std::size_t >( change );
 }
 
 u1 TextDocumentSyncOptions::hasWillSave( void ) const
 {
-    return find( WILL_SAVE ) != end();
+    return find( Identifier::willSave ) != end();
 }
 
 u1 TextDocumentSyncOptions::willSave( void ) const
 {
-    return at( WILL_SAVE ).get< u1 >();
+    return at( Identifier::willSave ).get< u1 >();
 }
 
 void TextDocumentSyncOptions::setWillSave( const u1 willSave )
 {
-    operator[]( WILL_SAVE ) = willSave;
+    operator[]( Identifier::willSave ) = willSave;
 }
 
 u1 TextDocumentSyncOptions::hasWillSaveWaitUntil( void ) const
 {
-    return find( WILL_SAVE_WAIT_UNITL ) != end();
+    return find( Identifier::willSaveWaitUntil ) != end();
 }
 
 u1 TextDocumentSyncOptions::willSaveWaitUntil( void ) const
 {
-    return at( WILL_SAVE_WAIT_UNITL ).get< u1 >();
+    return at( Identifier::willSaveWaitUntil ).get< u1 >();
 }
 
 void TextDocumentSyncOptions::setWillSaveWaitUntil( const u1 willSaveWaitUntil )
 {
-    operator[]( WILL_SAVE_WAIT_UNITL ) = willSaveWaitUntil;
+    operator[]( Identifier::willSaveWaitUntil ) = willSaveWaitUntil;
 }
 
 u1 TextDocumentSyncOptions::hasSave( void ) const
 {
-    return find( SAVE ) != end();
+    return find( Identifier::save ) != end();
 }
 
 SaveOptions TextDocumentSyncOptions::save( void ) const
 {
-    return at( SAVE );
+    return at( Identifier::save );
 }
 
 void TextDocumentSyncOptions::setSave( const SaveOptions& save )
 {
-    operator[]( SAVE ) = Data::from_cbor( Data::to_cbor( save ) );
+    operator[]( Identifier::save ) = Data::from_cbor( Data::to_cbor( save ) );
 }
 
 u1 TextDocumentSyncOptions::isValid( const Data& data )
 {
     if( data.is_object() )
     {
-        if( data.find( OPEN_CLOSE ) != data.end()
-            and not data[ OPEN_CLOSE ].is_boolean() )
+        if( data.find( Identifier::openClose ) != data.end()
+            and not data[ Identifier::openClose ].is_boolean() )
         {
             return false;
         }
 
-        if( data.find( CHANGE ) != data.end()
-            and not data[ CHANGE ].is_number() )
+        if( data.find( Identifier::change ) != data.end()
+            and not data[ Identifier::change ].is_number() )
         {
             return false;
         }
 
-        if( data.find( WILL_SAVE ) != data.end()
-            and not data[ WILL_SAVE ].is_boolean() )
+        if( data.find( Identifier::willSave ) != data.end()
+            and not data[ Identifier::willSave ].is_boolean() )
         {
             return false;
         }
 
-        if( data.find( WILL_SAVE_WAIT_UNITL ) != data.end()
-            and not data[ WILL_SAVE_WAIT_UNITL ].is_boolean() )
+        if( data.find( Identifier::willSaveWaitUntil ) != data.end()
+            and not data[ Identifier::willSaveWaitUntil ].is_boolean() )
         {
             return false;
         }
 
-        if( data.find( SAVE ) != data.end()
-            and not SaveOptions::isValid( data[ SAVE ] ) )
+        if( data.find( Identifier::save ) != data.end()
+            and not SaveOptions::isValid( data[ Identifier::save ] ) )
         {
             return false;
         }
@@ -2124,54 +2162,54 @@ CompletionOptions::CompletionOptions( const Data& data )
 CompletionOptions::CompletionOptions( void )
 : Data( Data::object() )
 {
-    operator[]( TRIGGER_CHARACTERS ) = Data::array();
+    operator[]( Identifier::triggerCharacters ) = Data::array();
 }
 
 u1 CompletionOptions::hasResolveProvider( void ) const
 {
-    return find( RESOLVE_PROVIDER ) != end();
+    return find( Identifier::resolveProvider ) != end();
 }
 
 u1 CompletionOptions::resolveProvider( void ) const
 {
-    return at( RESOLVE_PROVIDER ).get< u1 >();
+    return at( Identifier::resolveProvider ).get< u1 >();
 }
 
 void CompletionOptions::setResolveProvider( const u1 resolveProvider )
 {
-    operator[]( RESOLVE_PROVIDER ) = resolveProvider;
+    operator[]( Identifier::resolveProvider ) = resolveProvider;
 }
 
 u1 CompletionOptions::hasTriggerCharacters( void ) const
 {
-    return find( TRIGGER_CHARACTERS ) != end();
+    return find( Identifier::triggerCharacters ) != end();
 }
 
 Data CompletionOptions::triggerCharacters( void ) const
 {
-    return at( TRIGGER_CHARACTERS );
+    return at( Identifier::triggerCharacters );
 }
 
 void CompletionOptions::addTriggerCharacters(
     const std::string& triggerCharacter )
 {
-    operator[]( TRIGGER_CHARACTERS ).push_back( triggerCharacter );
+    operator[]( Identifier::triggerCharacters ).push_back( triggerCharacter );
 }
 
 u1 CompletionOptions::isValid( const Data& data )
 {
     if( data.is_object() )
     {
-        if( data.find( RESOLVE_PROVIDER ) != data.end()
-            and not data[ RESOLVE_PROVIDER ].is_boolean() )
+        if( data.find( Identifier::resolveProvider ) != data.end()
+            and not data[ Identifier::resolveProvider ].is_boolean() )
         {
             return false;
         }
 
-        if( data.find( TRIGGER_CHARACTERS ) != data.end()
-            and data[ TRIGGER_CHARACTERS ].is_array() )
+        if( data.find( Identifier::triggerCharacters ) != data.end()
+            and data[ Identifier::triggerCharacters ].is_array() )
         {
-            for( auto triggerCharacter : data[ TRIGGER_CHARACTERS ] )
+            for( auto triggerCharacter : data[ Identifier::triggerCharacters ] )
             {
                 if( not triggerCharacter.is_string() )
                 {
@@ -2206,33 +2244,33 @@ SignatureHelpOptions::SignatureHelpOptions( const Data& data )
 SignatureHelpOptions::SignatureHelpOptions( void )
 : Data( Data::object() )
 {
-    operator[]( MORE_TRIGGER_CHARACTER ) = Data::array();
+    operator[]( Identifier::moreTriggerCharacter ) = Data::array();
 }
 
 u1 SignatureHelpOptions::hasTriggerCharacters( void ) const
 {
-    return find( TRIGGER_CHARACTERS ) != end();
+    return find( Identifier::triggerCharacters ) != end();
 }
 
 Data SignatureHelpOptions::triggerCharacters( void ) const
 {
-    return at( TRIGGER_CHARACTERS );
+    return at( Identifier::triggerCharacters );
 }
 
 void SignatureHelpOptions::addTriggerCharacters(
     const std::string& triggerCharacter )
 {
-    operator[]( TRIGGER_CHARACTERS ).push_back( triggerCharacter );
+    operator[]( Identifier::triggerCharacters ).push_back( triggerCharacter );
 }
 
 u1 SignatureHelpOptions::isValid( const Data& data )
 {
     if( data.is_object() )
     {
-        if( data.find( TRIGGER_CHARACTERS ) != data.end()
-            and data[ TRIGGER_CHARACTERS ].is_array() )
+        if( data.find( Identifier::triggerCharacters ) != data.end()
+            and data[ Identifier::triggerCharacters ].is_array() )
         {
-            for( auto triggerCharacter : data[ TRIGGER_CHARACTERS ] )
+            for( auto triggerCharacter : data[ Identifier::triggerCharacters ] )
             {
                 if( not triggerCharacter.is_string() )
                 {
@@ -2271,25 +2309,25 @@ CodeLensOptions::CodeLensOptions( void )
 
 u1 CodeLensOptions::hasResolveProvider( void ) const
 {
-    return find( RESOLVE_PROVIDER ) != end();
+    return find( Identifier::resolveProvider ) != end();
 }
 
 u1 CodeLensOptions::resolveProvider( void ) const
 {
-    return at( RESOLVE_PROVIDER ).get< u1 >();
+    return at( Identifier::resolveProvider ).get< u1 >();
 }
 
 void CodeLensOptions::setResolveProvider( const u1 resolveProvider )
 {
-    operator[]( RESOLVE_PROVIDER ) = resolveProvider;
+    operator[]( Identifier::resolveProvider ) = resolveProvider;
 }
 
 u1 CodeLensOptions::isValid( const Data& data )
 {
     if( data.is_object() )
     {
-        if( data.find( RESOLVE_PROVIDER ) != data.end()
-            and not data[ RESOLVE_PROVIDER ].is_boolean() )
+        if( data.find( Identifier::resolveProvider ) != data.end()
+            and not data[ Identifier::resolveProvider ].is_boolean() )
         {
             return false;
         }
@@ -2322,40 +2360,43 @@ DocumentOnTypeFormattingOptions::DocumentOnTypeFormattingOptions(
     const std::string& firstTriggerCharacter )
 : Data( Data::object() )
 {
-    operator[]( FIRST_TRIGGER_CHARACTER ) = firstTriggerCharacter;
-    operator[]( MORE_TRIGGER_CHARACTER ) = Data::array();
+    operator[]( Identifier::firstTriggerCharacter ) = firstTriggerCharacter;
+    operator[]( Identifier::moreTriggerCharacter ) = Data::array();
 }
 
 std::string DocumentOnTypeFormattingOptions::firstTriggerCharacter( void ) const
 {
-    return at( FIRST_TRIGGER_CHARACTER ).get< std::string >();
+    return at( Identifier::firstTriggerCharacter ).get< std::string >();
 }
 
 u1 DocumentOnTypeFormattingOptions::hasMoreTriggerCharacter( void ) const
 {
-    return find( MORE_TRIGGER_CHARACTER ) != end();
+    return find( Identifier::moreTriggerCharacter ) != end();
 }
 
 Data DocumentOnTypeFormattingOptions::moreTriggerCharacter( void ) const
 {
-    return at( MORE_TRIGGER_CHARACTER );
+    return at( Identifier::moreTriggerCharacter );
 }
 
 void DocumentOnTypeFormattingOptions::addMoreTriggerCharacter(
     const Data& moreTriggerCharacter )
 {
-    operator[]( MORE_TRIGGER_CHARACTER ).push_back( moreTriggerCharacter );
+    operator[]( Identifier::moreTriggerCharacter )
+        .push_back( moreTriggerCharacter );
 }
 
 u1 DocumentOnTypeFormattingOptions::isValid( const Data& data )
 {
-    if( data.is_object() and data.find( FIRST_TRIGGER_CHARACTER ) != data.end()
-        and data[ FIRST_TRIGGER_CHARACTER ].is_string() )
+    if( data.is_object()
+        and data.find( Identifier::firstTriggerCharacter ) != data.end()
+        and data[ Identifier::firstTriggerCharacter ].is_string() )
     {
-        if( data.find( MORE_TRIGGER_CHARACTER ) != data.end()
-            and not data[ MORE_TRIGGER_CHARACTER ].is_array() )
+        if( data.find( Identifier::moreTriggerCharacter ) != data.end()
+            and not data[ Identifier::moreTriggerCharacter ].is_array() )
         {
-            for( auto moreTriggerCharacter : data[ MORE_TRIGGER_CHARACTER ] )
+            for( auto moreTriggerCharacter :
+                data[ Identifier::moreTriggerCharacter ] )
             {
                 if( not moreTriggerCharacter.is_string() )
                 {
@@ -2390,30 +2431,30 @@ ExecuteCommandOptions::ExecuteCommandOptions( const Data& data )
 ExecuteCommandOptions::ExecuteCommandOptions( void )
 : Data( Data::object() )
 {
-    operator[]( COMMANDS ) = Data::array();
+    operator[]( Identifier::commands ) = Data::array();
 }
 
 u1 ExecuteCommandOptions::hasCommands( void ) const
 {
-    return find( COMMANDS ) != end();
+    return find( Identifier::commands ) != end();
 }
 
 Data ExecuteCommandOptions::commands( void ) const
 {
-    return at( COMMANDS );
+    return at( Identifier::commands );
 }
 
 void ExecuteCommandOptions::addCommand( const std::string& command )
 {
-    operator[]( COMMANDS ).push_back( command );
+    operator[]( Identifier::commands ).push_back( command );
 }
 
 u1 ExecuteCommandOptions::isValid( const Data& data )
 {
-    if( data.is_object() and data.find( COMMANDS ) != data.end()
-        and data[ COMMANDS ].is_array() )
+    if( data.is_object() and data.find( Identifier::commands ) != data.end()
+        and data[ Identifier::commands ].is_array() )
     {
-        for( auto command : data[ COMMANDS ] )
+        for( auto command : data[ Identifier::commands ] )
         {
             if( not command.is_string() )
             {
@@ -2451,296 +2492,298 @@ ServerCapabilities::ServerCapabilities( void )
 
 u1 ServerCapabilities::hasTextDocumentSync( void ) const
 {
-    return find( TEXT_DOCUMENT_SYNC ) != end();
+    return find( Identifier::textDocumentSync ) != end();
 }
 
 TextDocumentSyncOptions ServerCapabilities::textDocumentSync( void ) const
 {
-    return at( TEXT_DOCUMENT_SYNC );
+    return at( Identifier::textDocumentSync );
 }
 
 void ServerCapabilities::setTextDocumentSync(
     const TextDocumentSyncOptions& textDocumentSync )
 {
-    operator[]( TEXT_DOCUMENT_SYNC )
+    operator[]( Identifier::textDocumentSync )
         = Data::from_cbor( Data::to_cbor( textDocumentSync ) );
 }
 
 void ServerCapabilities::setTextDocumentSync(
     const TextDocumentSyncKind& textDocumentSync )
 {
-    operator[]( TEXT_DOCUMENT_SYNC )
+    operator[]( Identifier::textDocumentSync )
         = static_cast< std::size_t >( textDocumentSync );
 }
 
 u1 ServerCapabilities::hasHoverProvider( void ) const
 {
-    return find( HOVER_PROVIDER ) != end();
+    return find( Identifier::hoverProvider ) != end();
 }
 
 u1 ServerCapabilities::hoverProvider( void ) const
 {
-    return at( HOVER_PROVIDER ).get< u1 >();
+    return at( Identifier::hoverProvider ).get< u1 >();
 }
 
 void ServerCapabilities::setHoverProvider( const u1 hoverProvider )
 {
-    operator[]( HOVER_PROVIDER ) = hoverProvider;
+    operator[]( Identifier::hoverProvider ) = hoverProvider;
 }
 
 u1 ServerCapabilities::hasCompletionProvider( void ) const
 {
-    return find( COMPLETION_PROVIDER ) != end();
+    return find( Identifier::completionProvider ) != end();
 }
 
 CompletionOptions ServerCapabilities::completionProvider( void ) const
 {
-    return at( COMPLETION_PROVIDER );
+    return at( Identifier::completionProvider );
 }
 
 void ServerCapabilities::setCompletionProvider(
     const CompletionOptions& completionProvider )
 {
-    operator[]( COMPLETION_PROVIDER ) = completionProvider;
+    operator[]( Identifier::completionProvider ) = completionProvider;
 }
 
 u1 ServerCapabilities::hasSignatureHelpProvider( void ) const
 {
-    return find( SIGNATURE_HELP_PROVIDER ) != end();
+    return find( Identifier::signatureHelpProvider ) != end();
 }
 
 SignatureHelpOptions ServerCapabilities::signatureHelpProvider( void ) const
 {
-    return at( SIGNATURE_HELP_PROVIDER );
+    return at( Identifier::signatureHelpProvider );
 }
 
 void ServerCapabilities::setSignatureHelpProvider(
     const SignatureHelpOptions& signatureHelpProvider )
 {
-    operator[]( SIGNATURE_HELP_PROVIDER ) = signatureHelpProvider;
+    operator[]( Identifier::signatureHelpProvider ) = signatureHelpProvider;
 }
 
 u1 ServerCapabilities::hasDefinitionProvider( void ) const
 {
-    return find( DEFINITION_PROVIDER ) != end();
+    return find( Identifier::definitionProvider ) != end();
 }
 
 u1 ServerCapabilities::definitionProvider( void ) const
 {
-    return at( DEFINITION_PROVIDER ).get< u1 >();
+    return at( Identifier::definitionProvider ).get< u1 >();
 }
 
 void ServerCapabilities::setDefinitionProvider( const u1 definitionProvider )
 {
-    operator[]( DEFINITION_PROVIDER ) = definitionProvider;
+    operator[]( Identifier::definitionProvider ) = definitionProvider;
 }
 
 u1 ServerCapabilities::hasReferencesProvider( void ) const
 {
-    return find( REFERENCES_PROVIDER ) != end();
+    return find( Identifier::referencesProvider ) != end();
 }
 
 u1 ServerCapabilities::referencesProvider( void ) const
 {
-    return at( REFERENCES_PROVIDER ).get< u1 >();
+    return at( Identifier::referencesProvider ).get< u1 >();
 }
 
 void ServerCapabilities::setReferencesProvider( const u1 referencesProvider )
 {
-    operator[]( REFERENCES_PROVIDER ) = referencesProvider;
+    operator[]( Identifier::referencesProvider ) = referencesProvider;
 }
 
 u1 ServerCapabilities::hasDocumentHighlightProvider( void ) const
 {
-    return find( DOCUMENT_HIGHLIGHT_PROVIDER ) != end();
+    return find( Identifier::documentHighlightProvider ) != end();
 }
 
 u1 ServerCapabilities::documentHighlightProvider( void ) const
 {
-    return at( DOCUMENT_HIGHLIGHT_PROVIDER ).get< u1 >();
+    return at( Identifier::documentHighlightProvider ).get< u1 >();
 }
 
 void ServerCapabilities::setDocumentHighlightProvider(
     const u1 documentHighlightProvider )
 {
-    operator[]( DOCUMENT_HIGHLIGHT_PROVIDER ) = documentHighlightProvider;
+    operator[]( Identifier::documentHighlightProvider )
+        = documentHighlightProvider;
 }
 
 u1 ServerCapabilities::hasDocumentSymbolProvider( void ) const
 {
-    return find( DOCUMENT_SYMBOL_PROVIDER ) != end();
+    return find( Identifier::documentSymbolProvider ) != end();
 }
 
 u1 ServerCapabilities::documentSymbolProvider( void ) const
 {
-    return at( DOCUMENT_SYMBOL_PROVIDER ).get< u1 >();
+    return at( Identifier::documentSymbolProvider ).get< u1 >();
 }
 
 void ServerCapabilities::setDocumentSymbolProvider(
     const u1 documentSymbolProvider )
 {
-    operator[]( DOCUMENT_SYMBOL_PROVIDER ) = documentSymbolProvider;
+    operator[]( Identifier::documentSymbolProvider ) = documentSymbolProvider;
 }
 
 u1 ServerCapabilities::hasWorkspaceSymbolProvider( void ) const
 {
-    return find( WORKSPACE_SYMBOL_PROVIDER ) != end();
+    return find( Identifier::workspaceSymbolProvider ) != end();
 }
 
 u1 ServerCapabilities::workspaceSymbolProvider( void ) const
 {
-    return at( WORKSPACE_SYMBOL_PROVIDER ).get< u1 >();
+    return at( Identifier::workspaceSymbolProvider ).get< u1 >();
 }
 
 void ServerCapabilities::setWorkspaceSymbolProvider(
     const u1 workspaceSymbolProvider )
 {
-    operator[]( WORKSPACE_SYMBOL_PROVIDER ) = workspaceSymbolProvider;
+    operator[]( Identifier::workspaceSymbolProvider ) = workspaceSymbolProvider;
 }
 
 u1 ServerCapabilities::hasCodeActionProvider( void ) const
 {
-    return find( CODE_ACTION_PROVIDER ) != end();
+    return find( Identifier::codeActionProvider ) != end();
 }
 
 u1 ServerCapabilities::codeActionProvider( void ) const
 {
-    return at( CODE_ACTION_PROVIDER ).get< u1 >();
+    return at( Identifier::codeActionProvider ).get< u1 >();
 }
 
 void ServerCapabilities::setCodeActionProvider( const u1 codeActionProvider )
 {
-    operator[]( CODE_ACTION_PROVIDER ) = codeActionProvider;
+    operator[]( Identifier::codeActionProvider ) = codeActionProvider;
 }
 
 u1 ServerCapabilities::hasCodeLensProvider( void ) const
 {
-    return find( CODE_LENS_PROVIDER ) != end();
+    return find( Identifier::codeLensProvider ) != end();
 }
 
 CodeLensOptions ServerCapabilities::codeLensProvider( void ) const
 {
-    return at( CODE_LENS_PROVIDER );
+    return at( Identifier::codeLensProvider );
 }
 
 void ServerCapabilities::setCodeLensProvider(
     const CodeLensOptions& codeLensProvider )
 {
-    operator[]( CODE_LENS_PROVIDER )
+    operator[]( Identifier::codeLensProvider )
         = Data::from_cbor( Data::to_cbor( codeLensProvider ) );
 }
 
 u1 ServerCapabilities::hasDocumentFormattingProvider( void ) const
 {
-    return find( DOCUMENT_FORMATTING_PROVIDER ) != end();
+    return find( Identifier::documentFormattingProvider ) != end();
 }
 
 u1 ServerCapabilities::documentFormattingProvider( void ) const
 {
-    return at( DOCUMENT_FORMATTING_PROVIDER ).get< u1 >();
+    return at( Identifier::documentFormattingProvider ).get< u1 >();
 }
 
 void ServerCapabilities::setDocumentFormattingProvider(
     const u1 documentFormattingProvider )
 {
-    operator[]( DOCUMENT_FORMATTING_PROVIDER ) = documentFormattingProvider;
+    operator[]( Identifier::documentFormattingProvider )
+        = documentFormattingProvider;
 }
 
 u1 ServerCapabilities::hasDocumentRangeFormattingProvider( void ) const
 {
-    return find( DOCUMENT_RANGE_FORMATTING_PROVIDER ) != end();
+    return find( Identifier::documentRangeFormattingProvider ) != end();
 }
 
 u1 ServerCapabilities::documentRangeFormattingProvider( void ) const
 {
-    return at( DOCUMENT_RANGE_FORMATTING_PROVIDER ).get< u1 >();
+    return at( Identifier::documentRangeFormattingProvider ).get< u1 >();
 }
 
 void ServerCapabilities::setDocumentRangeFormattingProvider(
     const u1 documentRangeFormattingProvider )
 {
-    operator[]( DOCUMENT_RANGE_FORMATTING_PROVIDER )
+    operator[]( Identifier::documentRangeFormattingProvider )
         = documentRangeFormattingProvider;
 }
 
 u1 ServerCapabilities::hasDocumentOnTypeFormattingProvider( void ) const
 {
-    return find( DOCUMENT_ON_TYPE_FORMATTING_PROVIDER ) != end();
+    return find( Identifier::documentOnTypeFormattingProvider ) != end();
 }
 
 DocumentOnTypeFormattingOptions
 ServerCapabilities::documentOnTypeFormattingProvider( void ) const
 {
-    return at( DOCUMENT_ON_TYPE_FORMATTING_PROVIDER );
+    return at( Identifier::documentOnTypeFormattingProvider );
 }
 
 void ServerCapabilities::setDocumentOnTypeFormattingProvider(
     const DocumentOnTypeFormattingOptions& documentOnTypeFormattingProvider )
 {
-    operator[]( DOCUMENT_ON_TYPE_FORMATTING_PROVIDER )
+    operator[]( Identifier::documentOnTypeFormattingProvider )
         = Data::from_cbor( Data::to_cbor( documentOnTypeFormattingProvider ) );
 }
 
 u1 ServerCapabilities::hasRenameProvider( void ) const
 {
-    return find( RENAME_PROVIDER ) != end();
+    return find( Identifier::renameProvider ) != end();
 }
 
 u1 ServerCapabilities::renameProvider( void ) const
 {
-    return at( RENAME_PROVIDER ).get< u1 >();
+    return at( Identifier::renameProvider ).get< u1 >();
 }
 
 void ServerCapabilities::setRenameProvider( const u1 renameProvider )
 {
-    operator[]( RENAME_PROVIDER ) = renameProvider;
+    operator[]( Identifier::renameProvider ) = renameProvider;
 }
 
 u1 ServerCapabilities::hasDocumentLinkProvider( void ) const
 {
-    return find( DOCUMENT_LINK_PROVIDER ) != end();
+    return find( Identifier::documentLinkProvider ) != end();
 }
 
 DocumentLinkOptions ServerCapabilities::documentLinkProvider( void ) const
 {
-    return at( DOCUMENT_LINK_PROVIDER );
+    return at( Identifier::documentLinkProvider );
 }
 
 void ServerCapabilities::setDocumentLinkProvider(
     const DocumentLinkOptions& documentLinkProvider )
 {
-    operator[]( DOCUMENT_LINK_PROVIDER ) = documentLinkProvider;
+    operator[]( Identifier::documentLinkProvider ) = documentLinkProvider;
 }
 
 u1 ServerCapabilities::hasExecuteCommandProvider( void ) const
 {
-    return find( EXECUTE_COMMAND_PROVIDER ) != end();
+    return find( Identifier::executeCommandProvider ) != end();
 }
 
 ExecuteCommandOptions ServerCapabilities::executeCommandProvider( void ) const
 {
-    return at( EXECUTE_COMMAND_PROVIDER );
+    return at( Identifier::executeCommandProvider );
 }
 
 void ServerCapabilities::setExecuteCommandProvider(
     const ExecuteCommandOptions& executeCommandProvider )
 {
-    operator[]( EXECUTE_COMMAND_PROVIDER ) = executeCommandProvider;
+    operator[]( Identifier::executeCommandProvider ) = executeCommandProvider;
 }
 
 u1 ServerCapabilities::hasExperimental( void ) const
 {
-    return find( EXPERIMENTAL ) != end();
+    return find( Identifier::experimental ) != end();
 }
 
 Data ServerCapabilities::experimental( void ) const
 {
-    return at( EXPERIMENTAL );
+    return at( Identifier::experimental );
 }
 
 void ServerCapabilities::setExperimental( const Data& experimental )
 {
-    operator[]( EXPERIMENTAL )
+    operator[]( Identifier::experimental )
         = Data::from_cbor( Data::to_cbor( experimental ) );
 }
 
@@ -2748,115 +2791,121 @@ u1 ServerCapabilities::isValid( const Data& data )
 {
     if( data.is_object() )
     {
-        if( data.find( TEXT_DOCUMENT_SYNC ) != data.end()
+        if( data.find( Identifier::textDocumentSync ) != data.end()
             and not TextDocumentSyncOptions::isValid(
-                    data[ TEXT_DOCUMENT_SYNC ] ) )
+                    data[ Identifier::textDocumentSync ] ) )
         {
             return false;
         }
 
-        if( data.find( HOVER_PROVIDER ) != data.end()
-            and not data[ HOVER_PROVIDER ].is_boolean() )
+        if( data.find( Identifier::hoverProvider ) != data.end()
+            and not data[ Identifier::hoverProvider ].is_boolean() )
         {
             return false;
         }
 
-        if( data.find( COMPLETION_PROVIDER ) != data.end()
-            and not CompletionOptions::isValid( data[ COMPLETION_PROVIDER ] ) )
+        if( data.find( Identifier::completionProvider ) != data.end()
+            and not CompletionOptions::isValid(
+                    data[ Identifier::completionProvider ] ) )
         {
             return false;
         }
 
-        if( data.find( SIGNATURE_HELP_PROVIDER ) != data.end()
+        if( data.find( Identifier::signatureHelpProvider ) != data.end()
             and not SignatureHelpOptions::isValid(
-                    data[ SIGNATURE_HELP_PROVIDER ] ) )
+                    data[ Identifier::signatureHelpProvider ] ) )
         {
             return false;
         }
 
-        if( data.find( DEFINITION_PROVIDER ) != data.end()
-            and not data[ DEFINITION_PROVIDER ].is_boolean() )
+        if( data.find( Identifier::definitionProvider ) != data.end()
+            and not data[ Identifier::definitionProvider ].is_boolean() )
         {
             return false;
         }
 
-        if( data.find( REFERENCES_PROVIDER ) != data.end()
-            and not data[ REFERENCES_PROVIDER ].is_boolean() )
+        if( data.find( Identifier::referencesProvider ) != data.end()
+            and not data[ Identifier::referencesProvider ].is_boolean() )
         {
             return false;
         }
 
-        if( data.find( DOCUMENT_HIGHLIGHT_PROVIDER ) != data.end()
-            and not data[ DOCUMENT_HIGHLIGHT_PROVIDER ].is_boolean() )
+        if( data.find( Identifier::documentHighlightProvider ) != data.end()
+            and not data[ Identifier::documentHighlightProvider ].is_boolean() )
         {
             return false;
         }
 
-        if( data.find( DOCUMENT_SYMBOL_PROVIDER ) != data.end()
-            and not data[ DOCUMENT_SYMBOL_PROVIDER ].is_boolean() )
+        if( data.find( Identifier::documentSymbolProvider ) != data.end()
+            and not data[ Identifier::documentSymbolProvider ].is_boolean() )
         {
             return false;
         }
 
-        if( data.find( WORKSPACE_SYMBOL_PROVIDER ) != data.end()
-            and not data[ WORKSPACE_SYMBOL_PROVIDER ].is_boolean() )
+        if( data.find( Identifier::workspaceSymbolProvider ) != data.end()
+            and not data[ Identifier::workspaceSymbolProvider ].is_boolean() )
         {
             return false;
         }
 
-        if( data.find( CODE_ACTION_PROVIDER ) != data.end()
-            and not data[ CODE_ACTION_PROVIDER ].is_boolean() )
+        if( data.find( Identifier::codeActionProvider ) != data.end()
+            and not data[ Identifier::codeActionProvider ].is_boolean() )
         {
             return false;
         }
 
-        if( data.find( CODE_LENS_PROVIDER ) != data.end()
-            and not CodeLensOptions::isValid( data[ CODE_LENS_PROVIDER ] ) )
+        if( data.find( Identifier::codeLensProvider ) != data.end()
+            and not CodeLensOptions::isValid(
+                    data[ Identifier::codeLensProvider ] ) )
         {
             return false;
         }
 
-        if( data.find( DOCUMENT_FORMATTING_PROVIDER ) != data.end()
-            and not data[ DOCUMENT_FORMATTING_PROVIDER ].is_boolean() )
+        if( data.find( Identifier::documentFormattingProvider ) != data.end()
+            and not data[ Identifier::documentFormattingProvider ]
+                        .is_boolean() )
         {
             return false;
         }
 
-        if( data.find( DOCUMENT_RANGE_FORMATTING_PROVIDER ) != data.end()
-            and not data[ DOCUMENT_RANGE_FORMATTING_PROVIDER ].is_boolean() )
+        if( data.find( Identifier::documentRangeFormattingProvider )
+                != data.end()
+            and not data[ Identifier::documentRangeFormattingProvider ]
+                        .is_boolean() )
         {
             return false;
         }
 
-        if( data.find( DOCUMENT_ON_TYPE_FORMATTING_PROVIDER ) != data.end()
+        if( data.find( Identifier::documentOnTypeFormattingProvider )
+                != data.end()
             and not DocumentOnTypeFormattingOptions::isValid(
-                    data[ DOCUMENT_ON_TYPE_FORMATTING_PROVIDER ] ) )
+                    data[ Identifier::documentOnTypeFormattingProvider ] ) )
         {
             return false;
         }
 
-        if( data.find( RENAME_PROVIDER ) != data.end()
-            and not data[ RENAME_PROVIDER ].is_boolean() )
+        if( data.find( Identifier::renameProvider ) != data.end()
+            and not data[ Identifier::renameProvider ].is_boolean() )
         {
             return false;
         }
 
-        if( data.find( DOCUMENT_LINK_PROVIDER ) != data.end()
+        if( data.find( Identifier::documentLinkProvider ) != data.end()
             and not DocumentLinkOptions::isValid(
-                    data[ DOCUMENT_LINK_PROVIDER ] ) )
+                    data[ Identifier::documentLinkProvider ] ) )
         {
             return false;
         }
 
-        if( data.find( EXECUTE_COMMAND_PROVIDER ) != data.end()
+        if( data.find( Identifier::executeCommandProvider ) != data.end()
             and not ExecuteCommandOptions::isValid(
-                    data[ EXECUTE_COMMAND_PROVIDER ] ) )
+                    data[ Identifier::executeCommandProvider ] ) )
         {
             return false;
         }
 
-        if( data.find( EXPERIMENTAL ) != data.end()
-            and not data[ EXPERIMENTAL ].is_object() )
+        if( data.find( Identifier::experimental ) != data.end()
+            and not data[ Identifier::experimental ].is_object() )
         {
             return false;
         }
@@ -2911,77 +2960,80 @@ InitializeParams::InitializeParams( const std::size_t processId,
     const ClientCapabilities& capabilities )
 : Data( Data::object() )
 {
-    operator[]( PROCESS_ID ) = processId;
-    operator[]( ROOT_URI ) = rootUri.toString();
-    operator[]( CAPABILITIES )
+    operator[]( Identifier::processId ) = processId;
+    operator[]( Identifier::rootUri ) = rootUri.toString();
+    operator[]( Identifier::capabilities )
         = Data::from_cbor( Data::to_cbor( capabilities ) );
 }
 
 std::size_t InitializeParams::processId( void ) const
 {
-    return at( PROCESS_ID ).get< std::size_t >();
+    return at( Identifier::processId ).get< std::size_t >();
 }
 
 DocumentUri InitializeParams::rootUri( void ) const
 {
-    return DocumentUri::fromString( at( PROCESS_ID ).get< std::string >() );
+    return DocumentUri::fromString(
+        at( Identifier::processId ).get< std::string >() );
 }
 
 u1 InitializeParams::hasInitializationOptions( void ) const
 {
-    return find( INITIALIZATION_OPTIONS ) != end();
+    return find( Identifier::initializationOptions ) != end();
 }
 
 Data InitializeParams::initializationOptions( void ) const
 {
-    return at( INITIALIZATION_OPTIONS );
+    return at( Identifier::initializationOptions );
 }
 
 void InitializeParams::setInitializationOptions(
     const Data& initializationOptions )
 {
-    operator[]( INITIALIZATION_OPTIONS ) = initializationOptions;
+    operator[]( Identifier::initializationOptions ) = initializationOptions;
 }
 
 ClientCapabilities InitializeParams::capabilities( void ) const
 {
-    return at( CAPABILITIES );
+    return at( Identifier::capabilities );
 }
 
 u1 InitializeParams::hasTrace( void ) const
 {
-    return find( TRACE ) != end();
+    return find( Identifier::trace ) != end();
 }
 
 std::string InitializeParams::trace( void ) const
 {
-    return at( TRACE );
+    return at( Identifier::trace );
 }
 
 void InitializeParams::setTrace( const std::string& trace )
 {
-    operator[]( TRACE ) = trace;
+    operator[]( Identifier::trace ) = trace;
 }
 
 u1 InitializeParams::isValid( const Data& data )
 {
-    if( data.is_object() and data.find( ROOT_URI ) != data.end()
-        and ( data[ ROOT_URI ].is_string() or data[ ROOT_URI ].is_null() )
-        and data.find( CAPABILITIES ) != data.end()
-        and ClientCapabilities::isValid( data[ CAPABILITIES ] ) )
+    if( data.is_object() and data.find( Identifier::rootUri ) != data.end()
+        and ( data[ Identifier::rootUri ].is_string()
+                or data[ Identifier::rootUri ].is_null() )
+        and data.find( Identifier::capabilities ) != data.end()
+        and ClientCapabilities::isValid( data[ Identifier::capabilities ] ) )
     {
-        if( data.find( PROCESS_ID ) != data.end()
-            and not( data[ PROCESS_ID ].is_number()
-                     or data[ PROCESS_ID ].is_null() ) )
+        if( data.find( Identifier::processId ) != data.end()
+            and not( data[ Identifier::processId ].is_number()
+                     or data[ Identifier::processId ].is_null() ) )
         {
             return false;
         }
 
-        if( not data[ ROOT_URI ].is_null() )
+        if( not data[ Identifier::rootUri ].is_null() )
         {
             try
             {
-                DocumentUri::fromString( data[ URI ].get< std::string >() );
+                DocumentUri::fromString(
+                    data[ Identifier::uri ].get< std::string >() );
             }
             catch( const std::exception& e )
             {
@@ -2989,13 +3041,14 @@ u1 InitializeParams::isValid( const Data& data )
             }
         }
 
-        if( data.find( INITIALIZATION_OPTIONS ) != data.end()
-            and not data[ INITIALIZATION_OPTIONS ].is_object() )
+        if( data.find( Identifier::initializationOptions ) != data.end()
+            and not data[ Identifier::initializationOptions ].is_object() )
         {
             return false;
         }
 
-        if( data.find( TRACE ) != data.end() and not data[ TRACE ].is_string() )
+        if( data.find( Identifier::trace ) != data.end()
+            and not data[ Identifier::trace ].is_string() )
         {
             return false;
         }
@@ -3026,21 +3079,22 @@ InitializeResult::InitializeResult( const Data& data )
 InitializeResult::InitializeResult( const ServerCapabilities& capabilities )
 : Data( Data::object() )
 {
-    operator[]( CAPABILITIES )
+    operator[]( Identifier::capabilities )
         = Data::from_cbor( Data::to_cbor( capabilities ) );
 }
 
 ServerCapabilities InitializeResult::capabilities( void ) const
 {
-    return at( CAPABILITIES );
+    return at( Identifier::capabilities );
 }
 
 u1 InitializeResult::isValid( const Data& data )
 {
     if( data.is_object() )
     {
-        if( data.find( CAPABILITIES ) != data.end()
-            and not ServerCapabilities::isValid( data[ CAPABILITIES ] ) )
+        if( data.find( Identifier::capabilities ) != data.end()
+            and not ServerCapabilities::isValid(
+                    data[ Identifier::capabilities ] ) )
         {
             return false;
         }
@@ -3071,18 +3125,18 @@ InitializeError::InitializeError( const Data& data )
 InitializeError::InitializeError( const u1 retry )
 : Data( Data::object() )
 {
-    operator[]( RETRY ) = retry;
+    operator[]( Identifier::retry ) = retry;
 }
 
 u1 InitializeError::retry( void ) const
 {
-    return at( RETRY ).get< u1 >();
+    return at( Identifier::retry ).get< u1 >();
 }
 
 u1 InitializeError::isValid( const Data& data )
 {
-    if( data.is_object() and data.find( RETRY ) != data.end()
-        and data[ RETRY ].is_boolean() )
+    if( data.is_object() and data.find( Identifier::retry ) != data.end()
+        and data[ Identifier::retry ].is_boolean() )
     {
         return true;
     }
@@ -3111,19 +3165,19 @@ DidOpenTextDocumentParams::DidOpenTextDocumentParams(
     const TextDocumentItem& textDocument )
 : Data( Data::object() )
 {
-    operator[]( TEXT_DOCUMENT )
+    operator[]( Identifier::textDocument )
         = Data::from_cbor( Data::to_cbor( textDocument ) );
 }
 
 TextDocumentItem DidOpenTextDocumentParams::textDocument( void ) const
 {
-    return at( TEXT_DOCUMENT );
+    return at( Identifier::textDocument );
 }
 
 u1 DidOpenTextDocumentParams::isValid( const Data& data )
 {
-    if( data.is_object() and data.find( TEXT_DOCUMENT ) != data.end()
-        and TextDocumentItem::isValid( data[ TEXT_DOCUMENT ] ) )
+    if( data.is_object() and data.find( Identifier::textDocument ) != data.end()
+        and TextDocumentItem::isValid( data[ Identifier::textDocument ] ) )
     {
         return true;
     }
@@ -3153,58 +3207,58 @@ TextDocumentContentChangeEvent::TextDocumentContentChangeEvent(
     const std::string& text )
 : Data( Data::object() )
 {
-    operator[]( TEXT ) = text;
+    operator[]( Identifier::text ) = text;
 }
 
 u1 TextDocumentContentChangeEvent::hasRange( void ) const
 {
-    return find( RANGE ) != end();
+    return find( Identifier::range ) != end();
 }
 
 Range TextDocumentContentChangeEvent::range( void ) const
 {
-    return at( RANGE );
+    return at( Identifier::range );
 }
 
 void TextDocumentContentChangeEvent::setRange( const Range& range )
 {
-    operator[]( RANGE ) = Data::from_cbor( Data::to_cbor( range ) );
+    operator[]( Identifier::range ) = Data::from_cbor( Data::to_cbor( range ) );
 }
 
 u1 TextDocumentContentChangeEvent::hasRangeLength( void ) const
 {
-    return find( RANGE_LENGTH ) != end();
+    return find( Identifier::rangeLength ) != end();
 }
 
 std::size_t TextDocumentContentChangeEvent::rangeLength( void ) const
 {
-    return at( RANGE_LENGTH ).get< std::size_t >();
+    return at( Identifier::rangeLength ).get< std::size_t >();
 }
 
 void TextDocumentContentChangeEvent::setRangeLength(
     const std::size_t rangeLength )
 {
-    operator[]( RANGE_LENGTH ) = rangeLength;
+    operator[]( Identifier::rangeLength ) = rangeLength;
 }
 
 std::string TextDocumentContentChangeEvent::text( void ) const
 {
-    return at( TEXT ).get< std::string >();
+    return at( Identifier::text ).get< std::string >();
 }
 
 u1 TextDocumentContentChangeEvent::isValid( const Data& data )
 {
-    if( data.is_object() and data.find( TEXT ) != data.end()
-        and data[ TEXT ].is_string() )
+    if( data.is_object() and data.find( Identifier::text ) != data.end()
+        and data[ Identifier::text ].is_string() )
     {
-        if( data.find( RANGE ) != data.end()
-            and not Range::isValid( data[ RANGE ] ) )
+        if( data.find( Identifier::range ) != data.end()
+            and not Range::isValid( data[ Identifier::range ] ) )
         {
             return false;
         }
 
-        if( data.find( RANGE_LENGTH ) != data.end()
-            and not data[ RANGE_LENGTH ].is_number() )
+        if( data.find( Identifier::rangeLength ) != data.end()
+            and not data[ Identifier::rangeLength ].is_number() )
         {
             return false;
         }
@@ -3237,41 +3291,41 @@ DidChangeTextDocumentParams::DidChangeTextDocumentParams(
     const std::vector< TextDocumentContentChangeEvent >& contentChanges )
 : Data( Data::object() )
 {
-    operator[]( TEXT_DOCUMENT )
-        = Data::from_cbor( Data::to_cbor( TEXT_DOCUMENT ) );
-    operator[]( CONTENT_CHANGES ) = Data::array();
+    operator[]( Identifier::textDocument )
+        = Data::from_cbor( Data::to_cbor( Identifier::textDocument ) );
+    operator[]( Identifier::contentChanges ) = Data::array();
 
     for( auto contentChange : contentChanges )
     {
-        operator[]( CONTENT_CHANGES ).push_back( contentChange );
+        operator[]( Identifier::contentChanges ).push_back( contentChange );
     }
 }
 
 VersionedTextDocumentIdentifier DidChangeTextDocumentParams::textDocument(
     void ) const
 {
-    return at( TEXT_DOCUMENT );
+    return at( Identifier::textDocument );
 }
 
 Data DidChangeTextDocumentParams::contentChanges( void ) const
 {
-    return at( CONTENT_CHANGES );
+    return at( Identifier::contentChanges );
 }
 
 u1 DidChangeTextDocumentParams::isValid( const Data& data )
 {
-    if( data.is_object() and data.find( TEXT_DOCUMENT ) != data.end()
-        and data[ TEXT_DOCUMENT ].is_object()
-        and data.find( CONTENT_CHANGES ) != data.end()
-        and data[ CONTENT_CHANGES ].is_array() )
+    if( data.is_object() and data.find( Identifier::textDocument ) != data.end()
+        and data[ Identifier::textDocument ].is_object()
+        and data.find( Identifier::contentChanges ) != data.end()
+        and data[ Identifier::contentChanges ].is_array() )
     {
         if( not VersionedTextDocumentIdentifier::isValid(
-                data[ TEXT_DOCUMENT ] ) )
+                data[ Identifier::textDocument ] ) )
         {
             return false;
         }
 
-        for( auto contentChange : data[ CONTENT_CHANGES ] )
+        for( auto contentChange : data[ Identifier::contentChanges ] )
         {
             if( not TextDocumentContentChangeEvent::isValid( contentChange ) )
             {
@@ -3306,25 +3360,25 @@ CodeActionContext::CodeActionContext(
     const std::vector< Diagnostic >& diagnostics )
 : Data( Data::object() )
 {
-    operator[]( DIAGNOSTICS ) = Data::array();
+    operator[]( Identifier::diagnostics ) = Data::array();
 
     for( auto diagnostic : diagnostics )
     {
-        operator[]( DIAGNOSTICS ).push_back( diagnostic );
+        operator[]( Identifier::diagnostics ).push_back( diagnostic );
     }
 }
 
 Data CodeActionContext::diagnostics( void ) const
 {
-    return at( DIAGNOSTICS );
+    return at( Identifier::diagnostics );
 }
 
 u1 CodeActionContext::isValid( const Data& data )
 {
-    if( data.is_object() and data.find( DIAGNOSTICS ) != data.end()
-        and data[ DIAGNOSTICS ].is_array() )
+    if( data.is_object() and data.find( Identifier::diagnostics ) != data.end()
+        and data[ Identifier::diagnostics ].is_array() )
     {
-        for( auto diagnostic : data[ DIAGNOSTICS ] )
+        for( auto diagnostic : data[ Identifier::diagnostics ] )
         {
             if( not TextDocumentContentChangeEvent::isValid( diagnostic ) )
             {
@@ -3359,35 +3413,37 @@ CodeActionParams::CodeActionParams( const TextDocumentIdentifier& textDocument,
     const Range& range, const CodeActionContext& context )
 : Data( Data::object() )
 {
-    operator[]( TEXT_DOCUMENT )
-        = Data::from_cbor( Data::to_cbor( TEXT_DOCUMENT ) );
-    operator[]( RANGE ) = Data::from_cbor( Data::to_cbor( RANGE ) );
-    operator[]( CONTEXT ) = Data::from_cbor( Data::to_cbor( CONTEXT ) );
+    operator[]( Identifier::textDocument )
+        = Data::from_cbor( Data::to_cbor( Identifier::textDocument ) );
+    operator[]( Identifier::range )
+        = Data::from_cbor( Data::to_cbor( Identifier::range ) );
+    operator[]( Identifier::context )
+        = Data::from_cbor( Data::to_cbor( Identifier::context ) );
 }
 
 TextDocumentIdentifier CodeActionParams::textDocument( void ) const
 {
-    return at( TEXT_DOCUMENT );
+    return at( Identifier::textDocument );
 }
 
 Range CodeActionParams::range( void ) const
 {
-    return at( RANGE );
+    return at( Identifier::range );
 }
 
 CodeActionContext CodeActionParams::context( void ) const
 {
-    return at( CONTEXT );
+    return at( Identifier::context );
 }
 
 u1 CodeActionParams::isValid( const Data& data )
 {
-    if( data.is_object() and data.find( TEXT_DOCUMENT ) != data.end()
-        and data[ TEXT_DOCUMENT ].is_object()
-        and data.find( RANGE ) != data.end()
-        and data[ RANGE ].is_object()
-        and data.find( CONTEXT ) != data.end()
-        and data[ CONTEXT ].is_object() )
+    if( data.is_object() and data.find( Identifier::textDocument ) != data.end()
+        and data[ Identifier::textDocument ].is_object()
+        and data.find( Identifier::range ) != data.end()
+        and data[ Identifier::range ].is_object()
+        and data.find( Identifier::context ) != data.end()
+        and data[ Identifier::context ].is_object() )
     {
         return true;
     }
@@ -3470,42 +3526,44 @@ PublishDiagnosticsParams::PublishDiagnosticsParams(
     const DocumentUri& uri, const std::vector< Diagnostic >& diagnostics )
 : Data( Data::object() )
 {
-    operator[]( URI ) = uri.toString();
-    operator[]( DIAGNOSTICS ) = Data::array();
+    operator[]( Identifier::uri ) = uri.toString();
+    operator[]( Identifier::diagnostics ) = Data::array();
 
     for( auto diagnostic : diagnostics )
     {
-        operator[]( DIAGNOSTICS ).push_back( diagnostic );
+        operator[]( Identifier::diagnostics ).push_back( diagnostic );
     }
 }
 
 DocumentUri PublishDiagnosticsParams::uri( void ) const
 {
-    return DocumentUri::fromString( at( URI ).get< std::string >() );
+    return DocumentUri::fromString(
+        at( Identifier::uri ).get< std::string >() );
 }
 
 Data PublishDiagnosticsParams::diagnostics( void ) const
 {
-    return at( DIAGNOSTICS );
+    return at( Identifier::diagnostics );
 }
 
 u1 PublishDiagnosticsParams::isValid( const Data& data )
 {
-    if( data.is_object() and data.find( URI ) != data.end()
-        and data[ URI ].is_string()
-        and data.find( DIAGNOSTICS ) != data.end()
-        and data[ DIAGNOSTICS ].is_array() )
+    if( data.is_object() and data.find( Identifier::uri ) != data.end()
+        and data[ Identifier::uri ].is_string()
+        and data.find( Identifier::diagnostics ) != data.end()
+        and data[ Identifier::diagnostics ].is_array() )
     {
         try
         {
-            DocumentUri::fromString( data[ URI ].get< std::string >() );
+            DocumentUri::fromString(
+                data[ Identifier::uri ].get< std::string >() );
         }
         catch( const std::exception& e )
         {
             return false;
         }
 
-        for( auto diagnostic : data[ DIAGNOSTICS ] )
+        for( auto diagnostic : data[ Identifier::diagnostics ] )
         {
             if( not Diagnostic::isValid( diagnostic ) )
             {
@@ -3540,18 +3598,18 @@ MarkedString::MarkedString(
     const std::string& language, const std::string& value )
 : Data( Data::object() )
 {
-    operator[]( LANGUAGE ) = language;
-    operator[]( VALUE ) = value;
+    operator[]( Identifier::language ) = language;
+    operator[]( Identifier::value ) = value;
 }
 
 std::string MarkedString::language( void ) const
 {
-    return at( LANGUAGE ).get< std::string >();
+    return at( Identifier::language ).get< std::string >();
 }
 
 std::string MarkedString::value( void ) const
 {
-    return at( VALUE ).get< std::string >();
+    return at( Identifier::value ).get< std::string >();
 }
 
 u1 MarkedString::isValid( const Data& data )
@@ -3560,10 +3618,11 @@ u1 MarkedString::isValid( const Data& data )
     {
         return true;
     }
-    else if( data.is_object() and data.find( LANGUAGE ) != data.end()
-             and data[ LANGUAGE ].is_string()
-             and data.find( VALUE ) != data.end()
-             and data[ VALUE ].is_string() )
+    else if( data.is_object()
+             and data.find( Identifier::language ) != data.end()
+             and data[ Identifier::language ].is_string()
+             and data.find( Identifier::value ) != data.end()
+             and data[ Identifier::value ].is_string() )
     {
         return true;
     }
@@ -3590,7 +3649,7 @@ HoverResult::HoverResult( const Data& data )
 
 HoverResult::HoverResult( const std::vector< MarkedString >& contents )
 {
-    operator[]( CONTENTS ) = Data::array();
+    operator[]( Identifier::contents ) = Data::array();
 
     for( auto content : contents )
     {
@@ -3600,43 +3659,44 @@ HoverResult::HoverResult( const std::vector< MarkedString >& contents )
 
 Data HoverResult::contents( void ) const
 {
-    return at( CONTENTS );
+    return at( Identifier::contents );
 }
 
 void HoverResult::addContent( const MarkedString& content )
 {
-    operator[]( CONTENTS ).push_back( content );
+    operator[]( Identifier::contents ).push_back( content );
 }
 
 u1 HoverResult::hasRange( void ) const
 {
-    return find( RANGE ) != end();
+    return find( Identifier::range ) != end();
 }
 
 Range HoverResult::range( void ) const
 {
-    return at( RANGE );
+    return at( Identifier::range );
 }
 
 void HoverResult::setRange( const Range& range )
 {
-    operator[]( RANGE ) = Data::from_cbor( Data::to_cbor( range ) );
+    operator[]( Identifier::range ) = Data::from_cbor( Data::to_cbor( range ) );
 }
 
 u1 HoverResult::isValid( const Data& data )
 {
-    if( data.is_object() and data.find( CONTENTS ) != data.end()
-        and ( data[ CONTENTS ].is_object() or data[ CONTENTS ].is_array() ) )
+    if( data.is_object() and data.find( Identifier::contents ) != data.end()
+        and ( data[ Identifier::contents ].is_object()
+                or data[ Identifier::contents ].is_array() ) )
     {
-        if( data[ CONTENTS ].is_object()
-            and not MarkedString::isValid( data[ CONTENTS ] ) )
+        if( data[ Identifier::contents ].is_object()
+            and not MarkedString::isValid( data[ Identifier::contents ] ) )
         {
             return false;
         }
 
-        if( data[ CONTENTS ].is_array() )
+        if( data[ Identifier::contents ].is_array() )
         {
-            for( auto content : data[ CONTENTS ] )
+            for( auto content : data[ Identifier::contents ] )
             {
                 if( not MarkedString::isValid( content ) )
                 {

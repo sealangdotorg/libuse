@@ -50,7 +50,7 @@ Message::Message( const ID id )
 : Data( Data::object() )
 , m_id( id )
 {
-    operator[]( JSONRPC ) = JSONRPC_VERSION;
+    operator[]( Identifier::jsonrpc ) = Identifier::jsonrpc_version;
 }
 
 Message::Message( const Data& data )
@@ -64,20 +64,20 @@ Message::Message( const Data& data )
             "'string'" );
     }
 
-    const auto& jsonrpc = operator[]( JSONRPC ).get< std::string >();
-    if( jsonrpc.compare( JSONRPC_VERSION ) != 0 )
+    const auto& jsonrpc = at( Identifier::jsonrpc ).get< std::string >();
+    if( jsonrpc.compare( Identifier::jsonrpc_version ) != 0 )
     {
         throw std::invalid_argument(
             "invalid data found, unsupported JSON-RPC version '" + jsonrpc
             + "', only version '"
-            + JSONRPC_VERSION
+            + Identifier::jsonrpc_version
             + "' is supported" );
     }
 
-    if( find( LSP::ID ) != end() )
+    if( find( Identifier::id ) != end() )
     {
         // can be a request or a response message
-        if( find( METHOD ) != end() )
+        if( find( Identifier::method ) != end() )
         {
             m_id = ID::REQUEST_MESSAGE;
             if( not RequestMessage::isValid( data ) )
@@ -99,7 +99,7 @@ Message::Message( const Data& data )
     else
     {
         // can be a notification message
-        if( find( METHOD ) != end() )
+        if( find( Identifier::method ) != end() )
         {
             m_id = ID::NOTIFICATION_MESSAGE;
             if( not NotificationMessage::isValid( data ) )
@@ -163,8 +163,8 @@ void Message::process( ServerInterface& interface ) const
 
 u1 Message::isValid( const Data& data )
 {
-    if( data.is_object() and data.find( JSONRPC ) != data.end()
-        and data[ JSONRPC ].is_string() )
+    if( data.is_object() and data.find( Identifier::jsonrpc ) != data.end()
+        and data[ Identifier::jsonrpc ].is_string() )
     {
         return true;
     }
@@ -188,23 +188,23 @@ RequestMessage::RequestMessage(
     const std::size_t id, const std::string& method )
 : Message( ID::REQUEST_MESSAGE )
 {
-    operator[]( LSP::ID ) = id;
-    operator[]( METHOD ) = method;
-    operator[]( PARAMS ) = Data::object();
+    operator[]( Identifier::id ) = id;
+    operator[]( Identifier::method ) = method;
+    operator[]( Identifier::params ) = Data::object();
 }
 
 RequestMessage::RequestMessage(
     const std::string& id, const std::string& method )
 : Message( ID::REQUEST_MESSAGE )
 {
-    operator[]( LSP::ID ) = id;
-    operator[]( METHOD ) = method;
-    operator[]( PARAMS ) = Data::object();
+    operator[]( Identifier::id ) = id;
+    operator[]( Identifier::method ) = method;
+    operator[]( Identifier::params ) = Data::object();
 }
 
 std::string RequestMessage::id( void ) const
 {
-    const auto& data_id = operator[]( LSP::ID );
+    const auto& data_id = operator[]( Identifier::id );
     if( data_id.is_number() )
     {
         return std::to_string( data_id.get< std::size_t >() );
@@ -217,22 +217,22 @@ std::string RequestMessage::id( void ) const
 
 std::string RequestMessage::method( void ) const
 {
-    return operator[]( METHOD ).get< std::string >();
+    return at( Identifier::method ).get< std::string >();
 }
 
 u1 RequestMessage::hasParams( void ) const
 {
-    return find( PARAMS ) != end();
+    return find( Identifier::params ) != end();
 }
 
 Data RequestMessage::params( void ) const
 {
-    return operator[]( PARAMS );
+    return at( Identifier::params );
 }
 
 void RequestMessage::setParams( const Data& data )
 {
-    operator[]( PARAMS ) = Data::from_cbor( Data::to_cbor( data ) );
+    operator[]( Identifier::params ) = Data::from_cbor( Data::to_cbor( data ) );
 }
 
 void RequestMessage::process( ServerInterface& interface ) const
@@ -247,14 +247,14 @@ void RequestMessage::process( ServerInterface& interface ) const
         switch( mv )
         {
             // default
-            case String::value( INITIALIZE ):
+            case String::value( Identifier::initialize ):
             {
                 const auto& parameters = InitializeParams( params() );
                 const auto& result = interface.initialize( parameters );
                 response.setResult( result );
                 break;
             }
-            case String::value( SHUTDOWN ):
+            case String::value( Identifier::shutdown ):
             {
                 interface.shutdown();
                 response.setResult( nullptr );
@@ -300,13 +300,14 @@ void RequestMessage::process( ServerInterface& interface ) const
 
 u1 RequestMessage::isValid( const Data& data )
 {
-    if( data.find( LSP::ID ) != data.end()
-        and ( data[ LSP::ID ].is_string() or data[ LSP::ID ].is_number() )
-        and data.find( METHOD ) != data.end()
-        and data[ METHOD ].is_string() )
+    if( data.find( Identifier::id ) != data.end()
+        and ( data[ Identifier::id ].is_string()
+                or data[ Identifier::id ].is_number() )
+        and data.find( Identifier::method ) != data.end()
+        and data[ Identifier::method ].is_string() )
     {
-        if( data.find( PARAMS ) != data.end()
-            and not data[ PARAMS ].is_object() )
+        if( data.find( Identifier::params ) != data.end()
+            and not data[ Identifier::params ].is_object() )
         {
             return false;
         }
@@ -332,28 +333,28 @@ NotificationMessage::NotificationMessage( const Data& data )
 NotificationMessage::NotificationMessage( const std::string& method )
 : Message( ID::NOTIFICATION_MESSAGE )
 {
-    operator[]( METHOD ) = method;
-    operator[]( PARAMS ) = Data::object();
+    operator[]( Identifier::method ) = method;
+    operator[]( Identifier::params ) = Data::object();
 }
 
 std::string NotificationMessage::method( void ) const
 {
-    return operator[]( METHOD ).get< std::string >();
+    return at( Identifier::method ).get< std::string >();
 }
 
 u1 NotificationMessage::hasParams( void ) const
 {
-    return find( PARAMS ) != end();
+    return find( Identifier::params ) != end();
 }
 
 Data NotificationMessage::params( void ) const
 {
-    return operator[]( PARAMS );
+    return at( Identifier::params );
 }
 
 void NotificationMessage::setParams( const Data& data )
 {
-    operator[]( PARAMS ) = Data::from_cbor( Data::to_cbor( data ) );
+    operator[]( Identifier::params ) = Data::from_cbor( Data::to_cbor( data ) );
 }
 
 void NotificationMessage::process( ServerInterface& interface ) const
@@ -368,12 +369,12 @@ void NotificationMessage::process( ServerInterface& interface ) const
         switch( mv )
         {
             // general
-            case String::value( INITIALIZED ):
+            case String::value( Identifier::initialized ):
             {
                 interface.initialized();
                 break;
             }
-            case String::value( EXIT ):
+            case String::value( Identifier::exit ):
             {
                 interface.exit();
                 break;
@@ -417,10 +418,11 @@ void NotificationMessage::process( ServerInterface& interface ) const
 
 u1 NotificationMessage::isValid( const Data& data )
 {
-    if( data.find( METHOD ) != data.end() and data[ METHOD ].is_string() )
+    if( data.find( Identifier::method ) != data.end()
+        and data[ Identifier::method ].is_string() )
     {
-        if( data.find( PARAMS ) != data.end()
-            and not data[ PARAMS ].is_object() )
+        if( data.find( Identifier::params ) != data.end()
+            and not data[ Identifier::params ].is_object() )
         {
             return false;
         }
@@ -446,61 +448,50 @@ ResponseMessage::ResponseMessage( const Data& data )
 ResponseMessage::ResponseMessage( const std::size_t id )
 : Message( ID::RESPONSE_MESSAGE )
 {
-    operator[]( LSP::ID ) = id;
+    operator[]( Identifier::id ) = id;
 }
 
 ResponseMessage::ResponseMessage( const std::string id )
 : Message( ID::RESPONSE_MESSAGE )
 {
-    operator[]( LSP::ID ) = id;
+    operator[]( Identifier::id ) = id;
 }
 
 ResponseMessage::ResponseMessage( void )
 : Message( ID::RESPONSE_MESSAGE )
 {
-    operator[]( LSP::ID ) = nullptr;
+    operator[]( Identifier::id ) = nullptr;
 }
 
 u1 ResponseMessage::hasResult( void ) const
 {
-    return find( RESULT ) != end();
+    return find( Identifier::result ) != end();
 }
 
 Data ResponseMessage::result( void ) const
 {
-    if( not hasResult() )
-    {
-        throw std::domain_error(
-            "response message has no response 'result' field" );
-    }
-
-    return operator[]( RESULT );
+    return at( Identifier::result );
 }
 
 void ResponseMessage::setResult( const Data& result )
 {
-    operator[]( RESULT ) = Data::from_cbor( Data::to_cbor( result ) );
+    operator[]( Identifier::result )
+        = Data::from_cbor( Data::to_cbor( result ) );
 }
 
 u1 ResponseMessage::hasError( void ) const
 {
-    return find( ERROR ) != end();
+    return find( Identifier::error ) != end();
 }
 
 ResponseError ResponseMessage::error( void ) const
 {
-    if( not hasError() )
-    {
-        throw std::domain_error(
-            "response message has no response 'error' field" );
-    }
-
-    return ResponseError{ operator[]( ERROR ) };
+    return at( Identifier::error );
 }
 
 void ResponseMessage::setError( const ResponseError& error )
 {
-    operator[]( ERROR ) = Data::from_cbor( Data::to_cbor( error ) );
+    operator[]( Identifier::error ) = Data::from_cbor( Data::to_cbor( error ) );
 }
 
 void ResponseMessage::setError( const ErrorCode code, const std::string& name )
@@ -523,17 +514,18 @@ void ResponseMessage::process( ServerInterface& interface ) const
 
 u1 ResponseMessage::isValid( const Data& data )
 {
-    if( data.find( LSP::ID ) != data.end()
-        and ( data[ LSP::ID ].is_string() or data[ LSP::ID ].is_number() ) )
+    if( data.find( Identifier::id ) != data.end()
+        and ( data[ Identifier::id ].is_string()
+                or data[ Identifier::id ].is_number() ) )
     {
-        if( data.find( RESULT ) != data.end()
-            and not data[ RESULT ].is_object() )
+        if( data.find( Identifier::result ) != data.end()
+            and not data[ Identifier::result ].is_object() )
         {
             return false;
         }
 
-        if( data.find( ERROR ) != data.end()
-            and not ResponseError::isValid( data[ ERROR ] ) )
+        if( data.find( Identifier::error ) != data.end()
+            and not ResponseError::isValid( data[ Identifier::error ] ) )
         {
             return false;
         }

@@ -25,10 +25,6 @@
 #ifndef _LIB_STDHL_CPP_NETWORK_LSP_IDENTIFIER_H_
 #define _LIB_STDHL_CPP_NETWORK_LSP_IDENTIFIER_H_
 
-#include "Message.h"
-
-#include "../../standard/rfc3986.h"
-
 /**
    @brief    TBD
 
@@ -43,141 +39,229 @@ namespace libstdhl
     {
         namespace LSP
         {
-            constexpr const char* JSONRPC = "jsonrpc";
-            constexpr const char* JSONRPC_VERSION = "2.0";
-
-            constexpr const char* ID = "id";
-            constexpr const char* METHOD = "method";
-            constexpr const char* PARAMS = "params";
-            constexpr const char* RESULT = "result";
-            constexpr const char* ERROR = "error";
-            constexpr const char* DATA = "data";
-
-            constexpr const char* NEW_TEXT = "newText";
-            constexpr const char* VERSION = "version";
-            constexpr const char* TEXT_DOCUMENT = "textDocument";
-            constexpr const char* EDITS = "edits";
-            constexpr const char* DOCUMENT_CHANGES = "documentChanges";
-            constexpr const char* LANGUAGE = "language";
-            constexpr const char* LANGUAGE_ID = "languageId";
-            constexpr const char* TEXT = "text";
-            constexpr const char* POSITION = "position";
-            constexpr const char* SCHEME = "scheme";
-            constexpr const char* PATTERN = "pattern";
-
-            constexpr const char* DYNAMIC_REGISTRATION = "dynamicRegistration";
-            constexpr const char* APPLY_EDIT = "applyEdit";
-            constexpr const char* WORKSPACE_EDIT = "workspaceEdit";
-            constexpr const char* DID_CHANGE_CONFIGURATION
-                = "didChangeConfiguration";
-            constexpr const char* DID_CHANGE_WATCHED_FILES
-                = "didChangeWatchedFiles";
-            constexpr const char* SYMBOL = "symbol";
-            constexpr const char* EXECUTE_COMMAND = "executeCommand";
-
-            constexpr const char* WILL_SAVE = "willSave";
-            constexpr const char* WILL_SAVE_WAIT_UNITL = "willSaveWaitUntil";
-            constexpr const char* DID_SAVE = "didSave";
-            constexpr const char* SAVE = "save";
-
-            constexpr const char* SNIPPET_SUPPORT = "snippetSupport";
-            constexpr const char* COMPLETION_ITEM = "completionItem";
-
-            constexpr const char* SYNCHRONIZATION = "synchronization";
-            constexpr const char* COMPLETION = "completion";
-            constexpr const char* HOVER = "hover";
-            constexpr const char* SIGNATURE_HELP = "signatureHelp";
-            constexpr const char* REFERENCES = "references";
-            constexpr const char* DOCUMENT_HIGHLIGHT = "documentHighlight";
-            constexpr const char* DOCUMENT_SYMBOL = "documentSymbol";
-            constexpr const char* FORMATTING = "formatting";
-            constexpr const char* RANGE_FORMATTING = "rangeFormatting";
-            constexpr const char* ON_TYPE_FORMATTING = "onTypeFormatting";
-            constexpr const char* DEFINITION = "definition";
-            constexpr const char* CODE_ACTION = "codeAction";
-            constexpr const char* CODE_LENS = "codeLens";
-            constexpr const char* DOCUMENT_LINK = "documentLink";
-            constexpr const char* RENAME = "rename";
-            constexpr const char* RETRY = "retry";
-
-            constexpr const char* WORKSPACE = "workspace";
-            constexpr const char* EXPERIMENTAL = "experimental";
-            constexpr const char* INCLUDE_TEXT = "includeText";
-            constexpr const char* OPEN_CLOSE = "openClose";
-            constexpr const char* CHANGE = "change";
-
-            constexpr const char* RESOLVE_PROVIDER = "resolveProvider";
-            constexpr const char* TRIGGER_CHARACTERS = "triggerCharacters";
-            constexpr const char* MORE_TRIGGER_CHARACTER
-                = "moreTriggerCharacter";
-            constexpr const char* FIRST_TRIGGER_CHARACTER
-                = "firstTriggerCharacter";
-
-            constexpr const char* TEXT_DOCUMENT_SYNC = "textDocumentSync";
-            constexpr const char* HOVER_PROVIDER = "hoverProvider";
-            constexpr const char* COMPLETION_PROVIDER = "completionProvider";
-            constexpr const char* SIGNATURE_HELP_PROVIDER
-                = "signatureHelpProvider";
-            constexpr const char* DEFINITION_PROVIDER = "definitionProvider";
-            constexpr const char* REFERENCES_PROVIDER = "referencesProvider";
-            constexpr const char* DOCUMENT_HIGHLIGHT_PROVIDER
-                = "documentHighlightProvider";
-            constexpr const char* DOCUMENT_SYMBOL_PROVIDER
-                = "documentSymbolProvider";
-            constexpr const char* WORKSPACE_SYMBOL_PROVIDER
-                = "workspaceSymbolProvider";
-            constexpr const char* CODE_ACTION_PROVIDER = "codeActionProvider";
-            constexpr const char* CODE_LENS_PROVIDER = "codeLensProvider";
-            constexpr const char* DOCUMENT_FORMATTING_PROVIDER
-                = "documentFormattingProvider";
-            constexpr const char* DOCUMENT_RANGE_FORMATTING_PROVIDER
-                = "documentRangeFormattingProvider";
-            constexpr const char* DOCUMENT_ON_TYPE_FORMATTING_PROVIDER
-                = "documentOnTypeFormattingProvider";
-            constexpr const char* RENAME_PROVIDER = "renameProvider";
-            constexpr const char* DOCUMENT_LINK_PROVIDER
-                = "documentLinkProvider";
-            constexpr const char* EXECUTE_COMMAND_PROVIDER
-                = "executeCommandProvider";
-
-            constexpr const char* URI = "uri";
-            constexpr const char* RANGE = "range";
-            constexpr const char* LINE = "line";
-            constexpr const char* CHARACTER = "character";
-            constexpr const char* START = "start";
-            constexpr const char* END = "end";
-            constexpr const char* MESSAGE = "message";
-            constexpr const char* SEVERITY = "severity";
-            constexpr const char* CODE = "code";
-            constexpr const char* SOURCE = "source";
-            constexpr const char* COMMAND = "command";
-            constexpr const char* COMMANDS = "commands";
-            constexpr const char* TITLE = "title";
-            constexpr const char* ARGUMENTS = "arguments";
-            constexpr const char* PROCESS_ID = "processId";
-            constexpr const char* ROOT_URI = "rootUri";
-            constexpr const char* CAPABILITIES = "capabilities";
-            constexpr const char* TRACE = "trace";
-
-            constexpr const char* INITIALIZATION_OPTIONS
-                = "initializationOptions";
-
-            constexpr const char* INITIALIZE = "initialize";
-            constexpr const char* INITIALIZED = "initialized";
-
-            constexpr const char* SHUTDOWN = "shutdown";
-            constexpr const char* EXIT = "exit";
-
-            constexpr const char* RANGE_LENGTH = "rangeLength";
-            constexpr const char* CONTENT_CHANGES = "contentChanges";
-            constexpr const char* DIAGNOSTICS = "diagnostics";
-            constexpr const char* CONTEXT = "context";
-
-            constexpr const char* VALUE = "value";
-            constexpr const char* CONTENTS = "contents";
-
             namespace Identifier
             {
+                constexpr const char* jsonrpc = "jsonrpc";
+
+                constexpr const char* jsonrpc_version = "2.0";
+
+                constexpr const char* id = "id";
+
+                constexpr const char* method = "method";
+
+                constexpr const char* params = "params";
+
+                constexpr const char* result = "result";
+
+                constexpr const char* error = "error";
+
+                constexpr const char* data = "data";
+
+                constexpr const char* newText = "newText";
+
+                constexpr const char* version = "version";
+
+                constexpr const char* textDocument = "textDocument";
+
+                constexpr const char* textDocumentSync = "textDocumentSync";
+
+                constexpr const char* edits = "edits";
+
+                constexpr const char* documentChanges = "documentChanges";
+
+                constexpr const char* language = "language";
+
+                constexpr const char* languageId = "languageId";
+
+                constexpr const char* text = "text";
+
+                constexpr const char* position = "position";
+
+                constexpr const char* scheme = "scheme";
+
+                constexpr const char* pattern = "pattern";
+
+                constexpr const char* dynamicRegistration
+                    = "dynamicRegistration";
+
+                constexpr const char* applyEdit = "applyEdit";
+
+                constexpr const char* workspaceEdit = "workspaceEdit";
+
+                constexpr const char* didChangeConfiguration
+                    = "didChangeConfiguration";
+
+                constexpr const char* didChangeWatchedFiles
+                    = "didChangeWatchedFiles";
+
+                constexpr const char* symbol = "symbol";
+
+                constexpr const char* executeCommand = "executeCommand";
+
+                constexpr const char* willSave = "willSave";
+
+                constexpr const char* willSaveWaitUntil = "willSaveWaitUntil";
+
+                constexpr const char* didSave = "didSave";
+
+                constexpr const char* save = "save";
+
+                constexpr const char* snippetSupport = "snippetSupport";
+
+                constexpr const char* completionItem = "completionItem";
+
+                constexpr const char* synchronization = "synchronization";
+
+                constexpr const char* completion = "completion";
+
+                constexpr const char* hover = "hover";
+
+                constexpr const char* signatureHelp = "signatureHelp";
+
+                constexpr const char* references = "references";
+
+                constexpr const char* documentHighlight = "documentHighlight";
+
+                constexpr const char* documentSymbol = "documentSymbol";
+
+                constexpr const char* formatting = "formatting";
+
+                constexpr const char* rangeFormatting = "rangeFormatting";
+
+                constexpr const char* onTypeFormatting = "onTypeFormatting";
+
+                constexpr const char* definition = "definition";
+
+                constexpr const char* codeAction = "codeAction";
+
+                constexpr const char* codeLens = "codeLens";
+
+                constexpr const char* documentLink = "documentLink";
+
+                constexpr const char* rename = "rename";
+
+                constexpr const char* retry = "retry";
+
+                constexpr const char* workspace = "workspace";
+
+                constexpr const char* experimental = "experimental";
+
+                constexpr const char* includeText = "includeText";
+
+                constexpr const char* openClose = "openClose";
+
+                constexpr const char* change = "change";
+
+                constexpr const char* resolveProvider = "resolveProvider";
+
+                constexpr const char* triggerCharacters = "triggerCharacters";
+
+                constexpr const char* moreTriggerCharacter
+                    = "moreTriggerCharacter";
+
+                constexpr const char* firstTriggerCharacter
+                    = "firstTriggerCharacter";
+
+                constexpr const char* hoverProvider = "hoverProvider";
+
+                constexpr const char* completionProvider = "completionProvider";
+
+                constexpr const char* signatureHelpProvider
+                    = "signatureHelpProvider";
+
+                constexpr const char* definitionProvider = "definitionProvider";
+
+                constexpr const char* referencesProvider = "referencesProvider";
+
+                constexpr const char* documentHighlightProvider
+                    = "documentHighlightProvider";
+
+                constexpr const char* documentSymbolProvider
+                    = "documentSymbolProvider";
+
+                constexpr const char* workspaceSymbolProvider
+                    = "workspaceSymbolProvider";
+
+                constexpr const char* codeActionProvider = "codeActionProvider";
+
+                constexpr const char* codeLensProvider = "codeLensProvider";
+
+                constexpr const char* documentFormattingProvider
+                    = "documentFormattingProvider";
+
+                constexpr const char* documentRangeFormattingProvider
+                    = "documentRangeFormattingProvider";
+
+                constexpr const char* documentOnTypeFormattingProvider
+                    = "documentOnTypeFormattingProvider";
+
+                constexpr const char* renameProvider = "renameProvider";
+
+                constexpr const char* documentLinkProvider
+                    = "documentLinkProvider";
+
+                constexpr const char* executeCommandProvider
+                    = "executeCommandProvider";
+
+                constexpr const char* uri = "uri";
+
+                constexpr const char* range = "range";
+
+                constexpr const char* line = "line";
+
+                constexpr const char* character = "character";
+
+                constexpr const char* start = "start";
+
+                constexpr const char* end = "end";
+
+                constexpr const char* message = "message";
+
+                constexpr const char* severity = "severity";
+
+                constexpr const char* code = "code";
+
+                constexpr const char* source = "source";
+
+                constexpr const char* command = "command";
+
+                constexpr const char* commands = "commands";
+
+                constexpr const char* title = "title";
+
+                constexpr const char* arguments = "arguments";
+
+                constexpr const char* processId = "processId";
+
+                constexpr const char* rootUri = "rootUri";
+
+                constexpr const char* capabilities = "capabilities";
+
+                constexpr const char* trace = "trace";
+
+                constexpr const char* initializationOptions
+                    = "initializationOptions";
+
+                constexpr const char* initialize = "initialize";
+
+                constexpr const char* initialized = "initialized";
+
+                constexpr const char* shutdown = "shutdown";
+
+                constexpr const char* exit = "exit";
+
+                constexpr const char* rangeLength = "rangeLength";
+
+                constexpr const char* contentChanges = "contentChanges";
+
+                constexpr const char* diagnostics = "diagnostics";
+
+                constexpr const char* context = "context";
+
+                constexpr const char* value = "value";
+
+                constexpr const char* contents = "contents";
+
                 constexpr const char* textDocument_publishDiagnostics
                     = "textDocument/publishDiagnostics";
 
