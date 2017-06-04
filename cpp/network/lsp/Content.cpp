@@ -60,13 +60,13 @@ ResponseError::ResponseError( const ErrorCode code, const std::string& message )
 
 ErrorCode ResponseError::code( void ) const
 {
-    const auto c = operator[]( CODE ).get< i32 >();
+    const auto c = at( CODE ).get< i32 >();
     return static_cast< ErrorCode >( c );
 }
 
 std::string ResponseError::message( void ) const
 {
-    return operator[]( MESSAGE );
+    return at( MESSAGE );
 }
 
 u1 ResponseError::hasData( void ) const
@@ -76,13 +76,12 @@ u1 ResponseError::hasData( void ) const
 
 Data ResponseError::data( void ) const
 {
-    assert( hasData() );
-    return operator[]( DATA );
+    return at( DATA );
 }
 
 void ResponseError::setData( const Data& data )
 {
-    operator[]( DATA ) = data;
+    operator[]( DATA ) = Data::from_cbor( Data::to_cbor( data ) );
 }
 
 u1 ResponseError::isValid( const Data& data )
@@ -128,12 +127,12 @@ Position::Position( const std::size_t line, const std::size_t character )
 
 std::size_t Position::line( void ) const
 {
-    return operator[]( LINE ).get< std::size_t >();
+    return at( LINE ).get< std::size_t >();
 }
 
 std::size_t Position::character( void ) const
 {
-    return operator[]( CHARACTER ).get< std::size_t >();
+    return at( CHARACTER ).get< std::size_t >();
 }
 
 u1 Position::isValid( const Data& data )
@@ -166,12 +165,12 @@ Range::Range( const Position& start, const Position& end )
 
 Position Range::start( void ) const
 {
-    return Position( operator[]( START ) );
+    return at( START );
 }
 
 Position Range::end( void ) const
 {
-    return Position( operator[]( END ) );
+    return at( END );
 }
 
 u1 Range::isValid( const Data& data )
@@ -180,13 +179,6 @@ u1 Range::isValid( const Data& data )
            and Position::isValid( data[ START ] )
            and data.find( END ) != data.end()
            and Position::isValid( data[ END ] );
-}
-
-static void to_json( Data& data, const Range& range )
-{
-    data = Data{
-        { START, range.start() }, { END, range.start() },
-    };
 }
 
 //
@@ -207,18 +199,17 @@ Location::Location( const DocumentUri& uri, const Range& range )
 : Data( Data::object() )
 {
     operator[]( URI ) = uri.toString();
-    auto& r = operator[]( RANGE );
-    to_json( r, range );
+    operator[]( RANGE ) = Data::from_cbor( Data::to_cbor( range ) );
 }
 
 DocumentUri Location::uri( void ) const
 {
-    return DocumentUri::fromString( operator[]( URI ).get< std::string >() );
+    return DocumentUri::fromString( at( URI ).get< std::string >() );
 }
 
 Range Location::range( void ) const
 {
-    return Range( operator[]( RANGE ) );
+    return at( RANGE );
 }
 
 u1 Location::isValid( const Data& data )
@@ -274,12 +265,12 @@ Diagnostic::Diagnostic( const Range& range, const std::string& message )
 
 Range Diagnostic::range( void ) const
 {
-    return Range( operator[]( RANGE ) );
+    return at( RANGE );
 }
 
 std::string Diagnostic::message( void ) const
 {
-    return operator[]( MESSAGE ).get< std::string >();
+    return at( MESSAGE ).get< std::string >();
 }
 
 u1 Diagnostic::hasSeverity( void ) const
@@ -289,9 +280,8 @@ u1 Diagnostic::hasSeverity( void ) const
 
 DiagnosticSeverity Diagnostic::severity( void ) const
 {
-    assert( hasSeverity() );
-    return static_cast< DiagnosticSeverity >( operator[](
-        SEVERITY ).get< std::size_t >() );
+    return static_cast< DiagnosticSeverity >(
+        at( SEVERITY ).get< std::size_t >() );
 }
 
 void Diagnostic::setSeverity( const DiagnosticSeverity& severity )
@@ -306,8 +296,7 @@ u1 Diagnostic::hasCode( void ) const
 
 std::string Diagnostic::code( void ) const
 {
-    assert( hasCode() );
-    return operator[]( CODE ).get< std::string >();
+    return at( CODE ).get< std::string >();
 }
 
 void Diagnostic::setCode( const std::string& code )
@@ -327,8 +316,7 @@ u1 Diagnostic::hasSource( void ) const
 
 std::string Diagnostic::source( void ) const
 {
-    assert( hasSource() );
-    return operator[]( SOURCE ).get< std::string >();
+    return at( SOURCE ).get< std::string >();
 }
 
 void Diagnostic::setSource( const std::string& source )
@@ -398,12 +386,12 @@ Command::Command( const std::string& title, const std::string& command )
 
 std::string Command::title( void ) const
 {
-    return operator[]( TITLE ).get< std::string >();
+    return at( TITLE ).get< std::string >();
 }
 
 std::string Command::command( void ) const
 {
-    return operator[]( COMMAND ).get< std::string >();
+    return at( COMMAND ).get< std::string >();
 }
 
 u1 Command::hasArguments( void ) const
@@ -413,8 +401,7 @@ u1 Command::hasArguments( void ) const
 
 Data Command::arguments( void ) const
 {
-    assert( hasArguments() );
-    return operator[]( ARGUMENTS );
+    return at( ARGUMENTS );
 }
 
 void Command::addArgument( const Data& argument )
@@ -460,19 +447,18 @@ TextEdit::TextEdit( const Data& data )
 TextEdit::TextEdit( const Range& range, const std::string newText )
 : Data( Data::object() )
 {
-    auto& r = operator[]( RANGE );
-    to_json( r, range );
+    operator[]( RANGE ) = Data::from_cbor( Data::to_cbor( range ) );
     operator[]( NEW_TEXT ) = newText;
 }
 
 Range TextEdit::range( void ) const
 {
-    return Range( operator[]( RANGE ) );
+    return at( RANGE );
 }
 
 std::string TextEdit::newText( void ) const
 {
-    return operator[]( NEW_TEXT ).get< std::string >();
+    return at( NEW_TEXT ).get< std::string >();
 }
 
 u1 TextEdit::isValid( const Data& data )
@@ -518,7 +504,7 @@ TextDocumentIdentifier::TextDocumentIdentifier( const DocumentUri& uri )
 
 DocumentUri TextDocumentIdentifier::uri( void ) const
 {
-    return DocumentUri::fromString( operator[]( URI ).get< std::string >() );
+    return DocumentUri::fromString( at( URI ).get< std::string >() );
 }
 
 u1 TextDocumentIdentifier::isValid( const Data& data )
@@ -568,7 +554,7 @@ VersionedTextDocumentIdentifier::VersionedTextDocumentIdentifier(
 
 std::size_t VersionedTextDocumentIdentifier::version( void ) const
 {
-    return operator[]( VERSION ).get< std::size_t >();
+    return at( VERSION ).get< std::size_t >();
 }
 
 u1 VersionedTextDocumentIdentifier::isValid( const Data& data )
@@ -608,7 +594,8 @@ TextDocumentEdit::TextDocumentEdit(
     const std::vector< TextEdit >& edits )
 : Data( Data::object() )
 {
-    operator[]( TEXT_DOCUMENT ) = textDocument;
+    operator[]( TEXT_DOCUMENT )
+        = Data::from_cbor( Data::to_cbor( textDocument ) );
     operator[]( EDITS ) = Data::array();
 
     for( auto edit : edits )
@@ -619,12 +606,12 @@ TextDocumentEdit::TextDocumentEdit(
 
 VersionedTextDocumentIdentifier TextDocumentEdit::textDocument( void ) const
 {
-    return operator[]( TEXT_DOCUMENT );
+    return at( TEXT_DOCUMENT );
 }
 
 Data TextDocumentEdit::edits( void ) const
 {
-    return operator[]( EDITS );
+    return at( EDITS );
 }
 
 u1 TextDocumentEdit::isValid( const Data& data )
@@ -684,8 +671,7 @@ u1 WorkspaceEdit::hasDocumentChanges( void ) const
 
 Data WorkspaceEdit::documentChanges( void ) const
 {
-    assert( hasDocumentChanges() );
-    return operator[]( DOCUMENT_CHANGES );
+    return at( DOCUMENT_CHANGES );
 }
 
 void WorkspaceEdit::addDocumentChange( const TextDocumentEdit& documentChange )
@@ -743,22 +729,22 @@ TextDocumentItem::TextDocumentItem( const DocumentUri& uri,
 
 DocumentUri TextDocumentItem::uri( void ) const
 {
-    return DocumentUri::fromString( operator[]( URI ).get< std::string >() );
+    return DocumentUri::fromString( at( URI ).get< std::string >() );
 }
 
 std::string TextDocumentItem::languageId( void ) const
 {
-    return operator[]( LANGUAGE_ID ).get< std::string >();
+    return at( LANGUAGE_ID ).get< std::string >();
 }
 
 std::size_t TextDocumentItem::version( void ) const
 {
-    return operator[]( VERSION ).get< std::size_t >();
+    return at( VERSION ).get< std::size_t >();
 }
 
 std::string TextDocumentItem::text( void ) const
 {
-    return operator[]( TEXT ).get< std::string >();
+    return at( TEXT ).get< std::string >();
 }
 
 u1 TextDocumentItem::isValid( const Data& data )
@@ -808,18 +794,19 @@ TextDocumentPositionParams::TextDocumentPositionParams(
     const TextDocumentIdentifier& textDocument, const Position& position )
 : Data( Data::object() )
 {
-    operator[]( TEXT_DOCUMENT ) = textDocument;
-    operator[]( POSITION ) = position;
+    operator[]( TEXT_DOCUMENT )
+        = Data::from_cbor( Data::to_cbor( textDocument ) );
+    operator[]( POSITION ) = Data::from_cbor( Data::to_cbor( position ) );
 }
 
 TextDocumentIdentifier TextDocumentPositionParams::textDocument( void ) const
 {
-    return operator[]( TEXT_DOCUMENT );
+    return at( TEXT_DOCUMENT );
 }
 
 Position TextDocumentPositionParams::position( void ) const
 {
-    return operator[]( POSITION );
+    return at( POSITION );
 }
 
 u1 TextDocumentPositionParams::isValid( const Data& data )
@@ -874,8 +861,7 @@ u1 DocumentFilter::hasLanguage( void ) const
 
 std::string DocumentFilter::language( void ) const
 {
-    assert( hasLanguage() );
-    return operator[]( LANGUAGE ).get< std::string >();
+    return at( LANGUAGE ).get< std::string >();
 }
 
 void DocumentFilter::setLanguage( const std::string& language )
@@ -890,8 +876,7 @@ u1 DocumentFilter::hasScheme( void ) const
 
 std::string DocumentFilter::scheme( void ) const
 {
-    assert( hasScheme() );
-    return operator[]( SCHEME ).get< std::string >();
+    return at( SCHEME ).get< std::string >();
 }
 
 void DocumentFilter::setScheme( const std::string& scheme )
@@ -906,8 +891,7 @@ u1 DocumentFilter::hasPattern( void ) const
 
 std::string DocumentFilter::pattern( void ) const
 {
-    assert( hasPattern() );
-    return operator[]( PATTERN ).get< std::string >();
+    return at( PATTERN ).get< std::string >();
 }
 
 void DocumentFilter::setPattern( const std::string& pattern )
@@ -1017,8 +1001,7 @@ u1 DynamicRegistration::hasDynamicRegistration( void ) const
 
 u1 DynamicRegistration::dynamicRegistration( void ) const
 {
-    assert( hasDynamicRegistration() );
-    return operator[]( DYNAMIC_REGISTRATION ).get< u1 >();
+    return at( DYNAMIC_REGISTRATION ).get< u1 >();
 }
 
 void DynamicRegistration::setDynamicRegistration( const u1 dynamicRegistration )
@@ -1071,8 +1054,7 @@ u1 WorkspaceClientCapabilities::hasApplyEdit( void ) const
 
 u1 WorkspaceClientCapabilities::applyEdit( void ) const
 {
-    assert( hasApplyEdit() );
-    return operator[]( APPLY_EDIT ).get< u1 >();
+    return at( APPLY_EDIT ).get< u1 >();
 }
 
 void WorkspaceClientCapabilities::setApplyEdit( const u1 applyEdit )
@@ -1087,14 +1069,14 @@ u1 WorkspaceClientCapabilities::hasWorkspaceEdit( void ) const
 
 WorkspaceEdit WorkspaceClientCapabilities::workspaceEdit( void ) const
 {
-    assert( hasWorkspaceEdit() );
-    return operator[]( WORKSPACE_EDIT );
+    return at( WORKSPACE_EDIT );
 }
 
 void WorkspaceClientCapabilities::setWorkspaceEdit(
     const WorkspaceEdit& workspaceEdit )
 {
-    operator[]( WORKSPACE_EDIT ) = workspaceEdit;
+    operator[]( WORKSPACE_EDIT )
+        = Data::from_cbor( Data::to_cbor( workspaceEdit ) );
 }
 
 u1 WorkspaceClientCapabilities::hasDidChangeConfiguration( void ) const
@@ -1105,14 +1087,14 @@ u1 WorkspaceClientCapabilities::hasDidChangeConfiguration( void ) const
 DynamicRegistration WorkspaceClientCapabilities::didChangeConfiguration(
     void ) const
 {
-    assert( hasDidChangeConfiguration() );
-    return operator[]( DID_CHANGE_CONFIGURATION );
+    return at( DID_CHANGE_CONFIGURATION );
 }
 
 void WorkspaceClientCapabilities::setDidChangeConfiguration(
     const DynamicRegistration& didChangeConfiguration )
 {
-    operator[]( DID_CHANGE_CONFIGURATION ) = didChangeConfiguration;
+    operator[]( DID_CHANGE_CONFIGURATION )
+        = Data::from_cbor( Data::to_cbor( didChangeConfiguration ) );
 }
 
 u1 WorkspaceClientCapabilities::hasDidChangeWatchedFiles( void ) const
@@ -1123,14 +1105,14 @@ u1 WorkspaceClientCapabilities::hasDidChangeWatchedFiles( void ) const
 DynamicRegistration WorkspaceClientCapabilities::didChangeWatchedFiles(
     void ) const
 {
-    assert( hasDidChangeWatchedFiles() );
-    return operator[]( DID_CHANGE_WATCHED_FILES );
+    return at( DID_CHANGE_WATCHED_FILES );
 }
 
 void WorkspaceClientCapabilities::didChangeWatchedFiles(
     const DynamicRegistration& didChangeWatchedFiles )
 {
-    operator[]( DID_CHANGE_WATCHED_FILES ) = didChangeWatchedFiles;
+    operator[]( DID_CHANGE_WATCHED_FILES )
+        = Data::from_cbor( Data::to_cbor( didChangeWatchedFiles ) );
 }
 
 u1 WorkspaceClientCapabilities::hasSymbol( void ) const
@@ -1140,13 +1122,12 @@ u1 WorkspaceClientCapabilities::hasSymbol( void ) const
 
 DynamicRegistration WorkspaceClientCapabilities::symbol( void ) const
 {
-    assert( hasSymbol() );
-    return operator[]( SYMBOL );
+    return at( SYMBOL );
 }
 
 void WorkspaceClientCapabilities::setSymbol( const DynamicRegistration& symbol )
 {
-    operator[]( SYMBOL ) = symbol;
+    operator[]( SYMBOL ) = Data::from_cbor( Data::to_cbor( symbol ) );
 }
 
 u1 WorkspaceClientCapabilities::hasExecuteCommand( void ) const
@@ -1156,14 +1137,14 @@ u1 WorkspaceClientCapabilities::hasExecuteCommand( void ) const
 
 DynamicRegistration WorkspaceClientCapabilities::executeCommand( void ) const
 {
-    assert( hasExecuteCommand() );
-    return operator[]( EXECUTE_COMMAND );
+    return at( EXECUTE_COMMAND );
 }
 
 void WorkspaceClientCapabilities::executeCommand(
     const DynamicRegistration& executeCommand )
 {
-    operator[]( EXECUTE_COMMAND ) = executeCommand;
+    operator[]( EXECUTE_COMMAND )
+        = Data::from_cbor( Data::to_cbor( executeCommand ) );
 }
 
 u1 WorkspaceClientCapabilities::isValid( const Data& data )
@@ -1243,8 +1224,7 @@ u1 Synchronization::hasDynamicRegistration( void ) const
 
 u1 Synchronization::dynamicRegistration( void ) const
 {
-    assert( hasDynamicRegistration() );
-    return operator[]( DYNAMIC_REGISTRATION ).get< u1 >();
+    return at( DYNAMIC_REGISTRATION ).get< u1 >();
 }
 
 void Synchronization::setDynamicRegistration( const u1 dynamicRegistration )
@@ -1259,8 +1239,7 @@ u1 Synchronization::hasWillSave( void ) const
 
 u1 Synchronization::willSave( void ) const
 {
-    assert( hasWillSave() );
-    return operator[]( WILL_SAVE ).get< u1 >();
+    return at( WILL_SAVE ).get< u1 >();
 }
 
 void Synchronization::setWillSave( const u1 willSave )
@@ -1275,8 +1254,7 @@ u1 Synchronization::hasWillSaveWaitUntil( void ) const
 
 u1 Synchronization::willSaveWaitUntil( void ) const
 {
-    assert( hasWillSaveWaitUntil() );
-    return operator[]( WILL_SAVE_WAIT_UNITL ).get< u1 >();
+    return at( WILL_SAVE_WAIT_UNITL ).get< u1 >();
 }
 
 void Synchronization::setWillSaveWaitUntil( const u1 willSaveWaitUntil )
@@ -1291,8 +1269,7 @@ u1 Synchronization::hasDidSave( void ) const
 
 u1 Synchronization::didSave( void ) const
 {
-    assert( hasDidSave() );
-    return operator[]( DID_SAVE ).get< u1 >();
+    return at( DID_SAVE ).get< u1 >();
 }
 
 void Synchronization::setDidSave( const u1 didSave )
@@ -1363,8 +1340,7 @@ u1 CompletionItem::hasSnippetSupport( void ) const
 
 u1 CompletionItem::snippetSupport( void ) const
 {
-    assert( hasSnippetSupport() );
-    return operator[]( SNIPPET_SUPPORT ).get< u1 >();
+    return at( SNIPPET_SUPPORT ).get< u1 >();
 }
 
 void CompletionItem::setSnippetSupport( const u1 snippetSupport )
@@ -1417,8 +1393,7 @@ u1 Completion::hasDynamicRegistration( void ) const
 
 u1 Completion::dynamicRegistration( void ) const
 {
-    assert( hasDynamicRegistration() );
-    return operator[]( DYNAMIC_REGISTRATION ).get< u1 >();
+    return at( DYNAMIC_REGISTRATION ).get< u1 >();
 }
 
 void Completion::setDynamicRegistration( const u1 dynamicRegistration )
@@ -1433,13 +1408,13 @@ u1 Completion::hasCompletionItem( void ) const
 
 CompletionItem Completion::completionItem( void ) const
 {
-    assert( hasCompletionItem() );
-    return operator[]( COMPLETION_ITEM );
+    return at( COMPLETION_ITEM );
 }
 
 void Completion::completionItem( const CompletionItem& completionItem )
 {
-    operator[]( COMPLETION_ITEM ) = completionItem;
+    operator[]( COMPLETION_ITEM )
+        = Data::from_cbor( Data::to_cbor( completionItem ) );
 }
 
 u1 Completion::isValid( const Data& data )
@@ -1494,14 +1469,14 @@ u1 TextDocumentClientCapabilities::hasSynchronization( void ) const
 
 Synchronization TextDocumentClientCapabilities::synchronization( void ) const
 {
-    assert( hasSynchronization() );
-    return operator[]( SYNCHRONIZATION );
+    return at( SYNCHRONIZATION );
 }
 
 void TextDocumentClientCapabilities::setSynchronization(
     const Synchronization& synchronization )
 {
-    operator[]( SYNCHRONIZATION ) = synchronization;
+    operator[]( SYNCHRONIZATION )
+        = Data::from_cbor( Data::to_cbor( synchronization ) );
 }
 
 u1 TextDocumentClientCapabilities::hasCompletion( void ) const
@@ -1511,14 +1486,13 @@ u1 TextDocumentClientCapabilities::hasCompletion( void ) const
 
 Completion TextDocumentClientCapabilities::completion( void ) const
 {
-    assert( hasCompletion() );
-    return operator[]( COMPLETION );
+    return at( COMPLETION );
 }
 
 void TextDocumentClientCapabilities::setCompletion(
     const Completion& completion )
 {
-    operator[]( COMPLETION ) = completion;
+    operator[]( COMPLETION ) = Data::from_cbor( Data::to_cbor( completion ) );
 }
 
 u1 TextDocumentClientCapabilities::hasHover( void ) const
@@ -1528,14 +1502,13 @@ u1 TextDocumentClientCapabilities::hasHover( void ) const
 
 DynamicRegistration TextDocumentClientCapabilities::hover( void ) const
 {
-    assert( hasHover() );
-    return operator[]( HOVER );
+    return at( HOVER );
 }
 
 void TextDocumentClientCapabilities::setHover(
     const DynamicRegistration& hover )
 {
-    operator[]( HOVER ) = hover;
+    operator[]( HOVER ) = Data::from_cbor( Data::to_cbor( hover ) );
 }
 
 u1 TextDocumentClientCapabilities::hasSignatureHelp( void ) const
@@ -1545,14 +1518,14 @@ u1 TextDocumentClientCapabilities::hasSignatureHelp( void ) const
 
 DynamicRegistration TextDocumentClientCapabilities::signatureHelp( void ) const
 {
-    assert( hasSignatureHelp() );
-    return operator[]( SIGNATURE_HELP );
+    return at( SIGNATURE_HELP );
 }
 
 void TextDocumentClientCapabilities::setSignatureHelp(
     const DynamicRegistration& signatureHelp )
 {
-    operator[]( SIGNATURE_HELP ) = signatureHelp;
+    operator[]( SIGNATURE_HELP )
+        = Data::from_cbor( Data::to_cbor( signatureHelp ) );
 }
 
 u1 TextDocumentClientCapabilities::hasReferences( void ) const
@@ -1562,14 +1535,13 @@ u1 TextDocumentClientCapabilities::hasReferences( void ) const
 
 DynamicRegistration TextDocumentClientCapabilities::references( void ) const
 {
-    assert( hasReferences() );
-    return operator[]( REFERENCES );
+    return at( REFERENCES );
 }
 
 void TextDocumentClientCapabilities::setReferences(
     const DynamicRegistration& references )
 {
-    operator[]( REFERENCES );
+    operator[]( REFERENCES ) = Data::from_cbor( Data::to_cbor( references ) );
 }
 
 u1 TextDocumentClientCapabilities::hasDocumentHighlight( void ) const
@@ -1580,14 +1552,14 @@ u1 TextDocumentClientCapabilities::hasDocumentHighlight( void ) const
 DynamicRegistration TextDocumentClientCapabilities::documentHighlight(
     void ) const
 {
-    assert( hasDocumentHighlight() );
-    return operator[]( DOCUMENT_HIGHLIGHT );
+    return at( DOCUMENT_HIGHLIGHT );
 }
 
 void TextDocumentClientCapabilities::setDocumentHighlight(
     const DynamicRegistration& documentHighlight )
 {
-    operator[]( DOCUMENT_HIGHLIGHT ) = documentHighlight;
+    operator[]( DOCUMENT_HIGHLIGHT )
+        = Data::from_cbor( Data::to_cbor( documentHighlight ) );
 }
 
 u1 TextDocumentClientCapabilities::hasDocumentSymbol( void ) const
@@ -1597,14 +1569,14 @@ u1 TextDocumentClientCapabilities::hasDocumentSymbol( void ) const
 
 DynamicRegistration TextDocumentClientCapabilities::documentSymbol( void ) const
 {
-    assert( hasDocumentSymbol() );
-    return operator[]( DOCUMENT_SYMBOL );
+    return at( DOCUMENT_SYMBOL );
 }
 
 void TextDocumentClientCapabilities::setDocumentSymbol(
     const DynamicRegistration& documentSymbol )
 {
-    operator[]( DOCUMENT_SYMBOL ) = documentSymbol;
+    operator[]( DOCUMENT_SYMBOL )
+        = Data::from_cbor( Data::to_cbor( documentSymbol ) );
 }
 
 u1 TextDocumentClientCapabilities::hasFormatting( void ) const
@@ -1614,14 +1586,13 @@ u1 TextDocumentClientCapabilities::hasFormatting( void ) const
 
 DynamicRegistration TextDocumentClientCapabilities::formatting( void ) const
 {
-    assert( hasFormatting() );
-    return operator[]( FORMATTING );
+    return at( FORMATTING );
 }
 
 void TextDocumentClientCapabilities::setFormatting(
     const DynamicRegistration& formatting )
 {
-    operator[]( FORMATTING ) = formatting;
+    operator[]( FORMATTING ) = Data::from_cbor( Data::to_cbor( formatting ) );
 }
 
 u1 TextDocumentClientCapabilities::hasRangeFormatting( void ) const
@@ -1632,14 +1603,14 @@ u1 TextDocumentClientCapabilities::hasRangeFormatting( void ) const
 DynamicRegistration TextDocumentClientCapabilities::rangeFormatting(
     void ) const
 {
-    assert( hasRangeFormatting() );
-    return operator[]( RANGE_FORMATTING );
+    return at( RANGE_FORMATTING );
 }
 
 void TextDocumentClientCapabilities::setRangeFormatting(
     const DynamicRegistration& rangeFormatting )
 {
-    operator[]( RANGE_FORMATTING ) = rangeFormatting;
+    operator[]( RANGE_FORMATTING )
+        = Data::from_cbor( Data::to_cbor( rangeFormatting ) );
 }
 
 u1 TextDocumentClientCapabilities::hasOnTypeFormatting( void ) const
@@ -1650,14 +1621,14 @@ u1 TextDocumentClientCapabilities::hasOnTypeFormatting( void ) const
 DynamicRegistration TextDocumentClientCapabilities::onTypeFormatting(
     void ) const
 {
-    assert( hasOnTypeFormatting() );
-    return operator[]( ON_TYPE_FORMATTING );
+    return at( ON_TYPE_FORMATTING );
 }
 
 void TextDocumentClientCapabilities::setOnTypeFormatting(
     const DynamicRegistration& onTypeFormatting )
 {
-    operator[]( ON_TYPE_FORMATTING ) = onTypeFormatting;
+    operator[]( ON_TYPE_FORMATTING )
+        = Data::from_cbor( Data::to_cbor( onTypeFormatting ) );
 }
 
 u1 TextDocumentClientCapabilities::hasDefinition( void ) const
@@ -1667,14 +1638,13 @@ u1 TextDocumentClientCapabilities::hasDefinition( void ) const
 
 DynamicRegistration TextDocumentClientCapabilities::definition( void ) const
 {
-    assert( hasDefinition() );
-    return operator[]( DEFINITION );
+    return at( DEFINITION );
 }
 
 void TextDocumentClientCapabilities::setDefinition(
     const DynamicRegistration& definition )
 {
-    operator[]( DEFINITION ) = definition;
+    operator[]( DEFINITION ) = Data::from_cbor( Data::to_cbor( definition ) );
 }
 
 u1 TextDocumentClientCapabilities::hasCodeAction( void ) const
@@ -1684,14 +1654,13 @@ u1 TextDocumentClientCapabilities::hasCodeAction( void ) const
 
 DynamicRegistration TextDocumentClientCapabilities::codeAction( void ) const
 {
-    assert( hasCodeAction() );
-    return operator[]( CODE_ACTION );
+    return at( CODE_ACTION );
 }
 
 void TextDocumentClientCapabilities::setCodeAction(
     const DynamicRegistration& codeAction )
 {
-    operator[]( CODE_ACTION ) = codeAction;
+    operator[]( CODE_ACTION ) = Data::from_cbor( Data::to_cbor( codeAction ) );
 }
 
 u1 TextDocumentClientCapabilities::hasCodeLens( void ) const
@@ -1701,14 +1670,13 @@ u1 TextDocumentClientCapabilities::hasCodeLens( void ) const
 
 DynamicRegistration TextDocumentClientCapabilities::codeLens( void ) const
 {
-    assert( hasCodeLens() );
-    return operator[]( CODE_LENS );
+    return at( CODE_LENS );
 }
 
 void TextDocumentClientCapabilities::setCodeLens(
     const DynamicRegistration& codeLens )
 {
-    operator[]( CODE_LENS ) = codeLens;
+    operator[]( CODE_LENS ) = Data::from_cbor( Data::to_cbor( codeLens ) );
 }
 
 u1 TextDocumentClientCapabilities::hasDocumentLink( void ) const
@@ -1718,14 +1686,14 @@ u1 TextDocumentClientCapabilities::hasDocumentLink( void ) const
 
 DynamicRegistration TextDocumentClientCapabilities::documentLink( void ) const
 {
-    assert( hasDocumentLink() );
-    return operator[]( DOCUMENT_LINK );
+    return at( DOCUMENT_LINK );
 }
 
 void TextDocumentClientCapabilities::setDocumentLink(
     const DynamicRegistration& documentLink )
 {
-    operator[]( DOCUMENT_LINK ) = documentLink;
+    operator[]( DOCUMENT_LINK )
+        = Data::from_cbor( Data::to_cbor( documentLink ) );
 }
 
 u1 TextDocumentClientCapabilities::hasRename( void ) const
@@ -1735,14 +1703,13 @@ u1 TextDocumentClientCapabilities::hasRename( void ) const
 
 DynamicRegistration TextDocumentClientCapabilities::rename( void ) const
 {
-    assert( hasRename() );
-    return operator[]( RENAME );
+    return at( RENAME );
 }
 
 void TextDocumentClientCapabilities::setRename(
     const DynamicRegistration& rename )
 {
-    operator[]( RENAME ) = rename;
+    operator[]( RENAME ) = Data::from_cbor( Data::to_cbor( rename ) );
 }
 
 u1 TextDocumentClientCapabilities::isValid( const Data& data )
@@ -1874,14 +1841,13 @@ u1 ClientCapabilities::hasWorkspace( void ) const
 
 WorkspaceClientCapabilities ClientCapabilities::workspace( void ) const
 {
-    assert( hasWorkspace() );
-    return operator[]( WORKSPACE );
+    return at( WORKSPACE );
 }
 
 void ClientCapabilities::setWorkspace(
     const WorkspaceClientCapabilities& workspace )
 {
-    operator[]( WORKSPACE ) = workspace;
+    operator[]( WORKSPACE ) = Data::from_cbor( Data::to_cbor( workspace ) );
 }
 
 u1 ClientCapabilities::hasTextDocument( void ) const
@@ -1891,14 +1857,14 @@ u1 ClientCapabilities::hasTextDocument( void ) const
 
 TextDocumentClientCapabilities ClientCapabilities::textDocument( void ) const
 {
-    assert( hasTextDocument() );
-    return operator[]( TEXT_DOCUMENT );
+    return at( TEXT_DOCUMENT );
 }
 
 void ClientCapabilities::setTextDocument(
     const TextDocumentClientCapabilities& textDocument )
 {
-    operator[]( TEXT_DOCUMENT ) = textDocument;
+    operator[]( TEXT_DOCUMENT )
+        = Data::from_cbor( Data::to_cbor( textDocument ) );
 }
 
 u1 ClientCapabilities::hasExperimental( void ) const
@@ -1908,13 +1874,13 @@ u1 ClientCapabilities::hasExperimental( void ) const
 
 Data ClientCapabilities::experimental( void ) const
 {
-    assert( hasExperimental() );
-    return operator[]( EXPERIMENTAL );
+    return at( EXPERIMENTAL );
 }
 
 void ClientCapabilities::setExperimental( const Data& experimental )
 {
-    operator[]( EXPERIMENTAL ) = experimental;
+    operator[]( EXPERIMENTAL )
+        = Data::from_cbor( Data::to_cbor( experimental ) );
 }
 
 u1 ClientCapabilities::isValid( const Data& data )
@@ -1975,8 +1941,7 @@ u1 SaveOptions::hasIncludeText( void ) const
 
 u1 SaveOptions::includeText( void ) const
 {
-    assert( hasIncludeText() );
-    return operator[]( INCLUDE_TEXT ).get< u1 >();
+    return at( INCLUDE_TEXT ).get< u1 >();
 }
 
 void SaveOptions::setIncludeText( const u1 includeText )
@@ -2029,8 +1994,7 @@ u1 TextDocumentSyncOptions::hasOpenClose( void ) const
 
 u1 TextDocumentSyncOptions::openClose( void ) const
 {
-    assert( hasOpenClose() );
-    return operator[]( OPEN_CLOSE ).get< u1 >();
+    return at( OPEN_CLOSE ).get< u1 >();
 }
 
 void TextDocumentSyncOptions::setOpenClose( const u1 openClose )
@@ -2046,8 +2010,8 @@ u1 TextDocumentSyncOptions::hasChange( void ) const
 TextDocumentSyncKind TextDocumentSyncOptions::change( void ) const
 {
     assert( hasChange() );
-    return static_cast< TextDocumentSyncKind >( operator[](
-        CHANGE ).get< std::size_t >() );
+    return static_cast< TextDocumentSyncKind >(
+        at( CHANGE ).get< std::size_t >() );
 }
 
 void TextDocumentSyncOptions::setChange( const TextDocumentSyncKind& change )
@@ -2062,8 +2026,7 @@ u1 TextDocumentSyncOptions::hasWillSave( void ) const
 
 u1 TextDocumentSyncOptions::willSave( void ) const
 {
-    assert( hasWillSave() );
-    return operator[]( WILL_SAVE ).get< u1 >();
+    return at( WILL_SAVE ).get< u1 >();
 }
 
 void TextDocumentSyncOptions::setWillSave( const u1 willSave )
@@ -2078,8 +2041,7 @@ u1 TextDocumentSyncOptions::hasWillSaveWaitUntil( void ) const
 
 u1 TextDocumentSyncOptions::willSaveWaitUntil( void ) const
 {
-    assert( hasWillSaveWaitUntil() );
-    return operator[]( WILL_SAVE_WAIT_UNITL ).get< u1 >();
+    return at( WILL_SAVE_WAIT_UNITL ).get< u1 >();
 }
 
 void TextDocumentSyncOptions::setWillSaveWaitUntil( const u1 willSaveWaitUntil )
@@ -2094,13 +2056,12 @@ u1 TextDocumentSyncOptions::hasSave( void ) const
 
 SaveOptions TextDocumentSyncOptions::save( void ) const
 {
-    assert( hasSave() );
-    return operator[]( SAVE );
+    return at( SAVE );
 }
 
 void TextDocumentSyncOptions::setSave( const SaveOptions& save )
 {
-    operator[]( SAVE ) = save;
+    operator[]( SAVE ) = Data::from_cbor( Data::to_cbor( save ) );
 }
 
 u1 TextDocumentSyncOptions::isValid( const Data& data )
@@ -2173,8 +2134,7 @@ u1 CompletionOptions::hasResolveProvider( void ) const
 
 u1 CompletionOptions::resolveProvider( void ) const
 {
-    assert( hasResolveProvider() );
-    return operator[]( RESOLVE_PROVIDER ).get< u1 >();
+    return at( RESOLVE_PROVIDER ).get< u1 >();
 }
 
 void CompletionOptions::setResolveProvider( const u1 resolveProvider )
@@ -2189,8 +2149,7 @@ u1 CompletionOptions::hasTriggerCharacters( void ) const
 
 Data CompletionOptions::triggerCharacters( void ) const
 {
-    assert( hasTriggerCharacters() );
-    return operator[]( TRIGGER_CHARACTERS );
+    return at( TRIGGER_CHARACTERS );
 }
 
 void CompletionOptions::addTriggerCharacters(
@@ -2257,8 +2216,7 @@ u1 SignatureHelpOptions::hasTriggerCharacters( void ) const
 
 Data SignatureHelpOptions::triggerCharacters( void ) const
 {
-    assert( hasTriggerCharacters() );
-    return operator[]( TRIGGER_CHARACTERS );
+    return at( TRIGGER_CHARACTERS );
 }
 
 void SignatureHelpOptions::addTriggerCharacters(
@@ -2318,8 +2276,7 @@ u1 CodeLensOptions::hasResolveProvider( void ) const
 
 u1 CodeLensOptions::resolveProvider( void ) const
 {
-    assert( hasResolveProvider() );
-    return operator[]( RESOLVE_PROVIDER ).get< u1 >();
+    return at( RESOLVE_PROVIDER ).get< u1 >();
 }
 
 void CodeLensOptions::setResolveProvider( const u1 resolveProvider )
@@ -2371,7 +2328,7 @@ DocumentOnTypeFormattingOptions::DocumentOnTypeFormattingOptions(
 
 std::string DocumentOnTypeFormattingOptions::firstTriggerCharacter( void ) const
 {
-    return operator[]( FIRST_TRIGGER_CHARACTER ).get< std::string >();
+    return at( FIRST_TRIGGER_CHARACTER ).get< std::string >();
 }
 
 u1 DocumentOnTypeFormattingOptions::hasMoreTriggerCharacter( void ) const
@@ -2381,8 +2338,7 @@ u1 DocumentOnTypeFormattingOptions::hasMoreTriggerCharacter( void ) const
 
 Data DocumentOnTypeFormattingOptions::moreTriggerCharacter( void ) const
 {
-    assert( hasMoreTriggerCharacter() );
-    return operator[]( MORE_TRIGGER_CHARACTER );
+    return at( MORE_TRIGGER_CHARACTER );
 }
 
 void DocumentOnTypeFormattingOptions::addMoreTriggerCharacter(
@@ -2444,8 +2400,7 @@ u1 ExecuteCommandOptions::hasCommands( void ) const
 
 Data ExecuteCommandOptions::commands( void ) const
 {
-    assert( hasCommands() );
-    return operator[]( COMMANDS );
+    return at( COMMANDS );
 }
 
 void ExecuteCommandOptions::addCommand( const std::string& command )
@@ -2525,8 +2480,7 @@ u1 ServerCapabilities::hasHoverProvider( void ) const
 
 u1 ServerCapabilities::hoverProvider( void ) const
 {
-    assert( hasHoverProvider() );
-    return operator[]( HOVER_PROVIDER ).get< u1 >();
+    return at( HOVER_PROVIDER ).get< u1 >();
 }
 
 void ServerCapabilities::setHoverProvider( const u1 hoverProvider )
@@ -2541,8 +2495,7 @@ u1 ServerCapabilities::hasCompletionProvider( void ) const
 
 CompletionOptions ServerCapabilities::completionProvider( void ) const
 {
-    assert( hasCompletionProvider() );
-    return operator[]( COMPLETION_PROVIDER );
+    return at( COMPLETION_PROVIDER );
 }
 
 void ServerCapabilities::setCompletionProvider(
@@ -2558,8 +2511,7 @@ u1 ServerCapabilities::hasSignatureHelpProvider( void ) const
 
 SignatureHelpOptions ServerCapabilities::signatureHelpProvider( void ) const
 {
-    assert( hasSignatureHelpProvider() );
-    return operator[]( SIGNATURE_HELP_PROVIDER );
+    return at( SIGNATURE_HELP_PROVIDER );
 }
 
 void ServerCapabilities::setSignatureHelpProvider(
@@ -2575,8 +2527,7 @@ u1 ServerCapabilities::hasDefinitionProvider( void ) const
 
 u1 ServerCapabilities::definitionProvider( void ) const
 {
-    assert( hasDefinitionProvider() );
-    return operator[]( DEFINITION_PROVIDER ).get< u1 >();
+    return at( DEFINITION_PROVIDER ).get< u1 >();
 }
 
 void ServerCapabilities::setDefinitionProvider( const u1 definitionProvider )
@@ -2591,8 +2542,7 @@ u1 ServerCapabilities::hasReferencesProvider( void ) const
 
 u1 ServerCapabilities::referencesProvider( void ) const
 {
-    assert( hasReferencesProvider() );
-    return operator[]( REFERENCES_PROVIDER ).get< u1 >();
+    return at( REFERENCES_PROVIDER ).get< u1 >();
 }
 
 void ServerCapabilities::setReferencesProvider( const u1 referencesProvider )
@@ -2607,8 +2557,7 @@ u1 ServerCapabilities::hasDocumentHighlightProvider( void ) const
 
 u1 ServerCapabilities::documentHighlightProvider( void ) const
 {
-    assert( hasDocumentHighlightProvider() );
-    return operator[]( DOCUMENT_HIGHLIGHT_PROVIDER ).get< u1 >();
+    return at( DOCUMENT_HIGHLIGHT_PROVIDER ).get< u1 >();
 }
 
 void ServerCapabilities::setDocumentHighlightProvider(
@@ -2624,8 +2573,7 @@ u1 ServerCapabilities::hasDocumentSymbolProvider( void ) const
 
 u1 ServerCapabilities::documentSymbolProvider( void ) const
 {
-    assert( hasDocumentSymbolProvider() );
-    return operator[]( DOCUMENT_SYMBOL_PROVIDER ).get< u1 >();
+    return at( DOCUMENT_SYMBOL_PROVIDER ).get< u1 >();
 }
 
 void ServerCapabilities::setDocumentSymbolProvider(
@@ -2641,8 +2589,7 @@ u1 ServerCapabilities::hasWorkspaceSymbolProvider( void ) const
 
 u1 ServerCapabilities::workspaceSymbolProvider( void ) const
 {
-    assert( hasWorkspaceSymbolProvider() );
-    return operator[]( WORKSPACE_SYMBOL_PROVIDER ).get< u1 >();
+    return at( WORKSPACE_SYMBOL_PROVIDER ).get< u1 >();
 }
 
 void ServerCapabilities::setWorkspaceSymbolProvider(
@@ -2658,8 +2605,7 @@ u1 ServerCapabilities::hasCodeActionProvider( void ) const
 
 u1 ServerCapabilities::codeActionProvider( void ) const
 {
-    assert( hasCodeActionProvider() );
-    return operator[]( CODE_ACTION_PROVIDER ).get< u1 >();
+    return at( CODE_ACTION_PROVIDER ).get< u1 >();
 }
 
 void ServerCapabilities::setCodeActionProvider( const u1 codeActionProvider )
@@ -2674,14 +2620,14 @@ u1 ServerCapabilities::hasCodeLensProvider( void ) const
 
 CodeLensOptions ServerCapabilities::codeLensProvider( void ) const
 {
-    assert( hasCodeLensProvider() );
-    return operator[]( CODE_LENS_PROVIDER );
+    return at( CODE_LENS_PROVIDER );
 }
 
 void ServerCapabilities::setCodeLensProvider(
     const CodeLensOptions& codeLensProvider )
 {
-    operator[]( CODE_LENS_PROVIDER ) = codeLensProvider;
+    operator[]( CODE_LENS_PROVIDER )
+        = Data::from_cbor( Data::to_cbor( codeLensProvider ) );
 }
 
 u1 ServerCapabilities::hasDocumentFormattingProvider( void ) const
@@ -2691,8 +2637,7 @@ u1 ServerCapabilities::hasDocumentFormattingProvider( void ) const
 
 u1 ServerCapabilities::documentFormattingProvider( void ) const
 {
-    assert( hasDocumentFormattingProvider() );
-    return operator[]( DOCUMENT_FORMATTING_PROVIDER ).get< u1 >();
+    return at( DOCUMENT_FORMATTING_PROVIDER ).get< u1 >();
 }
 
 void ServerCapabilities::setDocumentFormattingProvider(
@@ -2708,8 +2653,7 @@ u1 ServerCapabilities::hasDocumentRangeFormattingProvider( void ) const
 
 u1 ServerCapabilities::documentRangeFormattingProvider( void ) const
 {
-    assert( hasDocumentRangeFormattingProvider() );
-    return operator[]( DOCUMENT_RANGE_FORMATTING_PROVIDER ).get< u1 >();
+    return at( DOCUMENT_RANGE_FORMATTING_PROVIDER ).get< u1 >();
 }
 
 void ServerCapabilities::setDocumentRangeFormattingProvider(
@@ -2727,15 +2671,14 @@ u1 ServerCapabilities::hasDocumentOnTypeFormattingProvider( void ) const
 DocumentOnTypeFormattingOptions
 ServerCapabilities::documentOnTypeFormattingProvider( void ) const
 {
-    assert( hasDocumentOnTypeFormattingProvider() );
-    return operator[]( DOCUMENT_ON_TYPE_FORMATTING_PROVIDER );
+    return at( DOCUMENT_ON_TYPE_FORMATTING_PROVIDER );
 }
 
 void ServerCapabilities::setDocumentOnTypeFormattingProvider(
     const DocumentOnTypeFormattingOptions& documentOnTypeFormattingProvider )
 {
     operator[]( DOCUMENT_ON_TYPE_FORMATTING_PROVIDER )
-        = documentOnTypeFormattingProvider;
+        = Data::from_cbor( Data::to_cbor( documentOnTypeFormattingProvider ) );
 }
 
 u1 ServerCapabilities::hasRenameProvider( void ) const
@@ -2745,8 +2688,7 @@ u1 ServerCapabilities::hasRenameProvider( void ) const
 
 u1 ServerCapabilities::renameProvider( void ) const
 {
-    assert( hasRenameProvider() );
-    return operator[]( RENAME_PROVIDER ).get< u1 >();
+    return at( RENAME_PROVIDER ).get< u1 >();
 }
 
 void ServerCapabilities::setRenameProvider( const u1 renameProvider )
@@ -2761,8 +2703,7 @@ u1 ServerCapabilities::hasDocumentLinkProvider( void ) const
 
 DocumentLinkOptions ServerCapabilities::documentLinkProvider( void ) const
 {
-    assert( hasDocumentLinkProvider() );
-    return operator[]( DOCUMENT_LINK_PROVIDER );
+    return at( DOCUMENT_LINK_PROVIDER );
 }
 
 void ServerCapabilities::setDocumentLinkProvider(
@@ -2778,8 +2719,7 @@ u1 ServerCapabilities::hasExecuteCommandProvider( void ) const
 
 ExecuteCommandOptions ServerCapabilities::executeCommandProvider( void ) const
 {
-    assert( hasExecuteCommandProvider() );
-    return operator[]( EXECUTE_COMMAND_PROVIDER );
+    return at( EXECUTE_COMMAND_PROVIDER );
 }
 
 void ServerCapabilities::setExecuteCommandProvider(
@@ -2795,13 +2735,13 @@ u1 ServerCapabilities::hasExperimental( void ) const
 
 Data ServerCapabilities::experimental( void ) const
 {
-    assert( hasExperimental() );
-    return operator[]( EXPERIMENTAL );
+    return at( EXPERIMENTAL );
 }
 
 void ServerCapabilities::setExperimental( const Data& experimental )
 {
-    operator[]( EXPERIMENTAL ) = experimental;
+    operator[]( EXPERIMENTAL )
+        = Data::from_cbor( Data::to_cbor( experimental ) );
 }
 
 u1 ServerCapabilities::isValid( const Data& data )
@@ -2973,18 +2913,18 @@ InitializeParams::InitializeParams( const std::size_t processId,
 {
     operator[]( PROCESS_ID ) = processId;
     operator[]( ROOT_URI ) = rootUri.toString();
-    operator[]( CAPABILITIES ) = capabilities;
+    operator[]( CAPABILITIES )
+        = Data::from_cbor( Data::to_cbor( capabilities ) );
 }
 
 std::size_t InitializeParams::processId( void ) const
 {
-    return operator[]( PROCESS_ID ).get< std::size_t >();
+    return at( PROCESS_ID ).get< std::size_t >();
 }
 
 DocumentUri InitializeParams::rootUri( void ) const
 {
-    return DocumentUri::fromString( operator[](
-        PROCESS_ID ).get< std::string >() );
+    return DocumentUri::fromString( at( PROCESS_ID ).get< std::string >() );
 }
 
 u1 InitializeParams::hasInitializationOptions( void ) const
@@ -2994,8 +2934,7 @@ u1 InitializeParams::hasInitializationOptions( void ) const
 
 Data InitializeParams::initializationOptions( void ) const
 {
-    assert( hasInitializationOptions() );
-    return operator[]( INITIALIZATION_OPTIONS );
+    return at( INITIALIZATION_OPTIONS );
 }
 
 void InitializeParams::setInitializationOptions(
@@ -3006,7 +2945,7 @@ void InitializeParams::setInitializationOptions(
 
 ClientCapabilities InitializeParams::capabilities( void ) const
 {
-    return operator[]( CAPABILITIES );
+    return at( CAPABILITIES );
 }
 
 u1 InitializeParams::hasTrace( void ) const
@@ -3016,8 +2955,7 @@ u1 InitializeParams::hasTrace( void ) const
 
 std::string InitializeParams::trace( void ) const
 {
-    assert( hasTrace() );
-    return operator[]( TRACE );
+    return at( TRACE );
 }
 
 void InitializeParams::setTrace( const std::string& trace )
@@ -3094,7 +3032,7 @@ InitializeResult::InitializeResult( const ServerCapabilities& capabilities )
 
 ServerCapabilities InitializeResult::capabilities( void ) const
 {
-    return operator[]( CAPABILITIES );
+    return at( CAPABILITIES );
 }
 
 u1 InitializeResult::isValid( const Data& data )
@@ -3138,7 +3076,7 @@ InitializeError::InitializeError( const u1 retry )
 
 u1 InitializeError::retry( void ) const
 {
-    return operator[]( RETRY ).get< u1 >();
+    return at( RETRY ).get< u1 >();
 }
 
 u1 InitializeError::isValid( const Data& data )
@@ -3179,7 +3117,7 @@ DidOpenTextDocumentParams::DidOpenTextDocumentParams(
 
 TextDocumentItem DidOpenTextDocumentParams::textDocument( void ) const
 {
-    return operator[]( TEXT_DOCUMENT );
+    return at( TEXT_DOCUMENT );
 }
 
 u1 DidOpenTextDocumentParams::isValid( const Data& data )
@@ -3225,8 +3163,7 @@ u1 TextDocumentContentChangeEvent::hasRange( void ) const
 
 Range TextDocumentContentChangeEvent::range( void ) const
 {
-    assert( hasRange() );
-    return operator[]( RANGE );
+    return at( RANGE );
 }
 
 void TextDocumentContentChangeEvent::setRange( const Range& range )
@@ -3241,7 +3178,7 @@ u1 TextDocumentContentChangeEvent::hasRangeLength( void ) const
 
 std::size_t TextDocumentContentChangeEvent::rangeLength( void ) const
 {
-    return operator[]( RANGE_LENGTH ).get< std::size_t >();
+    return at( RANGE_LENGTH ).get< std::size_t >();
 }
 
 void TextDocumentContentChangeEvent::setRangeLength(
@@ -3252,7 +3189,7 @@ void TextDocumentContentChangeEvent::setRangeLength(
 
 std::string TextDocumentContentChangeEvent::text( void ) const
 {
-    return operator[]( TEXT ).get< std::string >();
+    return at( TEXT ).get< std::string >();
 }
 
 u1 TextDocumentContentChangeEvent::isValid( const Data& data )
@@ -3313,12 +3250,12 @@ DidChangeTextDocumentParams::DidChangeTextDocumentParams(
 VersionedTextDocumentIdentifier DidChangeTextDocumentParams::textDocument(
     void ) const
 {
-    return operator[]( TEXT_DOCUMENT );
+    return at( TEXT_DOCUMENT );
 }
 
 Data DidChangeTextDocumentParams::contentChanges( void ) const
 {
-    return operator[]( CONTENT_CHANGES );
+    return at( CONTENT_CHANGES );
 }
 
 u1 DidChangeTextDocumentParams::isValid( const Data& data )
@@ -3379,7 +3316,7 @@ CodeActionContext::CodeActionContext(
 
 Data CodeActionContext::diagnostics( void ) const
 {
-    return operator[]( DIAGNOSTICS );
+    return at( DIAGNOSTICS );
 }
 
 u1 CodeActionContext::isValid( const Data& data )
@@ -3430,17 +3367,17 @@ CodeActionParams::CodeActionParams( const TextDocumentIdentifier& textDocument,
 
 TextDocumentIdentifier CodeActionParams::textDocument( void ) const
 {
-    return operator[]( TEXT_DOCUMENT );
+    return at( TEXT_DOCUMENT );
 }
 
 Range CodeActionParams::range( void ) const
 {
-    return operator[]( RANGE );
+    return at( RANGE );
 }
 
 CodeActionContext CodeActionParams::context( void ) const
 {
-    return operator[]( CONTEXT );
+    return at( CONTEXT );
 }
 
 u1 CodeActionParams::isValid( const Data& data )
@@ -3544,12 +3481,12 @@ PublishDiagnosticsParams::PublishDiagnosticsParams(
 
 DocumentUri PublishDiagnosticsParams::uri( void ) const
 {
-    return DocumentUri::fromString( operator[]( URI ).get< std::string >() );
+    return DocumentUri::fromString( at( URI ).get< std::string >() );
 }
 
 Data PublishDiagnosticsParams::diagnostics( void ) const
 {
-    return operator[]( DIAGNOSTICS );
+    return at( DIAGNOSTICS );
 }
 
 u1 PublishDiagnosticsParams::isValid( const Data& data )
@@ -3609,12 +3546,12 @@ MarkedString::MarkedString(
 
 std::string MarkedString::language( void ) const
 {
-    return operator[]( LANGUAGE ).get< std::string >();
+    return at( LANGUAGE ).get< std::string >();
 }
 
 std::string MarkedString::value( void ) const
 {
-    return operator[]( VALUE ).get< std::string >();
+    return at( VALUE ).get< std::string >();
 }
 
 u1 MarkedString::isValid( const Data& data )
@@ -3663,7 +3600,7 @@ HoverResult::HoverResult( const std::vector< MarkedString >& contents )
 
 Data HoverResult::contents( void ) const
 {
-    return operator[]( CONTENTS );
+    return at( CONTENTS );
 }
 
 void HoverResult::addContent( const MarkedString& content )
@@ -3678,7 +3615,7 @@ u1 HoverResult::hasRange( void ) const
 
 Range HoverResult::range( void ) const
 {
-    return Range( operator[]( RANGE ) );
+    return at( RANGE );
 }
 
 void HoverResult::setRange( const Range& range )
