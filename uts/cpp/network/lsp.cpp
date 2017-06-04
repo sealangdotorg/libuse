@@ -65,6 +65,12 @@ class TestInterface final : public ServerInterface
     {
     }
 
+    HoverResult textDocument_hover(
+        const HoverParams& params ) override
+    {
+        return HoverResult();
+    }
+
     CodeActionResult textDocument_codeAction(
         const CodeActionParams& params ) override
     {
