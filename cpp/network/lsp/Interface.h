@@ -150,6 +150,10 @@ namespace libstdhl
                     = 0;
 
                 // :leftwards_arrow_with_hook: textDocument/codeLens
+                virtual CodeLensResult textDocument_codeLens(
+                    const CodeLensParams& params )
+                    = 0;
+
                 // :leftwards_arrow_with_hook: codeLens/resolve
                 // :leftwards_arrow_with_hook: textDocument/documentLink
                 // :leftwards_arrow_with_hook: documentLink/resolve

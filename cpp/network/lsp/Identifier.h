@@ -282,6 +282,9 @@ namespace libstdhl
                 constexpr const char* textDocument_codeAction
                     = "textDocument/codeAction";
 
+                constexpr const char* textDocument_codeLens
+                    = "textDocument/codeLens";
+
                 constexpr const char* textDocument_didChange
                     = "textDocument/didChange";
 

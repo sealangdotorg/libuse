@@ -1123,6 +1123,54 @@ namespace libstdhl
 
                 static u1 isValid( const Data& data );
             };
+
+            class CodeLensParams : public Data
+            {
+              public:
+                CodeLensParams( const Data& data );
+
+                CodeLensParams( const TextDocumentIdentifier& textDocument );
+
+                TextDocumentIdentifier textDocument( void ) const;
+
+                static u1 isValid( const Data& data );
+            };
+
+            class CodeLens : public Data
+            {
+              public:
+                CodeLens( const Data& data );
+
+                CodeLens( const Range& range );
+
+                Range range( void ) const;
+
+                u1 hasCommand( void ) const;
+
+                Command command( void ) const;
+
+                void setCommand( const Command& command );
+
+                u1 hasData( void ) const;
+
+                Data data( void ) const;
+
+                void setData( const Data& data );
+
+                static u1 isValid( const Data& data );
+            };
+
+            class CodeLensResult : public Data
+            {
+              public:
+                CodeLensResult( const Data& data );
+
+                CodeLensResult( const std::vector< CodeLens >& codeLens = {} );
+
+                void addCodeLens( const CodeLens& codeLens );
+
+                static u1 isValid( const Data& data );
+            };
         }
     }
 }

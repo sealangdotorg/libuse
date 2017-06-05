@@ -3648,6 +3648,7 @@ HoverResult::HoverResult( const Data& data )
 }
 
 HoverResult::HoverResult( const std::vector< MarkedString >& contents )
+: Data( Data::object() )
 {
     operator[]( Identifier::contents ) = Data::array();
 
@@ -3715,13 +3716,168 @@ u1 HoverResult::isValid( const Data& data )
 
 //
 //
+// CodeLensParams
 //
-//
+
+CodeLensParams::CodeLensParams( const Data& data )
+: Data( data )
+{
+    if( not isValid( data ) )
+    {
+        throw std::invalid_argument(
+            "invalid data for interface 'CodeLensParams'" );
+    }
+}
+
+CodeLensParams::CodeLensParams( const TextDocumentIdentifier& textDocument )
+: Data( Data::object() )
+{
+    operator[]( Identifier::textDocument )
+        = Data::from_cbor( Data::to_cbor( textDocument ) );
+}
+
+TextDocumentIdentifier CodeLensParams::textDocument( void ) const
+{
+    return at( Identifier::textDocument );
+}
+
+u1 CodeLensParams::isValid( const Data& data )
+{
+    if( data.is_object() and data.find( Identifier::textDocument ) != data.end()
+        and TextDocumentIdentifier::isValid(
+                data[ Identifier::textDocument ] ) )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 
 //
 //
+// CodeLens
+//
+
+CodeLens::CodeLens( const Data& data )
+: Data( data )
+{
+    if( not isValid( data ) )
+    {
+        throw std::invalid_argument( "invalid data for interface 'CodeLens'" );
+    }
+}
+
+CodeLens::CodeLens( const Range& range )
+: Data( Data::object() )
+{
+    operator[]( Identifier::range ) = Data::from_cbor( Data::to_cbor( range ) );
+}
+
+Range CodeLens::range( void ) const
+{
+    return at( Identifier::range );
+}
+
+u1 CodeLens::hasCommand( void ) const
+{
+    return find( Identifier::command ) != end();
+}
+
+Command CodeLens::command( void ) const
+{
+    return at( Identifier::command );
+}
+
+void CodeLens::setCommand( const Command& command )
+{
+    operator[]( Identifier::command )
+        = Data::from_cbor( Data::to_cbor( command ) );
+}
+
+u1 CodeLens::hasData( void ) const
+{
+    return find( Identifier::data ) != end();
+}
+
+Data CodeLens::data( void ) const
+{
+    return at( Identifier::data );
+}
+
+void CodeLens::setData( const Data& data )
+{
+    operator[]( Identifier::data ) = Data::from_cbor( Data::to_cbor( data ) );
+}
+
+u1 CodeLens::isValid( const Data& data )
+{
+    if( data.is_object() and data.find( Identifier::range ) != data.end()
+        and Range::isValid( data[ Identifier::range ] ) )
+    {
+        if( data.find( Identifier::command ) != data.end()
+            and not Command::isValid( data[ Identifier::command ] ) )
+        {
+            return false;
+        }
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 //
 //
+// CodeLensResult
+//
+
+CodeLensResult::CodeLensResult( const Data& data )
+: Data( data )
+{
+    if( not isValid( data ) )
+    {
+        throw std::invalid_argument(
+            "invalid data for interface 'CodeLensResult'" );
+    }
+}
+
+CodeLensResult::CodeLensResult( const std::vector< CodeLens >& codeLens )
+: Data( Data::array() )
+{
+    for( auto cl : codeLens )
+    {
+        addCodeLens( cl );
+    }
+}
+
+void CodeLensResult::addCodeLens( const CodeLens& codeLens )
+{
+    this->push_back( codeLens );
+}
+
+u1 CodeLensResult::isValid( const Data& data )
+{
+    if( data.is_array() )
+    {
+        for( auto codeLens : data )
+        {
+            if( not CodeLens::isValid( codeLens ) )
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 
 //
 //  Local variables:

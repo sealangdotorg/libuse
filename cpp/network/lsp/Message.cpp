@@ -276,6 +276,14 @@ void RequestMessage::process( ServerInterface& interface ) const
                 response.setResult( result );
                 break;
             }
+            case String::value( Identifier::textDocument_codeLens ):
+            {
+                const auto& parameters = CodeLensParams( params() );
+                const auto& result
+                    = interface.textDocument_codeLens( parameters );
+                response.setResult( result );
+                break;
+            }
             default:
             {
                 response.setError( ErrorCode::MethodNotFound,

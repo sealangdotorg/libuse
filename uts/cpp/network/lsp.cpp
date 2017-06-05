@@ -65,8 +65,7 @@ class TestInterface final : public ServerInterface
     {
     }
 
-    HoverResult textDocument_hover(
-        const HoverParams& params ) override
+    HoverResult textDocument_hover( const HoverParams& params ) override
     {
         return HoverResult();
     }
@@ -75,6 +74,12 @@ class TestInterface final : public ServerInterface
         const CodeActionParams& params ) override
     {
         return CodeActionResult();
+    }
+
+    CodeLensResult textDocument_codeLens(
+        const CodeLensParams& params ) override
+    {
+        return CodeLensResult();
     }
 };
 
