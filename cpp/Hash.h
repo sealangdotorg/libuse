@@ -73,7 +73,7 @@ namespace libstdhl
                 return m_value != rhs.value();
             }
 
-            friend std::size_t hash_value( const Code& code )
+            friend std::size_t value( const Code& code )
             {
                 return code.m_value;
             }
@@ -81,6 +81,16 @@ namespace libstdhl
           private:
             std::size_t m_value;
         };
+
+        inline std::size_t value( const u64 data )
+        {
+            return std::hash< u64 >()( data );
+        }
+
+        inline std::size_t value( const std::string& str )
+        {
+            return std::hash< std::string >()( str );
+        }
 
         /**
            from boost, see:

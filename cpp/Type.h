@@ -43,6 +43,8 @@
 #include <unordered_set>
 #include <vector>
 
+#include "Hash.h"
+
 /**
    @brief    TODO
 
@@ -336,6 +338,20 @@ namespace libstdhl
         u1 m_sign;
         u64 m_meta;
     };
+
+    namespace Hash
+    {
+        inline std::size_t value( const Type& data )
+        {
+            std::size_t h = 0;
+
+            data.foreach( [&]( const std::size_t, const u64 val ) {
+                h = Hash::combine( h, Hash::value( val ) );
+            } );
+
+            return h;
+        }
+    }
 }
 
 #endif // _LIB_STDHL_CPP_TYPE_H_
