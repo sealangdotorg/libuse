@@ -343,7 +343,7 @@ namespace libstdhl
     {
         inline std::size_t value( const Type& data )
         {
-            std::size_t h = 0;
+            std::size_t h = data.size();
 
             data.foreach( [&]( const std::size_t, const u64 val ) {
                 h = Hash::combine( h, Hash::value( val ) );

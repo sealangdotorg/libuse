@@ -26,10 +26,27 @@
 
 using namespace libstdhl;
 
-TEST( libstdhl_cpp_Hash, example )
+TEST( libstdhl_cpp_Hash, combine_example )
 {
     EXPECT_EQ( libstdhl::Hash::combine( 123, 456 ),
         libstdhl::Hash::combine( 123, 456 ) );
+
+    EXPECT_NE( libstdhl::Hash::combine( 123, 456 ),
+        libstdhl::Hash::combine( 456, 123 ) );
+}
+
+TEST( libstdhl_cpp_Hash, value_u64_example )
+{
+    EXPECT_EQ( Hash::value( 1234 ), Hash::value( 1234 ) );
+
+    EXPECT_NE( Hash::value( 1234 ), Hash::value( 4321 ) );
+}
+
+TEST( libstdhl_cpp_Hash, value_string_example )
+{
+    EXPECT_EQ( Hash::value( "foobar" ), Hash::value( "foobar" ) );
+
+    EXPECT_NE( Hash::value( "foobar" ), Hash::value( "FOOBAR" ) );
 }
 
 //

@@ -117,6 +117,17 @@ TEST( libstdhl_cpp_type, operator_div )
     }
 }
 
+TEST( libstdhl_cpp_type, hash_value_example )
+{
+    Type a( std::initializer_list< u64 >{ 0x0000000044448888, 0x2 } );
+    Type b( std::initializer_list< u64 >{ 0x0000000044448888, 0x2 } );
+    Type c( std::initializer_list< u64 >{ 0x0012340556788888, 0x4 } );
+
+    EXPECT_EQ( Hash::value( a ), Hash::value( b ) );
+
+    EXPECT_NE( Hash::value( a ), Hash::value( c ) );
+}
+
 //
 //  Local variables:
 //  mode: c++
