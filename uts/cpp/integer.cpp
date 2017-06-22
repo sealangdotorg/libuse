@@ -446,119 +446,79 @@ TEST( DISABLED_libstdhl_cpp_integer, str_decimal40_sign )
     EXPECT_EQ( i.word( 0 ), 0 );
 }
 
-TEST( libstdhl_cpp_integer, operator_add )
-{
-    const auto a = Integer( (i64)321 );
-    const auto b = Integer( (i64)123 );
+#define TEST_CPP_INTEGER_OPERATOR_ARITHMETIC_( NAME, OP, A, B )                \
+    TEST( libstdhl_cpp_integer, operator_##NAME )                              \
+    {                                                                          \
+        const auto a = Integer( (i64)A );                                      \
+        const auto b = Integer( (i64)B );                                      \
+                                                                               \
+        const auto c = a OP b;                                                 \
+        EXPECT_EQ( c.size(), 1 );                                              \
+        EXPECT_EQ( c.word( 0 ) * ( c.sign() ? ( -1 ) : ( 1 ) ), A OP B );      \
+    }
 
-    const auto c = a + b;
+#define TEST_CPP_INTEGER_OPERATOR_COMPARE_( NAME, OP, A, B )                   \
+    TEST( libstdhl_cpp_integer, operator_##NAME )                              \
+    {                                                                          \
+        const auto a = Integer( (i64)A );                                      \
+        const auto b = Integer( (i64)B );                                      \
+                                                                               \
+        const auto c = a OP b;                                                 \
+        EXPECT_EQ( c, A OP B );                                                \
+    }
 
-    EXPECT_EQ( c.size(), 1 );
-    EXPECT_EQ( c.sign(), false );
-    EXPECT_EQ( c.word( 0 ), 321 + 123 );
-}
+#define TEST_CPP_INTEGER_OPERATOR_SETz( KIND, NAME, OP )                       \
+    TEST_CPP_INTEGER_OPERATOR_##KIND##_( NAME##z0, OP, -1234, 0 );             \
+    TEST_CPP_INTEGER_OPERATOR_##KIND##_( NAME##z1, OP, -1, 0 );                \
+    TEST_CPP_INTEGER_OPERATOR_##KIND##_( NAME##z2, OP, 0, 0 );                 \
+    TEST_CPP_INTEGER_OPERATOR_##KIND##_( NAME##z3, OP, 1, 0 );                 \
+    TEST_CPP_INTEGER_OPERATOR_##KIND##_( NAME##z4, OP, 1234, 0 );
 
-TEST( libstdhl_cpp_integer, operator_sub )
-{
-    const auto a = Integer( (i64)321 );
-    const auto b = Integer( (i64)123 );
+#define TEST_CPP_INTEGER_OPERATOR_SET0( KIND, NAME, OP )                       \
+    TEST_CPP_INTEGER_OPERATOR_##KIND##_( NAME##00, OP, -1234, 1 );             \
+    TEST_CPP_INTEGER_OPERATOR_##KIND##_( NAME##01, OP, -1, 1 );                \
+    TEST_CPP_INTEGER_OPERATOR_##KIND##_( NAME##02, OP, 0, 1 );                 \
+    TEST_CPP_INTEGER_OPERATOR_##KIND##_( NAME##03, OP, 1, 1 );                 \
+    TEST_CPP_INTEGER_OPERATOR_##KIND##_( NAME##04, OP, 2, 1 );                 \
+    TEST_CPP_INTEGER_OPERATOR_##KIND##_( NAME##05, OP, 1234, 1 );              \
+    TEST_CPP_INTEGER_OPERATOR_##KIND##_( NAME##06, OP, 0, 1234 );
 
-    const auto c = a - b;
+#define TEST_CPP_INTEGER_OPERATOR_SET1( KIND, NAME, OP )                       \
+    TEST_CPP_INTEGER_OPERATOR_##KIND##_( NAME##10, OP, -1234, -10 );           \
+    TEST_CPP_INTEGER_OPERATOR_##KIND##_( NAME##11, OP, -11, -10 );             \
+    TEST_CPP_INTEGER_OPERATOR_##KIND##_( NAME##12, OP, -10, -10 );             \
+    TEST_CPP_INTEGER_OPERATOR_##KIND##_( NAME##13, OP, -10, -9 );              \
+    TEST_CPP_INTEGER_OPERATOR_##KIND##_( NAME##14, OP, -10, 1234 );
 
-    EXPECT_EQ( c.size(), 1 );
-    EXPECT_EQ( c.sign(), false );
-    EXPECT_EQ( c.word( 0 ), 321 - 123 );
-}
+#define TEST_CPP_INTEGER_OPERATOR_SET2( KIND, NAME, OP )                       \
+    TEST_CPP_INTEGER_OPERATOR_##KIND##_( NAME##20, OP, -1234, 48 );            \
+    TEST_CPP_INTEGER_OPERATOR_##KIND##_( NAME##21, OP, 47, 48 );               \
+    TEST_CPP_INTEGER_OPERATOR_##KIND##_( NAME##22, OP, 48, 48 );               \
+    TEST_CPP_INTEGER_OPERATOR_##KIND##_( NAME##23, OP, 48, 49 );               \
+    TEST_CPP_INTEGER_OPERATOR_##KIND##_( NAME##24, OP, 48, 1234 )
 
-TEST( libstdhl_cpp_integer, operator_mul )
-{
-    const auto a = Integer( (i64)321 );
-    const auto b = Integer( (i64)123 );
+#define TEST_CPP_INTEGER_OPERATOR_ARITHMETIC( NAME, OP )                       \
+    TEST_CPP_INTEGER_OPERATOR_SET0( ARITHMETIC, NAME, OP );                    \
+    TEST_CPP_INTEGER_OPERATOR_SET1( ARITHMETIC, NAME, OP );                    \
+    TEST_CPP_INTEGER_OPERATOR_SET2( ARITHMETIC, NAME, OP );
 
-    const auto c = a * b;
+#define TEST_CPP_INTEGER_OPERATOR_COMPARE( NAME, OP )                          \
+    TEST_CPP_INTEGER_OPERATOR_SET0( COMPARE, NAME, OP );                       \
+    TEST_CPP_INTEGER_OPERATOR_SET1( COMPARE, NAME, OP );                       \
+    TEST_CPP_INTEGER_OPERATOR_SET2( COMPARE, NAME, OP );
 
-    EXPECT_EQ( c.size(), 1 );
-    EXPECT_EQ( c.sign(), false );
-    EXPECT_EQ( c.word( 0 ), 321 * 123 );
-}
+TEST_CPP_INTEGER_OPERATOR_ARITHMETIC( add, +);
+TEST_CPP_INTEGER_OPERATOR_ARITHMETIC( sub, -);
+TEST_CPP_INTEGER_OPERATOR_ARITHMETIC( mul, * );
+TEST_CPP_INTEGER_OPERATOR_ARITHMETIC( mod, % );
+TEST_CPP_INTEGER_OPERATOR_ARITHMETIC( div, / );
 
-TEST( libstdhl_cpp_integer, operator_mod )
-{
-    const auto a = Integer( (i64)321 );
-    const auto b = Integer( (i64)123 );
-
-    const auto c = a % b;
-
-    EXPECT_EQ( c.size(), 1 );
-    EXPECT_EQ( c.sign(), false );
-    EXPECT_EQ( c.word( 0 ), 321 % 123 );
-}
-
-TEST( libstdhl_cpp_integer, operator_div )
-{
-    const auto a = Integer( (i64)321 );
-    const auto b = Integer( (i64)123 );
-
-    const auto c = a / b;
-
-    EXPECT_EQ( c.size(), 1 );
-    EXPECT_EQ( c.sign(), false );
-    EXPECT_EQ( c.word( 0 ), 321 / 123 );
-}
-
-TEST( libstdhl_cpp_integer, operator_equ )
-{
-    const auto a = Integer( (i64)321 );
-    const auto b = Integer( (i64)123 );
-
-    const auto c = a == b;
-    EXPECT_EQ( c, 321 == 123 );
-}
-
-TEST( libstdhl_cpp_integer, operator_neq )
-{
-    const auto a = Integer( (i64)321 );
-    const auto b = Integer( (i64)123 );
-
-    const auto c = a != b;
-    EXPECT_EQ( c, 321 != 123 );
-}
-
-TEST( libstdhl_cpp_integer, operator_les )
-{
-    const auto a = Integer( (i64)321 );
-    const auto b = Integer( (i64)123 );
-
-    const auto c = a < b;
-    EXPECT_EQ( c, 321 < 123 );
-}
-
-TEST( libstdhl_cpp_integer, operator_leq )
-{
-    const auto a = Integer( (i64)321 );
-    const auto b = Integer( (i64)123 );
-
-    const auto c = a <= b;
-    EXPECT_EQ( c, 321 <= 123 );
-}
-
-TEST( libstdhl_cpp_integer, operator_gre )
-{
-    const auto a = Integer( (i64)321 );
-    const auto b = Integer( (i64)123 );
-
-    const auto c = a > b;
-    EXPECT_EQ( c, 321 > 123 );
-}
-
-TEST( libstdhl_cpp_integer, operator_geq )
-{
-    const auto a = Integer( (i64)321 );
-    const auto b = Integer( (i64)123 );
-
-    const auto c = a >= b;
-    EXPECT_EQ( c, 321 >= 123 );
-}
+TEST_CPP_INTEGER_OPERATOR_COMPARE( equ, == );
+TEST_CPP_INTEGER_OPERATOR_COMPARE( neq, != );
+TEST_CPP_INTEGER_OPERATOR_COMPARE( leq, <= );
+TEST_CPP_INTEGER_OPERATOR_COMPARE( les, < );
+TEST_CPP_INTEGER_OPERATOR_COMPARE( geq, >= );
+TEST_CPP_INTEGER_OPERATOR_COMPARE( gre, > );
 
 //
 //  Local variables:

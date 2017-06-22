@@ -131,13 +131,12 @@ Integer& Integer::operator+=( const Integer& rhs )
         {
             m_words[ 0 ] = a - b;
         }
-        else
+        else // a < b
         {
             m_words[ 0 ] = b - a;
+            m_sign = rhs_neg;
         }
     }
-
-    m_sign = rhs_neg;
 
     return *this;
 }
@@ -157,22 +156,18 @@ Integer& Integer::operator-=( const Integer& rhs )
     {
         if( a >= b )
         {
-            m_sign = not lhs_neg;
             m_words[ 0 ] = a - b;
         }
-        else
+        else // a < b
         {
-            m_sign = lhs_neg;
             m_words[ 0 ] = b - a;
+            m_sign = not rhs_neg;
         }
     }
     else
     {
-        m_sign = lhs_neg;
         m_words[ 0 ] = a + b;
     }
-
-    m_sign = rhs_neg;
 
     return *this;
 }
@@ -241,7 +236,7 @@ u1 Integer::operator<( const Integer& rhs ) const
         if( rhs_neg )
         {
             return static_cast< const Type& >( *this )
-                   >= static_cast< const Type& >( rhs );
+                   > static_cast< const Type& >( rhs );
         }
         else // rhs pos
         {
@@ -272,7 +267,7 @@ u1 Integer::operator>( const Integer& rhs ) const
         if( rhs_neg )
         {
             return static_cast< const Type& >( *this )
-                   <= static_cast< const Type& >( rhs );
+                   < static_cast< const Type& >( rhs );
         }
         else // rhs pos
         {
