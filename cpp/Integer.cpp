@@ -221,9 +221,24 @@ Integer& Integer::operator/=( const Integer& rhs )
 
 u1 Integer::operator==( const Integer& rhs ) const
 {
-    return m_sign == rhs.sign()
-           and static_cast< const Type& >( *this )
-                   == static_cast< const Type& >( rhs );
+    if( static_cast< const Type& >( *this )
+        == static_cast< const Type& >( rhs ) )
+    {
+        if( m_sign != rhs.sign() )
+        {
+            // check and ignore signs if value is zero
+            if( static_cast< const Type& >( *this ) == 0 )
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    return false;
 }
 
 u1 Integer::operator<( const Integer& rhs ) const

@@ -457,6 +457,33 @@ TEST( DISABLED_libstdhl_cpp_integer, str_decimal40_sign )
         EXPECT_EQ( c.word( 0 ) * ( c.sign() ? ( -1 ) : ( 1 ) ), A OP B );      \
     }
 
+TEST( libstdhl_cpp_integer, operator_equ_zero_pn )
+{
+    auto a = Integer( "0", Type::Radix::DECIMAL );
+    auto b = Integer( "-0", Type::Radix::DECIMAL );
+
+    const auto c = a == b;
+    EXPECT_TRUE( c );
+}
+
+TEST( libstdhl_cpp_integer, operator_equ_zero_np )
+{
+    auto a = Integer( "-0", Type::Radix::DECIMAL );
+    auto b = Integer( "0", Type::Radix::DECIMAL );
+
+    const auto c = a == b;
+    EXPECT_TRUE( c );
+}
+
+TEST( libstdhl_cpp_integer, operator_equ_zero_nn )
+{
+    auto a = Integer( "-0", Type::Radix::DECIMAL );
+    auto b = Integer( "-0", Type::Radix::DECIMAL );
+
+    const auto c = a == b;
+    EXPECT_TRUE( c );
+}
+
 #define TEST_CPP_INTEGER_OPERATOR_COMPARE_( NAME, OP, A, B )                   \
     TEST( libstdhl_cpp_integer, operator_##NAME )                              \
     {                                                                          \
