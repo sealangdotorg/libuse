@@ -90,6 +90,13 @@ namespace libstdhl
                 return arg;
             }
 
+            u1 operator==( const Layout& rhs ) const;
+
+            inline u1 operator!=( const Layout& rhs ) const
+            {
+                return not( operator==( rhs ) );
+            }
+
             template < const Radix RADIX, const Literal LITERAL = STDHL >
             inline std::string to( void ) const
             {

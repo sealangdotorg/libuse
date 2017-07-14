@@ -63,7 +63,6 @@ Layout::Layout( void )
 
 u64 Layout::value( void ) const
 {
-    assert( trivial() );
     return m_data.value;
 }
 
@@ -75,7 +74,6 @@ void Layout::setValue( const u64 value )
 
 void* Layout::ptr( void ) const
 {
-    assert( not trivial() );
     return m_data.ptr;
 }
 
@@ -90,14 +88,43 @@ u1 Layout::sign( void ) const
     return m_sign;
 }
 
+u1 Layout::trivial( void ) const
+{
+    return m_trivial;
+}
+
 u1 Layout::defined( void ) const
 {
     return m_trivial or m_data.ptr != 0;
 }
 
-u1 Layout::trivial( void ) const
+u1 Layout::operator==( const Layout& rhs ) const
 {
-    return m_trivial;
+    if( defined() and defined() )
+    {
+        if( trivial() and rhs.trivial() )
+        {
+            return m_data.value == rhs.value();
+        }
+        else if( trivial() or rhs.trivial() )
+        {
+            return false;
+        }
+        else
+        {
+            assert( 0 ); // PPA: FIXME: TODO; lookup and dispatch to the correct
+                         // operator== function
+            return false;
+        }
+    }
+    else if( defined() or defined() )
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
 
 std::string Layout::to_string( const Radix radix, const Literal literal ) const
@@ -222,7 +249,16 @@ std::string Layout::to_string( const Radix radix, const Literal literal ) const
 
     std::reverse( format.begin(), format.end() );
 
-    return prefix + format + postfix;
+    const auto result = prefix + format + postfix;
+
+    if( result == "-0" )
+    {
+        return "0";
+    }
+    else
+    {
+        return result;
+    }
 }
 
 u64 Layout::to_digit(
