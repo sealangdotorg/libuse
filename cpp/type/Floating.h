@@ -22,36 +22,49 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "uts/main.h"
+#ifndef _LIB_STDHL_CPP_TYPE_FLOATING_H_
+#define _LIB_STDHL_CPP_TYPE_FLOATING_H_
 
-#include "cpp/type/Rational.h"
+#include "Layout.h"
 
-using namespace libstdhl;
-using namespace Type;
+/**
+   @brief    TODO
 
-TEST( libstdhl_cpp_rational, str_decimal1 )
+   TODO
+*/
+
+namespace libstdhl
 {
-    auto i = Rational( "5", Type::Radix::DECIMAL );
+    namespace Type
+    {
+        class Floating : public Layout
+        {
+          public:
+            using Ptr = std::shared_ptr< Floating >;
 
-    EXPECT_EQ( i.sign(), false );
-    EXPECT_EQ( i.trivial(), false );
-    EXPECT_EQ( i.defined(), true );
+            Floating( double value );
 
-    EXPECT_EQ( static_cast< RationalLayout* >( i.ptr() )->at( 0 ), 5 );
-    EXPECT_EQ( static_cast< RationalLayout* >( i.ptr() )->at( 1 ), 1 );
+            Floating( const std::string& value );
+
+            ~Floating( void ) = default;
+
+            inline friend Floating operator-( Floating arg )
+            {
+                auto tmp = -static_cast< Layout& >( arg );
+                return static_cast< Floating& >( tmp );
+            }
+
+            u1 operator==( const Floating& rhs ) const;
+
+            inline u1 operator!=( const Floating& rhs ) const
+            {
+                return not( operator==( rhs ) );
+            }
+        };
+    }
 }
 
-TEST( libstdhl_cpp_rational, str_decimal4 )
-{
-    auto i = Rational( "2/31", Type::Radix::DECIMAL );
-
-    EXPECT_EQ( i.sign(), false );
-    EXPECT_EQ( i.trivial(), false );
-    EXPECT_EQ( i.defined(), true );
-
-    EXPECT_EQ( static_cast< RationalLayout* >( i.ptr() )->at( 0 ), 2 );
-    EXPECT_EQ( static_cast< RationalLayout* >( i.ptr() )->at( 1 ), 31 );
-}
+#endif // _LIB_STDHL_CPP_TYPE_FLOATING_H_
 
 //
 //  Local variables:

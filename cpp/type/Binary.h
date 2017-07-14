@@ -22,36 +22,55 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "uts/main.h"
+#ifndef _LIB_STDHL_CPP_TYPE_BINARY_H_
+#define _LIB_STDHL_CPP_TYPE_BINARY_H_
 
-#include "cpp/type/Rational.h"
+#include "Integer.h"
 
-using namespace libstdhl;
-using namespace Type;
+/**
+   @brief    TODO
 
-TEST( libstdhl_cpp_rational, str_decimal1 )
+   TODO
+*/
+
+namespace libstdhl
 {
-    auto i = Rational( "5", Type::Radix::DECIMAL );
+    /**
+       @extends Stdhl
+    */
+    namespace Type
+    {
+        class Binary : public Integer
+        {
+          public:
+            using Ptr = std::shared_ptr< Binary >;
 
-    EXPECT_EQ( i.sign(), false );
-    EXPECT_EQ( i.trivial(), false );
-    EXPECT_EQ( i.defined(), true );
+            Binary( const u64 value );
 
-    EXPECT_EQ( static_cast< RationalLayout* >( i.ptr() )->at( 0 ), 5 );
-    EXPECT_EQ( static_cast< RationalLayout* >( i.ptr() )->at( 1 ), 1 );
+            Binary( const std::string& value, const Radix radix );
+
+            ~Binary( void ) = default;
+
+            u1 operator==( const Binary& rhs ) const;
+
+            inline u1 operator!=( const Binary& rhs ) const
+            {
+                return not( operator==( rhs ) );
+            }
+
+            friend Binary operator~( Binary arg )
+            {
+                assert( arg.trivial() );
+
+                arg.m_data.value = ~arg.m_data.value;
+
+                return arg;
+            }
+        };
+    }
 }
 
-TEST( libstdhl_cpp_rational, str_decimal4 )
-{
-    auto i = Rational( "2/31", Type::Radix::DECIMAL );
-
-    EXPECT_EQ( i.sign(), false );
-    EXPECT_EQ( i.trivial(), false );
-    EXPECT_EQ( i.defined(), true );
-
-    EXPECT_EQ( static_cast< RationalLayout* >( i.ptr() )->at( 0 ), 2 );
-    EXPECT_EQ( static_cast< RationalLayout* >( i.ptr() )->at( 1 ), 31 );
-}
+#endif // _LIB_STDHL_CPP_TYPE_BINARY_H_
 
 //
 //  Local variables:

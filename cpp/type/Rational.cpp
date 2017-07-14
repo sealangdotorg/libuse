@@ -24,13 +24,14 @@
 
 #include "Rational.h"
 
+#include "../String.h"
 #include "Integer.h"
-#include "String.h"
 
 using namespace libstdhl;
+using namespace Type;
 
 Rational::Rational( const std::string& value, const Type::Radix radix )
-: Type()
+: Layout()
 {
     std::vector< std::string > parts;
 
@@ -48,74 +49,42 @@ Rational::Rational( const std::string& value, const Type::Radix radix )
             + "' too many Rational '/' characters found in literal" );
     }
 
+    m_sign = false;
+    m_trivial = false;
+
     const auto numerator = Integer( parts[ 0 ], radix );
-
-    m_meta = numerator.size();
-
-    numerator.foreach( [&]( const std::size_t index, const u64 value ) {
-        if( index < 2 )
-        {
-            m_words[ index ] = value;
-        }
-        else
-        {
-            m_words_ext.emplace_back( value );
-        }
-    } );
 
     if( parts.size() > 1 )
     {
-        const auto denominator = Integer( parts[ 1 ], radix );
-
-        denominator.foreach( [&]( const std::size_t index, const u64 value ) {
-            const auto pos = m_meta + index;
-
-            if( pos < 2 )
-            {
-                m_words[ pos ] = value;
-            }
-            else
-            {
-                m_words_ext.emplace_back( value );
-            }
-        } );
+        m_data.ptr = new RationalLayout(
+            { { numerator, Integer( parts[ 1 ], radix ) } } );
+    }
+    else
+    {
+        m_data.ptr = new RationalLayout( { { numerator, Integer( (u64)1 ) } } );
     }
 }
 
 Rational::Rational( const Integer& numerator, const Integer& denominator )
-: Type()
+: Layout()
 {
-    if( static_cast< const Type& >( denominator ) == 0 )
+    if( denominator == 0 )
     {
         throw std::domain_error( "denominator of Rational is zero" );
     }
 
-    m_meta = numerator.size();
+    m_sign = false;
+    m_trivial = false;
 
-    numerator.foreach( [&]( const std::size_t index, const u64 value ) {
-        if( index < 2 )
-        {
-            m_words[ index ] = value;
-        }
-        else
-        {
-            m_words_ext.emplace_back( value );
-        }
-    } );
+    m_data.ptr = new RationalLayout( { { numerator, denominator } } );
+}
 
-    denominator.foreach( [&]( const std::size_t index, const u64 value ) {
-
-        const auto pos = m_meta + index;
-
-        if( pos < 2 )
-        {
-            m_words[ pos ] = value;
-        }
-        else
-        {
-            m_words_ext.emplace_back( value );
-        }
-    } );
+u1 Rational::operator==( const Rational& rhs ) const
+{
+    return static_cast< RationalLayout* >( m_data.ptr )->at( 0 )
+               == static_cast< RationalLayout* >( rhs.ptr() )->at( 0 )
+           and static_cast< RationalLayout* >( m_data.ptr )->at( 1 )
+                   == static_cast< RationalLayout* >( rhs.ptr() )->at( 1 );
 }
 
 //

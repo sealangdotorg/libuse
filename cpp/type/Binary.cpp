@@ -22,22 +22,27 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "FloatingPoint.h"
+#include "Binary.h"
 
 using namespace libstdhl;
+using namespace Type;
 
-FloatingPoint::FloatingPoint( const std::string& value )
-: Type()
+Binary::Binary( const u64 data )
+: Integer( data )
 {
-#warning "TODO"
 }
 
-FloatingPoint::FloatingPoint( double value )
-: Type( ( value >= 0 ? (u64)value : ( u64 )( -value ) ), ( value < 0 ) )
+Binary::Binary( const std::string& data, const Radix radix )
+: Integer( data, radix )
 {
-    // IEEE 754 double-precision binary floating-point format
-    static_assert(
-        sizeof( double ) == 8, " double shall be a byte-size of 8 " );
+}
+
+u1 Binary::operator==( const Binary& rhs ) const
+{
+    assert( trivial() );
+    assert( rhs.trivial() );
+
+    return value() == rhs.value();
 }
 
 //

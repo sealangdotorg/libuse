@@ -22,10 +22,10 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_CPP_FLOATING_POINT_H_
-#define _LIB_STDHL_CPP_FLOATING_POINT_H_
+#ifndef _LIB_STDHL_CPP_TYPE_RATIONAL_H_
+#define _LIB_STDHL_CPP_TYPE_RATIONAL_H_
 
-#include "Type.h"
+#include "Integer.h"
 
 /**
    @brief    TODO
@@ -35,33 +35,38 @@
 
 namespace libstdhl
 {
-    class FloatingPoint : public Type
+    namespace Type
     {
-      public:
-        using Ptr = std::shared_ptr< FloatingPoint >;
+        using RationalLayout = std::array< Integer, 2 >;
 
-        FloatingPoint( const std::string& value );
-
-        FloatingPoint( double value );
-
-        ~FloatingPoint( void ) = default;
-
-        inline friend FloatingPoint operator-( FloatingPoint arg )
+        class Rational : public Layout
         {
-            auto tmp = -static_cast< Type& >( arg );
-            if( tmp == 0 )
+          public:
+            using Ptr = std::shared_ptr< Rational >;
+
+            Rational( const std::string& value, const Radix radix = DECIMAL );
+
+            Rational( const Integer& numerator, const Integer& denominator );
+
+            ~Rational( void ) = default;
+
+            inline friend Rational operator-( Rational arg )
             {
-                return arg;
+                auto tmp = -static_cast< Layout& >( arg );
+                return static_cast< Rational& >( tmp );
             }
-            else
+
+            u1 operator==( const Rational& rhs ) const;
+
+            inline u1 operator!=( const Rational& rhs ) const
             {
-                return static_cast< FloatingPoint& >( tmp );
+                return not( operator==( rhs ) );
             }
-        }
-    };
+        };
+    }
 }
 
-#endif // _LIB_STDHL_CPP_FLOATING_POINT_H_
+#endif // _LIB_STDHL_CPP_RATIONAL_H_
 
 //
 //  Local variables:

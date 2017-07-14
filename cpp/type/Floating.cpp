@@ -22,41 +22,43 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_CPP_RATIONAL_H_
-#define _LIB_STDHL_CPP_RATIONAL_H_
+#include "Floating.h"
 
-#include "Type.h"
+using namespace libstdhl;
+using namespace Type;
 
-/**
-   @brief    TODO
-
-   TODO
-*/
-
-namespace libstdhl
+Floating::Floating( double value )
+: Layout( ( value >= 0 ? (u64)value : ( u64 )( -value ) ), ( value < 0 ) )
 {
-    class Integer;
-
-    class Rational : public Type
-    {
-      public:
-        using Ptr = std::shared_ptr< Rational >;
-
-        Rational( const std::string& value, const Radix radix = DECIMAL );
-
-        Rational( const Integer& numerator, const Integer& denominator );
-
-        ~Rational( void ) = default;
-
-        inline friend Rational operator-( Rational arg )
-        {
-            auto tmp = -static_cast< Type& >( arg );
-            return arg;
-        }
-    };
+    // IEEE 754 double-precision binary floating-point format
+    static_assert(
+        sizeof( double ) == 8, " double shall be a byte-size of 8 " );
 }
 
-#endif // _LIB_STDHL_CPP_RATIONAL_H_
+Floating::Floating( const std::string& value )
+: Layout()
+{
+#warning "TODO"    
+}
+
+u1 Floating::operator==( const Floating& rhs ) const
+{
+    if( defined() and rhs.defined() )
+    {
+        assert( trivial() );
+        assert( rhs.trivial() );
+
+        return value() == rhs.value();
+    }
+    else if( defined() or rhs.defined() )
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
 
 //
 //  Local variables:

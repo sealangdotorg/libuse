@@ -22,35 +22,26 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "uts/main.h"
-
-#include "cpp/type/Rational.h"
+#include "String.h"
 
 using namespace libstdhl;
 using namespace Type;
 
-TEST( libstdhl_cpp_rational, str_decimal1 )
+String::String( const std::string& value )
+: Layout()
 {
-    auto i = Rational( "5", Type::Radix::DECIMAL );
-
-    EXPECT_EQ( i.sign(), false );
-    EXPECT_EQ( i.trivial(), false );
-    EXPECT_EQ( i.defined(), true );
-
-    EXPECT_EQ( static_cast< RationalLayout* >( i.ptr() )->at( 0 ), 5 );
-    EXPECT_EQ( static_cast< RationalLayout* >( i.ptr() )->at( 1 ), 1 );
+    const auto size = value.size() + 1;
+    m_data.ptr = malloc( sizeof( char ) * size );
+    memcpy( m_data.ptr, value.data(), size );
+    ( (char*)m_data.ptr )[ size - 1 ] = '\0';
 }
 
-TEST( libstdhl_cpp_rational, str_decimal4 )
+String::~String( void )
 {
-    auto i = Rational( "2/31", Type::Radix::DECIMAL );
-
-    EXPECT_EQ( i.sign(), false );
-    EXPECT_EQ( i.trivial(), false );
-    EXPECT_EQ( i.defined(), true );
-
-    EXPECT_EQ( static_cast< RationalLayout* >( i.ptr() )->at( 0 ), 2 );
-    EXPECT_EQ( static_cast< RationalLayout* >( i.ptr() )->at( 1 ), 31 );
+    // if( m_data.ptr ) // PPA: FIXME:
+    // {
+    //     free( m_data.ptr );
+    // }
 }
 
 //
