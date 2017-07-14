@@ -55,7 +55,7 @@ namespace libstdhl
             }
 
             std::random_device device;
-            std::default_random_engine engine( device() );
+            static thread_local std::default_random_engine engine( device() );
 
             // std::seed_seq seed{ device(), device(), device(), device(),
             //     device(), device(), device(), device() };
