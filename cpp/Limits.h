@@ -28,6 +28,7 @@
 #include <limits>
 
 #include "Integer.h"
+#include "FloatingPoint.h"
 
 /**
    @brief    TODO
@@ -66,6 +67,21 @@ namespace libstdhl
         static Integer max() noexcept
         {
             return Integer( std::numeric_limits< i64 >::max() );
+        }
+    };
+
+    template <>
+    class Limits< FloatingPoint >
+    {
+      public:
+        static FloatingPoint min() noexcept
+        {
+            return FloatingPoint( std::numeric_limits< double >::min() );
+        }
+
+        static FloatingPoint max() noexcept
+        {
+            return FloatingPoint( std::numeric_limits< double >::max() );
         }
     };
 }

@@ -66,6 +66,23 @@ namespace libstdhl
             return uniform< u64 >( from.word( 0 ), to.word( 0 ) );
         }
 
+        template <>
+        inline FloatingPoint uniform< FloatingPoint >(
+            const FloatingPoint& from, const FloatingPoint& to )
+        {
+            if( from >= to )
+            {
+                std::domain_error( "invalid range" );
+            }
+
+            std::random_device device;
+            static thread_local std::default_random_engine engine( device() );
+
+            std::uniform_real_distribution< double > distribution(
+                from.word( 0 ), to.word( 0 ) );
+            return distribution( engine );
+        }
+
         template < typename T >
         inline T uniform( void )
         {
