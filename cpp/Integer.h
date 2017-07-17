@@ -121,6 +121,12 @@ namespace libstdhl
         {
             return not( operator>( rhs ) );
         }
+
+        Integer& operator++( void );
+        Integer operator++( int );
+
+        Integer& operator--( void );
+        Integer operator--( int );
     };
 }
 
