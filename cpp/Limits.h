@@ -44,14 +44,12 @@ namespace libstdhl
       public:
         static T min() noexcept
         {
-            assert( !"Limits::min not implemented" );
-            return T();
+            return std::numeric_limits< T >::min();
         }
 
         static T max() noexcept
         {
-            assert( !"Limits::max not implemented" );
-            return T();
+            return std::numeric_limits< T >::max();
         }
     };
 
