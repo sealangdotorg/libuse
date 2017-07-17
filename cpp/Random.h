@@ -57,10 +57,6 @@ namespace libstdhl
             std::random_device device;
             static thread_local std::default_random_engine engine( device() );
 
-            // std::seed_seq seed{ device(), device(), device(), device(),
-            //     device(), device(), device(), device() };
-            // std::mt19937_64 engine( seed );
-
             std::uniform_int_distribution< T > distribution( from, to );
             return distribution( engine );
         }
