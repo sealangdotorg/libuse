@@ -303,6 +303,36 @@ u1 Integer::operator>( const Integer& rhs ) const
     }
 }
 
+Integer& Integer::operator++( void )
+{
+    static const Integer one( 1UL );
+    return operator+=( one );
+}
+
+Integer Integer::operator++( int )
+{
+    static const Integer one( 1UL );
+
+    auto copy = *this;
+    operator+=( one );
+    return copy;
+}
+
+Integer& Integer::operator--( void )
+{
+    static const Integer one( 1UL );
+    return operator-=( one );
+}
+
+Integer Integer::operator--( int )
+{
+    static const Integer one( 1UL );
+
+    auto copy = *this;
+    operator-=( one );
+    return copy;
+}
+
 //
 //  Local variables:
 //  mode: c++
