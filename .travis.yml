@@ -103,6 +103,27 @@ matrix:
 
     - os: linux
       compiler: gcc
+      addons: &addons_gcc_7
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - sourceline: "ppa:jonathonf/binutils"
+          packages:
+            - gcc-7
+            - g++-7
+            - binutils
+      env: ENV_CC="gcc-7" ENV_CXX="g++-7" BUILD="debug"
+    - os: linux
+      compiler: gcc
+      addons: *addons_gcc_7
+      env: ENV_CC="gcc-7" ENV_CXX="g++-7" BUILD="sanitize"
+    - os: linux
+      compiler: gcc
+      addons: *addons_gcc_7
+      env: ENV_CC="gcc-7" ENV_CXX="g++-7" BUILD="release"
+
+    - os: linux
+      compiler: gcc
       addons: &addons_gcc_6
         apt:
           sources:
@@ -113,10 +134,6 @@ matrix:
             - g++-6
             - binutils
       env: ENV_CC="gcc-6" ENV_CXX="g++-6" BUILD="debug"
-    - os: linux
-      compiler: gcc
-      addons: *addons_gcc_6
-      env: ENV_CC="gcc-6" ENV_CXX="g++-6" BUILD="sanitize"
     - os: linux
       compiler: gcc
       addons: *addons_gcc_6
