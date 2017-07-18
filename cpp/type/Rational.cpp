@@ -41,8 +41,6 @@ Rational Type::createRational( const std::string& value, const Radix radix )
 Rational Type::createRational(
     const Integer& numerator, const Integer& denominator )
 {
-    Rational tmp;
-
     if( denominator == 0 )
     {
         throw std::domain_error( "denominator of rational cannot be zero!" );
@@ -73,7 +71,7 @@ Rational Rational::fromString(
             + "' too many Rational '/' characters found in literal" );
     }
 
-    Rational tmp;
+    Rational tmp( nullptr );
     tmp.m_sign = false;
     tmp.m_trivial = false;
 
