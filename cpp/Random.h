@@ -28,6 +28,7 @@
 #include "Default.h"
 #include "Math.h"
 #include "Type.h"
+#include "Limits.h"
 
 #include <random>
 
@@ -42,12 +43,10 @@ namespace libstdhl
     /**
        @extends Stdhl
     */
-    class Random
+    namespace Random
     {
-      public:
         template < typename T >
-        static inline T uniform( T from = std::numeric_limits< T >::min(),
-            T to = std::numeric_limits< T >::max() )
+        T uniform( const T& from, const T& to )
         {
             if( from >= to )
             {
@@ -55,14 +54,39 @@ namespace libstdhl
             }
 
             std::random_device device;
-            std::default_random_engine engine( device() );
-
-            // std::seed_seq seed{ device(), device(), device(), device(),
-            //     device(), device(), device(), device() };
-            // std::mt19937_64 engine( seed );
+            static thread_local std::default_random_engine engine( device() );
 
             std::uniform_int_distribution< T > distribution( from, to );
             return distribution( engine );
+        }
+
+        template <>
+        inline Integer uniform< Integer >( const Integer& from, const Integer& to )
+        {
+            return uniform< u64 >( from.word( 0 ), to.word( 0 ) );
+        }
+
+        template <>
+        inline FloatingPoint uniform< FloatingPoint >(
+            const FloatingPoint& from, const FloatingPoint& to )
+        {
+            if( from >= to )
+            {
+                std::domain_error( "invalid range" );
+            }
+
+            std::random_device device;
+            static thread_local std::default_random_engine engine( device() );
+
+            std::uniform_real_distribution< double > distribution(
+                from.word( 0 ), to.word( 0 ) );
+            return distribution( engine );
+        }
+
+        template < typename T >
+        inline T uniform( void )
+        {
+            return uniform( Limits< T >::min(), Limits< T >::max() );
         }
     };
 }
