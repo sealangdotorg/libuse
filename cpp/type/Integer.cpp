@@ -29,6 +29,34 @@
 using namespace libstdhl;
 using namespace Type;
 
+static inline u64 hi( u64 x )
+{
+    return x >> 32;
+}
+
+static inline u64 lo( u64 x )
+{
+    return ( ( 1L << 32 ) - 1 ) & x;
+}
+
+static inline u64 umull_carry( u64 a, u64 b )
+{
+    u64 x = lo( a ) * lo( b );
+
+    x = hi( a ) * lo( b ) + hi( x );
+    u64 s1 = lo( x );
+    u64 s2 = hi( x );
+
+    x = s1 + lo( a ) * hi( b );
+    s1 = lo( x );
+
+    x = s2 + hi( a ) * hi( b ) + hi( x );
+    s2 = lo( x );
+    u64 s3 = hi( x );
+
+    return ( s3 << 32 ) | s2;
+}
+
 //
 // Type::create*
 //
@@ -157,18 +185,29 @@ Integer& Integer::operator<<=( const u64 rhs )
     return *this;
 }
 
+Integer& Integer::operator++( void )
+{
+    return operator+=( 1 );
+}
+
+Integer Integer::operator++( int )
+{
+    auto tmp = *this;
+    operator++();
+    return tmp;
+}
+
 Integer& Integer::operator+=( const u64 rhs )
 {
-    u64 overflow = rhs;
-
     if( trivial() )
     {
-        overflow = __builtin_uaddl_overflow(
-            m_data.value, overflow, (u64*)&m_data.value );
+        const auto lhs = m_data.value;
+        const auto addof
+            = __builtin_uaddl_overflow( lhs, rhs, (u64*)&m_data.value );
 
-        if( overflow != 0 )
+        if( addof )
         {
-            m_data.ptr = new IntegerLayout( { m_data.value, overflow } );
+            m_data.ptr = new IntegerLayout( { m_data.value, 1 } );
             m_trivial = false;
         }
     }
@@ -176,6 +215,48 @@ Integer& Integer::operator+=( const u64 rhs )
     {
         auto data = static_cast< IntegerLayout* >( m_data.ptr );
         data->operator+=( rhs );
+    }
+
+    return *this;
+}
+
+Integer& Integer::operator--( void )
+{
+    return operator-=( 1 );
+}
+
+Integer Integer::operator--( int )
+{
+    auto tmp = *this;
+    operator--();
+    return tmp;
+}
+
+Integer& Integer::operator-=( const u64 rhs )
+{
+    if( trivial() )
+    {
+        if( m_sign )
+        {
+            return operator+=( rhs );
+        }
+        else
+        {
+            if( m_data.value >= rhs )
+            {
+                m_data.value -= rhs;
+            }
+            else
+            {
+                m_data.value = rhs - m_data.value;
+                m_sign = true;
+            }
+        }
+    }
+    else
+    {
+        auto data = static_cast< IntegerLayout* >( m_data.ptr );
+        data->operator-=( rhs );
     }
 
     return *this;
@@ -215,12 +296,13 @@ Integer& Integer::operator*=( const u64 rhs )
 
     if( trivial() )
     {
-        u64 carry
-            = __builtin_umull_overflow( m_data.value, rhs, &m_data.value );
+        const auto lhs = m_data.value;
+        const auto mulof = __builtin_umull_overflow( lhs, rhs, &m_data.value );
 
-        if( carry != 0 )
+        if( mulof )
         {
-            m_data.ptr = new IntegerLayout( { m_data.value, carry } );
+            m_data.ptr = new IntegerLayout(
+                { m_data.value, umull_carry( lhs, rhs ) } );
             m_trivial = false;
         }
     }
@@ -628,18 +710,28 @@ IntegerLayout& IntegerLayout::operator+=( const u64 rhs )
 {
     assert( m_word.size() > 0 );
 
-    u64 overflow = rhs;
+    u64 carry = rhs;
 
     for( std::size_t c = 0; c < m_word.size(); c++ )
     {
-        overflow
-            = __builtin_uaddl_overflow( m_word[ c ], overflow, &m_word[ c ] );
+        const auto lhs = m_word[ c ];
+        const auto addof = __builtin_uaddl_overflow( lhs, carry, &m_word[ c ] );
+        carry = addof;
     }
 
-    if( overflow != 0 )
+    if( carry != 0 )
     {
-        m_word.emplace_back( overflow );
+        m_word.emplace_back( carry );
     }
+
+    return *this;
+}
+
+IntegerLayout& IntegerLayout::operator-=( const u64 rhs )
+{
+    assert( m_word.size() > 0 );
+
+    throw std::domain_error( "unimplemented 'IntegerLayout::operator-='" );
 
     return *this;
 }
@@ -648,16 +740,19 @@ IntegerLayout& IntegerLayout::operator*=( const u64 rhs )
 {
     assert( m_word.size() > 0 );
 
-    u64 addof = 0;
     u64 carry = 0;
 
     for( std::size_t c = 0; c < m_word.size(); c++ )
     {
-        u64 mulof = __builtin_umull_overflow( m_word[ c ], rhs, &m_word[ c ] );
-        u64 addof = __builtin_uaddl_overflow( m_word[ c ], carry, &m_word[ c ] );
-        assert( addof == 0 );
-        
-        carry = mulof;
+        const auto lhs = m_word[ c ];
+        const auto mulof = __builtin_umull_overflow( lhs, rhs, &m_word[ c ] );
+
+        const auto addof
+            = __builtin_uaddl_overflow( m_word[ c ], carry, &m_word[ c ] );
+
+        assert( not addof );
+
+        carry = ( mulof ? umull_carry( lhs, rhs ) : 0 );
     }
 
     if( carry != 0 )

@@ -402,6 +402,7 @@ TEST( libstdhl_cpp_type_integer, str_decimal20_u64max )
     EXPECT_EQ( i.defined(), true );
     EXPECT_EQ( i.trivial(), true );
     EXPECT_EQ( i.value(), UINT64_MAX );
+    EXPECT_EQ( i.value(), 0xffffffffffffffff );
 }
 
 TEST( libstdhl_cpp_type_integer, str_decimal20_u64max_plus_one )

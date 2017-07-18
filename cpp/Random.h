@@ -26,9 +26,9 @@
 #define _LIB_STDHL_CPP_RANDOM_H_
 
 #include "Default.h"
+#include "Limits.h"
 #include "Math.h"
 #include "Type.h"
-#include "Limits.h"
 
 #include <random>
 
@@ -61,14 +61,15 @@ namespace libstdhl
         }
 
         template <>
-        inline Integer uniform< Integer >( const Integer& from, const Integer& to )
+        inline Type::Integer uniform< Type::Integer >(
+            const Type::Integer& from, const Type::Integer& to )
         {
-            return uniform< u64 >( from.word( 0 ), to.word( 0 ) );
+            return Type::createInteger( uniform< u64 >( from[ 0 ], to[ 0 ] ) );
         }
 
         template <>
-        inline FloatingPoint uniform< FloatingPoint >(
-            const FloatingPoint& from, const FloatingPoint& to )
+        inline Type::Floating uniform< Type::Floating >(
+            const Type::Floating& from, const Type::Floating& to )
         {
             if( from >= to )
             {
@@ -79,8 +80,9 @@ namespace libstdhl
             static thread_local std::default_random_engine engine( device() );
 
             std::uniform_real_distribution< double > distribution(
-                from.word( 0 ), to.word( 0 ) );
-            return distribution( engine );
+                from.value(), to.value() );
+
+            return Type::createFloating( distribution( engine ) );
         }
 
         template < typename T >

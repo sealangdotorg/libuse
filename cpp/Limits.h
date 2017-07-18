@@ -25,10 +25,10 @@
 #ifndef _LIB_STDHL_CPP_LIMITS_H_
 #define _LIB_STDHL_CPP_LIMITS_H_
 
-#include <limits>
+#include "Type.h"
 
-#include "Integer.h"
-#include "FloatingPoint.h"
+#include "type/Floating.h"
+#include "type/Integer.h"
 
 /**
    @brief    TODO
@@ -54,32 +54,32 @@ namespace libstdhl
     };
 
     template <>
-    class Limits< Integer >
+    class Limits< Type::Integer >
     {
       public:
-        static Integer min() noexcept
+        static Type::Integer min() noexcept
         {
-            return Integer( std::numeric_limits< i64 >::min() );
+            return Type::createInteger( std::numeric_limits< i64 >::min() );
         }
 
-        static Integer max() noexcept
+        static Type::Integer max() noexcept
         {
-            return Integer( std::numeric_limits< i64 >::max() );
+            return Type::createInteger( std::numeric_limits< i64 >::max() );
         }
     };
 
     template <>
-    class Limits< FloatingPoint >
+    class Limits< Type::Floating >
     {
       public:
-        static FloatingPoint min() noexcept
+        static Type::Floating min() noexcept
         {
-            return FloatingPoint( std::numeric_limits< double >::min() );
+            return Type::createFloating( std::numeric_limits< double >::min() );
         }
 
-        static FloatingPoint max() noexcept
+        static Type::Floating max() noexcept
         {
-            return FloatingPoint( std::numeric_limits< double >::max() );
+            return Type::createFloating( std::numeric_limits< double >::max() );
         }
     };
 }

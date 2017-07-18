@@ -63,11 +63,27 @@ namespace libstdhl
                 return lhs;
             }
 
+            Integer& operator++( void );
+
+            Integer operator++( int );
+
             Integer& operator+=( const u64 rhs );
 
             inline friend Integer operator+( Integer lhs, const u64 rhs )
             {
                 lhs += rhs;
+                return lhs;
+            }
+
+            Integer& operator--( void );
+
+            Integer operator--( int );
+
+            Integer& operator-=( const u64 rhs );
+
+            inline friend Integer operator-( Integer lhs, const u64 rhs )
+            {
+                lhs -= rhs;
                 return lhs;
             }
 
@@ -121,7 +137,7 @@ namespace libstdhl
                 return lhs;
             }
 
-            Integer operator~( void ) const;
+            Integer operator~(void)const;
 
             u1 operator==( const Integer& rhs ) const;
 
@@ -154,14 +170,6 @@ namespace libstdhl
 
             Layout* clone( void ) const override;
 
-            // std::size_t size( void ) const;
-
-            // template < typename... Args >
-            // inline void emplace_back( Args&&... args )
-            // {
-            //     m_word.emplace_back( std::forward< Args >( args )... );
-            // }
-
             const u64 operator[]( std::size_t idx ) const;
 
             u1 operator==( const u64 rhs ) const;
@@ -193,6 +201,15 @@ namespace libstdhl
                 IntegerLayout lhs, const u64 rhs )
             {
                 lhs += rhs;
+                return lhs;
+            }
+
+            IntegerLayout& operator-=( const u64 rhs );
+
+            inline friend IntegerLayout operator-(
+                IntegerLayout lhs, const u64 rhs )
+            {
+                lhs -= rhs;
                 return lhs;
             }
 

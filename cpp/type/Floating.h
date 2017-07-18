@@ -59,6 +59,20 @@ namespace libstdhl
             {
                 return not( operator==( rhs ) );
             }
+            
+            u1 operator<( const Floating& rhs ) const;
+
+            inline u1 operator>=( const Floating& rhs ) const
+            {
+                return not( operator<( rhs ) );
+            }
+
+            u1 operator>( const Floating& rhs ) const;
+
+            inline u1 operator<=( const Floating& rhs ) const
+            {
+                return not( operator>( rhs ) );
+            }
         };
 
         class FloatingLayout final : public Layout

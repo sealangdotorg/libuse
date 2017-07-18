@@ -79,6 +79,32 @@ u1 Floating::operator==( const Floating& rhs ) const
     }
 }
 
+u1 Floating::operator<( const Floating& rhs ) const
+{
+    assert( m_trivial );
+    assert( rhs.m_trivial );
+
+    // if trivial, the value equals a 'double' format!
+
+    const auto lval = static_cast< double >( m_data.value );
+    const auto rval = static_cast< double >( rhs.m_data.value );
+
+    return lval < rval;
+}
+
+u1 Floating::operator>( const Floating& rhs ) const
+{
+    assert( m_trivial );
+    assert( rhs.m_trivial );
+
+    // if trivial, the value equals a 'double' format!
+
+    const auto lval = static_cast< double >( m_data.value );
+    const auto rval = static_cast< double >( rhs.m_data.value );
+
+    return lval > rval;
+}
+
 //
 // FloatingLayout
 //
