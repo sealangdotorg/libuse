@@ -22,27 +22,60 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "Binary.h"
+#include "Natural.h"
+
+#include "../String.h"
 
 using namespace libstdhl;
 using namespace Type;
 
-Binary::Binary( const u64 data )
-: Integer( data )
+//
+// Type::create*
+//
+
+Natural Type::createNatural( const std::string& value, const Radix radix )
 {
+    return Natural::fromString( value, radix );
 }
 
-Binary::Binary( const std::string& data, const Radix radix )
-: Integer( data, radix )
+Natural Type::createNatural( const Integer& value )
 {
+    if( value.sign() )
+    {
+        throw std::domain_error(
+            "Natural type cannot be initialized with negative Integer value" );
+    }
+
+    if( value.trivial() )
+    {
+        return Natural( value.value(), false );
+    }
+    else
+    {
+        return Natural( value.ptr() );
+    }
 }
 
-u1 Binary::operator==( const Binary& rhs ) const
+Natural Type::createNatural( const u64 value )
 {
-    assert( trivial() );
-    assert( rhs.trivial() );
+    return Natural( value, false );
+}
 
-    return value() == rhs.value();
+//
+// Natural
+//
+
+Natural Natural::fromString( const std::string& value, const Type::Radix radix )
+{
+    Integer tmp = Integer::fromString( value, radix );
+
+    if( tmp.sign() )
+    {
+        throw std::domain_error(
+            "invalid negative '" + value + "' Natural literal" );
+    }
+
+    return createNatural( tmp );
 }
 
 //

@@ -31,26 +31,26 @@ using namespace Type;
 
 TEST( libstdhl_cpp_rational, str_decimal1 )
 {
-    auto i = Rational( "5", Type::Radix::DECIMAL );
+    auto i = createRational( "5", Type::Radix::DECIMAL );
 
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.trivial(), false );
     EXPECT_EQ( i.defined(), true );
 
-    EXPECT_EQ( static_cast< RationalLayout* >( i.ptr() )->at( 0 ), 5 );
-    EXPECT_EQ( static_cast< RationalLayout* >( i.ptr() )->at( 1 ), 1 );
+    EXPECT_EQ( i.numerator(), 5 );
+    EXPECT_EQ( i.denominator(), 1 );
 }
 
 TEST( libstdhl_cpp_rational, str_decimal4 )
 {
-    auto i = Rational( "2/31", Type::Radix::DECIMAL );
+    auto i = createRational( "2/31", Type::Radix::DECIMAL );
 
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.trivial(), false );
     EXPECT_EQ( i.defined(), true );
 
-    EXPECT_EQ( static_cast< RationalLayout* >( i.ptr() )->at( 0 ), 2 );
-    EXPECT_EQ( static_cast< RationalLayout* >( i.ptr() )->at( 1 ), 31 );
+    EXPECT_EQ( i.numerator(), 2 );
+    EXPECT_EQ( i.denominator(), 31 );
 }
 
 //

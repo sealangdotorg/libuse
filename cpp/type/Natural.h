@@ -22,8 +22,8 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef _LIB_STDHL_CPP_TYPE_BINARY_H_
-#define _LIB_STDHL_CPP_TYPE_BINARY_H_
+#ifndef _LIB_STDHL_CPP_TYPE_NATURAL_H_
+#define _LIB_STDHL_CPP_TYPE_NATURAL_H_
 
 #include "Integer.h"
 
@@ -35,42 +35,28 @@
 
 namespace libstdhl
 {
-    /**
-       @extends Stdhl
-    */
     namespace Type
     {
-        class Binary : public Integer
+        class Natural : public Integer
         {
           public:
-            using Ptr = std::shared_ptr< Binary >;
+            using Ptr = std::shared_ptr< Natural >;
 
-            Binary( const u64 value );
+            using Integer::Integer;
 
-            Binary( const std::string& value, const Radix radix );
+            static Natural fromString(
+                const std::string& value, const Radix radix );
 
-            ~Binary( void ) = default;
-
-            u1 operator==( const Binary& rhs ) const;
-
-            inline u1 operator!=( const Binary& rhs ) const
+            inline friend Natural operator~( Natural arg )
             {
-                return not( operator==( rhs ) );
-            }
-
-            friend Binary operator~( Binary arg )
-            {
-                assert( arg.trivial() );
-
-                arg.m_data.value = ~arg.m_data.value;
-
-                return arg;
+                auto tmp = ~static_cast< Integer& >( arg );
+                return static_cast< Natural& >( tmp );
             }
         };
     }
 }
 
-#endif // _LIB_STDHL_CPP_TYPE_BINARY_H_
+#endif // _LIB_STDHL_CPP_TYPE_NATURAL_H_
 
 //
 //  Local variables:

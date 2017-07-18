@@ -25,7 +25,7 @@
 #ifndef _LIB_STDHL_CPP_TYPE_STRING_H_
 #define _LIB_STDHL_CPP_TYPE_STRING_H_
 
-#include "Layout.h"
+#include "Data.h"
 
 /**
    @brief    TODO
@@ -37,14 +37,46 @@ namespace libstdhl
 {
     namespace Type
     {
-        class String : public Layout
+        class String : public Data
         {
           public:
             using Ptr = std::shared_ptr< String >;
 
-            String( const std::string& value );
+            using Data::Data;
 
-            ~String( void );
+            std::string toString( void ) const;
+
+            String& operator+=( const String& rhs );
+
+            inline friend String operator+( String lhs, const String& rhs )
+            {
+                lhs += rhs;
+                return lhs;
+            }
+        };
+
+        class StringLayout final : public Layout
+        {
+          public:
+            using Ptr = std::unique_ptr< StringLayout >;
+
+            StringLayout( const std::string& value );
+
+            Layout* clone( void ) const override;
+
+            const std::string& str( void ) const;
+
+            StringLayout& operator+=( const StringLayout& rhs );
+
+            inline friend StringLayout operator+(
+                StringLayout lhs, const StringLayout& rhs )
+            {
+                lhs += rhs;
+                return lhs;
+            }
+
+          private:
+            std::string m_str;
         };
     }
 }

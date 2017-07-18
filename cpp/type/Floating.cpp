@@ -27,18 +27,37 @@
 using namespace libstdhl;
 using namespace Type;
 
-Floating::Floating( double value )
-: Layout( ( value >= 0 ? (u64)value : ( u64 )( -value ) ), ( value < 0 ) )
+//
+// Type::create*
+//
+
+Floating Type::createFloating( const std::string& value, const Radix radix )
+{
+    return Floating::fromString( value, radix );
+}
+
+Floating Type::createFloating( const double value )
 {
     // IEEE 754 double-precision binary floating-point format
     static_assert(
         sizeof( double ) == 8, " double shall be a byte-size of 8 " );
+
+    Floating tmp(
+        ( value >= 0 ? (u64)value : ( u64 )( -value ) ), ( value < 0 ) );
+
+    return tmp;
 }
 
-Floating::Floating( const std::string& value )
-: Layout()
+//
+// Floating
+//
+
+Floating Floating::fromString( const std::string& value, const Radix radix )
 {
-#warning "TODO"    
+#warning "TODO"
+
+    Floating tmp;
+    return tmp;
 }
 
 u1 Floating::operator==( const Floating& rhs ) const
@@ -58,6 +77,15 @@ u1 Floating::operator==( const Floating& rhs ) const
     {
         return true;
     }
+}
+
+//
+// FloatingLayout
+//
+
+Layout* FloatingLayout::clone( void ) const
+{
+    return new FloatingLayout( *this );
 }
 
 //

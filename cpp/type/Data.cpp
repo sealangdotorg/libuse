@@ -22,7 +22,7 @@
 //  along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "Layout.h"
+#include "Data.h"
 
 using namespace libstdhl;
 using namespace Type;
@@ -40,94 +40,153 @@ static constexpr const char* digits_definitions[] = {
     "./" NUMBER UPPER_CASE LOWER_CASE, // unix radix 64 encoding
 };
 
-Layout::Layout( const u64 data, const u1 sign )
+Data::Data( const u64 data, const u1 sign )
 : m_sign( sign )
 , m_trivial( true )
 {
     m_data.value = data;
 }
 
-Layout::Layout( void* data )
+Data::Data( Layout* data )
 : m_sign( false )
 , m_trivial( false )
 {
     m_data.ptr = data;
 }
 
-Layout::Layout( void )
+Data::Data( void )
 : m_sign( false )
 , m_trivial( false )
 {
     m_data.ptr = 0;
 }
 
-u64 Layout::value( void ) const
+Data::~Data( void )
+{
+    if( not m_trivial and m_data.ptr != nullptr )
+    {
+        delete m_data.ptr;
+        m_data.ptr = nullptr;
+    }
+}
+
+Data::Data( const Data& other )
+{
+    if( other.m_trivial )
+    {
+        m_data.value = other.m_data.value;
+    }
+    else
+    {
+        if( other.m_data.ptr != nullptr )
+        {
+            m_data.ptr = other.m_data.ptr->clone();
+        }
+        else
+        {
+            m_data.ptr = nullptr;
+        }
+    }
+
+    m_trivial = other.m_trivial;
+    m_sign = other.m_sign;
+}
+
+Data::Data( Data&& other ) noexcept
+{
+    if( other.m_trivial )
+    {
+        std::swap( m_data.value, other.m_data.value );
+    }
+    else
+    {
+        std::swap( m_data.ptr, other.m_data.ptr );
+    }
+
+    m_trivial = other.m_trivial;
+    m_sign = other.m_sign;
+}
+
+Data& Data::operator=( const Data& other )
+{
+    if( this != &other )
+    {
+        if( other.m_trivial )
+        {
+            m_data.value = other.m_data.value;
+        }
+        else if( other.m_data.ptr != nullptr )
+        {
+            m_data.ptr = other.m_data.ptr->clone();
+        }
+
+        m_trivial = other.m_trivial;
+        m_sign = other.m_sign;
+    }
+    return *this;
+}
+
+Data& Data::operator=( Data&& other ) noexcept
+{
+    if( this != &other )
+    {
+        if( other.m_trivial )
+        {
+            std::swap( m_data.value, other.m_data.value );
+        }
+        else
+        {
+            std::swap( m_data.ptr, other.m_data.ptr );
+        }
+
+        m_trivial = other.m_trivial;
+        m_sign = other.m_sign;
+    }
+    return *this;
+}
+
+u64 Data::value( void ) const
 {
     return m_data.value;
 }
 
-void Layout::setValue( const u64 value )
-{
-    m_data.value = value;
-    m_trivial = true;
-}
-
-void* Layout::ptr( void ) const
+Layout* Data::ptr( void ) const
 {
     return m_data.ptr;
 }
 
-void Layout::setPtr( void* ptr )
-{
-    m_data.ptr = ptr;
-    m_trivial = false;
-}
-
-u1 Layout::sign( void ) const
+u1 Data::sign( void ) const
 {
     return m_sign;
 }
 
-u1 Layout::trivial( void ) const
+u1 Data::trivial( void ) const
 {
     return m_trivial;
 }
 
-u1 Layout::defined( void ) const
+u1 Data::defined( void ) const
 {
     return m_trivial or m_data.ptr != 0;
 }
 
-u1 Layout::operator==( const Layout& rhs ) const
+u1 Data::operator==( const Data& rhs ) const
 {
-    if( defined() and defined() )
+    if( trivial() and rhs.trivial() )
     {
-        if( trivial() and rhs.trivial() )
-        {
-            return m_data.value == rhs.value();
-        }
-        else if( trivial() or rhs.trivial() )
-        {
-            return false;
-        }
-        else
-        {
-            assert( 0 ); // PPA: FIXME: TODO; lookup and dispatch to the correct
-                         // operator== function
-            return false;
-        }
+        return m_data.value == rhs.m_data.value and m_sign == rhs.m_sign;
     }
-    else if( defined() or defined() )
+    else if( trivial() or rhs.trivial() )
     {
         return false;
     }
-    else
+    else // both are non-trivial
     {
-        return true;
+        return m_data.ptr == rhs.m_data.ptr;
     }
 }
 
-std::string Layout::to_string( const Radix radix, const Literal literal ) const
+std::string Data::to_string( const Radix radix, const Literal literal ) const
 {
     std::string prefix;
     std::string postfix;
@@ -237,7 +296,7 @@ std::string Layout::to_string( const Radix radix, const Literal literal ) const
 
     assert( trivial() );
     u64 tmp = m_data.value;
-    // Layout tmp( *this ); // PPA: TODO: FIXME:
+    // Data tmp( *this ); // PPA: TODO: FIXME:
 
     do
     {
@@ -261,7 +320,7 @@ std::string Layout::to_string( const Radix radix, const Literal literal ) const
     }
 }
 
-u64 Layout::to_digit(
+u64 Data::to_digit(
     const char character, const Radix radix, const Literal literal )
 {
     const char* digits = digits_definitions[ literal / 10 ];

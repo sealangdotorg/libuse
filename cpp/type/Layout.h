@@ -43,94 +43,14 @@ namespace libstdhl
         class Layout
         {
           public:
-            using Ptr = std::shared_ptr< Layout >;
+            // using Ptr = std::unique_ptr< Layout >;
 
-            /**
-               trivial defined value
-             */
-            Layout( const u64 data, const u1 sign );
+            Layout( void ) = default;
 
-            /**
-               non-trivial defined value
-             */
-            Layout( void* data );
+            virtual ~Layout( void ) = default;
 
-            /**
-               undefined value
-             */
-            Layout( void );
-
-            u64 value( void ) const;
-
-            void setValue( const u64 value );
-
-            void* ptr( void ) const;
-
-            void setPtr( void* ptr );
-
-            u1 sign( void ) const;
-
-            u1 trivial( void ) const;
-
-            u1 defined( void ) const;
-
-          protected:
-            union layout {
-                u64 value;
-                void* ptr;
-            } m_data;
-
-            u1 m_sign : 1;
-            u1 m_trivial : 1;
-
-          public:
-            friend Layout operator-( Layout arg )
-            {
-                arg.m_sign = not arg.m_sign;
-                return arg;
-            }
-
-            u1 operator==( const Layout& rhs ) const;
-
-            inline u1 operator!=( const Layout& rhs ) const
-            {
-                return not( operator==( rhs ) );
-            }
-
-            template < const Radix RADIX, const Literal LITERAL = STDHL >
-            inline std::string to( void ) const
-            {
-                return to_string( RADIX, LITERAL );
-            }
-
-            std::string to_string( const Radix radix = DECIMAL,
-                const Literal literal = NONE ) const;
-
-            static u64 to_digit( const char character,
-                const Radix radix = DECIMAL, const Literal literal = NONE );
+            virtual Layout* clone( void ) const = 0;
         };
-    }
-
-    namespace Hash
-    {
-        inline std::size_t value( const Type::Layout& data )
-        {
-            std::size_t hash = 0;
-            std::size_t seed
-                = ( ( (std::size_t)data.sign() ) << 1 ) | data.defined();
-
-            if( data.trivial() )
-            {
-                hash = Hash::value( data.value() );
-            }
-            else
-            {
-                assert( 0 );
-                // hash = Hash::value( data.value() );
-            }
-
-            return Hash::combine( seed, hash );
-        }
     }
 }
 

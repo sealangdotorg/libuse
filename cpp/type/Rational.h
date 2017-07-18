@@ -37,23 +37,33 @@ namespace libstdhl
 {
     namespace Type
     {
-        using RationalLayout = std::array< Integer, 2 >;
-
-        class Rational : public Layout
+        class Rational : public Data
         {
           public:
             using Ptr = std::shared_ptr< Rational >;
 
-            Rational( const std::string& value, const Radix radix = DECIMAL );
+            using Data::Data;
 
             Rational( const Integer& numerator, const Integer& denominator );
 
-            ~Rational( void ) = default;
+            static Rational fromString(
+                const std::string& value, const Radix radix );
+
+            const Integer& numerator( void ) const;
+
+            const Integer& denominator( void ) const;
 
             inline friend Rational operator-( Rational arg )
             {
-                auto tmp = -static_cast< Layout& >( arg );
+                auto tmp = -static_cast< Data& >( arg );
                 return static_cast< Rational& >( tmp );
+            }
+
+            u1 operator==( const u64 rhs ) const;
+
+            inline u1 operator!=( const u64 rhs ) const
+            {
+                return not( operator==( rhs ) );
             }
 
             u1 operator==( const Rational& rhs ) const;
@@ -62,6 +72,39 @@ namespace libstdhl
             {
                 return not( operator==( rhs ) );
             }
+        };
+
+        class RationalLayout final : public Layout
+        {
+          public:
+            using Ptr = std::unique_ptr< RationalLayout >;
+
+            RationalLayout(
+                const Integer& numerator, const Integer& denominator );
+
+            Layout* clone( void ) const override;
+
+            const Integer& numerator( void ) const;
+
+            const Integer& denominator( void ) const;
+
+            u1 operator==( const u64 rhs ) const;
+
+            inline u1 operator!=( const u64 rhs ) const
+            {
+                return not( operator==( rhs ) );
+            }
+
+            u1 operator==( const RationalLayout& rhs ) const;
+
+            inline u1 operator!=( const RationalLayout& rhs ) const
+            {
+                return not( operator==( rhs ) );
+            }
+
+          private:
+            Integer m_numerator;
+            Integer m_denominator;
         };
     }
 }

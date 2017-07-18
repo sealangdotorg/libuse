@@ -25,7 +25,7 @@
 #ifndef _LIB_STDHL_CPP_TYPE_INTEGER_H_
 #define _LIB_STDHL_CPP_TYPE_INTEGER_H_
 
-#include "Layout.h"
+#include "Data.h"
 
 /**
    @brief    TODO
@@ -37,24 +37,23 @@ namespace libstdhl
 {
     namespace Type
     {
-        using IntegerLayout = std::vector< u64 >;
-
-        class Integer : public Layout
+        class Integer : public Data
         {
           public:
             using Ptr = std::shared_ptr< Integer >;
 
-            Integer( void );
+            using Data::Data;
 
-            Integer( u64 value );
+            static Integer fromString(
+                const std::string& value, const Radix radix );
 
-            Integer( i64 value );
+            const u64 operator[]( std::size_t idx ) const;
 
-            Integer( const std::string& value, const Radix radix = DECIMAL );
-
-            ~Integer( void );
-
-            // Integer to u64
+            inline friend Integer operator-( Integer arg )
+            {
+                auto tmp = -static_cast< Data& >( arg );
+                return static_cast< Integer& >( tmp );
+            }
 
             Integer& operator<<=( const u64 rhs );
 
@@ -81,8 +80,6 @@ namespace libstdhl
             }
 
             u1 operator==( const u64& rhs ) const;
-
-            // Integer to Integer
 
             Integer& operator+=( const Integer& rhs );
 
@@ -124,11 +121,7 @@ namespace libstdhl
                 return lhs;
             }
 
-            inline friend Integer operator-( Integer arg )
-            {
-                auto tmp = -static_cast< Layout& >( arg );
-                return static_cast< Integer& >( tmp );
-            }
+            Integer operator~( void ) const;
 
             u1 operator==( const Integer& rhs ) const;
 
@@ -150,6 +143,72 @@ namespace libstdhl
             {
                 return not( operator>( rhs ) );
             }
+        };
+
+        class IntegerLayout final : public Layout
+        {
+          public:
+            using Ptr = std::unique_ptr< IntegerLayout >;
+
+            IntegerLayout( const u64 low, const u64 high );
+
+            Layout* clone( void ) const override;
+
+            // std::size_t size( void ) const;
+
+            // template < typename... Args >
+            // inline void emplace_back( Args&&... args )
+            // {
+            //     m_word.emplace_back( std::forward< Args >( args )... );
+            // }
+
+            const u64 operator[]( std::size_t idx ) const;
+
+            u1 operator==( const u64 rhs ) const;
+
+            inline u1 operator!=( const u64 rhs ) const
+            {
+                return not( operator==( rhs ) );
+            }
+
+            u1 operator==( const IntegerLayout& rhs ) const;
+
+            inline u1 operator!=( const IntegerLayout& rhs ) const
+            {
+                return not( operator==( rhs ) );
+            }
+
+            IntegerLayout& operator<<=( const u64 rhs );
+
+            inline friend IntegerLayout operator<<(
+                IntegerLayout lhs, const u64 rhs )
+            {
+                lhs <<= rhs;
+                return lhs;
+            }
+
+            IntegerLayout& operator+=( const u64 rhs );
+
+            inline friend IntegerLayout operator+(
+                IntegerLayout lhs, const u64 rhs )
+            {
+                lhs += rhs;
+                return lhs;
+            }
+
+            IntegerLayout& operator*=( const u64 rhs );
+
+            inline friend IntegerLayout operator*(
+                IntegerLayout lhs, const u64 rhs )
+            {
+                lhs *= rhs;
+                return lhs;
+            }
+
+            IntegerLayout& operator~( void );
+
+          private:
+            std::vector< u64 > m_word;
         };
     }
 }

@@ -29,23 +29,33 @@
 using namespace libstdhl;
 using namespace Type;
 
-Integer::Integer( void )
-: Layout( 0, false )
+//
+// Type::create*
+//
+
+Integer Type::createInteger( const std::string& value, const Radix radix )
 {
+    return Integer::fromString( value, radix );
 }
 
-Integer::Integer( u64 value )
-: Layout( value, false )
+Integer Type::createInteger( const u64 value )
 {
+    Integer tmp( value, false );
+    return tmp;
 }
 
-Integer::Integer( i64 value )
-: Layout( ( value >= 0 ? (u64)value : ( u64 )( -value ) ), ( value < 0 ) )
+Integer Type::createInteger( const i64 value )
 {
+    Integer tmp(
+        ( value >= 0 ? (u64)value : ( u64 )( -value ) ), ( value < 0 ) );
+    return tmp;
 }
 
-Integer::Integer( const std::string& value, const Radix radix )
-: Layout()
+//
+// Integer
+//
+
+Integer Integer::fromString( const std::string& value, const Radix radix )
 {
     const u64 shift
         = ( radix == BINARY
@@ -80,30 +90,38 @@ Integer::Integer( const std::string& value, const Radix radix )
 
     const i64 bound = ( i64 )( sign );
 
-    m_sign = sign;
-    m_trivial = true;
-    m_data.value = 0;
+    Integer tmp( 0, sign );
+    assert( tmp.trivial() );
+    assert( tmp.value() == 0 );
 
     for( i64 c = bound; c < data.size(); c++ )
     {
         if( shift )
         {
-            *this <<= shift;
+            tmp <<= shift;
         }
         else
         {
-            *this *= radix;
+            tmp *= radix;
         }
 
-        *this += Layout::to_digit( data[ c ], radix );
+        tmp += Data::to_digit( data[ c ], radix );
     }
+
+    return tmp;
 }
 
-Integer::~Integer( void )
+const u64 Integer::operator[]( std::size_t idx ) const
 {
-    if( not trivial() )
+    if( m_trivial )
     {
-        delete static_cast< IntegerLayout* >( m_data.ptr );
+        assert( idx == 0 );
+        return m_data.value;
+    }
+    else
+    {
+        auto data = static_cast< IntegerLayout* >( m_data.ptr );
+        return data->operator[]( idx );
     }
 }
 
@@ -116,15 +134,12 @@ Integer& Integer::operator<<=( const u64 rhs )
         return *this;
     }
 
-    const u64 shift = rhs;
-    const u64 shinv = 64 - rhs;
-
-    u64 current = 0;
-    u64 previous = 0;
-
     if( trivial() )
     {
-        current = m_data.value >> shinv;
+        const u64 shift = rhs;
+        const u64 shinv = 64 - rhs;
+
+        const u64 current = m_data.value >> shinv;
         m_data.value = m_data.value << shift;
 
         if( current != 0 )
@@ -136,19 +151,7 @@ Integer& Integer::operator<<=( const u64 rhs )
     else
     {
         auto data = static_cast< IntegerLayout* >( m_data.ptr );
-        assert( data and data->size() > 0 );
-
-        for( std::size_t c = 0; c < data->size(); c++ )
-        {
-            current = data->at( c ) >> shinv;
-            data->operator[]( c ) = ( data->at( c ) << shift ) | previous;
-            previous = current;
-        }
-
-        if( current != 0 )
-        {
-            data->emplace_back( current );
-        }
+        data->operator<<=( rhs );
     }
 
     return *this;
@@ -172,18 +175,7 @@ Integer& Integer::operator+=( const u64 rhs )
     else
     {
         auto data = static_cast< IntegerLayout* >( m_data.ptr );
-        assert( data and data->size() > 0 );
-
-        for( std::size_t c = 0; c < data->size(); c++ )
-        {
-            overflow = __builtin_uaddl_overflow(
-                data->data()[ c ], overflow, (u64*)&data->data()[ c ] );
-        }
-
-        if( overflow != 0 )
-        {
-            data->emplace_back( overflow );
-        }
+        data->operator+=( rhs );
     }
 
     return *this;
@@ -205,16 +197,13 @@ Integer& Integer::operator*=( const u64 rhs )
 
     if( rhs == 0 )
     {
-        if( trivial() )
+        if( not trivial() )
         {
-            m_data.value = 0;
-        }
-        else
-        {
-            delete static_cast< IntegerLayout* >( m_data.ptr );
-            m_data.value = rhs;
+            delete m_data.ptr;
             m_trivial = true;
         }
+
+        m_data.value = 0;
 
         return *this;
     }
@@ -228,6 +217,7 @@ Integer& Integer::operator*=( const u64 rhs )
     {
         u64 carry
             = __builtin_umull_overflow( m_data.value, rhs, &m_data.value );
+
         if( carry != 0 )
         {
             m_data.ptr = new IntegerLayout( { m_data.value, carry } );
@@ -236,7 +226,8 @@ Integer& Integer::operator*=( const u64 rhs )
     }
     else
     {
-        throw std::domain_error( "unimplemented" );
+        auto data = static_cast< IntegerLayout* >( m_data.ptr );
+        data->operator*=( rhs );
     }
 
     return *this;
@@ -266,32 +257,7 @@ u1 Integer::operator==( const u64& rhs ) const
     else
     {
         auto data = static_cast< IntegerLayout* >( m_data.ptr );
-        assert( data and data->size() > 0 );
-
-        for( std::size_t c = 1; c < data->size(); c++ )
-        {
-            if( data->at( c ) != 0 )
-            {
-                return false;
-            }
-        }
-
-        if( data->at( 0 ) == rhs )
-        {
-            if( m_sign )
-            {
-                if( rhs == 0 )
-                {
-                    return true;
-                }
-
-                return false;
-            }
-
-            return true;
-        }
-
-        return false;
+        return data->operator==( rhs );
     }
 }
 
@@ -406,6 +372,22 @@ Integer& Integer::operator/=( const Integer& rhs )
     return *this;
 }
 
+Integer Integer::operator~(void)const
+{
+    Integer tmp( *this );
+
+    if( tmp.trivial() )
+    {
+        tmp.m_data.value = ~tmp.m_data.value;
+    }
+    else
+    {
+        static_cast< IntegerLayout* >( tmp.m_data.ptr )->operator~();
+    }
+
+    return tmp;
+}
+
 u1 Integer::operator==( const Integer& rhs ) const
 {
     if( defined() and rhs.defined() )
@@ -441,23 +423,22 @@ u1 Integer::operator==( const Integer& rhs ) const
             auto a = static_cast< const IntegerLayout* >( ptr() );
             auto b = static_cast< const IntegerLayout* >( rhs.ptr() );
 
-            if( a->size() != b->size() )
+            if( *a == *b )
             {
-                return false;
-            }
-
-            for( std::size_t c = 0; c < a->size(); c++ )
-            {
-                if( a->at( c ) != b->at( c ) )
+                if( rhs.sign() != sign() )
                 {
+                    if( rhs == 0 )
+                    {
+                        return true;
+                    }
                     return false;
                 }
+                return true;
             }
+            return false;
         }
-
-        return true;
     }
-    else if( defined() and rhs.defined() )
+    else if( defined() xor rhs.defined() )
     {
         return false;
     }
@@ -482,7 +463,8 @@ u1 Integer::operator<( const Integer& rhs ) const
             }
             else
             {
-                throw std::domain_error( "unimplemented" );
+                throw std::domain_error(
+                    "unimplemented 'Integer::operator<' of -lhs and -rhs" );
             }
         }
         else // rhs pos
@@ -504,7 +486,8 @@ u1 Integer::operator<( const Integer& rhs ) const
             }
             else
             {
-                throw std::domain_error( "unimplemented" );
+                throw std::domain_error(
+                    "unimplemented 'Integer::operator<' of +lhs and +rhs" );
             }
         }
     }
@@ -525,7 +508,8 @@ u1 Integer::operator>( const Integer& rhs ) const
             }
             else
             {
-                throw std::domain_error( "unimplemented" );
+                throw std::domain_error(
+                    "unimplemented 'Integer::operator>' of -lhs and -rhs" );
             }
         }
         else // rhs pos
@@ -547,10 +531,153 @@ u1 Integer::operator>( const Integer& rhs ) const
             }
             else
             {
-                throw std::domain_error( "unimplemented" );
+                throw std::domain_error(
+                    "unimplemented 'Integer::operator>' of +lhs and +rhs" );
             }
         }
     }
+}
+
+//
+// IntegerLayout
+//
+
+IntegerLayout::IntegerLayout( const u64 low, const u64 high )
+: m_word( { low, high } )
+{
+}
+
+Layout* IntegerLayout::clone( void ) const
+{
+    return new IntegerLayout( *this );
+}
+
+const u64 IntegerLayout::operator[]( std::size_t idx ) const
+{
+    assert( m_word.size() > 0 and idx < m_word.size() );
+    return m_word[ idx ];
+}
+
+u1 IntegerLayout::operator==( const u64 rhs ) const
+{
+    assert( m_word.size() > 0 );
+
+    for( std::size_t c = 1; c < m_word.size(); c++ )
+    {
+        if( m_word[ c ] != 0 )
+        {
+            return false;
+        }
+    }
+
+    if( m_word[ 0 ] == rhs )
+    {
+        return true;
+    }
+
+    return false;
+}
+
+u1 IntegerLayout::operator==( const IntegerLayout& rhs ) const
+{
+    assert( m_word.size() > 0 );
+    assert( rhs.m_word.size() > 0 );
+
+    if( m_word.size() != rhs.m_word.size() )
+    {
+        return false;
+    }
+
+    for( std::size_t c = 0; c < m_word.size(); c++ )
+    {
+        if( m_word[ c ] != rhs.m_word[ c ] )
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+IntegerLayout& IntegerLayout::operator<<=( const u64 rhs )
+{
+    assert( m_word.size() > 0 );
+
+    const u64 shift = rhs;
+    const u64 shinv = 64 - rhs;
+
+    u64 current = 0;
+    u64 previous = 0;
+
+    for( std::size_t c = 0; c < m_word.size(); c++ )
+    {
+        current = m_word[ c ] >> shinv;
+        m_word[ c ] = ( m_word[ c ] << shift ) | previous;
+        previous = current;
+    }
+
+    if( current != 0 )
+    {
+        m_word.emplace_back( current );
+    }
+
+    return *this;
+}
+
+IntegerLayout& IntegerLayout::operator+=( const u64 rhs )
+{
+    assert( m_word.size() > 0 );
+
+    u64 overflow = rhs;
+
+    for( std::size_t c = 0; c < m_word.size(); c++ )
+    {
+        overflow
+            = __builtin_uaddl_overflow( m_word[ c ], overflow, &m_word[ c ] );
+    }
+
+    if( overflow != 0 )
+    {
+        m_word.emplace_back( overflow );
+    }
+
+    return *this;
+}
+
+IntegerLayout& IntegerLayout::operator*=( const u64 rhs )
+{
+    assert( m_word.size() > 0 );
+
+    u64 addof = 0;
+    u64 carry = 0;
+
+    for( std::size_t c = 0; c < m_word.size(); c++ )
+    {
+        u64 mulof = __builtin_umull_overflow( m_word[ c ], rhs, &m_word[ c ] );
+        u64 addof = __builtin_uaddl_overflow( m_word[ c ], carry, &m_word[ c ] );
+        assert( addof == 0 );
+        
+        carry = mulof;
+    }
+
+    if( carry != 0 )
+    {
+        m_word.emplace_back( carry );
+    }
+
+    return *this;
+}
+
+IntegerLayout& IntegerLayout::operator~( void )
+{
+    assert( m_word.size() > 0 );
+
+    for( std::size_t c = 0; c < m_word.size(); c++ )
+    {
+        m_word[ c ] = ~m_word[ c ];
+    }
+
+    return *this;
 }
 
 //

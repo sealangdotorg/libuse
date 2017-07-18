@@ -25,7 +25,7 @@
 #ifndef _LIB_STDHL_CPP_TYPE_FLOATING_H_
 #define _LIB_STDHL_CPP_TYPE_FLOATING_H_
 
-#include "Layout.h"
+#include "Data.h"
 
 /**
    @brief    TODO
@@ -37,20 +37,19 @@ namespace libstdhl
 {
     namespace Type
     {
-        class Floating : public Layout
+        class Floating : public Data
         {
           public:
             using Ptr = std::shared_ptr< Floating >;
 
-            Floating( double value );
+            using Data::Data;
 
-            Floating( const std::string& value );
-
-            ~Floating( void ) = default;
+            static Floating fromString(
+                const std::string& value, const Radix radix );
 
             inline friend Floating operator-( Floating arg )
             {
-                auto tmp = -static_cast< Layout& >( arg );
+                auto tmp = -static_cast< Data& >( arg );
                 return static_cast< Floating& >( tmp );
             }
 
@@ -60,6 +59,14 @@ namespace libstdhl
             {
                 return not( operator==( rhs ) );
             }
+        };
+
+        class FloatingLayout final : public Layout
+        {
+          public:
+            using Ptr = std::unique_ptr< FloatingLayout >;
+
+            Layout* clone( void ) const override;
         };
     }
 }

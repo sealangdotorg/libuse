@@ -27,21 +27,58 @@
 using namespace libstdhl;
 using namespace Type;
 
-String::String( const std::string& value )
-: Layout()
+//
+// Type::create*
+//
+
+String Type::createString( const std::string& value )
 {
-    const auto size = value.size() + 1;
-    m_data.ptr = malloc( sizeof( char ) * size );
-    memcpy( m_data.ptr, value.data(), size );
-    ( (char*)m_data.ptr )[ size - 1 ] = '\0';
+    return String( new StringLayout( value ) );
 }
 
-String::~String( void )
+//
+// String
+//
+
+std::string String::toString( void ) const
 {
-    // if( m_data.ptr ) // PPA: FIXME:
-    // {
-    //     free( m_data.ptr );
-    // }
+    const auto data = static_cast< StringLayout* >( m_data.ptr );
+    return data->str();
+}
+
+String& String::operator+=( const String& rhs )
+{
+    auto lval = static_cast< StringLayout* >( m_data.ptr );
+    const auto rval = static_cast< StringLayout* >( rhs.m_data.ptr );
+
+    lval->operator+=( *rval );
+
+    return *this;
+}
+
+//
+// StringLayout
+//
+
+StringLayout::StringLayout( const std::string& value )
+: m_str( value )
+{
+}
+
+Layout* StringLayout::clone( void ) const
+{
+    return new StringLayout( m_str );
+}
+
+const std::string& StringLayout::str( void ) const
+{
+    return m_str;
+}
+
+StringLayout& StringLayout::operator+=( const StringLayout& rhs )
+{
+    m_str += rhs.m_str;
+    return *this;
 }
 
 //

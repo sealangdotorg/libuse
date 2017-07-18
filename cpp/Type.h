@@ -77,6 +77,63 @@ namespace libstdhl
             BASE64 = 10,
             UNIX = 20
         };
+
+        //
+        // Integer
+        //
+
+        class Integer;
+
+        Integer createInteger(
+            const std::string& value, const Radix radix = DECIMAL );
+
+        Integer createInteger( const u64 value );
+
+        Integer createInteger( const i64 value );
+
+        //
+        // Natural
+        //
+
+        class Natural;
+
+        Natural createNatural(
+            const std::string& value, const Radix radix = DECIMAL );
+
+        Natural createNatural( const Integer& value );
+
+        Natural createNatural( const u64 value );
+
+        //
+        // Rational
+        //
+
+        class Rational;
+
+        Rational createRational(
+            const std::string& value, const Radix radix = DECIMAL );
+
+        Rational createRational(
+            const Integer& numerator, const Integer& denominator );
+
+        //
+        // Floating
+        //
+
+        class Floating;
+
+        Floating createFloating(
+            const std::string& value, const Radix radix = DECIMAL );
+
+        Floating createFloating( const double value );
+
+        //
+        // String
+        //
+
+        class String;
+
+        String createString( const std::string& value );
     }
 }
 

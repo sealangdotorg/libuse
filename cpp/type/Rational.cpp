@@ -25,17 +25,41 @@
 #include "Rational.h"
 
 #include "../String.h"
-#include "Integer.h"
 
 using namespace libstdhl;
 using namespace Type;
 
-Rational::Rational( const std::string& value, const Type::Radix radix )
-: Layout()
+//
+// Type::create*
+//
+
+Rational Type::createRational( const std::string& value, const Radix radix )
+{
+    return Rational::fromString( value, radix );
+}
+
+Rational Type::createRational(
+    const Integer& numerator, const Integer& denominator )
+{
+    Rational tmp;
+
+    if( denominator == 0 )
+    {
+        throw std::domain_error( "denominator of rational cannot be zero!" );
+    }
+
+    return Rational( new RationalLayout( numerator, denominator ) );
+}
+
+//
+// Rational
+//
+
+Rational Rational::fromString(
+    const std::string& value, const Type::Radix radix )
 {
     std::vector< std::string > parts;
-
-    String::split( value, "/", parts );
+    libstdhl::String::split( value, "/", parts );
 
     if( parts.size() == 0 )
     {
@@ -49,42 +73,134 @@ Rational::Rational( const std::string& value, const Type::Radix radix )
             + "' too many Rational '/' characters found in literal" );
     }
 
-    m_sign = false;
-    m_trivial = false;
+    Rational tmp;
+    tmp.m_sign = false;
+    tmp.m_trivial = false;
 
-    const auto numerator = Integer( parts[ 0 ], radix );
+    const auto numerator = Integer::fromString( parts[ 0 ], radix );
 
     if( parts.size() > 1 )
     {
-        m_data.ptr = new RationalLayout(
-            { { numerator, Integer( parts[ 1 ], radix ) } } );
+        tmp.m_data.ptr = new RationalLayout(
+            numerator, Integer::fromString( parts[ 1 ], radix ) );
     }
     else
     {
-        m_data.ptr = new RationalLayout( { { numerator, Integer( (u64)1 ) } } );
+        tmp.m_data.ptr
+            = new RationalLayout( numerator, createInteger( (u64)1 ) );
     }
+
+    return tmp;
 }
 
-Rational::Rational( const Integer& numerator, const Integer& denominator )
-: Layout()
+const Integer& Rational::numerator( void ) const
 {
-    if( denominator == 0 )
+    assert( m_data.ptr );
+    const auto data = static_cast< RationalLayout* >( m_data.ptr );
+    return data->numerator();
+}
+
+const Integer& Rational::denominator( void ) const
+{
+    assert( m_data.ptr );
+    const auto data = static_cast< RationalLayout* >( m_data.ptr );
+    return data->denominator();
+}
+
+u1 Rational::operator==( const u64 rhs ) const
+{
+    if( not defined() )
     {
-        throw std::domain_error( "denominator of Rational is zero" );
+        return false;
     }
 
-    m_sign = false;
-    m_trivial = false;
+    assert( m_data.ptr );
+    const auto data = static_cast< RationalLayout* >( m_data.ptr );
 
-    m_data.ptr = new RationalLayout( { { numerator, denominator } } );
+    if( *data == rhs )
+    {
+        if( m_sign )
+        {
+            if( rhs == 0 )
+            {
+                return true;
+            }
+            return false;
+        }
+        return true;
+    }
+    return false;
 }
 
 u1 Rational::operator==( const Rational& rhs ) const
 {
-    return static_cast< RationalLayout* >( m_data.ptr )->at( 0 )
-               == static_cast< RationalLayout* >( rhs.ptr() )->at( 0 )
-           and static_cast< RationalLayout* >( m_data.ptr )->at( 1 )
-                   == static_cast< RationalLayout* >( rhs.ptr() )->at( 1 );
+    if( defined() and rhs.defined() )
+    {
+        assert( m_data.ptr );
+        assert( rhs.m_data.ptr );
+
+        const auto lval = static_cast< RationalLayout* >( m_data.ptr );
+        const auto rval = static_cast< RationalLayout* >( rhs.m_data.ptr );
+
+        if( *lval == *rval )
+        {
+            if( m_sign != rhs.m_sign )
+            {
+                if( rhs == 0 )
+                {
+                    return true;
+                }
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+    else if( defined() xor rhs.defined() )
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+
+//
+// RationalLayout
+//
+
+RationalLayout::RationalLayout(
+    const Integer& numerator, const Integer& denominator )
+: m_numerator( numerator )
+, m_denominator( denominator )
+{
+}
+
+Layout* RationalLayout::clone( void ) const
+{
+    return new RationalLayout( m_numerator, m_denominator );
+}
+
+const Integer& RationalLayout::numerator( void ) const
+{
+    return m_numerator;
+}
+
+const Integer& RationalLayout::denominator( void ) const
+{
+    return m_denominator;
+}
+
+u1 RationalLayout::operator==( const u64 rhs ) const
+{
+    return m_numerator == rhs and m_denominator == 1;
+}
+
+u1 RationalLayout::operator==( const RationalLayout& rhs ) const
+{
+    return m_numerator == rhs.m_numerator
+           and m_denominator == rhs.m_denominator;
 }
 
 //
