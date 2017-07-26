@@ -79,6 +79,16 @@ namespace libstdhl
         };
 
         //
+        // Boolean
+        //
+
+        class Boolean;
+
+        Boolean createBoolean( const std::string& value );
+
+        Boolean createBoolean( const u1 value );
+
+        //
         // Integer
         //
 
