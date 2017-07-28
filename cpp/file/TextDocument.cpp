@@ -44,13 +44,19 @@ const std::string& TextDocument::extension( void ) const
     return m_extension;
 }
 
-const std::stringstream& TextDocument::data( void ) const
+std::stringbuf* TextDocument::buffer( void ) const
 {
-    return m_data;
+    return m_data.rdbuf();
+}
+
+std::string TextDocument::data( void ) const
+{
+    return m_data.str();
 }
 
 void TextDocument::setData( const std::string& data )
 {
+    m_data.clear();
     m_data.str( data );
 }
 

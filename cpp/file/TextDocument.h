@@ -47,13 +47,17 @@ namespace libstdhl
         class TextDocument
         {
           public:
+            using Ptr = std::shared_ptr< TextDocument >;
+
             TextDocument( const Path& path, const std::string& extension );
 
             const Path& path( void ) const;
 
             const std::string& extension( void ) const;
 
-            const std::stringstream& data( void ) const;
+            std::stringbuf* buffer( void ) const;
+
+            std::string data( void ) const;
 
             void setData( const std::string& data );
 
