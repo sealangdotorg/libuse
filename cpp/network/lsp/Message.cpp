@@ -260,6 +260,15 @@ void RequestMessage::process( ServerInterface& interface ) const
                 response.setResult( nullptr );
                 break;
             }
+            // workspace
+            case String::value( Identifier::workspace_executeCommand ):
+            {
+                const auto& parameters = ExecuteCommandParams( params() );
+                const auto& result
+                    = interface.workspace_executeCommand( parameters );
+                response.setResult( result );
+                break;
+            }
             // document
             case String::value( Identifier::textDocument_hover ):
             {

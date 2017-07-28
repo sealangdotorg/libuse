@@ -325,6 +325,9 @@ namespace libstdhl
                 constexpr const char* workspaceSymbolProvider
                     = "workspaceSymbolProvider";
 
+                constexpr const char* workspace_executeCommand
+                    = "workspace/executeCommand";
+
                 // X
 
                 // Y
