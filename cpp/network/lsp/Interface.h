@@ -100,7 +100,12 @@ namespace libstdhl
                 // :arrow_right: workspace/didChangeConfiguration
                 // :arrow_right: workspace/didChangeWatchedFiles
                 // :leftwards_arrow_with_hook: workspace/symbol
+
                 // New :leftwards_arrow_with_hook: workspace/executeCommand
+                virtual ExecuteCommandResult workspace_executeCommand(
+                    const ExecuteCommandParams& params )
+                    = 0;
+
                 // New :arrow_right_hook: workspace/applyEdit
 
                 /**

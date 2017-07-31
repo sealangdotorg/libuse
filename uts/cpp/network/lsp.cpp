@@ -55,6 +55,12 @@ class TestInterface final : public ServerInterface
     {
     }
 
+    ExecuteCommandResult workspace_executeCommand(
+        const ExecuteCommandParams& params ) override
+    {
+        return ExecuteCommandResult();
+    }
+
     void textDocument_didOpen(
         const DidOpenTextDocumentParams& params ) noexcept override
     {

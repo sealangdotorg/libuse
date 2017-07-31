@@ -1171,6 +1171,26 @@ namespace libstdhl
 
                 static u1 isValid( const Data& data );
             };
+
+            class ExecuteCommandParams : public Data
+            {
+              public:
+                ExecuteCommandParams( const Data& data );
+
+                ExecuteCommandParams( const std::string& command );
+
+                std::string command( void ) const;
+
+                u1 hasArguments( void ) const;
+
+                Data arguments( void ) const;
+
+                void addArgument( const Data& argument );
+
+                static u1 isValid( const Data& data );
+            };
+
+            using ExecuteCommandResult = Data; // TODO: PPA: FIXME:
         }
     }
 }

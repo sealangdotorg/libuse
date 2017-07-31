@@ -2768,7 +2768,8 @@ ExecuteCommandOptions ServerCapabilities::executeCommandProvider( void ) const
 void ServerCapabilities::setExecuteCommandProvider(
     const ExecuteCommandOptions& executeCommandProvider )
 {
-    operator[]( Identifier::executeCommandProvider ) = executeCommandProvider;
+    operator[]( Identifier::executeCommandProvider )
+        = Data::from_cbor( Data::to_cbor( executeCommandProvider ) );
 }
 
 u1 ServerCapabilities::hasExperimental( void ) const
@@ -3869,6 +3870,67 @@ u1 CodeLensResult::isValid( const Data& data )
             {
                 return false;
             }
+        }
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+//
+//
+// ExecuteCommandParams
+//
+
+ExecuteCommandParams::ExecuteCommandParams( const Data& data )
+: Data( data )
+{
+    if( not isValid( data ) )
+    {
+        throw std::invalid_argument(
+            "invalid data for interface 'ExecuteCommandParams'" );
+    }
+}
+
+ExecuteCommandParams::ExecuteCommandParams( const std::string& command )
+: Data( Data::object() )
+{
+    operator[]( Identifier::command ) = command;
+    operator[]( Identifier::arguments ) = Data::array();
+}
+
+std::string ExecuteCommandParams::command( void ) const
+{
+    return at( Identifier::command ).get< std::string >();
+}
+
+u1 ExecuteCommandParams::hasArguments( void ) const
+{
+    return find( Identifier::arguments ) != end();
+}
+
+Data ExecuteCommandParams::arguments( void ) const
+{
+    return at( Identifier::arguments );
+}
+
+void ExecuteCommandParams::addArgument( const Data& argument )
+{
+    operator[]( Identifier::arguments ).push_back( argument );
+}
+
+u1 ExecuteCommandParams::isValid( const Data& data )
+{
+    if( data.is_object() and data.find( Identifier::command ) != data.end()
+        and data[ Identifier::command ].is_string() )
+    {
+        if( data.find( Identifier::arguments ) != data.end()
+            and not data[ Identifier::arguments ].is_array() )
+        {
+            return false;
         }
 
         return true;
