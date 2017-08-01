@@ -58,7 +58,7 @@ Data::Data( void )
 : m_sign( false )
 , m_trivial( false )
 {
-    m_data.ptr = 0;
+    m_data.ptr = nullptr;
 }
 
 Data::~Data( void )
@@ -71,40 +71,15 @@ Data::~Data( void )
 }
 
 Data::Data( const Data& other )
+: Data( nullptr )
 {
-    if( other.m_trivial )
-    {
-        m_data.value = other.m_data.value;
-    }
-    else
-    {
-        if( other.m_data.ptr != nullptr )
-        {
-            m_data.ptr = other.m_data.ptr->clone();
-        }
-        else
-        {
-            m_data.ptr = nullptr;
-        }
-    }
-
-    m_trivial = other.m_trivial;
-    m_sign = other.m_sign;
+    *this = other;
 }
 
 Data::Data( Data&& other ) noexcept
+: Data( nullptr )
 {
-    if( other.m_trivial )
-    {
-        std::swap( m_data.value, other.m_data.value );
-    }
-    else
-    {
-        std::swap( m_data.ptr, other.m_data.ptr );
-    }
-
-    m_trivial = other.m_trivial;
-    m_sign = other.m_sign;
+    *this = std::move( other );
 }
 
 Data& Data::operator=( const Data& other )
@@ -115,14 +90,22 @@ Data& Data::operator=( const Data& other )
         {
             m_data.value = other.m_data.value;
         }
-        else if( other.m_data.ptr != nullptr )
+        else
         {
-            m_data.ptr = other.m_data.ptr->clone();
+            if( other.m_data.ptr != nullptr )
+            {
+                m_data.ptr = other.m_data.ptr->clone();
+            }
+            else
+            {
+                m_data.ptr = nullptr;
+            }
         }
 
         m_trivial = other.m_trivial;
         m_sign = other.m_sign;
     }
+
     return *this;
 }
 
@@ -132,16 +115,25 @@ Data& Data::operator=( Data&& other ) noexcept
     {
         if( other.m_trivial )
         {
-            std::swap( m_data.value, other.m_data.value );
+            m_data.value = other.m_data.value;
         }
         else
         {
-            std::swap( m_data.ptr, other.m_data.ptr );
+            if( m_data.ptr != nullptr )
+            {
+                delete m_data.ptr;
+            }
+
+            m_data.ptr = other.m_data.ptr;
         }
 
         m_trivial = other.m_trivial;
         m_sign = other.m_sign;
+
+        other.m_data.ptr = nullptr;
+        other.m_trivial = false;
     }
+
     return *this;
 }
 
