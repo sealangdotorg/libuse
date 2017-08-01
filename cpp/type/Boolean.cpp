@@ -76,6 +76,16 @@ u1 Boolean::value( void ) const
     return m_data.value;
 }
 
+u1 Boolean::operator==( const u1 rhs ) const
+{
+    return value() == rhs;
+}
+
+u1 Boolean::operator==( const Boolean& rhs ) const
+{
+    return value() == rhs.value();
+}
+
 //
 //  Local variables:
 //  mode: c++

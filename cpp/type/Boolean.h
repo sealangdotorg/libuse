@@ -47,6 +47,20 @@ namespace libstdhl
             static Boolean fromString( const std::string& value );
 
             u1 value( void ) const;
+
+            u1 operator==( const u1 rhs ) const;
+
+            inline u1 operator!=( const u1 rhs ) const
+            {
+                return not( operator==( rhs ) );
+            }
+
+            u1 operator==( const Boolean& rhs ) const;
+
+            inline u1 operator!=( const Boolean& rhs ) const
+            {
+                return not( operator==( rhs ) );
+            }
         };
     }
 }
