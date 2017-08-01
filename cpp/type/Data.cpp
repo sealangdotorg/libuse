@@ -119,7 +119,7 @@ Data& Data::operator=( Data&& other ) noexcept
         }
         else
         {
-            if( m_data.ptr != nullptr )
+            if( not m_trivial and m_data.ptr != nullptr )
             {
                 delete m_data.ptr;
             }
