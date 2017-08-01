@@ -118,7 +118,7 @@ Integer Integer::fromString( const std::string& value, const Radix radix )
 
     const i64 bound = ( i64 )( sign );
 
-    Integer tmp( 0, sign );
+    Integer tmp = Type::createInteger( (u64)0 );
     assert( tmp.trivial() );
     assert( tmp.value() == 0 );
 
@@ -136,7 +136,14 @@ Integer Integer::fromString( const std::string& value, const Radix radix )
         tmp += Data::to_digit( data[ c ], radix );
     }
 
-    return tmp;
+    if( sign )
+    {
+        return -tmp;
+    }
+    else
+    {
+        return tmp;
+    }
 }
 
 const u64 Integer::operator[]( std::size_t idx ) const

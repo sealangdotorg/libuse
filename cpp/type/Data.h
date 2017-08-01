@@ -48,12 +48,12 @@ namespace libstdhl
             /**
                trivial defined data
              */
-            Data( const u64 value, const u1 sign );
+            explicit Data( const u64 value, const u1 sign );
 
             /**
                non-trivial defined data
              */
-            Data( Layout* ptr );
+            explicit Data( Layout* ptr );
 
             /**
                undefined data
