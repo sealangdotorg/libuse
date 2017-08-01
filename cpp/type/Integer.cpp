@@ -202,13 +202,29 @@ Integer& Integer::operator+=( const u64 rhs )
     if( trivial() )
     {
         const auto lhs = m_data.value;
-        const auto addof
-            = __builtin_uaddl_overflow( lhs, rhs, (u64*)&m_data.value );
 
-        if( addof )
+        if( m_sign )
         {
-            m_data.ptr = new IntegerLayout( { m_data.value, 1 } );
-            m_trivial = false;
+            if( lhs > rhs )
+            {
+                m_data.value = lhs - rhs;
+            }
+            else
+            {
+                m_data.value = rhs - lhs;
+                m_sign = false;
+            }
+        }
+        else
+        {
+            const auto addof
+                = __builtin_uaddl_overflow( lhs, rhs, (u64*)&m_data.value );
+
+            if( addof )
+            {
+                m_data.ptr = new IntegerLayout( { m_data.value, 1 } );
+                m_trivial = false;
+            }
         }
     }
     else
