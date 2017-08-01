@@ -46,6 +46,13 @@ namespace libstdhl
 
             std::string toString( void ) const;
 
+            u1 operator==( const String& rhs ) const;
+
+            inline u1 operator!=( const String& rhs ) const
+            {
+                return not( operator==( rhs ) );
+            }
+
             String& operator+=( const String& rhs );
 
             inline friend String operator+( String lhs, const String& rhs )
