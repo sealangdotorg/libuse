@@ -69,7 +69,14 @@ u1 String::operator==( const String& rhs ) const
     auto lval = static_cast< StringLayout* >( m_data.ptr );
     const auto rval = static_cast< StringLayout* >( rhs.m_data.ptr );
 
-    return lval->str() == rval->str();
+    if( lval and rval )
+    {
+        return lval->str() == rval->str();
+    }
+    else
+    {
+        return not( lval or rval );
+    }
 }
 
 String& String::operator+=( const String& rhs )
