@@ -22,6 +22,32 @@
 #   along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 #
 
-TARGET = libstdhl
+# LIBSTDHL_FOUND        - system has found the package
+# LIBSTDHL_INCLUDE_DIRS - the package include directories
+# LIBSTDHL_LIBRARY      - the package library
 
-include .config.mk
+include( LibPackage )
+
+libfind_pkg_check_modules( LIBSTDHL_PKGCONF libstdhl )
+
+find_path( LIBSTDHL_INCLUDE_DIR
+  NAMES libstdhl/libstdhl.h
+  PATHS ${LIBSTDHL_PKGCONF_INCLUDE_DIRS}
+)
+
+find_library( LIBSTDHL_LIBRARY
+  NAMES libstdhl stdhl
+  PATHS ${LIBSTDHL_PKGCONF_LIBRARY_DIRS}
+)
+
+if( LIBSTDHL_LIBRARY-NOTFOUND )
+  find_library( LIBSTDHL_LIBRARY
+    NAMES libstdhl libstdhl
+    PATHS ${LIBSTDHL_PKGCONF_LIBRARY_DIRS}
+    )
+endif()
+
+set( LIBSTDHL_PROCESS_INCLUDES LIBSTDHL_INCLUDE_DIR )
+set( LIBSTDHL_PROCESS_LIBS     LIBSTDHL_LIBRARY )
+
+libfind_process( LIBSTDHL )

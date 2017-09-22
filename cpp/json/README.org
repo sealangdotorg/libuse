@@ -1,5 +1,0 @@
-
-* 3rd-Party C++ JSON Library
-
-The content of this directory includes a C++ JSON library, which was released under a MIT license. 
-For further information please see: https://github.com/nlohmann/json

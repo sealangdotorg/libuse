@@ -22,6 +22,11 @@
 #   along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 #
 
-TARGET = libstdhl
+include_directories(
+  ${PROJECT_BINARY_DIR}/src/cpp
+  ${HAYAI_INCLUDE_DIR}
+  )
 
-include .config.mk
+add_library( ${PROJECT}-benchmark OBJECT
+  main.cpp
+  )

@@ -22,6 +22,5 @@
 #   along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 #
 
-TARGET = libstdhl
-
-include .config.mk
+add_subdirectory( test )
+add_subdirectory( benchmark )

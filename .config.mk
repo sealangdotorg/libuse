@@ -74,7 +74,6 @@ ALL   = $(TYPES:%=%-all)
 
 
 $(OBJ)/Makefile: $(OBJ)
-	@rm -f $(OBJ)/CMakeCache.txt
 	@(\
 	cd $(OBJ); \
 	cmake \

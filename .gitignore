@@ -1,4 +1,4 @@
 /.attic
 /obj
-/py/*.pyc
-/py/*.pyo
+/src/py/*.pyc
+/src/py/*.pyo

@@ -1,0 +1,9 @@
+
+* 3rd-Party C++ JSON Library
+
+The content of this directory includes a C++ JSON library, which was released under a MIT license. 
+
+** json
+
+- url = https://github.com/nlohmann/json
+- rev = c0d511ea500e698061a4b288bd77ce43bd76fa70 (v2.1.0-101-gc0d511ea)

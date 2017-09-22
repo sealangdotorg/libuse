@@ -22,6 +22,26 @@
 #   along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 #
 
-TARGET = libstdhl
+message( "-- Loading: LibCompile" )
 
-include .config.mk
+
+function( compile_flags KIND )
+  add_definitions( -Wall )
+  add_definitions( -Wno-deprecated )
+
+  set( CMAKE_${KIND}_FLAGS          "${CMAKE_${KIND}_FLAGS}" )
+  set( CMAKE_${KIND}_FLAGS_DEBUG    "${CMAKE_${KIND}_FLAGS_DEBUG} -O0" )
+  set( CMAKE_${KIND}_FLAGS_RELEASE  "${CMAKE_${KIND}_FLAGS_RELEASE}" )
+  set( CMAKE_${KIND}_FLAGS_SANITIZE "${CMAKE_${KIND}_FLAGS_SANITIZE} -O1 -Wextra -g -fno-omit-frame-pointer -fno-optimize-sibling-calls -fsanitize=undefined -fsanitize=address" )
+endfunction()
+
+
+function( compile_check )
+  if( NOT CMAKE_BUILD_TYPE )
+    set( CMAKE_BUILD_TYPE Debug
+      CACHE STRING "Choose the type of build : debug sanitize release."
+      FORCE
+      )
+  endif( NOT CMAKE_BUILD_TYPE )
+endfunction()
+

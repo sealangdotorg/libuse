@@ -22,99 +22,117 @@
 #   along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 #
 
-cmake_minimum_required( VERSION 3.1 )
+set( PROJECT libstdhl )
+cmake_minimum_required( VERSION ${CMAKE_VERSION} )
 
-if( EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../gtest" )
-  set( LIBS .. )
-else()
-  set( LIBS lib )
-endif()
+set( CMAKE_VERSION 3.2 )
+set( CMAKE_INCLUDE_CURRENT_DIR ON )
 
-foreach( DEPENDENCY
-    )
-  if( NOT TARGET ${DEPENDENCY} )
-    add_subdirectory( ${LIBS}/${DEPENDENCY} lib/${DEPENDENCY} )
-  endif()  
-endforeach()
+set( CMAKE_CXX_STANDARD 11 )
+project( ${PROJECT} LANGUAGES CXX )
 
-
-file( GLOB_RECURSE C_SRC_FILES   "c/*.c"   )
-file( GLOB_RECURSE C_UTS_FILES   "uts/*.c" )
-
-file( GLOB_RECURSE CXX_SRC_FILES "cpp/*.cpp" )
-file( GLOB_RECURSE CXX_UTS_FILES "uts/*.cpp" )
-
-
-set( TARGET stdhl )
-project( ${TARGET} )
-
-
-include_directories(
-  .
-  ${LIBS}/gtest/googletest
-  ${LIBS}/gtest/googletest/include
-  ${LIBS}/hayai/src
-  ${LIBS}/json
-  ${LIBS}/xml
-)
-
-
-set( CMAKE_C_FLAGS            "${CMAKE_C_FLAGS}            -std=c11   -Wall" )
-set( CMAKE_C_FLAGS_DEBUG      "${CMAKE_C_FLAGS_DEBUG}      -O0" )
-set( CMAKE_C_FLAGS_RELEASE    "${CMAKE_C_FLAGS_RELEASE}" )
-set( CMAKE_C_FLAGS_SANITIZE   "${CMAKE_C_FLAGS_SANITIZE}   -O1 -Wextra -g -fno-omit-frame-pointer -fno-optimize-sibling-calls -fsanitize=undefined -fsanitize=address" )
-
-set( CMAKE_CXX_FLAGS          "${CMAKE_CXX_FLAGS}          -std=c++11 -Wall" )
-set( CMAKE_CXX_FLAGS_DEBUG    "${CMAKE_CXX_FLAGS_DEBUG}    -O0" )
-set( CMAKE_CXX_FLAGS_RELEASE  "${CMAKE_CXX_FLAGS_RELEASE}" )
-set( CMAKE_CXX_FLAGS_SANITIZE "${CMAKE_CXX_FLAGS_SANITIZE} -O1 -Wextra -g -fno-omit-frame-pointer -fno-optimize-sibling-calls -fsanitize=undefined -fsanitize=address" )
-
-
-add_library( ${TARGET} STATIC
-  ${C_SRC_FILES}
-  ${CXX_SRC_FILES}
-)
-
-
-add_library( ${TARGET}-test OBJECT
-  ${C_UTS_FILES}
-  ${CXX_UTS_FILES}
-)
-
-add_executable( ${TARGET}-check
-  ${LIBS}/gtest/googletest/src/gtest_main.cc
-  ${LIBS}/gtest/googletest/src/gtest-all.cc
-  $<TARGET_OBJECTS:${TARGET}-test>
-)
-
-target_link_libraries( ${TARGET}-check
-  ${TARGET}
-  pthread
-)
-
-
-add_library( ${TARGET}-benchmark OBJECT
-  uts/main.cpp
-)
-  
-add_executable( ${TARGET}-run
-  ${LIBS}/hayai/src/hayai_posix_main.cpp
-  ${LIBS}/gtest/googletest/src/gtest-all.cc
-  $<TARGET_OBJECTS:${TARGET}-benchmark>
-)
-
-target_link_libraries( ${TARGET}-run
-  ${TARGET}
-  pthread
-)
-
-
-if( NOT CMAKE_BUILD_TYPE )
-  set( CMAKE_BUILD_TYPE Debug
-    CACHE STRING "Choose the type of build : debug sanitize release."
-    FORCE
+find_package( ECM REQUIRED CONFIG QUIET )
+set( CMAKE_MODULE_PATH
+  ${ECM_MODULE_PATH}
+  ${${PROJECT}_SOURCE_DIR}/.cmake
   )
-endif( NOT CMAKE_BUILD_TYPE )
+
+include( ECMGenerateHeaders )
+include( FeatureSummary )
+include( GenerateExportHeader )
+include( CPack )
+include( LibPackage )
+
+package_git( ${PROJECT} )
+
+package_print_path( CMAKE_MODULE_PATH )
+package_print_path( CMAKE_INSTALL_PREFIX )
+
+package_find_git( GTest 1.8   REQUIRED "../gtest;lib/gtest" build )
+package_find_git( Hayai 1.0.1 REQUIRED "../hayai;lib/hayai" build )
+
+add_subdirectory( src )
+add_subdirectory( etc )
 
 
-message( "* ${CMAKE_BUILD_TYPE} : ${TARGET} : ${LIBS}" )
+#
+# library
+#
+
+add_library( ${PROJECT} STATIC
+  $<TARGET_OBJECTS:${PROJECT}-cpp>
+  )
+
+set( ${PROJECT}_VERSION ${GIT_REVTAG} )
+set_property( TARGET ${PROJECT} PROPERTY VERSION   ${PROJECT}_VERSION )
+set_property( TARGET ${PROJECT} PROPERTY PREFIX "" )
+
+install(
+  TARGETS  ${PROJECT}
+  EXPORT   ${PROJECT}Targets
+  LIBRARY  DESTINATION lib
+  ARCHIVE  DESTINATION lib
+  RUNTIME  DESTINATION bin
+  INCLUDES DESTINATION include
+  )
+
+generate_export_header( ${PROJECT} )
+
+install(
+  FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}_export.h"
+  DESTINATION
+  "include/${PROJECT}"
+  )
+
+#
+# test
+# 
+
+add_executable( ${PROJECT}-check
+  $<TARGET_OBJECTS:${PROJECT}-test>
+  )
+
+target_link_libraries( ${PROJECT}-check
+  ${PROJECT}
+  GTest::GTest
+  GTest::Main
+  )
+
+
+#
+# benchmark
+#
+
+add_executable( ${PROJECT}-run
+  $<TARGET_OBJECTS:${PROJECT}-benchmark>
+  )
+
+target_link_libraries( ${PROJECT}-run
+  ${PROJECT}
+  ${HAYAI_LIBRARY}
+  )
+
+
+#
+# cmake
+#
+
+install(
+  FILES
+    .cmake/FindHayai.cmake
+    .cmake/Find${PROJECT}.cmake
+    .cmake/LibCompile.cmake
+    .cmake/LibPackage.cmake
+  DESTINATION
+    "share/cmake/Module/${PROJECT}"
+  )
+
+#
+# build features and checks
+#
+
+include( LibCompile )
+compile_flags( CXX )
+compile_check()
+feature_summary( WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES )

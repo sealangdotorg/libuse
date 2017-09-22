@@ -22,6 +22,25 @@
 #   along with libstdhl. If not, see <http://www.gnu.org/licenses/>.
 #
 
-TARGET = libstdhl
+# HAYAI_FOUND        - system has found the package
+# HAYAI_INCLUDE_DIRS - the package include directories
+# HAYAI_LIBRARY      - the package library
 
-include .config.mk
+include( LibPackage )
+
+libfind_pkg_check_modules( HAYAI_PKGCONF hayai )
+
+find_path( HAYAI_INCLUDE_DIR
+  NAMES hayai/hayai.hpp
+  PATHS ${hayai_PKGCONF_INCLUDE_DIRS}
+)
+
+find_library( HAYAI_LIBRARY
+  NAMES hayai_main
+  PATHS ${hayai_PKGCONF_LIBRARY_DIRS}
+)
+
+set( HAYAI_PROCESS_INCLUDES HAYAI_INCLUDE_DIR )
+set( HAYAI_PROCESS_LIBS     HAYAI_LIBRARY )
+
+libfind_process( HAYAI )
