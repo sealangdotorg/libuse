@@ -316,9 +316,9 @@ function (libfind_process PREFIX)
     message(FATAL_ERROR "${msg}\n${vars}")
   endif()
   # Otherwise just print a nasty warning
-  if (NOT quiet)
-    message(WARNING "WARNING: MISSING PACKAGE\n${msg} This package is NOT REQUIRED and you may ignore this warning but by doing so you may miss some functionality of ${CMAKE_PROJECT_NAME}. \n${vars}")
-  endif()
+  #if (NOT quiet)
+  #  message(WARNING "WARNING: MISSING PACKAGE\n${msg} This package is NOT REQUIRED and you may ignore this warning but by doing so you may miss some functionality of ${CMAKE_PROJECT_NAME}. \n${vars}")
+  #endif()
 endfunction()
 
 ################################################################################
@@ -388,8 +388,8 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
   string( TOUPPER ${PREFIX} PREFIX_NAME )
   string( REPLACE "-" "_"   PREFIX_NAME ${PREFIX_NAME} )
 
-  message( "-- Package: ${PREFIX} [${PREFIX_NAME}] @${VERSION} ?${MODE} '${TMP}' [${ARGN}]" )
-  
+  message( "-- Package: ${PREFIX} Module @ ${VERSION} ${MODE} '${TMP}' [${ARGN}] [${PREFIX_NAME}]" )
+
   set( PREFIX_LIBRARY ${PREFIX_NAME}_LIBRARY )
   set( PREFIX_INCLUDE ${PREFIX_NAME}_INCLUDE_DIR )
 
@@ -398,7 +398,7 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
 
   find_package(
     ${PREFIX}
-    ${${PREFIX}_VERSION}
+    #${${PREFIX}_VERSION}
     QUIET
     )
 
@@ -422,7 +422,7 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
 
     if( EXISTS ${${PREFIX}_REPO_DIR} )
       # PPA: add a better check in the future!
-      message( "-- Package: ${PREFIX} [${PREFIX_NAME}] Found @ '${${PREFIX}_REPO_DIR}'" )
+      message( "-- Package: ${PREFIX} Found  @ '${${PREFIX}_REPO_DIR}'" )
 
       Externalproject_Add( ${PREFIX}
 	SOURCE_DIR      ${${PREFIX}_REPO_DIR}
@@ -433,22 +433,47 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
 	)
 
       if( EXISTS ${${PREFIX}_REPO_DIR}/.cmake )
-	message( "${${PREFIX}_REPO_DIR}/.cmake" )
+	message( "   ${${PREFIX}_REPO_DIR}/.cmake" )
 	set( CMAKE_MODULE_PATH
 	  ${CMAKE_MODULE_PATH}
 	  ${${PREFIX}_REPO_DIR}/.cmake
 	  )
       endif()
 
-      set( CMAKE_PREFIX_PATH ${${PREFIX}_ROOT_DIR} )
+      if( EXISTS ${${PREFIX}_ROOT_DIR}/share/cmake/Module/${PREFIX} )
+	message( "   ${${PREFIX}_ROOT_DIR}/share/cmake/Module/${PREFIX}" )
+	set( CMAKE_MODULE_PATH
+	  ${CMAKE_MODULE_PATH}
+	  ${${PREFIX}_ROOT_DIR}/share/cmake/Module/${PREFIX}
+	  )
+      endif()
 
       #package_print_path( CMAKE_MODULE_PATH )
       #package_print_path( CMAKE_PREFIX_PATH )
 
+      set( CMAKE_PREFIX_PATH ${${PREFIX}_ROOT_DIR} )
+
       find_package(
 	${PREFIX}
-	${MODE}
+	#${MODE}
+	QUIET
 	)
+
+      if( "${${PREFIX_LIBRARY}}" STREQUAL "${PREFIX_LIBRARY}-NOTFOUND" AND
+	  "${${PREFIX_INCLUDE}}" STREQUAL "${PREFIX_INCLUDE}-NOTFOUND"
+	  )
+	set( ${PREFIX_INCLUDE} ${PROJECT_SOURCE_DIR} )
+	set( ${PREFIX_INCLUDE} ${PROJECT_SOURCE_DIR} PARENT_SCOPE )
+	set( ${PREFIX_NAME}_FOUND FALSE )
+	set( ${PREFIX_NAME}_FOUND FALSE PARENT_SCOPE )
+      else()
+	set( ${PREFIX_NAME}_FOUND TRUE )
+	set( ${PREFIX_NAME}_FOUND TRUE PARENT_SCOPE )
+      endif()
+
+      message( "   ${PREFIX_INCLUDE} = ${${PREFIX_INCLUDE}}" )
+      message( "   ${PREFIX_LIBRARY} = ${${PREFIX_LIBRARY}}" )
+      message( "   ${PREFIX_NAME}_FOUND = ${${PREFIX_NAME}_FOUND}" )
 
       set( CMAKE_MODULE_PATH
 	${CMAKE_MODULE_PATH}
@@ -460,8 +485,8 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
   endforeach()
 
   if( ${PREFIX_FOUND} )
-    message( "-- Package: ${PREFIX} [${PREFIX_NAME}] Found [installed]" )
+    message( "-- Package: ${PREFIX} Found [installed]" )
   else()
-    message( "-- Package: ${PREFIX} [${PREFIX_NAME}] NOT Found!" )
+    message( "-- Package: ${PREFIX} NOT Found!" )
   endif()
 endfunction()
