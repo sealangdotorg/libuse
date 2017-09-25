@@ -92,6 +92,7 @@ ALL   = $(TYPES:%=%-all)
 
 
 $(OBJ)/Makefile: $(OBJ)
+ifeq ("$(wildcard $(OBJ)/CMakeCache.txt)","")
 	@(\
 	cd $(OBJ); \
 	cmake \
@@ -99,10 +100,13 @@ $(OBJ)/Makefile: $(OBJ)
 	-D CMAKE_CXX_COMPILER=$(CXX) \
 	-D CMAKE_BUILD_TYPE=$(TYPE) .. \
 	)
+endif
 
-$(SYNCS):%-sync: 
-	@$(MAKE) $(MFLAGS) --no-print-directory \
-	TYPE=$(patsubst %-sync,%,$@) $(OBJ)/Makefile
+sync: debug-sync
+
+$(SYNCS):%-sync: $(OBJ)/Makefile
+	@$(MAKE) $(MFLAGS) --no-print-directory TYPE=$(patsubst %-sync,%,$@) -C $(OBJ) rebuild_cache
+
 
 $(TYPES):%: %-sync
 	@$(MAKE) $(MFLAGS) --no-print-directory -C $(OBJ) ${TARGET}
