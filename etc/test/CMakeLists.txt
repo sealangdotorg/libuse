@@ -45,6 +45,7 @@ include_directories(
   ${LIBGTEST_INCLUDE_DIR}
   )
 
+
 add_library( ${PROJECT}-test OBJECT
   main.cpp
   cpp/hash.cpp

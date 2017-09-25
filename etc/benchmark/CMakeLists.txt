@@ -45,6 +45,7 @@ include_directories(
   ${LIBHAYAI_INCLUDE_DIR}
   )
 
+
 add_library( ${PROJECT}-benchmark OBJECT
   main.cpp
   )

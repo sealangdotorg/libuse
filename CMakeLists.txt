@@ -74,9 +74,23 @@ package_git_submodule( libgtest master REQUIRED build ../gtest lib/gtest )
 package_git_submodule( libhayai master REQUIRED build ../hayai lib/hayai )
 
 add_subdirectory( src )
-add_subdirectory( etc )
+add_subdirectory( etc
+  EXCLUDE_FROM_ALL
+  )
 
-add_dependencies( ${PROJECT}-cpp libgtest libhayai )
+add_custom_target( sync
+  COMMAND
+    make sync
+  DEPENDS
+    libgtest
+    libhayai
+  WORKING_DIRECTORY
+    ${PROJECT_SOURCE_DIR}
+  )
+
+add_dependencies( ${PROJECT}-cpp
+  sync
+  )
 
 
 #
@@ -86,6 +100,7 @@ add_dependencies( ${PROJECT}-cpp libgtest libhayai )
 add_library( ${PROJECT} STATIC
   $<TARGET_OBJECTS:${PROJECT}-cpp>
   )
+
 
 set( ${PROJECT}_VERSION ${GIT_REVTAG} )
 set_property( TARGET ${PROJECT} PROPERTY VERSION   ${PROJECT}_VERSION )
@@ -116,29 +131,36 @@ install(
 
 
 add_executable( ${PROJECT}-check
+  EXCLUDE_FROM_ALL
   $<TARGET_OBJECTS:${PROJECT}-test>
   )
 
-target_link_libraries( ${PROJECT}-check
-  ${PROJECT}
-  ${LIBGTEST_LIBRARY}
-  ${LIBGTEST_MAIN}
-  Threads::Threads
-  )
-
+if( ${LIBGTEST_FOUND}
+    )
+  target_link_libraries( ${PROJECT}-check
+    ${PROJECT}
+    ${LIBGTEST_LIBRARY}
+    ${LIBGTEST_MAIN}
+    Threads::Threads
+    )
+endif()
 
 #
 # benchmark
 #
 
 add_executable( ${PROJECT}-run
+  EXCLUDE_FROM_ALL
   $<TARGET_OBJECTS:${PROJECT}-benchmark>
   )
 
-target_link_libraries( ${PROJECT}-run
-  ${PROJECT}
-  ${LIBHAYAI_LIBRARY}
-  )
+if( ${LIBHAYAI_FOUND}
+    )
+  target_link_libraries( ${PROJECT}-run
+    ${PROJECT}
+    ${LIBHAYAI_LIBRARY}
+    )
+endif()
 
 
 #
@@ -147,8 +169,9 @@ target_link_libraries( ${PROJECT}-run
 
 install(
   FILES
-    .cmake/FindHayai.cmake
     .cmake/Find${PROJECT}.cmake
+    .cmake/Findlibgtest.cmake
+    .cmake/Findlibhayai.cmake
     .cmake/LibCompile.cmake
     .cmake/LibPackage.cmake
   DESTINATION
