@@ -46,19 +46,19 @@
 
 include( LibPackage )
 
-libfind_pkg_check_modules( HAYAI_PKGCONF hayai )
+libfind_pkg_check_modules( HAYAI_PKGCONF libhayai )
 
-find_path( HAYAI_INCLUDE_DIR
+find_path( LIBHAYAI_INCLUDE_DIR
   NAMES hayai/hayai.hpp
-  PATHS ${hayai_PKGCONF_INCLUDE_DIRS}
+  PATHS ${libhayai_PKGCONF_INCLUDE_DIRS}
 )
 
-find_library( HAYAI_LIBRARY
+find_library( LIBHAYAI_LIBRARY
   NAMES hayai_main
-  PATHS ${hayai_PKGCONF_LIBRARY_DIRS}
+  PATHS ${libhayai_PKGCONF_LIBRARY_DIRS}
 )
 
-set( HAYAI_PROCESS_INCLUDES HAYAI_INCLUDE_DIR )
-set( HAYAI_PROCESS_LIBS     HAYAI_LIBRARY )
+set( LIBHAYAI_PROCESS_INCLUDES LIBHAYAI_INCLUDE_DIR )
+set( LIBHAYAI_PROCESS_LIBS     LIBHAYAI_LIBRARY )
 
-libfind_process( HAYAI )
+libfind_process( LIBHAYAI )
