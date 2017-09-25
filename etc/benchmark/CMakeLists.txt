@@ -42,7 +42,7 @@
 
 include_directories(
   ${PROJECT_BINARY_DIR}/src/cpp
-  ${HAYAI_INCLUDE_DIR}
+  ${LIBHAYAI_INCLUDE_DIR}
   )
 
 add_library( ${PROJECT}-benchmark OBJECT

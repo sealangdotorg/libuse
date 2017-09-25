@@ -42,7 +42,7 @@
 
 include_directories(
   ${PROJECT_BINARY_DIR}/src/cpp
-  ${GTEST_INCLUDE_DIR}
+  ${LIBGTEST_INCLUDE_DIR}
   )
 
 add_library( ${PROJECT}-test OBJECT

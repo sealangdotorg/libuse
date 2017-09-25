@@ -55,22 +55,28 @@ set( CMAKE_MODULE_PATH
   ${${PROJECT}_SOURCE_DIR}/.cmake
   )
 
+set( THREADS_PREFER_PTHREAD_FLAG ON )
+find_package( Threads REQUIRED )
+
 include( ECMGenerateHeaders )
 include( FeatureSummary )
 include( GenerateExportHeader )
 include( CPack )
 include( LibPackage )
 
+
 package_git( ${PROJECT} )
 
 package_print_path( CMAKE_MODULE_PATH )
 package_print_path( CMAKE_INSTALL_PREFIX )
 
-package_find_git( GTest 1.8   REQUIRED "../gtest;lib/gtest" build )
-package_find_git( Hayai 1.0.1 REQUIRED "../hayai;lib/hayai" build )
+package_git_submodule( libgtest master REQUIRED build ../gtest lib/gtest )
+package_git_submodule( libhayai master REQUIRED build ../hayai lib/hayai )
 
 add_subdirectory( src )
 add_subdirectory( etc )
+
+add_dependencies( ${PROJECT}-cpp libgtest libhayai )
 
 
 #
@@ -103,9 +109,11 @@ install(
   "include/${PROJECT}"
   )
 
+
 #
 # test
 # 
+
 
 add_executable( ${PROJECT}-check
   $<TARGET_OBJECTS:${PROJECT}-test>
@@ -113,8 +121,9 @@ add_executable( ${PROJECT}-check
 
 target_link_libraries( ${PROJECT}-check
   ${PROJECT}
-  GTest::GTest
-  GTest::Main
+  ${LIBGTEST_LIBRARY}
+  ${LIBGTEST_MAIN}
+  Threads::Threads
   )
 
 
@@ -128,7 +137,7 @@ add_executable( ${PROJECT}-run
 
 target_link_libraries( ${PROJECT}-run
   ${PROJECT}
-  ${HAYAI_LIBRARY}
+  ${LIBHAYAI_LIBRARY}
   )
 
 
