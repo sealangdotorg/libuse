@@ -40,6 +40,15 @@
 #   statement from your version.
 #
 
+#
+# LibPackage
+#
+# This CMake library contains besides the embedded 'LibFindMacros.cmake' some
+# small and basic functions to define git-based projects with sub-module
+# dependencies. The origin of this file is located at:
+# https://github.com/ppaulweber/libstdhl/blob/master/.cmake/LibPackage.cmake
+#
+
 ################################################################################
 # BEGIN OF LibFindMacros.cmake
 # url = https://github.com/Tronic/cmake-modules/blob/master/LibFindMacros.cmake
@@ -249,7 +258,7 @@ function (libfind_process PREFIX)
       mark_as_advanced(${i})
     endforeach()
     if (NOT quiet)
-      message(STATUS "Found ${PREFIX} ${${PREFIX}_VERSION}")
+      #message(STATUS "Found ${PREFIX} ${${PREFIX}_VERSION}")
       if (LIBFIND_DEBUG)
         message(STATUS "  ${PREFIX}_DEPENDENCIES=${${PREFIX}_DEPENDENCIES}")
         message(STATUS "  ${PREFIX}_INCLUDE_OPTS=${includeopts}")
@@ -368,91 +377,91 @@ function( package_print_path PATHS )
 endfunction()
 
 
+
 #
-# package_find_git
+# package_git_submodule
 #
 
-function( package_find_git PREFIX VERSION MODE PATHS TMP )
-  message( "-- Package: ${PREFIX} ${VERSION} ${MODE} ${PATHS}" )
+include( ExternalProject )
+
+function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
+  string( TOUPPER ${PREFIX} PREFIX_NAME )
+  string( REPLACE "-" "_"   PREFIX_NAME ${PREFIX_NAME} )
+
+  message( "-- Package: ${PREFIX} [${PREFIX_NAME}] @${VERSION} ?${MODE} '${TMP}' [${ARGN}]" )
   
+  set( PREFIX_LIBRARY ${PREFIX_NAME}_LIBRARY )
+  set( PREFIX_INCLUDE ${PREFIX_NAME}_INCLUDE_DIR )
+
+  #message( "-- Package: ${PREFIX} --> ${${PREFIX_LIBRARY}}" )
+  #message( "-- Package: ${PREFIX} --> ${${PREFIX_INCLUDE}}" )
+
   find_package(
     ${PREFIX}
     ${${PREFIX}_VERSION}
     QUIET
     )
 
-  if( ${PREFIX}_FOUND )
-    message( "-- Package: ${PREFIX}" )
-  else()
-    foreach( path ${PATHS} )
-      set( ${PREFIX}_REPO_DIR ${PROJECT_SOURCE_DIR}/${path} )
-      set( ${PREFIX}_MAKE_DIR ${${PREFIX}_REPO_DIR}/${TMP} )
-      set( ${PREFIX}_ROOT_DIR ${${PREFIX}_MAKE_DIR}/install )
-      
-      if( EXISTS ${${PREFIX}_REPO_DIR} )
-	message( "-- Package: ${PREFIX} @ '${${PREFIX}_REPO_DIR}'" )
+  set( PREFIX_FOUND FALSE )
 
-	# if( NOT EXISTS ${${PREFIX}_REPO_DIR}/.git )
-	#   execute_process(
-	#     COMMAND             git submodule update --init --remote ${path}
-	#     WORKING_DIRECTORY   ${PROJECT_SOURCE_DIR}
-	#     )
-	# endif()
-	
-	execute_process(
-	  COMMAND             git status
-	  WORKING_DIRECTORY   ${${PREFIX}_REPO_DIR}
-	  )
+  if( EXISTS "${${PREFIX_LIBRARY}}" AND EXISTS "${${PREFIX_INCLUDE}}" )
+    set( PREFIX_FOUND TRUE )
+    # add_custom_target( ${PREFIX} )
+    # return()
+  endif()
 
-	file( MAKE_DIRECTORY  ${${PREFIX}_MAKE_DIR} )
+  foreach( PATH ${ARGN} )
+    string( STRIP ${PATH} PREFIX_PATH )
+    set( ${PREFIX}_REPO_DIR ${PROJECT_SOURCE_DIR}/${PREFIX_PATH} )
+    set( ${PREFIX}_MAKE_DIR ${${PREFIX}_REPO_DIR}/${TMP} )
+    set( ${PREFIX}_ROOT_DIR ${${PREFIX}_MAKE_DIR}/install )
 
-	execute_process(
-	  COMMAND             ${CMAKE_COMMAND} -DCMAKE_INSTALL_PREFIX=${${PREFIX}_ROOT_DIR} ..
-	  WORKING_DIRECTORY   ${${PREFIX}_MAKE_DIR}
-	  )
+    #message( "   + ${${PREFIX}_REPO_DIR}" )
+    #message( "   + ${${PREFIX}_MAKE_DIR}" )
+    #message( "   + ${${PREFIX}_ROOT_DIR}" )
 
-	execute_process(
-	  COMMAND             make -s install
-	  WORKING_DIRECTORY   ${${PREFIX}_MAKE_DIR}
-	  )
+    if( EXISTS ${${PREFIX}_REPO_DIR} )
+      # PPA: add a better check in the future!
+      message( "-- Package: ${PREFIX} [${PREFIX_NAME}] Found @ '${${PREFIX}_REPO_DIR}'" )
 
-	message( "${${PREFIX}_REPO_DIR}" )
-	message( "${${PREFIX}_MAKE_DIR}" )
-	message( "${${PREFIX}_ROOT_DIR}" )
+      Externalproject_Add( ${PREFIX}
+	SOURCE_DIR      ${${PREFIX}_REPO_DIR}
+	BINARY_DIR      ${${PREFIX}_MAKE_DIR}
+	INSTALL_DIR     ${${PREFIX}_ROOT_DIR}
+	CMAKE_ARGS      -DCMAKE_INSTALL_PREFIX=${${PREFIX}_ROOT_DIR}
+	#  INSTALL_COMMAND ""
+	)
 
-	if( EXISTS ${${PREFIX}_REPO_DIR}/.cmake )
-	  message( "${${PREFIX}_REPO_DIR}/.cmake" )
-	  set( CMAKE_MODULE_PATH
-	    ${CMAKE_MODULE_PATH}
-	    ${${PREFIX}_REPO_DIR}/.cmake
-	    )
-	endif()
-
-	set( CMAKE_PREFIX_PATH ${${PREFIX}_ROOT_DIR} )
-	
-	package_print_path( CMAKE_MODULE_PATH )
-	package_print_path( CMAKE_PREFIX_PATH )
-	
-	find_package(
-	  ${PREFIX}
-	  #   #${${PREFIX}_VERSION}
-	  ${MODE}
-	  )
-
+      if( EXISTS ${${PREFIX}_REPO_DIR}/.cmake )
+	message( "${${PREFIX}_REPO_DIR}/.cmake" )
 	set( CMAKE_MODULE_PATH
-	    ${CMAKE_MODULE_PATH}
-	    PARENT_SCOPE
-	    )
-	
-	break()
+	  ${CMAKE_MODULE_PATH}
+	  ${${PREFIX}_REPO_DIR}/.cmake
+	  )
       endif()
-    endforeach()
+
+      set( CMAKE_PREFIX_PATH ${${PREFIX}_ROOT_DIR} )
+
+      #package_print_path( CMAKE_MODULE_PATH )
+      #package_print_path( CMAKE_PREFIX_PATH )
+
+      find_package(
+	${PREFIX}
+	${MODE}
+	)
+
+      set( CMAKE_MODULE_PATH
+	${CMAKE_MODULE_PATH}
+	PARENT_SCOPE
+	)
+
+      return()
+    endif()
+  endforeach()
+
+  if( ${PREFIX_FOUND} )
+    message( "-- Package: ${PREFIX} [${PREFIX_NAME}] Found [installed]" )
+  else()
+    message( "-- Package: ${PREFIX} [${PREFIX_NAME}] NOT Found!" )
   endif()
 endfunction()
-
-# execute_process(
-#   COMMAND             cmd
-#   WORKING_DIRECTORY   path
-#   #OUTPUT_QUIET
-#   #ERROR_QUIET
-# )
