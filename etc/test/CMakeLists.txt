@@ -70,22 +70,3 @@ add_library( ${PROJECT}-test OBJECT
   cpp/xml.cpp
   cpp/network/lsp.cpp
   )
-
-
-ecm_generate_headers( ${PROJECT}_TEST_HEADERS_CPP
-  ORIGINAL
-    CAMELCASE
-  HEADER_NAMES
-    main
-  PREFIX
-    ${PROJECT}/test
-  REQUIRED_HEADERS
-    ${PROJECT}_TEST_HEADERS
-  )
-install(
-  FILES
-    ${${PROJECT}_TEST_HEADERS}
-    ${${PROJECT}_TEST_HEADERS_CPP}
-  DESTINATION
-    "include/${PROJECT}/test"
-  )

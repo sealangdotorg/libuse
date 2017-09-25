@@ -40,7 +40,7 @@
 //  statement from your version.
 //
 
-#include "main.h"
+#include <libstdhl/Test>
 
 TEST( libstdhl, main )
 {

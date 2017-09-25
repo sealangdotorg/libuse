@@ -115,6 +115,7 @@ ecm_generate_headers( ${PROJECT}_HEADERS_CPP
     Random
     Standard
     String
+    Test
     Type
     Variadic
     Xml

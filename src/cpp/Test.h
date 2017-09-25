@@ -40,8 +40,8 @@
 //  statement from your version.
 //
 
-#ifndef _LIBSTDHL_UTS_MAIN_H_
-#define _LIBSTDHL_UTS_MAIN_H_
+#ifndef _LIBSTDHL_TEST_H_
+#define _LIBSTDHL_TEST_H_
 
 #include <gtest/gtest.h>
 #include <libstdhl/libstdhl.h>
@@ -57,7 +57,7 @@
 
 #define TEST_NAME ( TEST_CASE + "." + TEST_UNIT )
 
-#endif // _LIBSTDHL_UTS_MAIN_H_
+#endif // _LIBSTDHL_TEST_H_
 
 //
 //  Local variables:

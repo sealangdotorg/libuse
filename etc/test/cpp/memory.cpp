@@ -40,7 +40,7 @@
 //  statement from your version.
 //
 
-#include "main.h"
+#include <libstdhl/Test>
 
 using namespace libstdhl;
 using namespace Memory;
