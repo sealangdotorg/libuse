@@ -80,7 +80,7 @@ add_subdirectory( etc
 
 add_custom_target( sync
   COMMAND
-    make sync
+    make sync > ${PROJECT_BINARY_DIR}/CMakeSync 2>&1
   DEPENDS
     libgtest
     libhayai
@@ -135,8 +135,7 @@ add_executable( ${PROJECT}-check
   $<TARGET_OBJECTS:${PROJECT}-test>
   )
 
-if( ${LIBGTEST_FOUND}
-    )
+if( ${LIBGTEST_FOUND} )
   target_link_libraries( ${PROJECT}-check
     ${PROJECT}
     ${LIBGTEST_LIBRARY}
@@ -154,8 +153,7 @@ add_executable( ${PROJECT}-run
   $<TARGET_OBJECTS:${PROJECT}-benchmark>
   )
 
-if( ${LIBHAYAI_FOUND}
-    )
+if( ${LIBHAYAI_FOUND} )
   target_link_libraries( ${PROJECT}-run
     ${PROJECT}
     ${LIBHAYAI_LIBRARY}

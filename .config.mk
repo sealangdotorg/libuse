@@ -165,7 +165,7 @@ CPPCHECK_REPORT = ./$(OBJ)/.cppcheck.xml
 	--report-progress \
 	--enable=all \
 	-I . \
-	./c**
+	./src/c**
 
 	cppcheck \
 	-v \
@@ -175,7 +175,7 @@ CPPCHECK_REPORT = ./$(OBJ)/.cppcheck.xml
 	--force \
 	--enable=all \
 	-I . \
-	./c** > $(CPPCHECK_REPORT)
+	./src/c** > $(CPPCHECK_REPORT)
 
 
 analyze-iwyu: debug-analyze-iwyu

@@ -428,8 +428,9 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
 	SOURCE_DIR      ${${PREFIX}_REPO_DIR}
 	BINARY_DIR      ${${PREFIX}_MAKE_DIR}
 	INSTALL_DIR     ${${PREFIX}_ROOT_DIR}
+	BUILD_ALWAYS    1
 	CMAKE_ARGS      -DCMAKE_INSTALL_PREFIX=${${PREFIX}_ROOT_DIR}
-	#  INSTALL_COMMAND ""
+	INSTALL_COMMAND ""
 	)
 
       if( EXISTS ${${PREFIX}_REPO_DIR}/.cmake )

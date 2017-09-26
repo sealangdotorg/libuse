@@ -40,8 +40,6 @@
 #   statement from your version.
 #
 
-message( "-- Loading: LibCompile" )
-
 
 function( compile_flags KIND )
   add_definitions( -Wall )
