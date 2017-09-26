@@ -393,12 +393,8 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
   set( PREFIX_LIBRARY ${PREFIX_NAME}_LIBRARY )
   set( PREFIX_INCLUDE ${PREFIX_NAME}_INCLUDE_DIR )
 
-  #message( "-- Package: ${PREFIX} --> ${${PREFIX_LIBRARY}}" )
-  #message( "-- Package: ${PREFIX} --> ${${PREFIX_INCLUDE}}" )
-
   find_package(
     ${PREFIX}
-    #${${PREFIX}_VERSION}
     QUIET
     )
 
@@ -406,8 +402,6 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
 
   if( EXISTS "${${PREFIX_LIBRARY}}" AND EXISTS "${${PREFIX_INCLUDE}}" )
     set( PREFIX_FOUND TRUE )
-    # add_custom_target( ${PREFIX} )
-    # return()
   endif()
 
   foreach( PATH ${ARGN} )
@@ -415,6 +409,7 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
     set( ${PREFIX}_REPO_DIR ${PROJECT_SOURCE_DIR}/${PREFIX_PATH} )
     set( ${PREFIX}_MAKE_DIR ${${PREFIX}_REPO_DIR}/${TMP} )
     set( ${PREFIX}_ROOT_DIR ${${PREFIX}_MAKE_DIR}/install )
+    set( ${PREFIX}_STAM_DIR ${${PREFIX}_MAKE_DIR}/stamp )
 
     #message( "   + ${${PREFIX}_REPO_DIR}" )
     #message( "   + ${${PREFIX}_MAKE_DIR}" )
@@ -428,13 +423,17 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
 	SOURCE_DIR      ${${PREFIX}_REPO_DIR}
 	BINARY_DIR      ${${PREFIX}_MAKE_DIR}
 	INSTALL_DIR     ${${PREFIX}_ROOT_DIR}
-	BUILD_ALWAYS    1
-	CMAKE_ARGS      -DCMAKE_INSTALL_PREFIX=${${PREFIX}_ROOT_DIR}
-	INSTALL_COMMAND ""
+	STAMP_DIR       ${${PREFIX}_STAM_DIR}
+	CMAKE_ARGS
+	-DCMAKE_INSTALL_PREFIX=${${PREFIX}_ROOT_DIR}
+	-DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+	-DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+	-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
 	)
+	#BUILD_ALWAYS    1
+	#INSTALL_COMMAND ""
 
       if( EXISTS ${${PREFIX}_REPO_DIR}/.cmake )
-	message( "   ${${PREFIX}_REPO_DIR}/.cmake" )
 	set( CMAKE_MODULE_PATH
 	  ${CMAKE_MODULE_PATH}
 	  ${${PREFIX}_REPO_DIR}/.cmake
@@ -442,21 +441,16 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
       endif()
 
       if( EXISTS ${${PREFIX}_ROOT_DIR}/share/cmake/Module/${PREFIX} )
-	message( "   ${${PREFIX}_ROOT_DIR}/share/cmake/Module/${PREFIX}" )
 	set( CMAKE_MODULE_PATH
 	  ${CMAKE_MODULE_PATH}
 	  ${${PREFIX}_ROOT_DIR}/share/cmake/Module/${PREFIX}
 	  )
       endif()
 
-      #package_print_path( CMAKE_MODULE_PATH )
-      #package_print_path( CMAKE_PREFIX_PATH )
-
       set( CMAKE_PREFIX_PATH ${${PREFIX}_ROOT_DIR} )
 
       find_package(
 	${PREFIX}
-	#${MODE}
 	QUIET
 	)
 

@@ -71,7 +71,6 @@ help:
 
 $(OBJ):
 	@mkdir -p $(OBJ)
-	@mkdir -p $(OBJ)/uts
 
 clean:
 ifneq ("$(wildcard $(OBJ)/CMakeCache.txt)","")
@@ -100,13 +99,15 @@ ifeq ("$(wildcard $(OBJ)/CMakeCache.txt)","")
 	-D CMAKE_CXX_COMPILER=$(CXX) \
 	-D CMAKE_BUILD_TYPE=$(TYPE) .. \
 	)
+else
+	@$(MAKE) $(MFLAGS) --no-print-directory TYPE=$(patsubst %-sync,%,$@) -C $(OBJ) rebuild_cache
 endif
+
 
 sync: debug-sync
 
-$(SYNCS):%-sync: $(OBJ)/Makefile
-	@$(MAKE) $(MFLAGS) --no-print-directory TYPE=$(patsubst %-sync,%,$@) -C $(OBJ) rebuild_cache
-
+$(SYNCS):%-sync:
+	@$(MAKE) $(MFLAGS) --no-print-directory TYPE=$(patsubst %-sync,%,$@) $(OBJ)/Makefile
 
 $(TYPES):%: %-sync
 	@$(MAKE) $(MFLAGS) --no-print-directory -C $(OBJ) ${TARGET}
