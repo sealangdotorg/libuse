@@ -45,6 +45,7 @@ ifndef TARGET
 endif
 
 OBJ = obj
+BIN = install
 .PHONY: $(OBJ)
 .NOTPARALLEL: $(OBJ)
 
@@ -86,6 +87,7 @@ TYPES = debug sanitize release
 SYNCS = $(TYPES:%=%-sync)
 TESTS = $(TYPES:%=%-test)
 BENCH = $(TYPES:%=%-benchmark)
+INSTA = $(TYPES:%=%-install)
 ANALY = $(TYPES:%=%-analyze)
 ALL   = $(TYPES:%=%-all)
 
@@ -95,23 +97,27 @@ ifeq ("$(wildcard $(OBJ)/CMakeCache.txt)","")
 	@(\
 	cd $(OBJ); \
 	cmake \
+	-D CMAKE_INSTALL_PREFIX=$(BIN) \
+	-D CMAKE_BUILD_TYPE=$(TYPE) \
 	-D CMAKE_C_COMPILER=$(CC) \
 	-D CMAKE_CXX_COMPILER=$(CXX) \
-	-D CMAKE_BUILD_TYPE=$(TYPE) .. \
+	.. \
 	)
 else
-	@$(MAKE) $(MFLAGS) --no-print-directory TYPE=$(patsubst %-sync,%,$@) -C $(OBJ) rebuild_cache
+	@$(MAKE) $(MFLAGS) --no-print-directory -C $(OBJ) rebuild_cache
 endif
 
 
 sync: debug-sync
 
-$(SYNCS):%-sync:
+sync-all: $(TYPES:%=%-sync)
+
+$(SYNCS):%-sync: $(OBJ)
 	@$(MAKE) $(MFLAGS) --no-print-directory TYPE=$(patsubst %-sync,%,$@) $(OBJ)/Makefile
+
 
 $(TYPES):%: %-sync
 	@$(MAKE) $(MFLAGS) --no-print-directory -C $(OBJ) ${TARGET}
-
 
 all: debug-all
 
@@ -139,6 +145,14 @@ $(BENCH):%-benchmark: %
 	-C $(OBJ) $(TARGET)-run
 	@echo "-- Running benchmark"
 	@$(ENV_FLAGS) ./$(OBJ)/$(TARGET)-run -o console -o json:obj/report.json $(ENV_ARGS)
+
+
+install: debug-install
+
+install-all: $(TYPES:%=%-install)
+
+$(INSTA):%-install: %
+	@$(MAKE) $(MFLAGS) --no-print-directory -C $(OBJ) install
 
 
 analyze: debug-analyze
