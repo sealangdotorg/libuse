@@ -14,8 +14,8 @@ is coming soon!
 
 ** Copyright and License
 
-The copyright holder of libstdhl is Philipp Paulweber (@ppaulweber) and the
-used license of libstdhl is a [[https://www.gnu.org/licenses/gpl-3.0.html][GNU GPLv3+]]
+The copyright holder of libstdhl is Philipp Paulweber (@ppaulweber)
+and the used license of libstdhl is a [[https://www.gnu.org/licenses/gpl-3.0.html][GNU GPLv3+]]
 with an additional permission ("GPL Linking Exception").
 
 *** Notice
