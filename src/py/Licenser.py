@@ -132,6 +132,16 @@ def searcher( dirpath, rootdir = True ) :
             relicense( filepath, ";;" )
 
         if fileext in \
+        [ ".el"   # Emacs-Lisp Source
+        ] :
+            relicense( filepath, ";" )
+
+        if fileext in \
+        [ ".org"   # Org-Mode Source
+        ] :
+            relicense( filepath, "# " )
+
+        if fileext in \
         [ ".py"               # Python Script
         , ".mk"               # Makefile Script
         , ".cmake"            # CMake Script
