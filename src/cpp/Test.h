@@ -44,7 +44,7 @@
 #define _LIBSTDHL_TEST_H_
 
 #include <gtest/gtest.h>
-#include <libstdhl/libstdhl.h>
+#include <libstdhl/libstdhl>
 
 #define TEST_CASE                                                              \
     std::string(::testing::UnitTest::GetInstance()                             \

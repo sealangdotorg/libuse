@@ -46,6 +46,7 @@
 #include <libstdhl/Type>
 
 #include <unordered_set>
+#include <cassert>
 
 /**
    @brief    TODO
