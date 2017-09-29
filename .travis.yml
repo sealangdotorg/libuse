@@ -45,6 +45,9 @@ language: cpp
 dist: trusty
 sudo: required
 
+git:
+    submodules: false
+
 matrix:
   include:
     - os: linux
@@ -181,6 +184,9 @@ matrix:
     - os: osx
       osx_image: xcode8
       compiler: gcc
+
+before_install:
+  - git submodule update --init --remote
 
 install:
   - echo ${TRAVIS_OS_NAME}
