@@ -58,6 +58,7 @@ matrix:
             - gcc-6
             - g++-6
             - clang-4.0
+            - libpthread-stubs0-dev
       env: ENV_CC="clang-4.0" ENV_CXX="clang++-4.0" BUILD="debug"
     - os: linux
       compiler: clang
@@ -79,6 +80,7 @@ matrix:
             - gcc-6
             - g++-6
             - clang-3.9
+            - libpthread-stubs0-dev
       env: ENV_CC="clang-3.9" ENV_CXX="clang++-3.9" BUILD="debug"
     - os: linux
       compiler: clang
@@ -96,6 +98,7 @@ matrix:
             - gcc-6
             - g++-6
             - clang-3.8
+            - libpthread-stubs0-dev
       env: ENV_CC="clang-3.8" ENV_CXX="clang++-3.8" BUILD="debug"
     - os: linux
       compiler: clang
@@ -113,6 +116,7 @@ matrix:
             - gcc-5
             - g++-5
             - clang-3.7
+            - libpthread-stubs0-dev
       env: ENV_CC="clang-3.7" ENV_CXX="clang++-3.7" BUILD="debug"
     - os: linux
       compiler: clang
@@ -130,6 +134,7 @@ matrix:
             - gcc-7
             - g++-7
             - binutils
+            - libpthread-stubs0-dev
       env: ENV_CC="gcc-7" ENV_CXX="g++-7" BUILD="debug"
     - os: linux
       compiler: gcc
@@ -151,6 +156,7 @@ matrix:
             - gcc-6
             - g++-6
             - binutils
+            - libpthread-stubs0-dev
       env: ENV_CC="gcc-6" ENV_CXX="g++-6" BUILD="debug"
     - os: linux
       compiler: gcc
@@ -166,6 +172,7 @@ matrix:
           packages:
             - gcc-5
             - g++-5
+            - libpthread-stubs0-dev
       env: ENV_CC="gcc-5" ENV_CXX="g++-5" BUILD="debug"
     - os: linux
       compiler: gcc
