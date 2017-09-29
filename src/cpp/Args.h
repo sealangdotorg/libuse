@@ -46,7 +46,7 @@
 #include <libstdhl/Log>
 #include <libstdhl/Type>
 
-#include <function>
+#include <functional>
 #include <unordered_map>
 
 #include <getopt.h>

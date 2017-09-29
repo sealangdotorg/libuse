@@ -54,17 +54,18 @@ set( CMAKE_MODULE_PATH
   ${${PROJECT}_SOURCE_DIR}/.cmake
   )
 
+include( LibPackage )
+
+package_git( ${PROJECT} )
+package_git_submodule( libgtest master REQUIRED build ../gtest lib/gtest )
+package_git_submodule( libhayai master REQUIRED build ../hayai lib/hayai )
+
 find_package( Threads REQUIRED )
 
 include( ECMGenerateHeaders )
 include( FeatureSummary )
 include( GenerateExportHeader )
 include( CPack )
-include( LibPackage )
-
-package_git( ${PROJECT} )
-package_git_submodule( libgtest master REQUIRED build ../gtest lib/gtest )
-package_git_submodule( libhayai master REQUIRED build ../hayai lib/hayai )
 
 add_subdirectory( src )
 add_subdirectory( etc
