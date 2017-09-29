@@ -52,17 +52,31 @@ libfind_pkg_check_modules( GTEST_PKGCONF libgtest )
 find_path( LIBGTEST_INCLUDE_DIR
   NAMES gtest/gtest.h
   PATHS ${libgtest_PKGCONF_INCLUDE_DIRS}
-)
+  )
 
 find_library( LIBGTEST_LIBRARY
   NAMES gtest
   PATHS ${libgtest_PKGCONF_LIBRARY_DIRS}
-)
+  )
+
+if( LIBGTEST_LIBRARY-NOTFOUND )
+  find_library( LIBGTEST_LIBRARY
+    NAMES gtestd
+    PATHS ${libgtest_PKGCONF_LIBRARY_DIRS}
+    )
+endif()
 
 find_library( LIBGTEST_MAIN
   NAMES gtest_main
   PATHS ${libgtest_PKGCONF_LIBRARY_DIRS}
-)
+  )
+
+if( LIBGTEST_MAIN-NOTFOUND )
+  find_library( LIBGTEST_MAIN
+    NAMES gtest_maind
+    PATHS ${libgtest_PKGCONF_LIBRARY_DIRS}
+    )
+endif()
 
 set( LIBGTEST_PROCESS_INCLUDES LIBGTEST_INCLUDE_DIR )
 set( LIBGTEST_PROCESS_LIBS     LIBGTEST_LIBRARY )

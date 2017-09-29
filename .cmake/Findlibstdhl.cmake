@@ -51,16 +51,16 @@ libfind_pkg_check_modules( LIBSTDHL_PKGCONF libstdhl )
 find_path( LIBSTDHL_INCLUDE_DIR
   NAMES libstdhl/libstdhl.h
   PATHS ${LIBSTDHL_PKGCONF_INCLUDE_DIRS}
-)
+  )
 
 find_library( LIBSTDHL_LIBRARY
-  NAMES libstdhl stdhl
+  NAMES stdhl
   PATHS ${LIBSTDHL_PKGCONF_LIBRARY_DIRS}
-)
+  )
 
 if( LIBSTDHL_LIBRARY-NOTFOUND )
   find_library( LIBSTDHL_LIBRARY
-    NAMES libstdhl libstdhl
+    NAMES libstdhl
     PATHS ${LIBSTDHL_PKGCONF_LIBRARY_DIRS}
     )
 endif()

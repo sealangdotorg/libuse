@@ -51,12 +51,12 @@ libfind_pkg_check_modules( HAYAI_PKGCONF libhayai )
 find_path( LIBHAYAI_INCLUDE_DIR
   NAMES hayai/hayai.hpp
   PATHS ${libhayai_PKGCONF_INCLUDE_DIRS}
-)
+  )
 
 find_library( LIBHAYAI_LIBRARY
   NAMES hayai_main
   PATHS ${libhayai_PKGCONF_LIBRARY_DIRS}
-)
+  )
 
 set( LIBHAYAI_PROCESS_INCLUDES LIBHAYAI_INCLUDE_DIR )
 set( LIBHAYAI_PROCESS_LIBS     LIBHAYAI_LIBRARY )
