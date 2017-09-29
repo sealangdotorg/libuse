@@ -46,8 +46,10 @@
 #include <libstdhl/Log>
 #include <libstdhl/Type>
 
-#include <getopt.h>
+#include <function>
 #include <unordered_map>
+
+#include <getopt.h>
 
 /**
    @brief    TODO
