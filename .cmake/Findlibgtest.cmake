@@ -55,28 +55,14 @@ find_path( LIBGTEST_INCLUDE_DIR
   )
 
 find_library( LIBGTEST_LIBRARY
-  NAMES gtest
+  NAMES gtest gtestd
   PATHS ${libgtest_PKGCONF_LIBRARY_DIRS}
   )
-
-if( LIBGTEST_LIBRARY-NOTFOUND )
-  find_library( LIBGTEST_LIBRARY
-    NAMES gtestd
-    PATHS ${libgtest_PKGCONF_LIBRARY_DIRS}
-    )
-endif()
 
 find_library( LIBGTEST_MAIN
-  NAMES gtest_main
+  NAMES gtest_main gtest_maind
   PATHS ${libgtest_PKGCONF_LIBRARY_DIRS}
   )
-
-if( LIBGTEST_MAIN-NOTFOUND )
-  find_library( LIBGTEST_MAIN
-    NAMES gtest_maind
-    PATHS ${libgtest_PKGCONF_LIBRARY_DIRS}
-    )
-endif()
 
 set( LIBGTEST_PROCESS_INCLUDES LIBGTEST_INCLUDE_DIR )
 set( LIBGTEST_PROCESS_LIBS     LIBGTEST_LIBRARY )
