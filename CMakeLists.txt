@@ -49,7 +49,6 @@ set( CMAKE_INCLUDE_CURRENT_DIR ON )
 set( CMAKE_CXX_STANDARD 11 )
 project( ${PROJECT} LANGUAGES CXX )
 
-find_package( ECM REQUIRED CONFIG QUIET )
 set( CMAKE_MODULE_PATH
   ${ECM_MODULE_PATH}
   ${${PROJECT}_SOURCE_DIR}/.cmake
@@ -167,6 +166,7 @@ endif()
 
 install(
   FILES
+    .cmake/ECMGenerateHeaders.cmake
     .cmake/Find${PROJECT}.cmake
     .cmake/Findlibgtest.cmake
     .cmake/Findlibhayai.cmake

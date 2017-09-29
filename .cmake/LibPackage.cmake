@@ -272,7 +272,7 @@ function (libfind_process PREFIX)
       set (${PREFIX}_LIBRARIES ${libs} PARENT_SCOPE)
       set (${PREFIX}_FOUND TRUE PARENT_SCOPE)
     endif()
-    return()    
+    return()
   endif()
 
   # Format messages for debug info and the type of error
@@ -496,7 +496,7 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
 	OUTPUT_VARIABLE     REPO_DIFF_STAGED
 	)
 
-      set( REPO_DIFF "${REPO_DIFF_CURDIR}${REPO_DIFF_STAGED}" )      
+      set( REPO_DIFF "${REPO_DIFF_CURDIR}${REPO_DIFF_STAGED}" )
       if( "${REPO_DIFF}" STREQUAL "" )
 	set( REPO_DIFF "." )
       endif()
@@ -512,7 +512,7 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
 
       # message( "            src: ${REPO_DIFF_HASH}" )
       # message( "            bin: ${MAKE_DIFF_HASH}" )
-      
+
       if( NOT "${MAKE_DIFF_HASH}" STREQUAL "${REPO_DIFF_HASH}" )
 	message( "            rebuild required!" )
 
@@ -535,6 +535,11 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
       else()
       	set( ${PREFIX_NAME}_FOUND TRUE )
       	set( ${PREFIX_NAME}_FOUND TRUE PARENT_SCOPE )
+
+	find_package(
+	  ${PREFIX}
+	  ${MODE}
+	  )
       endif()
 
       # message( "            ${PREFIX_INCLUDE} = ${${PREFIX_INCLUDE}}" )
