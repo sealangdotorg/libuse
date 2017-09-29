@@ -47,14 +47,13 @@ set( CMAKE_VERSION 3.2 )
 set( CMAKE_INCLUDE_CURRENT_DIR ON )
 
 set( CMAKE_CXX_STANDARD 11 )
-project( ${PROJECT} LANGUAGES CXX )
+project( ${PROJECT} LANGUAGES C CXX )
 
 set( CMAKE_MODULE_PATH
   ${ECM_MODULE_PATH}
   ${${PROJECT}_SOURCE_DIR}/.cmake
   )
 
-set( THREADS_PREFER_PTHREAD_FLAG ON )
 find_package( Threads REQUIRED )
 
 include( ECMGenerateHeaders )
