@@ -389,7 +389,7 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
   string( TOUPPER ${PREFIX} PREFIX_NAME )
   string( REPLACE "-" "_"   PREFIX_NAME ${PREFIX_NAME} )
 
-  #message( "-- Package: ${PREFIX} Module @ ${VERSION} ${MODE} '${TMP}' [${ARGN}] [${PREFIX_NAME}]" )
+  #message( "-- ${PREFIX} Module @ ${VERSION} ${MODE} '${TMP}' [${ARGN}] [${PREFIX_NAME}]" )
   
   set( PREFIX_LIBRARY ${PREFIX_NAME}_LIBRARY )
   set( PREFIX_INCLUDE ${PREFIX_NAME}_INCLUDE_DIR )
@@ -420,7 +420,7 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
 	message( FATAL_ERROR "package '${PREFIX}' is not a 'git' repository" )
       endif()
 
-      message( "-- Package: ${PREFIX} Found [git] @ '${${PREFIX}_REPO_DIR}'" )
+      message( "-- ${PREFIX} Found [git] @ '${${PREFIX}_REPO_DIR}'" )
 
       Externalproject_Add( ${PREFIX}
 	SOURCE_DIR      ${${PREFIX}_REPO_DIR}
@@ -441,45 +441,7 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
       # BUILD_ALWAYS    1
       # STAMP_DIR       ${${PREFIX}_STAM_DIR}
 
-      # ExternalProject_Add_Step(${PREFIX} forcebuild
-      # 	COMMAND ${CMAKE_COMMAND} -E echo_append ""
-      # #   COMMAND ${CMAKE_COMMAND} -E remove ${${PREFIX}_STAM_DIR}/${PREFIX}-build
-      # 	COMMENT "Forcing build step for '${PREFIX}'"
-      # 	DEPENDEES configure
-      # 	DEPENDERS build
-      # 	ALWAYS 1
-      # 	)
-      # endif()
 
-
-      # execute_process(
-      # 	COMMAND                               git diff
-      # 	WORKING_DIRECTORY                     ${CMAKE_SOURCE_DIR}
-      # 	OUTPUT_VARIABLE                       REPO_DIFF_CURDIR
-      # 	OUTPUT_STRIP_TRAILING_WHITESPACE
-      # 	)
-      # if( "${REPO_DIFF_CURDIR}" STREQUAL "" )
-      # 	set( REPO_DIFF_CURDIR "." )
-      # endif()
-
-      # file( WRITE
-      # 	${CMAKE_BINARY_DIR}
-      # 	${REPO_DIFF_CURDIR}
-      # 	)
-
-      # execute_process(
-      # 	COMMAND                               git diff --staged
-      # 	WORKING_DIRECTORY                     ${CMAKE_SOURCE_DIR}
-      # 	OUTPUT_VARIABLE                       REPO_DIFF_STAGED
-      # 	OUTPUT_STRIP_TRAILING_WHITESPACE
-      # 	)
-
-      # file( WRITE
-      # 	${CMAKE_BINARY_DIR}/CMakeLibPackageGit_REPO_DIFF_STAGED
-      # 	${REPO_DIFF_STAGED}
-      # 	)
-
-      
       if( EXISTS ${${PREFIX}_REPO_DIR}/.cmake )
 	set( CMAKE_MODULE_PATH
 	  ${CMAKE_MODULE_PATH}
@@ -548,11 +510,11 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
       # message( "${REPO_DIFF}" )
       # message( "<<< REPO_DIFF" )
 
-      message( "            src: ${REPO_DIFF_HASH}" )
-      message( "            bin: ${MAKE_DIFF_HASH}" )
+      # message( "            src: ${REPO_DIFF_HASH}" )
+      # message( "            bin: ${MAKE_DIFF_HASH}" )
       
       if( NOT "${MAKE_DIFF_HASH}" STREQUAL "${REPO_DIFF_HASH}" )
-	message( "        >>> rebuild required!" )
+	message( "            rebuild required!" )
 
 	ExternalProject_Add_Step(${PREFIX} force-build
       	  COMMAND             ${CMAKE_COMMAND} -E remove ${MAKE_DIFF_PATH}
@@ -575,9 +537,9 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
       	set( ${PREFIX_NAME}_FOUND TRUE PARENT_SCOPE )
       endif()
 
-      message( "            ${PREFIX_INCLUDE} = ${${PREFIX_INCLUDE}}" )
-      message( "            ${PREFIX_LIBRARY}     = ${${PREFIX_LIBRARY}}" )
-      message( "            ${PREFIX_NAME}_FOUND       = ${${PREFIX_NAME}_FOUND}" )
+      # message( "            ${PREFIX_INCLUDE} = ${${PREFIX_INCLUDE}}" )
+      # message( "            ${PREFIX_LIBRARY}     = ${${PREFIX_LIBRARY}}" )
+      # message( "            ${PREFIX_NAME}_FOUND       = ${${PREFIX_NAME}_FOUND}" )
 
       set( CMAKE_MODULE_PATH
 	${CMAKE_MODULE_PATH}
@@ -594,12 +556,12 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
   endforeach()
 
   if( ${${PREFIX_NAME}_FOUND} )
-    message( "-- Package: ${PREFIX} Found [installed]" )
+    message( "-- ${PREFIX} Found [installed]" )
     add_custom_target( ${PREFIX}
       COMMENT "Package ${PREFIX}"
       )
   else()
-    message( "-- Package: ${PREFIX} NOT Found!" )
+    message( FATAL_ERROR "-- ${PREFIX} NOT Found!" )
   endif()
 
   set( ${PREFIX_NAME}_FOUND

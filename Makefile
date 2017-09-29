@@ -42,4 +42,4 @@
 
 TARGET = libstdhl
 
-include .config.mk
+include .cmake/config.mk
