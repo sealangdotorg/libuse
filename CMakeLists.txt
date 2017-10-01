@@ -93,31 +93,8 @@ add_library( ${PROJECT} STATIC
 
 
 set( ${PROJECT}_VERSION ${GIT_REVTAG} )
-set_property( TARGET ${PROJECT} PROPERTY VERSION   ${PROJECT}_VERSION )
-set_property( TARGET ${PROJECT} PROPERTY PREFIX "" )
-
-install(
-  TARGETS  ${PROJECT}
-  EXPORT   ${PROJECT}Targets
-  LIBRARY  DESTINATION lib
-  ARCHIVE  DESTINATION lib
-  RUNTIME  DESTINATION bin
-  INCLUDES DESTINATION include
-  )
-
-generate_export_header( ${PROJECT} )
-
-install(
-  FILES
-  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}_export.h"
-  DESTINATION
-  "include/${PROJECT}"
-  )
-
-export(
-  TARGETS ${PROJECT}
-  FILE    ${PROJECT}Config.cmake
-  )
+set_property( TARGET ${PROJECT} PROPERTY VERSION ${${PROJECT}_VERSION} )
+set_property( TARGET ${PROJECT} PROPERTY PREFIX  "" )
 
 
 #
@@ -154,6 +131,34 @@ if( ${LIBHAYAI_FOUND} )
     ${LIBHAYAI_LIBRARY}
     )
 endif()
+
+
+#
+# install
+#
+
+install(
+  TARGETS  ${PROJECT}
+  EXPORT   ${PROJECT}Targets
+  LIBRARY  DESTINATION lib
+  ARCHIVE  DESTINATION lib
+  RUNTIME  DESTINATION bin
+  INCLUDES DESTINATION include
+  )
+
+generate_export_header( ${PROJECT} )
+
+install(
+  FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}_export.h"
+  DESTINATION
+  "include/${PROJECT}"
+  )
+
+export(
+  TARGETS ${PROJECT}
+  FILE    ${PROJECT}Config.cmake
+  )
 
 
 #

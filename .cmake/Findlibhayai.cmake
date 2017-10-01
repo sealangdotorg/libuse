@@ -40,22 +40,22 @@
 #   statement from your version.
 #
 
-# HAYAI_FOUND        - system has found the package
-# HAYAI_INCLUDE_DIRS - the package include directories
-# HAYAI_LIBRARY      - the package library
+# LIBHAYAI_FOUND        - system has found the package
+# LIBHAYAI_INCLUDE_DIRS - the package include directories
+# LIBHAYAI_LIBRARY      - the package library
 
 include( LibPackage )
 
-libfind_pkg_check_modules( HAYAI_PKGCONF libhayai )
+libfind_pkg_check_modules( LIBHAYAI_PKGCONF libhayai )
 
 find_path( LIBHAYAI_INCLUDE_DIR
   NAMES hayai/hayai.hpp
-  PATHS ${libhayai_PKGCONF_INCLUDE_DIRS}
+  PATHS ${LIBHAYAI_PKGCONF_INCLUDE_DIRS}
   )
 
 find_library( LIBHAYAI_LIBRARY
   NAMES hayai_main
-  PATHS ${libhayai_PKGCONF_LIBRARY_DIRS}
+  PATHS ${LIBHAYAI_PKGCONF_LIBRARY_DIRS}
   )
 
 set( LIBHAYAI_PROCESS_INCLUDES LIBHAYAI_INCLUDE_DIR )
