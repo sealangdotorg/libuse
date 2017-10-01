@@ -91,7 +91,6 @@ add_library( ${PROJECT} STATIC
   $<TARGET_OBJECTS:${PROJECT}-cpp>
   )
 
-
 set( ${PROJECT}_VERSION ${GIT_REVTAG} )
 set_property( TARGET ${PROJECT} PROPERTY VERSION ${${PROJECT}_VERSION} )
 set_property( TARGET ${PROJECT} PROPERTY PREFIX  "" )
