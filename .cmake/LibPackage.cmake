@@ -420,7 +420,14 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
 	message( FATAL_ERROR "package '${PREFIX}' is not a 'git' repository" )
       endif()
 
-      message( "-- Found ${PREFIX} [git] @ '${${PREFIX}_REPO_DIR}'" )
+      execute_process(
+	COMMAND             git describe --always --tags --dirty
+	WORKING_DIRECTORY   ${${PREFIX}_REPO_DIR}
+	OUTPUT_VARIABLE     PREFIX_GIT_REVTAG
+	OUTPUT_STRIP_TRAILING_WHITESPACE
+	)
+
+      message( "-- Found ${PREFIX} [${PREFIX_GIT_REVTAG}] @ '${${PREFIX}_REPO_DIR}'" )
 
       if( EXISTS ${${PREFIX}_REPO_DIR}/.cmake )
 	set( CMAKE_MODULE_PATH
@@ -569,7 +576,6 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
 
   if( ${${PREFIX_NAME}_FOUND} )
     message( "-- Found ${PREFIX} [installed]" )
-    message( "-- ${PREFIX} Found [installed]" )
     add_custom_target( ${PREFIX}
       COMMENT "Package ${PREFIX}"
       )
