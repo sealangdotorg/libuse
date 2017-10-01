@@ -60,4 +60,3 @@ function( compile_check )
       )
   endif( NOT CMAKE_BUILD_TYPE )
 endfunction()
-

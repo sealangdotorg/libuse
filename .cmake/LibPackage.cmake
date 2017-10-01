@@ -420,7 +420,29 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
 	message( FATAL_ERROR "package '${PREFIX}' is not a 'git' repository" )
       endif()
 
-      message( "-- ${PREFIX} Found [git] @ '${${PREFIX}_REPO_DIR}'" )
+      message( "-- Found ${PREFIX} [git] @ '${${PREFIX}_REPO_DIR}'" )
+
+      if( EXISTS ${${PREFIX}_REPO_DIR}/.cmake )
+	set( CMAKE_MODULE_PATH
+	  ${CMAKE_MODULE_PATH}
+	  ${${PREFIX}_REPO_DIR}/.cmake
+	  )
+      endif()
+
+      if( EXISTS ${${PREFIX}_ROOT_DIR}/share/cmake/Module/${PREFIX} )
+	set( CMAKE_MODULE_PATH
+	  ${CMAKE_MODULE_PATH}
+	  ${${PREFIX}_ROOT_DIR}/share/cmake/Module/${PREFIX}
+	  )
+      endif()
+
+      if( TARGET ${PREFIX} )
+	set( CMAKE_MODULE_PATH
+	  ${CMAKE_MODULE_PATH}
+	  PARENT_SCOPE
+	  )
+	return()
+      endif()
 
       Externalproject_Add( ${PREFIX}
 	SOURCE_DIR      ${${PREFIX}_REPO_DIR}
@@ -440,21 +462,6 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
       # UPDATE_COMMAND  ""
       # BUILD_ALWAYS    1
       # STAMP_DIR       ${${PREFIX}_STAM_DIR}
-
-
-      if( EXISTS ${${PREFIX}_REPO_DIR}/.cmake )
-	set( CMAKE_MODULE_PATH
-	  ${CMAKE_MODULE_PATH}
-	  ${${PREFIX}_REPO_DIR}/.cmake
-	  )
-      endif()
-
-      if( EXISTS ${${PREFIX}_ROOT_DIR}/share/cmake/Module/${PREFIX} )
-	set( CMAKE_MODULE_PATH
-	  ${CMAKE_MODULE_PATH}
-	  ${${PREFIX}_ROOT_DIR}/share/cmake/Module/${PREFIX}
-	  )
-      endif()
 
       set( CMAKE_PREFIX_PATH ${${PREFIX}_ROOT_DIR} )
 
@@ -514,7 +521,7 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
       # message( "            bin: ${MAKE_DIFF_HASH}" )
 
       if( NOT "${MAKE_DIFF_HASH}" STREQUAL "${REPO_DIFF_HASH}" )
-	message( "            rebuild required!" )
+	message( "         rebuild required!" )
 
 	ExternalProject_Add_Step(${PREFIX} force-build
       	  COMMAND             ${CMAKE_COMMAND} -E remove ${MAKE_DIFF_PATH}
@@ -542,9 +549,9 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
 	#   )
       endif()
 
-      # message( "            ${PREFIX_INCLUDE} = ${${PREFIX_INCLUDE}}" )
-      # message( "            ${PREFIX_LIBRARY}     = ${${PREFIX_LIBRARY}}" )
-      # message( "            ${PREFIX_NAME}_FOUND       = ${${PREFIX_NAME}_FOUND}" )
+      # message( "         ${PREFIX_INCLUDE} = ${${PREFIX_INCLUDE}}" )
+      # message( "         ${PREFIX_LIBRARY}     = ${${PREFIX_LIBRARY}}" )
+      # message( "         ${PREFIX_NAME}_FOUND       = ${${PREFIX_NAME}_FOUND}" )
 
       set( CMAKE_MODULE_PATH
 	${CMAKE_MODULE_PATH}
@@ -561,12 +568,13 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
   endforeach()
 
   if( ${${PREFIX_NAME}_FOUND} )
+    message( "-- Found ${PREFIX} [installed]" )
     message( "-- ${PREFIX} Found [installed]" )
     add_custom_target( ${PREFIX}
       COMMENT "Package ${PREFIX}"
       )
   else()
-    message( FATAL_ERROR "-- ${PREFIX} NOT Found!" )
+    message( FATAL_ERROR "-- *NOT* Found ${PREFIX}" )
   endif()
 
   set( ${PREFIX_NAME}_FOUND
