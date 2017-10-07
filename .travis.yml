@@ -52,6 +52,27 @@ matrix:
   include:
     - os: linux
       compiler: clang
+      addons: &addons_clang_5_0
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty-5.0
+          packages:
+            - gcc-6
+            - g++-6
+            - clang-5.0
+      env: ENV_CC="clang-5.0" ENV_CXX="clang++-5.0" BUILD="debug"
+    - os: linux
+      compiler: clang
+      addons: *addons_clang_5_0
+      env: ENV_CC="clang-5.0" ENV_CXX="clang++-5.0" BUILD="sanitize"
+    - os: linux
+      compiler: clang
+      addons: *addons_clang_5_0
+      env: ENV_CC="clang-5.0" ENV_CXX="clang++-5.0" BUILD="release"
+
+    - os: linux
+      compiler: clang
       addons: &addons_clang_4_0
         apt:
           sources:
@@ -62,14 +83,14 @@ matrix:
             - g++-6
             - clang-4.0
       env: ENV_CC="clang-4.0" ENV_CXX="clang++-4.0" BUILD="debug"
-    - os: linux
-      compiler: clang
-      addons: *addons_clang_4_0
-      env: ENV_CC="clang-4.0" ENV_CXX="clang++-4.0" BUILD="sanitize"
-    - os: linux
-      compiler: clang
-      addons: *addons_clang_4_0
-      env: ENV_CC="clang-4.0" ENV_CXX="clang++-4.0" BUILD="release"
+#   - os: linux
+#     compiler: clang
+#     addons: *addons_clang_4_0
+#     env: ENV_CC="clang-4.0" ENV_CXX="clang++-4.0" BUILD="sanitize"
+#   - os: linux
+#     compiler: clang
+#     addons: *addons_clang_4_0
+#     env: ENV_CC="clang-4.0" ENV_CXX="clang++-4.0" BUILD="release"
 
     - os: linux
       compiler: clang
@@ -83,10 +104,10 @@ matrix:
             - g++-6
             - clang-3.9
       env: ENV_CC="clang-3.9" ENV_CXX="clang++-3.9" BUILD="debug"
-    - os: linux
-      compiler: clang
-      addons: *addons_clang_3_9
-      env: ENV_CC="clang-3.9" ENV_CXX="clang++-3.9" BUILD="release"
+#   - os: linux
+#     compiler: clang
+#     addons: *addons_clang_3_9
+#     env: ENV_CC="clang-3.9" ENV_CXX="clang++-3.9" BUILD="release"
 
     - os: linux
       compiler: clang
@@ -100,10 +121,10 @@ matrix:
             - g++-6
             - clang-3.8
       env: ENV_CC="clang-3.8" ENV_CXX="clang++-3.8" BUILD="debug"
-    - os: linux
-      compiler: clang
-      addons: *addons_clang_3_8
-      env: ENV_CC="clang-3.8" ENV_CXX="clang++-3.8" BUILD="release"
+#   - os: linux
+#     compiler: clang
+#     addons: *addons_clang_3_8
+#     env: ENV_CC="clang-3.8" ENV_CXX="clang++-3.8" BUILD="release"
 
     - os: linux
       compiler: clang
@@ -117,10 +138,10 @@ matrix:
             - g++-5
             - clang-3.7
       env: ENV_CC="clang-3.7" ENV_CXX="clang++-3.7" BUILD="debug"
-    - os: linux
-      compiler: clang
-      addons: *addons_clang_3_7
-      env: ENV_CC="clang-3.7" ENV_CXX="clang++-3.7" BUILD="release"
+#   - os: linux
+#     compiler: clang
+#     addons: *addons_clang_3_7
+#     env: ENV_CC="clang-3.7" ENV_CXX="clang++-3.7" BUILD="release"
 
     - os: linux
       compiler: gcc
@@ -155,10 +176,10 @@ matrix:
             - g++-6
             - binutils
       env: ENV_CC="gcc-6" ENV_CXX="g++-6" BUILD="debug"
-    - os: linux
-      compiler: gcc
-      addons: *addons_gcc_6
-      env: ENV_CC="gcc-6" ENV_CXX="g++-6" BUILD="release"
+#   - os: linux
+#     compiler: gcc
+#     addons: *addons_gcc_6
+#     env: ENV_CC="gcc-6" ENV_CXX="g++-6" BUILD="release"
 
     - os: linux
       compiler: gcc
@@ -170,10 +191,10 @@ matrix:
             - gcc-5
             - g++-5
       env: ENV_CC="gcc-5" ENV_CXX="g++-5" BUILD="debug"
-    - os: linux
-      compiler: gcc
-      addons: *addons_gcc_5
-      env: ENV_CC="gcc-5" ENV_CXX="g++-5" BUILD="release"
+#   - os: linux
+#     compiler: gcc
+#     addons: *addons_gcc_5
+#     env: ENV_CC="gcc-5" ENV_CXX="g++-5" BUILD="release"
 
   allow_failures:
 
