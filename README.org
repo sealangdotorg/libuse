@@ -1,10 +1,10 @@
 # 
-#   Copyright (c) 2014-2017 Philipp Paulweber
+#   Copyright (c) 2014-2017 CASM Organization https://casm-lang.org
 #   All rights reserved.
 # 
 #   Developed by: Philipp Paulweber
 #                 Emmanuel Pescosta
-#                 https://github.com/ppaulweber/libstdhl
+#                 https://github.com/casm-lang/libstdhl
 # 
 #   This file is part of libstdhl.
 # 
@@ -45,7 +45,8 @@
 This library includes some basic data-structures, classes, definitions etc.
 which are used in several projects for different languages.
 
-** Status [[https://travis-ci.org/ppaulweber/libstdhl][https://api.travis-ci.org/ppaulweber/libstdhl.svg?branch=master]]
+
+** Status [[https://travis-ci.org/ppaulweber/libstdhl][https://api.travis-ci.org/casm-lang/libstdhl.svg?branch=master]]
 
 Currently the repository covers some Python and C/C++ libraries.
 
@@ -55,20 +56,22 @@ is coming soon!
 
 ** Copyright and License
 
-The copyright holder of libstdhl is Philipp Paulweber (@ppaulweber)
-and the used license of libstdhl is a [[https://www.gnu.org/licenses/gpl-3.0.html][GNU GPLv3+]]
-with an additional permission ("GPL Linking Exception").
+The copyright holder of 
+libstdhl is the [[https://casm-lang.org][CASM organization]] ([[https://github.com/casm-lang][@casm-lang]]) 
+and the used license of 
+libstdhl is a [[https://www.gnu.org/licenses/gpl-3.0.html][GNU GPLv3+]]
+with an additional "GPL Linking Exception" permission.
 
 *** Notice
 
 #+begin_src
 
-Copyright (c) 2014-2017 Philipp Paulweber
+Copyright (c) 2014-2017 CASM Organization https://casm-lang.org
 All rights reserved.
 
 Developed by: Philipp Paulweber
               Emmanuel Pescosta
-              https://github.com/ppaulweber/libstdhl
+              https://github.com/casm-lang/libstdhl
 
 This file is part of libstdhl.
 

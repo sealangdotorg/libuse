@@ -1,8 +1,8 @@
 [submodule "lib/gtest"]
 	path = lib/gtest
-	url = https://github.com/google/googletest
+	url = https://github.com/casm-lang/libgtest
 	branch = master
 [submodule "lib/hayai"]
 	path = lib/hayai
-	url = https://github.com/nickbruun/hayai
+	url = https://github.com/casm-lang/libhayai
 	branch = master
