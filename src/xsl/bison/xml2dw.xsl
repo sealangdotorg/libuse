@@ -88,7 +88,7 @@
 </xsl:template>
 
 <xsl:template match="grammar">
-  <xsl:text>===== Syntax =====&#10;</xsl:text>
+  <xsl:text>====== Syntax ======&#10;</xsl:text>
   <xsl:text>&#10;</xsl:text>
   <xsl:text>{{page&#62;:grammar:readme&#38;noheader&#38;nofooter}}&#10;</xsl:text>
   <xsl:call-template name="style-rule-set">
@@ -324,9 +324,9 @@
       </xsl:call-template>
     </xsl:when>
     <xsl:otherwise>
-      <xsl:text>==== </xsl:text>
+      <xsl:text>===== </xsl:text>
       <xsl:value-of select="lhs"/>
-      <xsl:text> ====</xsl:text>
+      <xsl:text> =====</xsl:text>
       <xsl:text>&#10;</xsl:text>
       <xsl:text>&#10;</xsl:text>
 
