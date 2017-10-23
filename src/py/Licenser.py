@@ -67,28 +67,66 @@ for txt in licensetext :
 def relicense( filepath, comment, licensetext = licensetext ) :
     print filepath, comment
 
+    xml = False
     context = True
     cnt = 0
     for line in fileinput.FileInput( filepath, inplace = 1 ) :
+
+        if line.startswith( "<!DOCTYPE" ) \
+        or line.startswith( "<!doctype" ) \
+        or line.startswith( "<?xml" ) \
+        :
+            xml = True
+            print "%s" % line.replace( "\n", "" )
+            continue
+        # end if
+
         cnt = cnt + 1
         if cnt == 1 :
             sys.stderr.write( "'%s' '%s' '%s'\n" % ( line, comment, licensetext[0] ) )
             if comment == "//" and line.replace( "\n", "" ) != ( "%s" % ( comment ) ) :
                 context = False
-            else :
-                for txt in licensetext :
-                    if len( txt ) == 0 :
-                        print "%s" % comment
-                    else :
-                        print "%-4s%s" % ( comment, txt )
-        
-        if context :
-            if not line.startswith( comment ) :
+            elif comment == "<!--" and line.replace( "\n", "" ) != ( "%s" % ( comment ) ) :
                 context = False
             else :
-                continue
+                if xml :
+                    print "%s" % comment
+                # end if
+                for txt in licensetext :
+                    if len( txt ) == 0 :
+                        if xml :
+                            print ""
+                        else :
+                            print "%s" % comment
+                        # end if
+                    else :
+                        if xml :
+                            print "%-4s%s" % ( "", txt )
+                        else :
+                            print "%-4s%s" % ( comment, txt )
+                        # end if
+                    # end if
+                # end for
+            # end if
+        # end if
+        if context :
+            if xml :
+                if "-->" in line:
+                    context = False
+                else :
+                    continue
+                # end if
+            else :
+                if not line.startswith( comment ) :
+                    context = False
+                else :
+                    continue
+                # end if
+            # end if
+        # end if
         
         print line.replace( "\n", "" )
+    # end for
 # end def
 
 def searcher( dirpath, rootdir = True ) :
@@ -160,6 +198,8 @@ def searcher( dirpath, rootdir = True ) :
 
         if fileext in \
         [ ".html"             # HTML Source
+        , ".xml"              # XML Source
+        , ".xsl"              # XSL Source
         ] :
             relicense( filepath, "<!--" )
 # end def
