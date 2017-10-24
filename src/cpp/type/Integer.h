@@ -190,6 +190,8 @@ namespace libstdhl
 
             Layout* clone( void ) const override;
 
+            std::size_t hash( void ) const override;
+
             const u64 operator[]( std::size_t idx ) const;
 
             u1 operator==( const u64 rhs ) const;

@@ -101,6 +101,8 @@ namespace libstdhl
 
             u1 defined( void ) const;
 
+            std::size_t hash( void ) const;
+
           protected:
             union content {
                 u64 value;
@@ -142,21 +144,7 @@ namespace libstdhl
     {
         inline std::size_t value( const Type::Data& data )
         {
-            std::size_t hash = 0;
-            std::size_t seed
-                = ( ( (std::size_t)data.sign() ) << 1 ) | data.defined();
-
-            if( data.trivial() )
-            {
-                hash = Hash::value( data.value() );
-            }
-            else
-            {
-                // TODO: PPA: FIXME:
-                // hash = Hash::value( data.value() );
-            }
-
-            return Hash::combine( seed, hash );
+            return data.hash();
         }
     }
 }

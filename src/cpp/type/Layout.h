@@ -61,6 +61,8 @@ namespace libstdhl
             virtual ~Layout( void ) = default;
 
             virtual Layout* clone( void ) const = 0;
+
+            virtual std::size_t hash( void ) const = 0;
         };
     }
 }

@@ -184,6 +184,29 @@ u1 Data::defined( void ) const
     return m_trivial or m_data.ptr != 0;
 }
 
+std::size_t Data::hash( void ) const
+{
+    std::size_t hash = 0;
+    std::size_t seed
+        = ( ( (std::size_t)104729 ) << 2 ) // at pos 2. 10'000st prime number
+          | ( (std::size_t)sign() << 1 )   // at 1. idx the sign
+          | ( (std::size_t)defined() );    // at 0. idx the defined
+
+    if( trivial() )
+    {
+        hash = Hash::value( value() );
+    }
+    else
+    {
+        if( ptr() )
+        {
+            hash = ptr()->hash();
+        }
+    }
+
+    return Hash::combine( seed, hash );
+}
+
 u1 Data::operator==( const Data& rhs ) const
 {
     if( trivial() and rhs.trivial() )
@@ -285,8 +308,7 @@ std::string Data::to_string( const Radix radix, const Literal literal ) const
             {
                 throw std::domain_error(
                     "base64 literal format not specified for radix '"
-                    + std::to_string( radix )
-                    + "'" );
+                    + std::to_string( radix ) + "'" );
             }
             break;
         }
@@ -296,8 +318,7 @@ std::string Data::to_string( const Radix radix, const Literal literal ) const
             {
                 throw std::domain_error(
                     "unix literal format not specified for radix '"
-                    + std::to_string( radix )
-                    + "'" );
+                    + std::to_string( radix ) + "'" );
             }
             break;
         }
@@ -354,8 +375,7 @@ u64 Data::to_digit(
     {
         throw std::domain_error( "digit '" + std::to_string( digit )
                                  + "' must be smaller than radix '"
-                                 + std::to_string( radix )
-                                 + "'" );
+                                 + std::to_string( radix ) + "'" );
     }
 
     return digit;

@@ -89,6 +89,8 @@ namespace libstdhl
 
             Layout* clone( void ) const override;
 
+            std::size_t hash( void ) const override;
+
             const std::string& str( void ) const;
 
             StringLayout& operator+=( const StringLayout& rhs );
