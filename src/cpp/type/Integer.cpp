@@ -681,14 +681,14 @@ Layout* IntegerLayout::clone( void ) const
 
 std::size_t IntegerLayout::hash( void ) const
 {
-    auto tmp = std::hash< u64 >()( m_word[ 0 ] );
+    auto h = std::hash< u64 >()( m_word[ 0 ] );
 
     for( std::size_t c = 1; c < m_word.size(); c++ )
     {
-        tmp = libstdhl::Hash::combine( tmp, m_word[ c ] );
+        h = libstdhl::Hash::combine( h, m_word[ c ] );
     }
 
-    return 0;
+    return h;
 }
 
 const u64 IntegerLayout::operator[]( std::size_t idx ) const

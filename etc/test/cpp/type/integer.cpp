@@ -545,6 +545,27 @@ TEST( libstdhl_cpp_type_integer, str_decimal77_sign )
     EXPECT_EQ( i[ 0 ], 0xaccff196ce3f0ad2 );
 }
 
+
+TEST( libstdhl_cpp_type_integer, hash_equal )
+{
+    u64 number = 1234;
+
+    auto a = createInteger( number );
+    auto b = createInteger( number );
+
+    EXPECT_EQ( a.hash(), b.hash() );
+}
+
+TEST( libstdhl_cpp_type_integer, hash_not_equal )
+{
+    u64 number = 1234;
+
+    auto a = createInteger( number );
+    auto b = createInteger( number * (-1) );
+
+    EXPECT_NE( a.hash(), b.hash() );
+}
+
 #define TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_( NAME, OP, A, B )           \
     TEST( libstdhl_cpp_type_integer, operator_##NAME )                         \
     {                                                                          \
