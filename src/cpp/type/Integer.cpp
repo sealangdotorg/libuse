@@ -46,6 +46,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <functional>
 
 using namespace libstdhl;
 using namespace Type;
@@ -676,6 +677,18 @@ IntegerLayout::IntegerLayout( const u64 low, const u64 high )
 Layout* IntegerLayout::clone( void ) const
 {
     return new IntegerLayout( *this );
+}
+
+std::size_t IntegerLayout::hash( void ) const
+{
+    auto h = std::hash< u64 >()( m_word[ 0 ] );
+
+    for( std::size_t c = 1; c < m_word.size(); c++ )
+    {
+        h = libstdhl::Hash::combine( h, m_word[ c ] );
+    }
+
+    return h;
 }
 
 const u64 IntegerLayout::operator[]( std::size_t idx ) const

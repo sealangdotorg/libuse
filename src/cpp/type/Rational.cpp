@@ -199,6 +199,11 @@ Layout* RationalLayout::clone( void ) const
     return new RationalLayout( m_numerator, m_denominator );
 }
 
+std::size_t RationalLayout::hash( void ) const
+{
+    return libstdhl::Hash::combine( m_numerator.hash(), m_denominator.hash() );
+}
+
 const Integer& RationalLayout::numerator( void ) const
 {
     return m_numerator;

@@ -66,9 +66,8 @@ namespace libstdhl
         std::unique_ptr< T > make_unique( Args&&... args )
         {
             return std::unique_ptr< T >(
-                new T( std::forward< Args >( args )... ) ); // TODO: PPA: change
-                                                            // this when C++14
-            // make_unique is ready
+                new T( std::forward< Args >( args )... ) );
+            // TODO: PPA: change this when C++14 make_unique is ready
         }
 
         //
@@ -83,25 +82,24 @@ namespace libstdhl
 
         //
         // shared object creation utility which allocates only new objects
-        // if they are not already cached in the 'make_cache()' facility
-        // through 'make_hash()'
+        // if they are not already cached in the 'cache()' facility
+        // through 'hash()'
         //
         template < typename T, typename... Args >
         inline std::shared_ptr< T > get( Args&&... args )
         {
-            T tmp = T( std::forward< Args >( args )... );
+            T obj = T( std::forward< Args >( args )... );
+            const auto h = obj.hash();
 
-            auto cache = tmp.make_cache().find( tmp.make_hash() );
-            if( cache != tmp.make_cache().end() )
+            auto it = obj.cache().find( h );
+            if( it != obj.cache().end() )
             {
-                return std::static_pointer_cast< T >( cache->second );
+                return std::static_pointer_cast< T >( it->second );
             }
 
-            auto ptr = make< T >( tmp );
+            auto ptr = make< T >( obj );
             return std::static_pointer_cast< T >(
-                tmp.make_cache()
-                    .emplace( tmp.make_hash(), ptr )
-                    .first->second );
+                obj.cache().emplace( h, ptr ).first->second );
         }
 
         //

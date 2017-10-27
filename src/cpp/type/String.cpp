@@ -42,6 +42,8 @@
 
 #include "String.h"
 
+#include "../String.h"
+
 using namespace libstdhl;
 using namespace Type;
 
@@ -49,7 +51,7 @@ using namespace Type;
 // Type::create*
 //
 
-String Type::createString( const std::string& value )
+Type::String Type::createString( const std::string& value )
 {
     return String( new StringLayout( value ) );
 }
@@ -58,13 +60,13 @@ String Type::createString( const std::string& value )
 // String
 //
 
-std::string String::toString( void ) const
+std::string Type::String::toString( void ) const
 {
     const auto data = static_cast< StringLayout* >( m_data.ptr );
     return data->str();
 }
 
-u1 String::operator==( const String& rhs ) const
+u1 Type::String::operator==( const String& rhs ) const
 {
     auto lval = static_cast< StringLayout* >( m_data.ptr );
     const auto rval = static_cast< StringLayout* >( rhs.m_data.ptr );
@@ -79,7 +81,7 @@ u1 String::operator==( const String& rhs ) const
     }
 }
 
-String& String::operator+=( const String& rhs )
+Type::String& Type::String::operator+=( const Type::String& rhs )
 {
     auto lval = static_cast< StringLayout* >( m_data.ptr );
     const auto rval = static_cast< StringLayout* >( rhs.m_data.ptr );
@@ -101,6 +103,11 @@ StringLayout::StringLayout( const std::string& value )
 Layout* StringLayout::clone( void ) const
 {
     return new StringLayout( m_str );
+}
+
+std::size_t StringLayout::hash( void ) const
+{
+    return libstdhl::String::value( str() );
 }
 
 const std::string& StringLayout::str( void ) const

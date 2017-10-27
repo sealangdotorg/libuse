@@ -74,7 +74,7 @@ Floating Type::createFloating( const double value )
 
 Floating Floating::fromString( const std::string& value, const Radix radix )
 {
-#warning "TODO"
+#warning "TODO: PPA: FIXME: unimplemented!"
 
     Floating tmp;
     return tmp;
@@ -132,6 +132,13 @@ u1 Floating::operator>( const Floating& rhs ) const
 Layout* FloatingLayout::clone( void ) const
 {
     return new FloatingLayout( *this );
+}
+
+std::size_t FloatingLayout::hash( void ) const
+{
+#warning "TODO: PPA: FIXME: unimplemented!"
+
+    return 0;
 }
 
 //

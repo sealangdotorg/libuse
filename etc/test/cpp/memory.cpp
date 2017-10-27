@@ -55,7 +55,7 @@ class TestClass
     {
     }
 
-    const u32 value() const
+    u32 value() const
     {
         return m_value;
     }
@@ -65,15 +65,15 @@ class TestClass
         return this->value() == rhs.value();
     }
 
-    std::unordered_map< std::string, TestClass::Ptr >& make_cache( void )
+    std::unordered_map< std::size_t, TestClass::Ptr >& cache( void )
     {
-        static std::unordered_map< std::string, TestClass::Ptr > cache;
+        static std::unordered_map< std::size_t, TestClass::Ptr > cache;
         return cache;
     }
 
-    const char* make_hash( void )
+    std::size_t hash( void ) const
     {
-        return Allocator::string( std::to_string( value() ) );
+        return value();
     }
 
   private:

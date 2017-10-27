@@ -99,6 +99,8 @@ namespace libstdhl
             using Ptr = std::unique_ptr< FloatingLayout >;
 
             Layout* clone( void ) const override;
+
+            std::size_t hash( void ) const override;
         };
     }
 }
