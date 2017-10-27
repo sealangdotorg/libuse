@@ -186,12 +186,12 @@ u1 Data::defined( void ) const
 
 std::size_t Data::hash( void ) const
 {
-    std::size_t hash = 0;
-    std::size_t seed
+    const std::size_t seed
         = ( ( (std::size_t)104729 ) << 2 ) // at pos 2. 10'000st prime number
           | ( (std::size_t)sign() << 1 )   // at 1. idx the sign
           | ( (std::size_t)defined() );    // at 0. idx the defined
 
+    std::size_t hash = 0;
     if( trivial() )
     {
         hash = Hash::value( value() );
