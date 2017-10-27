@@ -92,10 +92,10 @@ namespace libstdhl
 
             const auto tmp_hash = tmp.hash();
 
-            auto cache = tmp.cache().find( tmp_hash );
-            if( cache != tmp.cache().end() )
+            auto it = tmp.cache().find( tmp_hash );
+            if( it != tmp.cache().end() )
             {
-                return std::static_pointer_cast< T >( cache->second );
+                return std::static_pointer_cast< T >( it->second );
             }
 
             auto ptr = make< T >( tmp );
