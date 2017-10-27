@@ -88,19 +88,18 @@ namespace libstdhl
         template < typename T, typename... Args >
         inline std::shared_ptr< T > get( Args&&... args )
         {
-            T tmp = T( std::forward< Args >( args )... );
+            T obj = T( std::forward< Args >( args )... );
+            const auto h = obj.hash();
 
-            const auto tmp_hash = tmp.hash();
-
-            auto it = tmp.cache().find( tmp_hash );
-            if( it != tmp.cache().end() )
+            auto it = obj.cache().find( h );
+            if( it != obj.cache().end() )
             {
                 return std::static_pointer_cast< T >( it->second );
             }
 
-            auto ptr = make< T >( tmp );
+            auto ptr = make< T >( obj );
             return std::static_pointer_cast< T >(
-                tmp.cache().emplace( tmp_hash, ptr ).first->second );
+                obj.cache().emplace( h, ptr ).first->second );
         }
 
         //
