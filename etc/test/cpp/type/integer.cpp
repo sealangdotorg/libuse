@@ -42,7 +42,10 @@
 
 #include <libstdhl/Test>
 
-#include <libstdhl/type/Integer.h>
+#include <libstdhl/type/Integer>
+#include <libstdhl/type/Natural>
+
+#include <cmath>
 
 using namespace libstdhl;
 using namespace Type;
@@ -534,7 +537,7 @@ TEST( libstdhl_cpp_type_integer, str_decimal77_sign )
         "1234567890"
         "1234567890"
         "1234567890" // 10
-        );
+    );
 
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.defined(), true );
@@ -544,7 +547,6 @@ TEST( libstdhl_cpp_type_integer, str_decimal77_sign )
     EXPECT_EQ( i[ 1 ], 0x5f72b95e8f5f488b );
     EXPECT_EQ( i[ 0 ], 0xaccff196ce3f0ad2 );
 }
-
 
 TEST( libstdhl_cpp_type_integer, hash_equal )
 {
@@ -561,7 +563,7 @@ TEST( libstdhl_cpp_type_integer, hash_not_equal )
     u64 number = 1234;
 
     auto a = createInteger( number );
-    auto b = createInteger( number * (-1) );
+    auto b = createInteger( number * ( -1 ) );
 
     EXPECT_NE( a.hash(), b.hash() );
 }
@@ -574,7 +576,7 @@ TEST( libstdhl_cpp_type_integer, hash_not_equal )
                                                                                \
         const auto c = a OP b;                                                 \
         EXPECT_EQ( c.trivial(), true );                                        \
-        EXPECT_EQ( c.value() * ( c.sign() ? ( -1 ) : ( 1 ) ), A OP B );        \
+        EXPECT_EQ( (i64)c.value() * ( c.sign() ? ( -1 ) : ( 1 ) ), A OP B );   \
     }
 
 TEST( libstdhl_cpp_type_integer, operator_equ_zero_pn )
@@ -655,11 +657,39 @@ TEST( libstdhl_cpp_type_integer, operator_equ_zero_nn )
     TEST_CPP_TYPE_INTEGER_OPERATOR_SET1( COMPARE, NAME, OP );                  \
     TEST_CPP_TYPE_INTEGER_OPERATOR_SET2( COMPARE, NAME, OP );
 
+#define TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( NUMBER, A, B )          \
+    TEST( libstdhl_cpp_type_integer, operator_pow##NUMBER )                    \
+    {                                                                          \
+        const auto a = createInteger( (i64)A );                                \
+        const auto b = createNatural( (i64)B );                                \
+                                                                               \
+        const auto c = a ^ b;                                                  \
+        EXPECT_EQ( c.trivial(), true );                                        \
+        EXPECT_EQ( (i64)c.value() * ( c.sign() ? ( -1 ) : ( 1 ) ),             \
+            std::pow( A, B ) );                                                \
+    }
+
+#define TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC__pow                         \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 00, 0, 0 );                 \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 01, 0, 1 );                 \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 02, 1, 0 );                 \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 03, 1, 1 );                 \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 04, -1, 0 );                \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 05, -1, 1 );                \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 06, 3, 3 );                 \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 07, -5, 4 );                \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 08, -23, 3 );               \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 09, 8, 2 );                 \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 10, 2, 16 );                \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 11, 16, 3 );                \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 12, 14, 5 );
+
 TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC( add, +);
 TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC( sub, -);
 TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC( mul, * );
 TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC( mod, % );
 TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC( div, / );
+TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC__pow;
 
 TEST_CPP_TYPE_INTEGER_OPERATOR_COMPARE( equ, == );
 TEST_CPP_TYPE_INTEGER_OPERATOR_COMPARE( neq, != );

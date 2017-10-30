@@ -42,10 +42,12 @@
 
 #include "Integer.h"
 
-#include "../Math.h"
+#include <libstdhl/Math>
+#include <libstdhl/type/Natural>
 
 #include <algorithm>
 #include <cassert>
+#include <cmath>
 #include <functional>
 
 using namespace libstdhl;
@@ -182,185 +184,47 @@ const u64 Integer::operator[]( std::size_t idx ) const
     }
 }
 
-// Integer to u64
+//
+// IntegerLayout
+//
 
-Integer& Integer::operator<<=( const u64 rhs )
+IntegerLayout::IntegerLayout( const u64 low, const u64 high )
+: m_word( { low, high } )
 {
-    if( rhs == 0 )
-    {
-        return *this;
-    }
-
-    if( trivial() )
-    {
-        const u64 shift = rhs;
-        const u64 shinv = 64 - rhs;
-
-        const u64 current = m_data.value >> shinv;
-        m_data.value = m_data.value << shift;
-
-        if( current != 0 )
-        {
-            m_data.ptr = new IntegerLayout( { m_data.value, current } );
-            m_trivial = false;
-        }
-    }
-    else
-    {
-        auto data = static_cast< IntegerLayout* >( m_data.ptr );
-        data->operator<<=( rhs );
-    }
-
-    return *this;
 }
 
-Integer& Integer::operator++( void )
+Layout* IntegerLayout::clone( void ) const
 {
-    return operator+=( 1 );
+    return new IntegerLayout( *this );
 }
 
-Integer Integer::operator++( int )
+std::size_t IntegerLayout::hash( void ) const
 {
-    auto tmp = *this;
-    operator++();
-    return tmp;
+    auto h = std::hash< u64 >()( m_word[ 0 ] );
+
+    for( std::size_t c = 1; c < m_word.size(); c++ )
+    {
+        h = libstdhl::Hash::combine( h, m_word[ c ] );
+    }
+
+    return h;
 }
 
-Integer& Integer::operator+=( const u64 rhs )
+const u64 IntegerLayout::operator[]( std::size_t idx ) const
 {
-    if( trivial() )
-    {
-        const auto lhs = m_data.value;
-
-        if( m_sign )
-        {
-            if( lhs > rhs )
-            {
-                m_data.value = lhs - rhs;
-            }
-            else
-            {
-                m_data.value = rhs - lhs;
-                m_sign = false;
-            }
-        }
-        else
-        {
-            const auto addof
-                = __builtin_uaddl_overflow( lhs, rhs, (u64*)&m_data.value );
-
-            if( addof )
-            {
-                m_data.ptr = new IntegerLayout( { m_data.value, 1 } );
-                m_trivial = false;
-            }
-        }
-    }
-    else
-    {
-        auto data = static_cast< IntegerLayout* >( m_data.ptr );
-        data->operator+=( rhs );
-    }
-
-    return *this;
+    assert( m_word.size() > 0 and idx < m_word.size() );
+    return m_word[ idx ];
 }
 
-Integer& Integer::operator--( void )
-{
-    return operator-=( 1 );
-}
+//
+// Integer and IntegerLayout Operators
+//
 
-Integer Integer::operator--( int )
-{
-    auto tmp = *this;
-    operator--();
-    return tmp;
-}
+//
+// operator '==' and '!='
+//
 
-Integer& Integer::operator-=( const u64 rhs )
-{
-    if( trivial() )
-    {
-        if( m_sign )
-        {
-            return operator+=( rhs );
-        }
-        else
-        {
-            if( m_data.value >= rhs )
-            {
-                m_data.value -= rhs;
-            }
-            else
-            {
-                m_data.value = rhs - m_data.value;
-                m_sign = true;
-            }
-        }
-    }
-    else
-    {
-        auto data = static_cast< IntegerLayout* >( m_data.ptr );
-        data->operator-=( rhs );
-    }
-
-    return *this;
-}
-
-Integer& Integer::operator*=( const u64 rhs )
-{
-    if( *this == 0 )
-    {
-        return *this;
-    }
-
-    if( *this == 1 )
-    {
-        assert( trivial() );
-        m_data.value = rhs;
-        return *this;
-    }
-
-    if( rhs == 0 )
-    {
-        if( not trivial() )
-        {
-            delete m_data.ptr;
-            m_trivial = true;
-        }
-
-        m_data.value = 0;
-
-        return *this;
-    }
-
-    if( rhs == 1 )
-    {
-        return *this;
-    }
-
-    if( trivial() )
-    {
-        const auto lhs = m_data.value;
-        const auto mulof = __builtin_umull_overflow( lhs, rhs, &m_data.value );
-
-        if( mulof )
-        {
-            m_data.ptr = new IntegerLayout(
-                { m_data.value, umull_carry( lhs, rhs ) } );
-            m_trivial = false;
-        }
-    }
-    else
-    {
-        auto data = static_cast< IntegerLayout* >( m_data.ptr );
-        data->operator*=( rhs );
-    }
-
-    return *this;
-}
-
-u1 Integer::operator==( const u64& rhs ) const
+u1 Integer::operator==( const u64 rhs ) const
 {
     if( trivial() )
     {
@@ -386,133 +250,6 @@ u1 Integer::operator==( const u64& rhs ) const
         auto data = static_cast< IntegerLayout* >( m_data.ptr );
         return data->operator==( rhs );
     }
-}
-
-// Integer to Integer
-
-Integer& Integer::operator+=( const Integer& rhs )
-{
-    assert( trivial() );
-    assert( rhs.trivial() );
-
-    const auto lhs_neg = m_sign;
-    const auto rhs_neg = rhs.sign();
-
-    const auto a = value();
-    const auto b = rhs.value();
-
-    if( lhs_neg == rhs_neg )
-    {
-        m_data.value = a + b;
-    }
-    else
-    {
-        if( a >= b )
-        {
-            m_data.value = a - b;
-        }
-        else // a < b
-        {
-            m_data.value = b - a;
-            m_sign = rhs_neg;
-        }
-    }
-
-    return *this;
-}
-
-Integer& Integer::operator-=( const Integer& rhs )
-{
-    assert( trivial() );
-    assert( rhs.trivial() );
-
-    const auto lhs_neg = m_sign;
-    const auto rhs_neg = rhs.sign();
-
-    const auto a = value();
-    const auto b = rhs.value();
-
-    if( lhs_neg == rhs_neg )
-    {
-        if( a >= b )
-        {
-            m_data.value = a - b;
-        }
-        else // a < b
-        {
-            m_data.value = b - a;
-            m_sign = not rhs_neg;
-        }
-    }
-    else
-    {
-        m_data.value = a + b;
-    }
-
-    return *this;
-}
-
-Integer& Integer::operator*=( const Integer& rhs )
-{
-    assert( trivial() );
-    assert( rhs.trivial() );
-
-    const auto lhs_neg = m_sign;
-    const auto rhs_neg = rhs.sign();
-
-    const auto a = value();
-    const auto b = rhs.value();
-
-    m_data.value = a * b;
-    m_sign = lhs_neg != rhs_neg;
-
-    return *this;
-}
-
-Integer& Integer::operator%=( const Integer& rhs )
-{
-    assert( trivial() );
-    assert( rhs.trivial() );
-
-    const auto a = value();
-    const auto b = rhs.value();
-
-    m_data.value = a % b;
-
-    return *this;
-}
-
-Integer& Integer::operator/=( const Integer& rhs )
-{
-    assert( trivial() );
-    assert( rhs.trivial() );
-
-    const auto lhs_neg = m_sign;
-    const auto rhs_neg = rhs.sign();
-
-    const auto a = value();
-    const auto b = rhs.value();
-
-    m_data.value = a / b;
-    m_sign = lhs_neg != rhs_neg;
-
-    return *this;
-}
-
-Integer Integer::operator~(void)const
-{
-    Integer tmp( *this );
-
-    if( tmp.trivial() )
-    {
-        tmp.m_data.value = ~tmp.m_data.value;
-    }
-    else
-    {
-        static_cast< IntegerLayout* >( tmp.m_data.ptr )->operator~();
-    }
-
-    return tmp;
 }
 
 u1 Integer::operator==( const Integer& rhs ) const
@@ -575,6 +312,51 @@ u1 Integer::operator==( const Integer& rhs ) const
     }
 }
 
+u1 IntegerLayout::operator==( const u64 rhs ) const
+{
+    assert( m_word.size() > 0 );
+
+    for( std::size_t c = 1; c < m_word.size(); c++ )
+    {
+        if( m_word[ c ] != 0 )
+        {
+            return false;
+        }
+    }
+
+    if( m_word[ 0 ] == rhs )
+    {
+        return true;
+    }
+
+    return false;
+}
+
+u1 IntegerLayout::operator==( const IntegerLayout& rhs ) const
+{
+    assert( m_word.size() > 0 );
+    assert( rhs.m_word.size() > 0 );
+
+    if( m_word.size() != rhs.m_word.size() )
+    {
+        return false;
+    }
+
+    for( std::size_t c = 0; c < m_word.size(); c++ )
+    {
+        if( m_word[ c ] != rhs.m_word[ c ] )
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+//
+// operator '<' and '>='
+//
+
 u1 Integer::operator<( const Integer& rhs ) const
 {
     const auto lhs_neg = m_sign;
@@ -619,6 +401,10 @@ u1 Integer::operator<( const Integer& rhs ) const
         }
     }
 }
+
+//
+// operator '>' and '<='
+//
 
 u1 Integer::operator>( const Integer& rhs ) const
 {
@@ -666,98 +452,86 @@ u1 Integer::operator>( const Integer& rhs ) const
 }
 
 //
-// IntegerLayout
+// operator '+=' and '+'
 //
 
-IntegerLayout::IntegerLayout( const u64 low, const u64 high )
-: m_word( { low, high } )
+Integer& Integer::operator++( void )
 {
+    return operator+=( 1 );
 }
 
-Layout* IntegerLayout::clone( void ) const
+Integer Integer::operator++( int )
 {
-    return new IntegerLayout( *this );
+    auto tmp = *this;
+    operator++();
+    return tmp;
 }
 
-std::size_t IntegerLayout::hash( void ) const
+Integer& Integer::operator+=( const u64 rhs )
 {
-    auto h = std::hash< u64 >()( m_word[ 0 ] );
-
-    for( std::size_t c = 1; c < m_word.size(); c++ )
+    if( trivial() )
     {
-        h = libstdhl::Hash::combine( h, m_word[ c ] );
-    }
+        const auto lhs = m_data.value;
 
-    return h;
-}
-
-const u64 IntegerLayout::operator[]( std::size_t idx ) const
-{
-    assert( m_word.size() > 0 and idx < m_word.size() );
-    return m_word[ idx ];
-}
-
-u1 IntegerLayout::operator==( const u64 rhs ) const
-{
-    assert( m_word.size() > 0 );
-
-    for( std::size_t c = 1; c < m_word.size(); c++ )
-    {
-        if( m_word[ c ] != 0 )
+        if( m_sign )
         {
-            return false;
+            if( lhs > rhs )
+            {
+                m_data.value = lhs - rhs;
+            }
+            else
+            {
+                m_data.value = rhs - lhs;
+                m_sign = false;
+            }
+        }
+        else
+        {
+            const auto addof
+                = __builtin_uaddl_overflow( lhs, rhs, (u64*)&m_data.value );
+
+            if( addof )
+            {
+                m_data.ptr = new IntegerLayout( { m_data.value, 1 } );
+                m_trivial = false;
+            }
         }
     }
-
-    if( m_word[ 0 ] == rhs )
+    else
     {
-        return true;
+        auto data = static_cast< IntegerLayout* >( m_data.ptr );
+        data->operator+=( rhs );
     }
 
-    return false;
+    return *this;
 }
 
-u1 IntegerLayout::operator==( const IntegerLayout& rhs ) const
+Integer& Integer::operator+=( const Integer& rhs )
 {
-    assert( m_word.size() > 0 );
-    assert( rhs.m_word.size() > 0 );
+    assert( trivial() );
+    assert( rhs.trivial() );
 
-    if( m_word.size() != rhs.m_word.size() )
+    const auto lhs_neg = m_sign;
+    const auto rhs_neg = rhs.sign();
+
+    const auto a = value();
+    const auto b = rhs.value();
+
+    if( lhs_neg == rhs_neg )
     {
-        return false;
+        m_data.value = a + b;
     }
-
-    for( std::size_t c = 0; c < m_word.size(); c++ )
+    else
     {
-        if( m_word[ c ] != rhs.m_word[ c ] )
+        if( a >= b )
         {
-            return false;
+            m_data.value = a - b;
         }
-    }
-
-    return true;
-}
-
-IntegerLayout& IntegerLayout::operator<<=( const u64 rhs )
-{
-    assert( m_word.size() > 0 );
-
-    const u64 shift = rhs;
-    const u64 shinv = 64 - rhs;
-
-    u64 current = 0;
-    u64 previous = 0;
-
-    for( std::size_t c = 0; c < m_word.size(); c++ )
-    {
-        current = m_word[ c ] >> shinv;
-        m_word[ c ] = ( m_word[ c ] << shift ) | previous;
-        previous = current;
-    }
-
-    if( current != 0 )
-    {
-        m_word.emplace_back( current );
+        else // a < b
+        {
+            m_data.value = b - a;
+            m_sign = rhs_neg;
+        }
     }
 
     return *this;
@@ -784,11 +558,168 @@ IntegerLayout& IntegerLayout::operator+=( const u64 rhs )
     return *this;
 }
 
+//
+// operator '--', '-=' and '-'
+//
+
+Integer& Integer::operator--( void )
+{
+    return operator-=( 1 );
+}
+
+Integer Integer::operator--( int )
+{
+    auto tmp = *this;
+    operator--();
+    return tmp;
+}
+
+Integer& Integer::operator-=( const u64 rhs )
+{
+    if( trivial() )
+    {
+        if( m_sign )
+        {
+            return operator+=( rhs );
+        }
+        else
+        {
+            if( m_data.value >= rhs )
+            {
+                m_data.value -= rhs;
+            }
+            else
+            {
+                m_data.value = rhs - m_data.value;
+                m_sign = true;
+            }
+        }
+    }
+    else
+    {
+        auto data = static_cast< IntegerLayout* >( m_data.ptr );
+        data->operator-=( rhs );
+    }
+
+    return *this;
+}
+
+Integer& Integer::operator-=( const Integer& rhs )
+{
+    assert( trivial() );
+    assert( rhs.trivial() );
+
+    const auto lhs_neg = m_sign;
+    const auto rhs_neg = rhs.sign();
+
+    const auto a = value();
+    const auto b = rhs.value();
+
+    if( lhs_neg == rhs_neg )
+    {
+        if( a >= b )
+        {
+            m_data.value = a - b;
+        }
+        else // a < b
+        {
+            m_data.value = b - a;
+            m_sign = not rhs_neg;
+        }
+    }
+    else
+    {
+        m_data.value = a + b;
+    }
+
+    return *this;
+}
+
 IntegerLayout& IntegerLayout::operator-=( const u64 rhs )
 {
     assert( m_word.size() > 0 );
 
     throw std::domain_error( "unimplemented 'IntegerLayout::operator-='" );
+
+    return *this;
+}
+
+//
+// operator '-' (NEGATE)
+//
+
+// inline defined in header file
+
+//
+// operator '*=' and '*'
+//
+
+Integer& Integer::operator*=( const u64 rhs )
+{
+    if( *this == 0 )
+    {
+        return *this;
+    }
+
+    if( *this == 1 )
+    {
+        assert( trivial() );
+        m_data.value = rhs;
+        return *this;
+    }
+
+    if( rhs == 0 )
+    {
+        if( not trivial() )
+        {
+            delete m_data.ptr;
+            m_trivial = true;
+        }
+
+        m_data.value = 0;
+
+        return *this;
+    }
+
+    if( rhs == 1 )
+    {
+        return *this;
+    }
+
+    if( trivial() )
+    {
+        const auto lhs = m_data.value;
+        const auto mulof = __builtin_umull_overflow( lhs, rhs, &m_data.value );
+
+        if( mulof )
+        {
+            m_data.ptr = new IntegerLayout(
+                { m_data.value, umull_carry( lhs, rhs ) } );
+            m_trivial = false;
+        }
+    }
+    else
+    {
+        auto data = static_cast< IntegerLayout* >( m_data.ptr );
+        data->operator*=( rhs );
+    }
+
+    return *this;
+}
+
+Integer& Integer::operator*=( const Integer& rhs )
+{
+    assert( trivial() );
+    assert( rhs.trivial() );
+
+    const auto lhs_neg = m_sign;
+    const auto rhs_neg = rhs.sign();
+
+    const auto a = value();
+    const auto b = rhs.value();
+
+    m_data.value = a * b;
+    m_sign = lhs_neg != rhs_neg;
 
     return *this;
 }
@@ -820,6 +751,92 @@ IntegerLayout& IntegerLayout::operator*=( const u64 rhs )
     return *this;
 }
 
+//
+// operator '%=' and '%'
+//
+
+Integer& Integer::operator%=( const u64 rhs )
+{
+    assert( trivial() );
+
+    const u64 a = value();
+    m_data.value = a % rhs;
+
+    return *this;
+}
+
+Integer& Integer::operator%=( const Integer& rhs )
+{
+    assert( trivial() );
+    assert( rhs.trivial() );
+
+    const auto a = value();
+    const auto b = rhs.value();
+
+    m_data.value = a % b;
+
+    return *this;
+}
+
+//
+// operator '/=' and '/'
+//
+
+Integer& Integer::operator/=( const Integer& rhs )
+{
+    assert( trivial() );
+    assert( rhs.trivial() );
+
+    const auto lhs_neg = m_sign;
+    const auto rhs_neg = rhs.sign();
+
+    const auto a = value();
+    const auto b = rhs.value();
+
+    m_data.value = a / b;
+    m_sign = lhs_neg != rhs_neg;
+
+    return *this;
+}
+
+//
+// operator '^=' and '^'
+//
+
+Integer& Integer::operator^=( const Natural& rhs )
+{
+    assert( trivial() );
+    assert( rhs.trivial() );
+
+    const u64 a = value();
+    const u64 b = rhs.value();
+
+    m_data.value = (u64)std::llround( std::pow( a, b ) );
+    m_sign = sign() and ( rhs % 2 ) == 1;
+
+    return *this;
+}
+
+//
+// operator '~' (INVERSE)
+//
+
+Integer Integer::operator~(void)const
+{
+    Integer tmp( *this );
+
+    if( tmp.trivial() )
+    {
+        tmp.m_data.value = ~tmp.m_data.value;
+    }
+    else
+    {
+        static_cast< IntegerLayout* >( tmp.m_data.ptr )->operator~();
+    }
+
+    return tmp;
+}
+
 IntegerLayout& IntegerLayout::operator~( void )
 {
     assert( m_word.size() > 0 );
@@ -827,6 +844,65 @@ IntegerLayout& IntegerLayout::operator~( void )
     for( std::size_t c = 0; c < m_word.size(); c++ )
     {
         m_word[ c ] = ~m_word[ c ];
+    }
+
+    return *this;
+}
+
+//
+// operator '<<=' and '<<'
+//
+
+Integer& Integer::operator<<=( const u64 rhs )
+{
+    if( rhs == 0 )
+    {
+        return *this;
+    }
+
+    if( trivial() )
+    {
+        const u64 shift = rhs;
+        const u64 shinv = 64 - rhs;
+
+        const u64 current = m_data.value >> shinv;
+        m_data.value = m_data.value << shift;
+
+        if( current != 0 )
+        {
+            m_data.ptr = new IntegerLayout( { m_data.value, current } );
+            m_trivial = false;
+        }
+    }
+    else
+    {
+        auto data = static_cast< IntegerLayout* >( m_data.ptr );
+        data->operator<<=( rhs );
+    }
+
+    return *this;
+}
+
+IntegerLayout& IntegerLayout::operator<<=( const u64 rhs )
+{
+    assert( m_word.size() > 0 );
+
+    const u64 shift = rhs;
+    const u64 shinv = 64 - rhs;
+
+    u64 current = 0;
+    u64 previous = 0;
+
+    for( std::size_t c = 0; c < m_word.size(); c++ )
+    {
+        current = m_word[ c ] >> shinv;
+        m_word[ c ] = ( m_word[ c ] << shift ) | previous;
+        previous = current;
+    }
+
+    if( current != 0 )
+    {
+        m_word.emplace_back( current );
     }
 
     return *this;
