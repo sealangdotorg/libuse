@@ -357,6 +357,22 @@ u1 IntegerLayout::operator==( const IntegerLayout& rhs ) const
 // operator '<' and '>='
 //
 
+u1 Integer::operator<( const u64 rhs ) const
+{
+    if( not trivial() )
+    {
+        return false;
+    }
+    else if( sign() )
+    {
+        return true;
+    }
+    else
+    {
+        return value() < rhs;
+    }
+}
+
 u1 Integer::operator<( const Integer& rhs ) const
 {
     const auto lhs_neg = m_sign;
@@ -405,6 +421,22 @@ u1 Integer::operator<( const Integer& rhs ) const
 //
 // operator '>' and '<='
 //
+
+u1 Integer::operator>( const u64 rhs ) const
+{
+    if( sign() )
+    {
+        return false;
+    }
+    else if( not trivial() )
+    {
+        return true;
+    }
+    else
+    {
+        return value() > rhs;
+    }
+}
 
 u1 Integer::operator>( const Integer& rhs ) const
 {

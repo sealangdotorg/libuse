@@ -93,6 +93,18 @@ namespace libstdhl
             // operator '<' and '>='
             //
 
+            u1 operator<( const u64 rhs ) const;
+
+            inline u1 operator>=( const u64 rhs ) const
+            {
+                return not( operator<( rhs ) );
+            }
+
+            inline friend u1 operator<( const u64 lhs, const Integer& rhs )
+            {
+                return rhs >= lhs;
+            }
+
             u1 operator<( const Integer& rhs ) const;
 
             inline u1 operator>=( const Integer& rhs ) const
@@ -103,6 +115,18 @@ namespace libstdhl
             //
             // operator '>' and '<='
             //
+
+            u1 operator>( const u64 rhs ) const;
+
+            inline u1 operator<=( const u64 rhs ) const
+            {
+                return not( operator>( rhs ) );
+            }
+
+            inline friend u1 operator>( const u64 lhs, const Integer& rhs )
+            {
+                return rhs <= lhs;
+            }
 
             u1 operator>( const Integer& rhs ) const;
 
