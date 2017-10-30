@@ -42,7 +42,10 @@
 
 #include "Floating.h"
 
+#include <libstdhl/type/Natural>
+
 #include <cassert>
+#include <cmath>
 
 using namespace libstdhl;
 using namespace Type;
@@ -80,6 +83,30 @@ Floating Floating::fromString( const std::string& value, const Radix radix )
     return tmp;
 }
 
+//
+// FloatingLayout
+//
+
+Layout* FloatingLayout::clone( void ) const
+{
+    return new FloatingLayout( *this );
+}
+
+std::size_t FloatingLayout::hash( void ) const
+{
+#warning "TODO: PPA: FIXME: unimplemented!"
+
+    return 0;
+}
+
+//
+// Floating and FloatingLayout operators
+//
+
+//
+// operator '==' and '!='
+//
+
 u1 Floating::operator==( const Floating& rhs ) const
 {
     if( defined() and rhs.defined() )
@@ -99,6 +126,9 @@ u1 Floating::operator==( const Floating& rhs ) const
     }
 }
 
+//
+// operator '<' and '>='
+//
 u1 Floating::operator<( const Floating& rhs ) const
 {
     assert( m_trivial );
@@ -112,6 +142,9 @@ u1 Floating::operator<( const Floating& rhs ) const
     return lval < rval;
 }
 
+//
+// operator '>' and '<='
+//
 u1 Floating::operator>( const Floating& rhs ) const
 {
     assert( m_trivial );
@@ -126,19 +159,27 @@ u1 Floating::operator>( const Floating& rhs ) const
 }
 
 //
-// FloatingLayout
+// operator '-' (NEGATE)
 //
 
-Layout* FloatingLayout::clone( void ) const
-{
-    return new FloatingLayout( *this );
-}
+// directly defined in the header file
 
-std::size_t FloatingLayout::hash( void ) const
-{
-#warning "TODO: PPA: FIXME: unimplemented!"
+//
+// operator '^=' and '^'
+//
 
-    return 0;
+Floating& Floating::operator^=( const Natural& rhs )
+{
+    assert( trivial() );
+    assert( rhs.trivial() );
+
+    const double a = value();
+    const u64 b = rhs.value();
+
+    m_data.value = (double)std::pow( a, b );
+    m_sign = sign() and ( ( b % 2 ) == 1 );
+
+    return *this;
 }
 
 //

@@ -55,6 +55,8 @@ namespace libstdhl
 {
     namespace Type
     {
+        class Natural;
+
         class Floating : public Data
         {
           public:
@@ -65,11 +67,9 @@ namespace libstdhl
             static Floating fromString(
                 const std::string& value, const Radix radix );
 
-            inline friend Floating operator-( Floating arg )
-            {
-                auto tmp = -static_cast< Data& >( arg );
-                return static_cast< Floating& >( tmp );
-            }
+            //
+            // operator '==' and '!='
+            //
 
             u1 operator==( const Floating& rhs ) const;
 
@@ -78,6 +78,10 @@ namespace libstdhl
                 return not( operator==( rhs ) );
             }
 
+            //
+            // operator '<' and '>='
+            //
+
             u1 operator<( const Floating& rhs ) const;
 
             inline u1 operator>=( const Floating& rhs ) const
@@ -85,11 +89,37 @@ namespace libstdhl
                 return not( operator<( rhs ) );
             }
 
+            //
+            // operator '>' and '<='
+            //
+
             u1 operator>( const Floating& rhs ) const;
 
             inline u1 operator<=( const Floating& rhs ) const
             {
                 return not( operator>( rhs ) );
+            }
+
+            //
+            // operator '-' (NEGATE)
+            //
+
+            inline friend Floating operator-( Floating arg )
+            {
+                auto tmp = -static_cast< Data& >( arg );
+                return static_cast< Floating& >( tmp );
+            }
+
+            //
+            // operator '^=' and '^'
+            //
+
+            Floating& operator^=( const Natural& rhs );
+
+            inline friend Floating operator^( Floating lhs, const Natural& rhs )
+            {
+                lhs ^= rhs;
+                return lhs;
             }
         };
 
