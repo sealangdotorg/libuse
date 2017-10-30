@@ -71,6 +71,13 @@ namespace libstdhl
             // operator '==' and '!='
             //
 
+            u1 operator==( const u64 rhs ) const;
+
+            inline u1 operator!=( const u64 rhs ) const
+            {
+                return not( operator==( rhs ) );
+            }
+
             u1 operator==( const Floating& rhs ) const;
 
             inline u1 operator!=( const Floating& rhs ) const

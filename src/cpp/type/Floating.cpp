@@ -107,6 +107,19 @@ std::size_t FloatingLayout::hash( void ) const
 // operator '==' and '!='
 //
 
+u1 Floating::operator==( const u64 rhs ) const
+{
+    if( not trivial() )
+    {
+        return false;
+    }
+
+    const auto lval = static_cast< double >( m_data.value );
+    const auto rval = static_cast< double >( rhs );
+
+    return lval == rval;
+}
+
 u1 Floating::operator==( const Floating& rhs ) const
 {
     if( defined() and rhs.defined() )
