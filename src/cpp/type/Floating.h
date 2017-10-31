@@ -72,6 +72,8 @@ namespace libstdhl
             static Floating fromString(
                 const std::string& value, const Radix radix );
 
+            Integer toInteger( void ) const;
+
             //
             // operator '==' and '!='
             //

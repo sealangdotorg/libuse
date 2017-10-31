@@ -95,6 +95,17 @@ Floating Floating::fromString( const std::string& value, const Radix radix )
     return tmp;
 }
 
+Integer Floating::toInteger( void ) const
+{
+    assert( trivial() );
+
+    const auto fval = static_cast< double >( m_data.value );
+    const auto ival = static_cast< u64 >( fval );
+
+    Integer tmp( ival, this->sign() );
+    return tmp;
+}
+
 //
 // FloatingLayout
 //
@@ -127,9 +138,9 @@ u1 Floating::operator==( const u64 rhs ) const
     }
 
     const auto lval = static_cast< double >( m_data.value );
-    const auto rval = static_cast< double >( rhs );
+    const auto rval = rhs;
 
-    return lval == rval;
+    return (u64)lval == rval;
 }
 
 u1 Floating::operator==( const Floating& rhs ) const
@@ -139,7 +150,7 @@ u1 Floating::operator==( const Floating& rhs ) const
         assert( trivial() );
         assert( rhs.trivial() );
 
-        return value() == rhs.value();
+        return std::abs( (double)value() - (double)rhs.value() ) - 0.000001;
     }
     else if( defined() or rhs.defined() )
     {
