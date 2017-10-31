@@ -55,6 +55,7 @@ namespace libstdhl
 {
     namespace Type
     {
+        class Integer;
         class Natural;
 
         class Floating : public Data
@@ -63,6 +64,10 @@ namespace libstdhl
             using Ptr = std::shared_ptr< Floating >;
 
             using Data::Data;
+
+            Floating( const Integer& integer );
+
+            Floating( const Natural& integer );
 
             static Floating fromString(
                 const std::string& value, const Radix radix );

@@ -71,6 +71,18 @@ Floating Type::createFloating( const double value )
     return tmp;
 }
 
+Floating Type::createFloating( const Integer& value )
+{
+    assert( value.trivial() );
+    Floating tmp( value.value(), value.sign() );
+    return tmp;
+}
+
+Floating Type::createFloating( const Natural& value )
+{
+    return createFloating( static_cast< const Integer& >( value ) );
+}
+
 //
 // Floating
 //

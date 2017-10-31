@@ -148,6 +148,10 @@ namespace libstdhl
 
         Floating createFloating( const double value );
 
+        Floating createFloating( const Integer& value );
+
+        Floating createFloating( const Natural& value );
+
         //
         // String
         //
