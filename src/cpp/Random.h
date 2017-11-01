@@ -85,8 +85,8 @@ namespace libstdhl
         }
 
         template <>
-        inline Type::Floating uniform< Type::Floating >(
-            const Type::Floating& from, const Type::Floating& to )
+        inline Type::Decimal uniform< Type::Decimal >(
+            const Type::Decimal& from, const Type::Decimal& to )
         {
             if( from >= to )
             {
@@ -99,7 +99,7 @@ namespace libstdhl
             std::uniform_real_distribution< double > distribution(
                 from.value(), to.value() );
 
-            return Type::createFloating( distribution( engine ) );
+            return Type::createDecimal( distribution( engine ) );
         }
 
         template < typename T >

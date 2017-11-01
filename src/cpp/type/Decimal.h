@@ -40,8 +40,8 @@
 //  statement from your version.
 //
 
-#ifndef _LIBSTDHL_CPP_TYPE_FLOATING_H_
-#define _LIBSTDHL_CPP_TYPE_FLOATING_H_
+#ifndef _LIBSTDHL_CPP_TYPE_DECIMAL_H_
+#define _LIBSTDHL_CPP_TYPE_DECIMAL_H_
 
 #include <libstdhl/type/Data>
 
@@ -58,18 +58,18 @@ namespace libstdhl
         class Integer;
         class Natural;
 
-        class Floating : public Data
+        class Decimal : public Data
         {
           public:
-            using Ptr = std::shared_ptr< Floating >;
+            using Ptr = std::shared_ptr< Decimal >;
 
             using Data::Data;
 
-            Floating( const Integer& integer );
+            Decimal( const Integer& integer );
 
-            Floating( const Natural& integer );
+            Decimal( const Natural& integer );
 
-            static Floating fromString(
+            static Decimal fromString(
                 const std::string& value, const Radix radix );
 
             Integer toInteger( void ) const;
@@ -85,9 +85,9 @@ namespace libstdhl
                 return not( operator==( rhs ) );
             }
 
-            u1 operator==( const Floating& rhs ) const;
+            u1 operator==( const Decimal& rhs ) const;
 
-            inline u1 operator!=( const Floating& rhs ) const
+            inline u1 operator!=( const Decimal& rhs ) const
             {
                 return not( operator==( rhs ) );
             }
@@ -96,9 +96,9 @@ namespace libstdhl
             // operator '<' and '>='
             //
 
-            u1 operator<( const Floating& rhs ) const;
+            u1 operator<( const Decimal& rhs ) const;
 
-            inline u1 operator>=( const Floating& rhs ) const
+            inline u1 operator>=( const Decimal& rhs ) const
             {
                 return not( operator<( rhs ) );
             }
@@ -107,9 +107,9 @@ namespace libstdhl
             // operator '>' and '<='
             //
 
-            u1 operator>( const Floating& rhs ) const;
+            u1 operator>( const Decimal& rhs ) const;
 
-            inline u1 operator<=( const Floating& rhs ) const
+            inline u1 operator<=( const Decimal& rhs ) const
             {
                 return not( operator>( rhs ) );
             }
@@ -118,29 +118,29 @@ namespace libstdhl
             // operator '-' (NEGATE)
             //
 
-            inline friend Floating operator-( Floating arg )
+            inline friend Decimal operator-( Decimal arg )
             {
                 auto tmp = -static_cast< Data& >( arg );
-                return static_cast< Floating& >( tmp );
+                return static_cast< Decimal& >( tmp );
             }
 
             //
             // operator '^=' and '^'
             //
 
-            Floating& operator^=( const Natural& rhs );
+            Decimal& operator^=( const Natural& rhs );
 
-            inline friend Floating operator^( Floating lhs, const Natural& rhs )
+            inline friend Decimal operator^( Decimal lhs, const Natural& rhs )
             {
                 lhs ^= rhs;
                 return lhs;
             }
         };
 
-        class FloatingLayout final : public Layout
+        class DecimalLayout final : public Layout
         {
           public:
-            using Ptr = std::unique_ptr< FloatingLayout >;
+            using Ptr = std::unique_ptr< DecimalLayout >;
 
             Layout* clone( void ) const override;
 
@@ -149,7 +149,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_TYPE_FLOATING_H_
+#endif // _LIBSTDHL_CPP_TYPE_DECIMAL_H_
 
 //
 //  Local variables:

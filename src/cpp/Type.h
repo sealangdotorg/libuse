@@ -138,19 +138,19 @@ namespace libstdhl
             const Integer& numerator, const Integer& denominator );
 
         //
-        // Floating
+        // Decimal
         //
 
-        class Floating;
+        class Decimal;
 
-        Floating createFloating(
+        Decimal createDecimal(
             const std::string& value, const Radix radix = DECIMAL );
 
-        Floating createFloating( const double value );
+        Decimal createDecimal( const double value );
 
-        Floating createFloating( const Integer& value );
+        Decimal createDecimal( const Integer& value );
 
-        Floating createFloating( const Natural& value );
+        Decimal createDecimal( const Natural& value );
 
         //
         // String
