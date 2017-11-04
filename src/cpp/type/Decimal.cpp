@@ -89,9 +89,22 @@ Decimal Type::createDecimal( const Natural& value )
 
 Decimal Decimal::fromString( const std::string& value, const Radix radix )
 {
-#warning "TODO: PPA: FIXME: unimplemented!"
+    try
+    {
+        double val = std::stod( value );
+        return createDecimal( val );
+    }
+    catch( const std::invalid_argument& e )
+    {
+        // TODO: PPA: FIXME: if no conversion could be performed
+    }
+    catch( const std::out_of_range& e )
+    {
+        // TODO: PPA: FIXME: if the converted value would fall out
+        // of the range of the result type or if the underlying function
+    }
 
-    Decimal tmp;
+    Decimal tmp( 0, false );
     return tmp;
 }
 
