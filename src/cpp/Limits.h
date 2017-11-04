@@ -44,7 +44,7 @@
 #define _LIBSTDHL_CPP_LIMITS_H_
 
 #include <libstdhl/Type>
-#include <libstdhl/type/Floating>
+#include <libstdhl/type/Decimal>
 #include <libstdhl/type/Integer>
 
 /**
@@ -91,17 +91,17 @@ namespace libstdhl
     };
 
     template <>
-    class Limits< Type::Floating >
+    class Limits< Type::Decimal >
     {
       public:
-        static Type::Floating min() noexcept
+        static Type::Decimal min() noexcept
         {
-            return Type::createFloating( std::numeric_limits< double >::min() );
+            return Type::createDecimal( std::numeric_limits< double >::min() );
         }
 
-        static Type::Floating max() noexcept
+        static Type::Decimal max() noexcept
         {
-            return Type::createFloating( std::numeric_limits< double >::max() );
+            return Type::createDecimal( std::numeric_limits< double >::max() );
         }
     };
 }

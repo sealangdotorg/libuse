@@ -40,7 +40,7 @@
 //  statement from your version.
 //
 
-#include "Floating.h"
+#include "Decimal.h"
 
 #include <libstdhl/type/Natural>
 
@@ -54,48 +54,61 @@ using namespace Type;
 // Type::create*
 //
 
-Floating Type::createFloating( const std::string& value, const Radix radix )
+Decimal Type::createDecimal( const std::string& value, const Radix radix )
 {
-    return Floating::fromString( value, radix );
+    return Decimal::fromString( value, radix );
 }
 
-Floating Type::createFloating( const double value )
+Decimal Type::createDecimal( const double value )
 {
-    // IEEE 754 double-precision binary floating-point format
+    // IEEE 754 double-precision binary decimal-point format
     static_assert(
         sizeof( double ) == 8, " double shall be a byte-size of 8 " );
 
-    Floating tmp(
+    Decimal tmp(
         ( value >= 0 ? (u64)value : ( u64 )( -value ) ), ( value < 0 ) );
 
     return tmp;
 }
 
-Floating Type::createFloating( const Integer& value )
+Decimal Type::createDecimal( const Integer& value )
 {
     assert( value.trivial() );
-    Floating tmp( value.value(), value.sign() );
+    Decimal tmp( value.value(), value.sign() );
     return tmp;
 }
 
-Floating Type::createFloating( const Natural& value )
+Decimal Type::createDecimal( const Natural& value )
 {
-    return createFloating( static_cast< const Integer& >( value ) );
+    return createDecimal( static_cast< const Integer& >( value ) );
 }
 
 //
-// Floating
+// Decimal
 //
 
-Floating Floating::fromString( const std::string& value, const Radix radix )
+Decimal Decimal::fromString( const std::string& value, const Radix radix )
 {
-#warning "TODO: PPA: FIXME: unimplemented!"
+    try
+    {
+        double val = std::stod( value );
+        return createDecimal( val );
+    }
+    catch( const std::invalid_argument& e )
+    {
+        // TODO: PPA: FIXME: if no conversion could be performed
+    }
+    catch( const std::out_of_range& e )
+    {
+        // TODO: PPA: FIXME: if the converted value would fall out
+        // of the range of the result type or if the underlying function
+    }
 
-    Floating tmp;
+    Decimal tmp( 0, false );
     return tmp;
 }
 
-Integer Floating::toInteger( void ) const
+Integer Decimal::toInteger( void ) const
 {
     assert( trivial() );
 
@@ -107,15 +120,15 @@ Integer Floating::toInteger( void ) const
 }
 
 //
-// FloatingLayout
+// DecimalLayout
 //
 
-Layout* FloatingLayout::clone( void ) const
+Layout* DecimalLayout::clone( void ) const
 {
-    return new FloatingLayout( *this );
+    return new DecimalLayout( *this );
 }
 
-std::size_t FloatingLayout::hash( void ) const
+std::size_t DecimalLayout::hash( void ) const
 {
 #warning "TODO: PPA: FIXME: unimplemented!"
 
@@ -123,14 +136,14 @@ std::size_t FloatingLayout::hash( void ) const
 }
 
 //
-// Floating and FloatingLayout operators
+// Decimal and DecimalLayout operators
 //
 
 //
 // operator '==' and '!='
 //
 
-u1 Floating::operator==( const u64 rhs ) const
+u1 Decimal::operator==( const u64 rhs ) const
 {
     if( not trivial() )
     {
@@ -143,7 +156,7 @@ u1 Floating::operator==( const u64 rhs ) const
     return (u64)lval == rval;
 }
 
-u1 Floating::operator==( const Floating& rhs ) const
+u1 Decimal::operator==( const Decimal& rhs ) const
 {
     if( defined() and rhs.defined() )
     {
@@ -165,7 +178,7 @@ u1 Floating::operator==( const Floating& rhs ) const
 //
 // operator '<' and '>='
 //
-u1 Floating::operator<( const Floating& rhs ) const
+u1 Decimal::operator<( const Decimal& rhs ) const
 {
     assert( m_trivial );
     assert( rhs.m_trivial );
@@ -181,7 +194,7 @@ u1 Floating::operator<( const Floating& rhs ) const
 //
 // operator '>' and '<='
 //
-u1 Floating::operator>( const Floating& rhs ) const
+u1 Decimal::operator>( const Decimal& rhs ) const
 {
     assert( m_trivial );
     assert( rhs.m_trivial );
@@ -204,7 +217,7 @@ u1 Floating::operator>( const Floating& rhs ) const
 // operator '^=' and '^'
 //
 
-Floating& Floating::operator^=( const Natural& rhs )
+Decimal& Decimal::operator^=( const Natural& rhs )
 {
     assert( trivial() );
     assert( rhs.trivial() );

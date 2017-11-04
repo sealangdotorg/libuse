@@ -76,7 +76,7 @@ add_library( ${PROJECT}-cpp OBJECT
   standard/rfc3986.cpp
   type/Boolean.cpp
   type/Data.cpp
-  type/Floating.cpp
+  type/Decimal.cpp
   type/Integer.cpp
   type/Natural.cpp
   type/Rational.cpp
@@ -387,7 +387,7 @@ ecm_generate_headers( ${PROJECT}_TYPE_HEADERS_CPP
   HEADER_NAMES
     Boolean
     Data
-    Floating
+    Decimal
     Integer
     Layout
     Natural
