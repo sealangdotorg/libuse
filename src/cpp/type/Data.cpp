@@ -228,6 +228,11 @@ std::string Data::to_string( const Radix radix, const Literal literal ) const
     std::string prefix;
     std::string postfix;
 
+    if( m_sign )
+    {
+        prefix += "-";
+    }
+
     switch( literal )
     {
         case NONE: // fall-through
@@ -268,10 +273,6 @@ std::string Data::to_string( const Radix radix, const Literal literal ) const
                 }
                 case DECIMAL:
                 {
-                    if( m_sign )
-                    {
-                        prefix += "-";
-                    }
                     break;
                 }
                 case HEXADECIMAL:
