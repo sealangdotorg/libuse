@@ -216,6 +216,11 @@ const u64 IntegerLayout::operator[]( std::size_t idx ) const
     return m_word[ idx ];
 }
 
+const std::vector< u64 >& IntegerLayout::word( void ) const
+{
+    return m_word;
+}
+
 //
 // Integer and IntegerLayout Operators
 //
@@ -915,6 +920,17 @@ Integer& Integer::operator<<=( const u64 rhs )
     return *this;
 }
 
+Integer& Integer::operator<<=( const Integer& rhs )
+{
+    if( rhs == 0 )
+    {
+        return *this;
+    }
+
+    assert( rhs.trivial() );
+    return this->operator<<=( rhs.value() );
+}
+
 IntegerLayout& IntegerLayout::operator<<=( const u64 rhs )
 {
     assert( m_word.size() > 0 );
@@ -935,6 +951,73 @@ IntegerLayout& IntegerLayout::operator<<=( const u64 rhs )
     if( current != 0 )
     {
         m_word.emplace_back( current );
+    }
+
+    return *this;
+}
+
+//
+// operator '>>=' and '>>'
+//
+
+Integer& Integer::operator>>=( const u64 rhs )
+{
+    if( rhs == 0 )
+    {
+        return *this;
+    }
+
+    if( trivial() )
+    {
+        const u64 shift = rhs;
+        m_data.value = m_data.value >> shift;
+    }
+    else
+    {
+        auto data = static_cast< IntegerLayout* >( m_data.ptr );
+        data->operator>>=( rhs );
+
+        if( data->word().size() <= 1 )
+        {
+            const auto value = data->word()[0];
+            delete m_data.ptr;
+            m_trivial = true;
+            m_data.value = value;
+        }
+    }
+
+    return *this;
+}
+
+Integer& Integer::operator>>=( const Integer& rhs )
+{
+    if( rhs == 0 )
+    {
+        return *this;
+    }
+
+    assert( rhs.trivial() );
+    return this->operator>>=( rhs.value() );
+}
+
+IntegerLayout& IntegerLayout::operator>>=( const u64 rhs )
+{
+    assert( m_word.size() > 0 );
+
+    const u64 shift = rhs;
+    const u64 shinv = 64 - rhs;
+
+    u64 next = 0;
+
+    for( std::size_t c = 0; c < m_word.size() - 1; c++ )
+    {
+        next = m_word[ c + 1 ] << shinv;
+        m_word[ c ] = next | ( m_word[ c ] >> shift );
+    }
+
+    if( m_word.back() == 0 )
+    {
+        m_word.pop_back();
     }
 
     return *this;

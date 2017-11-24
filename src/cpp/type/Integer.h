@@ -274,6 +274,34 @@ namespace libstdhl
                 lhs <<= rhs;
                 return lhs;
             }
+
+            Integer& operator<<=( const Integer& rhs );
+
+            inline friend Integer operator<<( Integer lhs, const Integer rhs )
+            {
+                lhs <<= rhs;
+                return lhs;
+            }
+
+            //
+            // operator '>>=' and '>>'
+            //
+
+            Integer& operator>>=( const u64 rhs );
+
+            inline friend Integer operator>>( Integer lhs, const u64 rhs )
+            {
+                lhs >>= rhs;
+                return lhs;
+            }
+
+            Integer& operator>>=( const Integer& rhs );
+
+            inline friend Integer operator>>( Integer lhs, const Integer rhs )
+            {
+                lhs >>= rhs;
+                return lhs;
+            }
         };
 
         class IntegerLayout final : public Layout
@@ -288,6 +316,8 @@ namespace libstdhl
             std::size_t hash( void ) const override;
 
             const u64 operator[]( std::size_t idx ) const;
+
+            const std::vector< u64 >& word( void ) const;
 
             //
             // operator '==' and '!='
@@ -362,6 +392,19 @@ namespace libstdhl
                 IntegerLayout lhs, const u64 rhs )
             {
                 lhs <<= rhs;
+                return lhs;
+            }
+
+            //
+            // operator '>>=' and '>>'
+            //
+
+            IntegerLayout& operator>>=( const u64 rhs );
+
+            inline friend IntegerLayout operator>>(
+                IntegerLayout lhs, const u64 rhs )
+            {
+                lhs >>= rhs;
                 return lhs;
             }
 
