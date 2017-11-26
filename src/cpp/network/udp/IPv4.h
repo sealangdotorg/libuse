@@ -63,14 +63,11 @@ namespace libstdhl
 
                 void send( const std::string& data ) override;
 
-                void send( const std::string& data, const Address& address,
-                    const Port& port );
+                void send( const std::string& data, const Address& address, const Port& port );
 
-                void send( const Network::Packet& data, const Address& address,
-                    const Port& port );
+                void send( const Network::Packet& data, const Address& address, const Port& port );
 
-                void send( const Network::Packet& data,
-                    const IPv4Packet& destination );
+                void send( const Network::Packet& data, const IPv4Packet& destination );
 
                 void receive( IPv4Packet& data ) override;
 
@@ -80,7 +77,7 @@ namespace libstdhl
     };
 }
 
-#endif // _LIBSTDHL_CPP_NETWORK_UDP_IPV4_H_
+#endif  // _LIBSTDHL_CPP_NETWORK_UDP_IPV4_H_
 
 //
 //  Local variables:

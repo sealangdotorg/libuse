@@ -96,8 +96,7 @@ namespace libstdhl
             std::random_device device;
             static thread_local std::default_random_engine engine( device() );
 
-            std::uniform_real_distribution< double > distribution(
-                from.value(), to.value() );
+            std::uniform_real_distribution< double > distribution( from.value(), to.value() );
 
             return Type::createDecimal( distribution( engine ) );
         }
@@ -110,7 +109,7 @@ namespace libstdhl
     };
 }
 
-#endif // _LIBSTDHL_CPP_RANDOM_H_
+#endif  // _LIBSTDHL_CPP_RANDOM_H_
 
 //
 //  Local variables:

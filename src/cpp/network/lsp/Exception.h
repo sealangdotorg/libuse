@@ -57,19 +57,19 @@ namespace libstdhl
     {
         namespace LSP
         {
-            class Exception : public Data, public std::exception
+            class Exception
+            : public Data
+            , public std::exception
             {
               public:
-                Exception( const ErrorCode code, const std::string& message,
-                    const Data& data )
+                Exception( const ErrorCode code, const std::string& message, const Data& data )
                 : m_code( code )
                 , m_message( message )
                 , m_data( data )
                 {
                 }
 
-                inline Exception(
-                    const ErrorCode code, const std::string& message )
+                inline Exception( const ErrorCode code, const std::string& message )
                 : Exception( code, message, nullptr )
                 {
                 }
@@ -113,7 +113,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_NETWORK_LSP_EXCEPTION_H_
+#endif  // _LIBSTDHL_CPP_NETWORK_LSP_EXCEPTION_H_
 
 //
 //  Local variables:

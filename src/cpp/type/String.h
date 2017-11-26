@@ -95,8 +95,7 @@ namespace libstdhl
 
             StringLayout& operator+=( const StringLayout& rhs );
 
-            inline friend StringLayout operator+(
-                StringLayout lhs, const StringLayout& rhs )
+            inline friend StringLayout operator+( StringLayout lhs, const StringLayout& rhs )
             {
                 lhs += rhs;
                 return lhs;
@@ -108,7 +107,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_STRING_H_
+#endif  // _LIBSTDHL_CPP_STRING_H_
 
 //
 //  Local variables:

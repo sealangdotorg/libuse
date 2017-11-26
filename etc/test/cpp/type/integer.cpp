@@ -99,14 +99,14 @@ TEST( libstdhl_cpp_type_integer, str_binary4 )
 TEST( libstdhl_cpp_type_integer, str_binary64 )
 {
     auto i = createInteger(
-        "01111011" // 7b
-        "11110010" // f2
-        "00000100" // 04
-        "11101110" // ee
-        "01111011" // 7b
-        "11110010" // f2
-        "00000100" // 04
-        "11101101" // ed
+        "01111011"  // 7b
+        "11110010"  // f2
+        "00000100"  // 04
+        "11101110"  // ee
+        "01111011"  // 7b
+        "11110010"  // f2
+        "00000100"  // 04
+        "11101101"  // ed
         ,
         Type::Radix::BINARY );
 
@@ -119,14 +119,14 @@ TEST( libstdhl_cpp_type_integer, str_binary64 )
 TEST( libstdhl_cpp_type_integer, str_binary64_max )
 {
     auto i = createInteger(
-        "11111111" // ff
-        "11111111" // ff
-        "11111111" // ff
-        "11111111" // ff
-        "11111111" // ff
-        "11111111" // ff
-        "11111111" // ff
-        "11111111" // ff
+        "11111111"  // ff
+        "11111111"  // ff
+        "11111111"  // ff
+        "11111111"  // ff
+        "11111111"  // ff
+        "11111111"  // ff
+        "11111111"  // ff
+        "11111111"  // ff
         ,
         Type::Radix::BINARY );
 
@@ -139,15 +139,15 @@ TEST( libstdhl_cpp_type_integer, str_binary64_max )
 TEST( libstdhl_cpp_type_integer, str_binary70 )
 {
     auto i = createInteger(
-        "101010"   // 2a
-        "01111011" // 7b
-        "11110010" // f2
-        "00000100" // 04
-        "11101110" // ee
-        "01111011" // 7b
-        "11110010" // f2
-        "00000100" // 04
-        "11101101" // ed
+        "101010"    // 2a
+        "01111011"  // 7b
+        "11110010"  // f2
+        "00000100"  // 04
+        "11101110"  // ee
+        "01111011"  // 7b
+        "11110010"  // f2
+        "00000100"  // 04
+        "11101101"  // ed
         ,
         Type::Radix::BINARY );
 
@@ -161,72 +161,72 @@ TEST( libstdhl_cpp_type_integer, str_binary70 )
 TEST( libstdhl_cpp_type_integer, str_binary522 )
 {
     auto i = createInteger(
-        "11"       // 03
-        "11110010" // f2
-        "01111011" // 7b // 512
-        "11110010" // f2
-        "00000100" // 04
-        "11101110" // ee
-        "01111011" // 7b // -
-        "11110010" // f2
-        "00000100" // 04
-        "11101101" // ed
-        "01111011" // 7b // -
-        "11110010" // f2
-        "00000100" // 04
-        "11101110" // ee
-        "01111011" // 7b // -
-        "11110010" // f2
-        "00000100" // 04
-        "11101101" // ed
-        "01111011" // 7b // -
-        "11110010" // f2
-        "00000100" // 04
-        "11101110" // ee
-        "01111011" // 7b // -
-        "11110010" // f2
-        "00000100" // 04
-        "11101101" // ed
-        "01111011" // 7b // -
-        "11110010" // f2
-        "00000100" // 04
-        "11101110" // ee
-        "01111011" // 7b // -
-        "11110010" // f2
-        "00000100" // 04
-        "11101101" // ed
-        "01111011" // 7b // 256
-        "11110010" // f2
-        "00000100" // 04
-        "11101110" // ee
-        "01111011" // 7b // -
-        "11110010" // f2
-        "00000100" // 04
-        "11101101" // ed
-        "01111011" // 7b // -
-        "11110010" // f2
-        "00000100" // 04
-        "11101110" // ee
-        "01111011" // 7b // -
-        "11110010" // f2
-        "00000100" // 04
-        "11101101" // ed
-        "01111011" // 7b // 128
-        "11110010" // f2
-        "00000100" // 04
-        "11101110" // ee
-        "01111011" // 7b // -
-        "11110010" // f2
-        "00000100" // 04
-        "11101101" // ed
-        "01111011" // 7b // 64
-        "11110010" // f2
-        "00000100" // 04
-        "11101110" // ee
-        "01111011" // 7b // -
-        "11110010" // f2
-        "00000100" // 04
-        "11101101" // ed // 8
+        "11"        // 03
+        "11110010"  // f2
+        "01111011"  // 7b // 512
+        "11110010"  // f2
+        "00000100"  // 04
+        "11101110"  // ee
+        "01111011"  // 7b // -
+        "11110010"  // f2
+        "00000100"  // 04
+        "11101101"  // ed
+        "01111011"  // 7b // -
+        "11110010"  // f2
+        "00000100"  // 04
+        "11101110"  // ee
+        "01111011"  // 7b // -
+        "11110010"  // f2
+        "00000100"  // 04
+        "11101101"  // ed
+        "01111011"  // 7b // -
+        "11110010"  // f2
+        "00000100"  // 04
+        "11101110"  // ee
+        "01111011"  // 7b // -
+        "11110010"  // f2
+        "00000100"  // 04
+        "11101101"  // ed
+        "01111011"  // 7b // -
+        "11110010"  // f2
+        "00000100"  // 04
+        "11101110"  // ee
+        "01111011"  // 7b // -
+        "11110010"  // f2
+        "00000100"  // 04
+        "11101101"  // ed
+        "01111011"  // 7b // 256
+        "11110010"  // f2
+        "00000100"  // 04
+        "11101110"  // ee
+        "01111011"  // 7b // -
+        "11110010"  // f2
+        "00000100"  // 04
+        "11101101"  // ed
+        "01111011"  // 7b // -
+        "11110010"  // f2
+        "00000100"  // 04
+        "11101110"  // ee
+        "01111011"  // 7b // -
+        "11110010"  // f2
+        "00000100"  // 04
+        "11101101"  // ed
+        "01111011"  // 7b // 128
+        "11110010"  // f2
+        "00000100"  // 04
+        "11101110"  // ee
+        "01111011"  // 7b // -
+        "11110010"  // f2
+        "00000100"  // 04
+        "11101101"  // ed
+        "01111011"  // 7b // 64
+        "11110010"  // f2
+        "00000100"  // 04
+        "11101110"  // ee
+        "01111011"  // 7b // -
+        "11110010"  // f2
+        "00000100"  // 04
+        "11101101"  // ed // 8
         ,
         Type::Radix::BINARY );
 
@@ -344,15 +344,15 @@ TEST( libstdhl_cpp_type_integer, str_hexadecimal140 )
 {
     auto i = createInteger(
         "affe"
-        "feedbeef13579024" //
-        "9024feedbeef1357" // 512, 128
-        "13579024feedbeef" //
-        "beef13579024feed" //
-        "feedbeef13579024" //
-        "edbeef13579024fe" // 256, 64
-        "ef13579024feedbe" //
-        "579024feedbeef13" // 128, 32
-        "24feedbeef135790" // 64,  16
+        "feedbeef13579024"  //
+        "9024feedbeef1357"  // 512, 128
+        "13579024feedbeef"  //
+        "beef13579024feed"  //
+        "feedbeef13579024"  //
+        "edbeef13579024fe"  // 256, 64
+        "ef13579024feedbe"  //
+        "579024feedbeef13"  // 128, 32
+        "24feedbeef135790"  // 64,  16
         ,
         Type::Radix::HEXADECIMAL );
 
@@ -361,14 +361,14 @@ TEST( libstdhl_cpp_type_integer, str_hexadecimal140 )
     EXPECT_EQ( i.trivial(), false );
     EXPECT_EQ( i[ 9 ], 0xaffe );
     EXPECT_EQ( i[ 8 ], 0xfeedbeef13579024 );
-    EXPECT_EQ( i[ 7 ], 0x9024feedbeef1357 ); // 512, 128
-    EXPECT_EQ( i[ 6 ], 0x13579024feedbeef ); //
-    EXPECT_EQ( i[ 5 ], 0xbeef13579024feed ); //
-    EXPECT_EQ( i[ 4 ], 0xfeedbeef13579024 ); //
-    EXPECT_EQ( i[ 3 ], 0xedbeef13579024fe ); // 256, 64
-    EXPECT_EQ( i[ 2 ], 0xef13579024feedbe ); //
-    EXPECT_EQ( i[ 1 ], 0x579024feedbeef13 ); // 128, 32
-    EXPECT_EQ( i[ 0 ], 0x24feedbeef135790 ); // 64,  16
+    EXPECT_EQ( i[ 7 ], 0x9024feedbeef1357 );  // 512, 128
+    EXPECT_EQ( i[ 6 ], 0x13579024feedbeef );  //
+    EXPECT_EQ( i[ 5 ], 0xbeef13579024feed );  //
+    EXPECT_EQ( i[ 4 ], 0xfeedbeef13579024 );  //
+    EXPECT_EQ( i[ 3 ], 0xedbeef13579024fe );  // 256, 64
+    EXPECT_EQ( i[ 2 ], 0xef13579024feedbe );  //
+    EXPECT_EQ( i[ 1 ], 0x579024feedbeef13 );  // 128, 32
+    EXPECT_EQ( i[ 0 ], 0x24feedbeef135790 );  // 64,  16
 }
 
 TEST( libstdhl_cpp_type_integer, str_decimal3 )
@@ -414,8 +414,8 @@ TEST( libstdhl_cpp_type_integer, str_decimal8_sign )
 TEST( libstdhl_cpp_type_integer, str_decimal20_u64max )
 {
     auto i = createInteger(
-        "1844674407" // 20
-        "3709551615" // 10
+        "1844674407"  // 20
+        "3709551615"  // 10
         ,
         Type::Radix::DECIMAL );
 
@@ -429,8 +429,8 @@ TEST( libstdhl_cpp_type_integer, str_decimal20_u64max )
 TEST( libstdhl_cpp_type_integer, str_decimal20_u64max_plus_one )
 {
     auto i = createInteger(
-        "1844674407" // 20
-        "3709551616" // 10
+        "1844674407"  // 20
+        "3709551616"  // 10
         ,
         Type::Radix::DECIMAL );
 
@@ -445,15 +445,15 @@ TEST( libstdhl_cpp_type_integer, str_decimal21 )
 {
     auto i = createInteger(
         "3"
-        "7384632100" // 20
-        "9187212372" // 10
+        "7384632100"  // 20
+        "9187212372"  // 10
         ,
         Type::Radix::DECIMAL );
 
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.defined(), true );
     EXPECT_EQ( i.trivial(), false );
-    EXPECT_EQ( i[ 1 ], 0x14 ); // 14 4428F03C3341CC54
+    EXPECT_EQ( i[ 1 ], 0x14 );  // 14 4428F03C3341CC54
     EXPECT_EQ( i[ 0 ], 0x4428f03c3341cc54 );
 }
 
@@ -461,8 +461,8 @@ TEST( libstdhl_cpp_type_integer, str_decimal21_sign )
 {
     auto i = createInteger(
         "-3"
-        "7384632100" // 20
-        "9187212372" // 10
+        "7384632100"  // 20
+        "9187212372"  // 10
         ,
         Type::Radix::DECIMAL );
 
@@ -477,8 +477,8 @@ TEST( libstdhl_cpp_type_integer, str_decimal23 )
 {
     auto i = createInteger(
         "123"
-        "7384632100" // 20
-        "9187212372" // 10
+        "7384632100"  // 20
+        "9187212372"  // 10
         ,
         Type::Radix::DECIMAL );
 
@@ -492,10 +492,10 @@ TEST( libstdhl_cpp_type_integer, str_decimal23 )
 TEST( libstdhl_cpp_type_integer, str_decimal40 )
 {
     auto i = createInteger(
-        "9238463426" // 40
+        "9238463426"  // 40
         "6284625235"
         "7384632100"
-        "9187212372" // 10
+        "9187212372"  // 10
         ,
         Type::Radix::DECIMAL );
 
@@ -511,10 +511,10 @@ TEST( libstdhl_cpp_type_integer, str_decimal40_sign )
 {
     auto i = createInteger(
         "-331155"
-        "9238463426" // 40
+        "9238463426"  // 40
         "6284625235"
         "7384632100"
-        "9187212372" // 10
+        "9187212372"  // 10
         ,
         Type::Radix::DECIMAL );
 
@@ -530,13 +530,13 @@ TEST( libstdhl_cpp_type_integer, str_decimal77_sign )
 {
     auto i = createInteger(
         "1234567"
-        "1234567890" // 70
+        "1234567890"  // 70
         "1234567890"
         "1234567890"
-        "1234567890" // 40
+        "1234567890"  // 40
         "1234567890"
         "1234567890"
-        "1234567890" // 10
+        "1234567890"  // 10
     );
 
     EXPECT_EQ( i.sign(), false );
@@ -568,15 +568,15 @@ TEST( libstdhl_cpp_type_integer, hash_not_equal )
     EXPECT_NE( a.hash(), b.hash() );
 }
 
-#define TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_( NAME, OP, A, B )           \
-    TEST( libstdhl_cpp_type_integer, operator_##NAME )                         \
-    {                                                                          \
-        const auto a = createInteger( (i64)A );                                \
-        const auto b = createInteger( (i64)B );                                \
-                                                                               \
-        const auto c = a OP b;                                                 \
-        EXPECT_EQ( c.trivial(), true );                                        \
-        EXPECT_EQ( (i64)c.value() * ( c.sign() ? ( -1 ) : ( 1 ) ), A OP B );   \
+#define TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_( NAME, OP, A, B )         \
+    TEST( libstdhl_cpp_type_integer, operator_##NAME )                       \
+    {                                                                        \
+        const auto a = createInteger( (i64)A );                              \
+        const auto b = createInteger( (i64)B );                              \
+                                                                             \
+        const auto c = a OP b;                                               \
+        EXPECT_EQ( c.trivial(), true );                                      \
+        EXPECT_EQ( (i64)c.value() * ( c.sign() ? ( -1 ) : ( 1 ) ), A OP B ); \
     }
 
 TEST( libstdhl_cpp_type_integer, operator_equ_zero_pn )
@@ -606,82 +606,81 @@ TEST( libstdhl_cpp_type_integer, operator_equ_zero_nn )
     EXPECT_TRUE( c );
 }
 
-#define TEST_CPP_TYPE_INTEGER_OPERATOR_COMPARE_( NAME, OP, A, B )              \
-    TEST( libstdhl_cpp_type_integer, operator_##NAME )                         \
-    {                                                                          \
-        const auto a = createInteger( (i64)A );                                \
-        const auto b = createInteger( (i64)B );                                \
-                                                                               \
-        const auto c = a OP b;                                                 \
-        EXPECT_EQ( c, A OP B );                                                \
+#define TEST_CPP_TYPE_INTEGER_OPERATOR_COMPARE_( NAME, OP, A, B ) \
+    TEST( libstdhl_cpp_type_integer, operator_##NAME )            \
+    {                                                             \
+        const auto a = createInteger( (i64)A );                   \
+        const auto b = createInteger( (i64)B );                   \
+                                                                  \
+        const auto c = a OP b;                                    \
+        EXPECT_EQ( c, A OP B );                                   \
     }
 
-#define TEST_CPP_TYPE_INTEGER_OPERATOR_SETz( KIND, NAME, OP )                  \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##z0, OP, -1234, 0 );        \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##z1, OP, -1, 0 );           \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##z2, OP, 0, 0 );            \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##z3, OP, 1, 0 );            \
+#define TEST_CPP_TYPE_INTEGER_OPERATOR_SETz( KIND, NAME, OP )           \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##z0, OP, -1234, 0 ); \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##z1, OP, -1, 0 );    \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##z2, OP, 0, 0 );     \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##z3, OP, 1, 0 );     \
     TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##z4, OP, 1234, 0 );
 
-#define TEST_CPP_TYPE_INTEGER_OPERATOR_SET0( KIND, NAME, OP )                  \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##00, OP, -1234, 1 );        \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##01, OP, -1, 1 );           \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##02, OP, 0, 1 );            \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##03, OP, 1, 1 );            \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##04, OP, 2, 1 );            \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##05, OP, 1234, 1 );         \
+#define TEST_CPP_TYPE_INTEGER_OPERATOR_SET0( KIND, NAME, OP )           \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##00, OP, -1234, 1 ); \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##01, OP, -1, 1 );    \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##02, OP, 0, 1 );     \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##03, OP, 1, 1 );     \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##04, OP, 2, 1 );     \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##05, OP, 1234, 1 );  \
     TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##06, OP, 0, 1234 );
 
-#define TEST_CPP_TYPE_INTEGER_OPERATOR_SET1( KIND, NAME, OP )                  \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##10, OP, -1234, -10 );      \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##11, OP, -11, -10 );        \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##12, OP, -10, -10 );        \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##13, OP, -10, -9 );         \
+#define TEST_CPP_TYPE_INTEGER_OPERATOR_SET1( KIND, NAME, OP )             \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##10, OP, -1234, -10 ); \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##11, OP, -11, -10 );   \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##12, OP, -10, -10 );   \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##13, OP, -10, -9 );    \
     TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##14, OP, -10, 1234 );
 
-#define TEST_CPP_TYPE_INTEGER_OPERATOR_SET2( KIND, NAME, OP )                  \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##20, OP, -1234, 48 );       \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##21, OP, 47, 48 );          \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##22, OP, 48, 48 );          \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##23, OP, 48, 49 );          \
+#define TEST_CPP_TYPE_INTEGER_OPERATOR_SET2( KIND, NAME, OP )            \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##20, OP, -1234, 48 ); \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##21, OP, 47, 48 );    \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##22, OP, 48, 48 );    \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##23, OP, 48, 49 );    \
     TEST_CPP_TYPE_INTEGER_OPERATOR_##KIND##_( NAME##24, OP, 48, 1234 )
 
-#define TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC( NAME, OP )                  \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_SET0( ARITHMETIC, NAME, OP );               \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_SET1( ARITHMETIC, NAME, OP );               \
+#define TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC( NAME, OP )    \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_SET0( ARITHMETIC, NAME, OP ); \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_SET1( ARITHMETIC, NAME, OP ); \
     TEST_CPP_TYPE_INTEGER_OPERATOR_SET2( ARITHMETIC, NAME, OP );
 
-#define TEST_CPP_TYPE_INTEGER_OPERATOR_COMPARE( NAME, OP )                     \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_SETz( COMPARE, NAME, OP );                  \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_SET0( COMPARE, NAME, OP );                  \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_SET1( COMPARE, NAME, OP );                  \
+#define TEST_CPP_TYPE_INTEGER_OPERATOR_COMPARE( NAME, OP )    \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_SETz( COMPARE, NAME, OP ); \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_SET0( COMPARE, NAME, OP ); \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_SET1( COMPARE, NAME, OP ); \
     TEST_CPP_TYPE_INTEGER_OPERATOR_SET2( COMPARE, NAME, OP );
 
-#define TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( NUMBER, A, B )          \
-    TEST( libstdhl_cpp_type_integer, operator_pow##NUMBER )                    \
-    {                                                                          \
-        const auto a = createInteger( (i64)A );                                \
-        const auto b = createNatural( (i64)B );                                \
-                                                                               \
-        const auto c = a ^ b;                                                  \
-        EXPECT_EQ( c.trivial(), true );                                        \
-        EXPECT_EQ( (i64)c.value() * ( c.sign() ? ( -1 ) : ( 1 ) ),             \
-            std::pow( A, B ) );                                                \
+#define TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( NUMBER, A, B )                  \
+    TEST( libstdhl_cpp_type_integer, operator_pow##NUMBER )                            \
+    {                                                                                  \
+        const auto a = createInteger( (i64)A );                                        \
+        const auto b = createNatural( (i64)B );                                        \
+                                                                                       \
+        const auto c = a ^ b;                                                          \
+        EXPECT_EQ( c.trivial(), true );                                                \
+        EXPECT_EQ( (i64)c.value() * ( c.sign() ? ( -1 ) : ( 1 ) ), std::pow( A, B ) ); \
     }
 
-#define TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC__pow                         \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 00, 0, 0 );                 \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 01, 0, 1 );                 \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 02, 1, 0 );                 \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 03, 1, 1 );                 \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 04, -1, 0 );                \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 05, -1, 1 );                \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 06, 3, 3 );                 \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 07, -5, 4 );                \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 08, -23, 3 );               \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 09, 8, 2 );                 \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 10, 2, 16 );                \
-    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 11, 16, 3 );                \
+#define TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC__pow           \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 00, 0, 0 );   \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 01, 0, 1 );   \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 02, 1, 0 );   \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 03, 1, 1 );   \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 04, -1, 0 );  \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 05, -1, 1 );  \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 06, 3, 3 );   \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 07, -5, 4 );  \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 08, -23, 3 ); \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 09, 8, 2 );   \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 10, 2, 16 );  \
+    TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 11, 16, 3 );  \
     TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( 12, 14, 5 );
 
 TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC( add, +);

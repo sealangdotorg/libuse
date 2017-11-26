@@ -71,8 +71,7 @@ void ServerInterface::notify( const NotificationMessage& message )
     m_notificationBuffer[ m_notificationBufferSlot ].emplace_back( message );
 }
 
-void ServerInterface::flush(
-    const std::function< void( const Message& ) >& callback )
+void ServerInterface::flush( const std::function< void( const Message& ) >& callback )
 {
     std::lock_guard< std::mutex > guard( m_serverFlushLock );
 
@@ -108,8 +107,7 @@ void ServerInterface::flush(
 void ServerInterface::textDocument_publishDiagnostics(
     const PublishDiagnosticsParams& params ) noexcept
 {
-    NotificationMessage msg(
-        std::string{ Identifier::textDocument_publishDiagnostics } );
+    NotificationMessage msg( std::string{ Identifier::textDocument_publishDiagnostics } );
     msg.setParams( params );
     notify( msg );
 }

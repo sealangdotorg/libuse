@@ -61,8 +61,7 @@ std::string StringFormatter::visit( Timestamp& item )
 
 std::string StringFormatter::visit( Chronograph& item )
 {
-    return std::to_string( item.duration< std::chrono::nanoseconds >().count() )
-           + "ns";
+    return std::to_string( item.duration< std::chrono::nanoseconds >().count() ) + "ns";
 }
 
 std::string StringFormatter::visit( Source& item )
@@ -152,8 +151,7 @@ std::string StringFormatter::visit( TextItem& item )
 
 std::string StringFormatter::visit( PositionItem& item )
 {
-    return std::to_string( item.line() ) + ":"
-           + std::to_string( item.column() );
+    return std::to_string( item.line() ) + ":" + std::to_string( item.column() );
 }
 
 std::string StringFormatter::visit( RangeItem& item )
@@ -261,9 +259,7 @@ std::string ApplicationFormatter::visit( Data& item )
 {
     std::string tmp = m_name + ": ";
 
-    tmp = Ansi::format< Ansi::Style::BOLD >(
-              tmp + item.level().accept( *this ) )
-          + " ";
+    tmp = Ansi::format< Ansi::Style::BOLD >( tmp + item.level().accept( *this ) ) + " ";
 
     if( item.level() == Level::ID::OUTPUT and m_rawOutput )
     {
@@ -289,8 +285,7 @@ std::string ApplicationFormatter::visit( Data& item )
     auto src = item.source()->accept( *this );
     auto cat = item.category()->accept( *this );
 
-    tmp += Ansi::format< Ansi::Style::FAINT >(
-        " [" + /*tsp +*/ src + ", " + cat + "]" );
+    tmp += Ansi::format< Ansi::Style::FAINT >( " [" + /*tsp +*/ src + ", " + cat + "]" );
 #endif
 
     for( auto i : item.items() )
@@ -306,22 +301,18 @@ std::string ApplicationFormatter::visit( Data& item )
 
             const auto& location = static_cast< const LocationItem& >( *i );
 
-            std::string line = File::readLine(
-                location.filename().text(), location.range().begin().line() );
+            std::string line =
+                File::readLine( location.filename().text(), location.range().begin().line() );
 
             tmp += "\n" + Ansi::format< 192, 192, 192 >( line ) + "\n";
             tmp += std::string( location.range().begin().column() - 1, ' ' );
 
             std::string underline;
-            if( ( location.range().begin().line()
-                    == location.range().end().line() )
-                and ( location.range().end().column()
-                        > location.range().begin().column() ) )
+            if( ( location.range().begin().line() == location.range().end().line() ) and
+                ( location.range().end().column() > location.range().begin().column() ) )
             {
-                underline = std::string( location.range().end().column()
-                                             - location.range().begin().column()
-                                             - 1,
-                    '-' );
+                underline = std::string(
+                    location.range().end().column() - location.range().begin().column() - 1, '-' );
             }
             else
             {

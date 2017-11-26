@@ -69,19 +69,24 @@ namespace libstdhl
             using Data = std::array< u8, LENGTH - HEADER >;
 
             static constexpr Address BROADCAST = { {
-                0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+                0xff,
+                0xff,
+                0xff,
+                0xff,
+                0xff,
+                0xff,
             } };
 
             static constexpr Type RUNT = { {
-                0, 64,
+                0,
+                64,
             } };
 
             class Protocol final : public Network::Protocol
             {
               public:
-                constexpr Protocol( const Address& destination,
-                    const Address& source,
-                    const Type& type )
+                constexpr Protocol(
+                    const Address& destination, const Address& source, const Type& type )
                 : m_destination( destination )
                 , m_source( source )
                 , m_type( type )
@@ -109,7 +114,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_NETWORK_ETHERNET_PROTOCOL_H_
+#endif  // _LIBSTDHL_CPP_NETWORK_ETHERNET_PROTOCOL_H_
 
 //
 //  Local variables:

@@ -75,7 +75,7 @@ namespace libstdhl
     };
 }
 
-#endif // _LIBSTDHL_CPP_NETWORK_ETHERNET_LINK_H_
+#endif  // _LIBSTDHL_CPP_NETWORK_ETHERNET_LINK_H_
 
 //
 //  Local variables:

@@ -98,8 +98,7 @@ Integer Type::createInteger( const u64 value )
 
 Integer Type::createInteger( const i64 value )
 {
-    Integer tmp(
-        ( value >= 0 ? (u64)value : ( u64 )( -value ) ), ( value < 0 ) );
+    Integer tmp( ( value >= 0 ? (u64)value : ( u64 )( -value ) ), ( value < 0 ) );
     return tmp;
 }
 
@@ -109,14 +108,11 @@ Integer Type::createInteger( const i64 value )
 
 Integer Integer::fromString( const std::string& value, const Radix radix )
 {
-    const u64 shift
-        = ( radix == BINARY
-                ? 1
-                : ( radix == OCTAL
-                          ? 3
-                          : ( radix == HEXADECIMAL
-                                    ? 4
-                                    : ( radix == RADIX64 ? 6 : 0 ) ) ) );
+    const u64 shift =
+        ( radix == BINARY
+              ? 1
+              : ( radix == OCTAL ? 3
+                                 : ( radix == HEXADECIMAL ? 4 : ( radix == RADIX64 ? 6 : 0 ) ) ) );
 
     std::string data = value;
     data.erase( std::remove( data.begin(), data.end(), '\'' ), data.end() );
@@ -136,8 +132,7 @@ Integer Integer::fromString( const std::string& value, const Radix radix )
 
     if( length == 0 )
     {
-        throw std::domain_error(
-            "unable to convert string '" + data + "' to a valid Integer" );
+        throw std::domain_error( "unable to convert string '" + data + "' to a valid Integer" );
     }
 
     const i64 bound = ( i64 )( sign );
@@ -393,22 +388,21 @@ u1 Integer::operator<( const Integer& rhs ) const
             }
             else
             {
-                throw std::domain_error(
-                    "unimplemented 'Integer::operator<' of -lhs and -rhs" );
+                throw std::domain_error( "unimplemented 'Integer::operator<' of -lhs and -rhs" );
             }
         }
-        else // rhs pos
+        else  // rhs pos
         {
             return true;
         }
     }
-    else // lhs pos
+    else  // lhs pos
     {
         if( rhs_neg )
         {
             return false;
         }
-        else // rhs pos
+        else  // rhs pos
         {
             if( trivial() and rhs.trivial() )
             {
@@ -416,8 +410,7 @@ u1 Integer::operator<( const Integer& rhs ) const
             }
             else
             {
-                throw std::domain_error(
-                    "unimplemented 'Integer::operator<' of +lhs and +rhs" );
+                throw std::domain_error( "unimplemented 'Integer::operator<' of +lhs and +rhs" );
             }
         }
     }
@@ -458,22 +451,21 @@ u1 Integer::operator>( const Integer& rhs ) const
             }
             else
             {
-                throw std::domain_error(
-                    "unimplemented 'Integer::operator>' of -lhs and -rhs" );
+                throw std::domain_error( "unimplemented 'Integer::operator>' of -lhs and -rhs" );
             }
         }
-        else // rhs pos
+        else  // rhs pos
         {
             return false;
         }
     }
-    else // lhs pos
+    else  // lhs pos
     {
         if( rhs_neg )
         {
             return true;
         }
-        else // rhs pos
+        else  // rhs pos
         {
             if( trivial() and rhs.trivial() )
             {
@@ -481,8 +473,7 @@ u1 Integer::operator>( const Integer& rhs ) const
             }
             else
             {
-                throw std::domain_error(
-                    "unimplemented 'Integer::operator>' of +lhs and +rhs" );
+                throw std::domain_error( "unimplemented 'Integer::operator>' of +lhs and +rhs" );
             }
         }
     }
@@ -524,8 +515,7 @@ Integer& Integer::operator+=( const u64 rhs )
         }
         else
         {
-            const auto addof
-                = __builtin_uaddl_overflow( lhs, rhs, (u64*)&m_data.value );
+            const auto addof = __builtin_uaddl_overflow( lhs, rhs, (u64*)&m_data.value );
 
             if( addof )
             {
@@ -564,7 +554,7 @@ Integer& Integer::operator+=( const Integer& rhs )
         {
             m_data.value = a - b;
         }
-        else // a < b
+        else  // a < b
         {
             m_data.value = b - a;
             m_sign = rhs_neg;
@@ -658,7 +648,7 @@ Integer& Integer::operator-=( const Integer& rhs )
         {
             m_data.value = a - b;
         }
-        else // a < b
+        else  // a < b
         {
             m_data.value = b - a;
             m_sign = not rhs_neg;
@@ -730,8 +720,7 @@ Integer& Integer::operator*=( const u64 rhs )
 
         if( mulof )
         {
-            m_data.ptr = new IntegerLayout(
-                { m_data.value, umull_carry( lhs, rhs ) } );
+            m_data.ptr = new IntegerLayout( { m_data.value, umull_carry( lhs, rhs ) } );
             m_trivial = false;
         }
     }
@@ -772,8 +761,7 @@ IntegerLayout& IntegerLayout::operator*=( const u64 rhs )
         const auto lhs = m_word[ c ];
         const auto mulof = __builtin_umull_overflow( lhs, rhs, &m_word[ c ] );
 
-        const auto addof
-            = __builtin_uaddl_overflow( m_word[ c ], carry, &m_word[ c ] );
+        const auto addof = __builtin_uaddl_overflow( m_word[ c ], carry, &m_word[ c ] );
 
         assert( not addof );
 
@@ -979,7 +967,7 @@ Integer& Integer::operator>>=( const u64 rhs )
 
         if( data->word().size() <= 1 )
         {
-            const auto value = data->word()[0];
+            const auto value = data->word()[ 0 ];
             delete m_data.ptr;
             m_trivial = true;
             m_data.value = value;

@@ -58,7 +58,7 @@ namespace libstdhl
     constexpr const char* BRANCH = "@GIT_BRANCH@";
 }
 
-#endif // _LIBSTDHL_CPP_VERSION_H_
+#endif  // _LIBSTDHL_CPP_VERSION_H_
 
 //
 //  Local variables:

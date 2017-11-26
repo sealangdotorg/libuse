@@ -67,8 +67,7 @@ namespace libstdhl
             using UnderlyingType = typename std::underlying_type< Enum >::type;
 
           public:
-            static_assert( std::is_enum< Enum >::value,
-                "Template parameter must be an enum" );
+            static_assert( std::is_enum< Enum >::value, "Template parameter must be an enum" );
 
             /**
                No flags will be set initially.
@@ -200,8 +199,7 @@ namespace libstdhl
           private:
             static UnderlyingType asBitValue( Enum e )
             {
-                assert( static_cast< UnderlyingType >( e )
-                        < ( sizeof( UnderlyingType ) * 8 ) );
+                assert( static_cast< UnderlyingType >( e ) < ( sizeof( UnderlyingType ) * 8 ) );
                 return 1 << static_cast< UnderlyingType >( e );
             }
 
@@ -212,15 +210,13 @@ namespace libstdhl
 }
 
 template < typename T >
-typename std::enable_if< std::is_enum< T >::value,
-    libstdhl::Enum::Flags< T > >::type
-operator|( T lhs, T rhs )
+typename std::enable_if< std::is_enum< T >::value, libstdhl::Enum::Flags< T > >::type operator|(
+    T lhs, T rhs )
 {
-    return libstdhl::Enum::Flags< T >( lhs )
-           | libstdhl::Enum::Flags< T >( rhs );
+    return libstdhl::Enum::Flags< T >( lhs ) | libstdhl::Enum::Flags< T >( rhs );
 }
 
-#endif // _LIBSTDHL_CPP_ENUM_H_
+#endif  // _LIBSTDHL_CPP_ENUM_H_
 
 //
 //  Local variables:

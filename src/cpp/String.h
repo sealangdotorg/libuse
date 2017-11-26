@@ -63,7 +63,9 @@ namespace libstdhl
     */
     namespace String
     {
-        inline void split( const std::string& str, const std::string& delimiter,
+        inline void split(
+            const std::string& str,
+            const std::string& delimiter,
             std::vector< std::string >& result )
         {
             std::string input( str );
@@ -88,8 +90,8 @@ namespace libstdhl
             return result;
         }
 
-        inline std::string join( const std::vector< std::string >& elements,
-            const std::string& delimiter )
+        inline std::string join(
+            const std::vector< std::string >& elements, const std::string& delimiter )
         {
             std::stringstream result;
 
@@ -103,8 +105,7 @@ namespace libstdhl
             return result.str();
         }
 
-        inline u1 startsWith(
-            const std::string& str, const std::string& pattern )
+        inline u1 startsWith( const std::string& str, const std::string& pattern )
         {
             if( strncmp( str.c_str(), pattern.c_str(), pattern.size() ) == 0 )
             {
@@ -153,8 +154,7 @@ namespace libstdhl
                 c = chars[ i ];
                 ic = c;
 
-                if( isalnum( c ) or c == '-' or c == '_' or c == '.'
-                    or c == '~' )
+                if( isalnum( c ) or c == '-' or c == '_' or c == '.' or c == '~' )
                 {
                     new_str += c;
                 }
@@ -211,8 +211,7 @@ namespace libstdhl
         template < typename... Args >
         inline std::string format( const std::string& format, Args... args )
         {
-            std::size_t size
-                = std::snprintf( nullptr, 0, format.c_str(), args... ) + 1;
+            std::size_t size = std::snprintf( nullptr, 0, format.c_str(), args... ) + 1;
             std::unique_ptr< char[] > buf( new char[ size ] );
             std::snprintf( buf.get(), size, format.c_str(), args... );
             return std::string( buf.get(), buf.get() + size - 1 );
@@ -220,7 +219,7 @@ namespace libstdhl
     };
 }
 
-#endif // _LIBSTDHL_CPP_STRING_H_
+#endif  // _LIBSTDHL_CPP_STRING_H_
 
 //
 //  Local variables:

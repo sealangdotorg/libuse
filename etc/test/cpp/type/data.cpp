@@ -149,7 +149,7 @@ TEST( libstdhl_cpp_type_data, pointer_ctor_copy )
     Data b( a );
 
     EXPECT_NE( b.ptr(), nullptr );
-    EXPECT_NE( b.ptr(), layout ); // should clone layout
+    EXPECT_NE( b.ptr(), layout );  // should clone layout
     EXPECT_EQ( b.trivial(), false );
     EXPECT_EQ( b.defined(), true );
     EXPECT_EQ( b.sign(), false );
@@ -162,7 +162,7 @@ TEST( libstdhl_cpp_type_data, pointer_oper_copy )
     Data b = a;
 
     EXPECT_NE( b.ptr(), nullptr );
-    EXPECT_NE( b.ptr(), layout ); // should clone layout
+    EXPECT_NE( b.ptr(), layout );  // should clone layout
     EXPECT_EQ( b.trivial(), false );
     EXPECT_EQ( b.defined(), true );
     EXPECT_EQ( b.sign(), false );

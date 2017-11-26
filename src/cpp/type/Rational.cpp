@@ -57,8 +57,7 @@ Rational Type::createRational( const std::string& value, const Radix radix )
     return Rational::fromString( value, radix );
 }
 
-Rational Type::createRational(
-    const Integer& numerator, const Integer& denominator )
+Rational Type::createRational( const Integer& numerator, const Integer& denominator )
 {
     if( denominator == 0 )
     {
@@ -72,8 +71,7 @@ Rational Type::createRational(
 // Rational
 //
 
-Rational Rational::fromString(
-    const std::string& value, const Type::Radix radix )
+Rational Rational::fromString( const std::string& value, const Type::Radix radix )
 {
     std::vector< std::string > parts;
     libstdhl::String::split( value, "/", parts );
@@ -86,8 +84,7 @@ Rational Rational::fromString(
     else if( parts.size() > 2 )
     {
         throw std::domain_error(
-            "value '" + value
-            + "' too many Rational '/' characters found in literal" );
+            "value '" + value + "' too many Rational '/' characters found in literal" );
     }
 
     Rational tmp( nullptr );
@@ -98,13 +95,11 @@ Rational Rational::fromString(
 
     if( parts.size() > 1 )
     {
-        tmp.m_data.ptr = new RationalLayout(
-            numerator, Integer::fromString( parts[ 1 ], radix ) );
+        tmp.m_data.ptr = new RationalLayout( numerator, Integer::fromString( parts[ 1 ], radix ) );
     }
     else
     {
-        tmp.m_data.ptr
-            = new RationalLayout( numerator, createInteger( (u64)1 ) );
+        tmp.m_data.ptr = new RationalLayout( numerator, createInteger( (u64)1 ) );
     }
 
     return tmp;
@@ -187,8 +182,7 @@ u1 Rational::operator==( const Rational& rhs ) const
 // RationalLayout
 //
 
-RationalLayout::RationalLayout(
-    const Integer& numerator, const Integer& denominator )
+RationalLayout::RationalLayout( const Integer& numerator, const Integer& denominator )
 : m_numerator( numerator )
 , m_denominator( denominator )
 {
@@ -221,8 +215,7 @@ u1 RationalLayout::operator==( const u64 rhs ) const
 
 u1 RationalLayout::operator==( const RationalLayout& rhs ) const
 {
-    return m_numerator == rhs.m_numerator
-           and m_denominator == rhs.m_denominator;
+    return m_numerator == rhs.m_numerator and m_denominator == rhs.m_denominator;
 }
 
 //

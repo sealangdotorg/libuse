@@ -44,12 +44,12 @@
 
 using namespace libstdhl;
 
-#define LIBSTDHL_CPP_MATH_POW_TEST( NAME, TYPE, BASE, EXPONENT )               \
-    TEST( libstdhl_cpp_math, pow_##NAME )                                      \
-    {                                                                          \
-        auto p0 = Math::pow< TYPE >( BASE, EXPONENT );                         \
-                                                                               \
-        EXPECT_EQ( p0, std::pow( BASE, EXPONENT ) );                           \
+#define LIBSTDHL_CPP_MATH_POW_TEST( NAME, TYPE, BASE, EXPONENT ) \
+    TEST( libstdhl_cpp_math, pow_##NAME )                        \
+    {                                                            \
+        auto p0 = Math::pow< TYPE >( BASE, EXPONENT );           \
+                                                                 \
+        EXPECT_EQ( p0, std::pow( BASE, EXPONENT ) );             \
     }
 
 LIBSTDHL_CPP_MATH_POW_TEST( f_l_0, long double, 2, 0 );

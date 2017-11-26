@@ -63,40 +63,39 @@ void UDP::IPv4::send( const IPv4Packet& data )
 
 void UDP::IPv4::send( const std::string& data )
 {
-    auto packet = IPv4Packet{ Network::IPv4::Protocol{},
-        Network::UDP::Protocol{}, data };
+    auto packet = IPv4Packet{ Network::IPv4::Protocol{}, Network::UDP::Protocol{}, data };
 
     send( packet );
 }
 
-void UDP::IPv4::send(
-    const std::string& data, const Address& address, const Port& port )
+void UDP::IPv4::send( const std::string& data, const Address& address, const Port& port )
 {
-    auto packet = IPv4Packet{ Network::IPv4::Protocol{ address, address },
-        Network::UDP::Protocol{ port, port }, data };
+    auto packet = IPv4Packet{
+        Network::IPv4::Protocol{ address, address }, Network::UDP::Protocol{ port, port }, data
+    };
 
     send( packet );
 }
 
-void UDP::IPv4::send(
-    const Network::Packet& data, const Address& address, const Port& port )
+void UDP::IPv4::send( const Network::Packet& data, const Address& address, const Port& port )
 {
     const std::string str( (const char*)data.buffer() );
 
-    auto packet = IPv4Packet{ Network::IPv4::Protocol{ address, address },
-        Network::UDP::Protocol{ port, port }, str };
+    auto packet = IPv4Packet{
+        Network::IPv4::Protocol{ address, address }, Network::UDP::Protocol{ port, port }, str
+    };
 
     send( packet );
 }
 
-void UDP::IPv4::send(
-    const Network::Packet& data, const IPv4Packet& destination )
+void UDP::IPv4::send( const Network::Packet& data, const IPv4Packet& destination )
 {
     const std::string str( (const char*)data.buffer() );
 
     IPv4Packet packet{
         Network::IPv4::Protocol{ destination.ip() },
-        Network::UDP::Protocol{ destination.udp() }, str,
+        Network::UDP::Protocol{ destination.udp() },
+        str,
     };
 
     send( packet );
@@ -110,7 +109,7 @@ void UDP::IPv4::receive( IPv4Packet& data )
 
 IPv4Packet UDP::IPv4::receive( std::string& data )
 {
-    data.resize( 2048 ); // TODO: PPA: FIXME: should be configured etc.
+    data.resize( 2048 );  // TODO: PPA: FIXME: should be configured etc.
 
     IPv4Packet packet{ data };
     receive( packet );

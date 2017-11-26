@@ -104,7 +104,8 @@ namespace libstdhl
             std::size_t hash( void ) const;
 
           protected:
-            union content {
+            union content
+            {
                 u64 value;
                 Layout* ptr;
             } m_data;
@@ -132,11 +133,11 @@ namespace libstdhl
                 return to_string( RADIX, LITERAL );
             }
 
-            std::string to_string( const Radix radix = DECIMAL,
-                const Literal literal = NONE ) const;
+            std::string to_string(
+                const Radix radix = DECIMAL, const Literal literal = NONE ) const;
 
-            static u64 to_digit( const char character,
-                const Radix radix = DECIMAL, const Literal literal = NONE );
+            static u64 to_digit(
+                const char character, const Radix radix = DECIMAL, const Literal literal = NONE );
         };
     }
 
@@ -149,7 +150,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_TYPE_LAYOUT_H_
+#endif  // _LIBSTDHL_CPP_TYPE_LAYOUT_H_
 
 //
 //  Local variables:

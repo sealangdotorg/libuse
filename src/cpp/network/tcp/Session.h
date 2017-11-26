@@ -62,7 +62,7 @@ namespace libstdhl
     };
 }
 
-#endif // _LIBSTDHL_CPP_NETWORK_TCP_SESSION_H_
+#endif  // _LIBSTDHL_CPP_NETWORK_TCP_SESSION_H_
 
 //
 //  Local variables:

@@ -67,8 +67,8 @@ namespace libstdhl
             class IPv4Packet final : public Network::Packet
             {
               public:
-                IPv4Packet( const IPv4::Protocol& ip, const UDP::Protocol& udp,
-                    const std::string& data )
+                IPv4Packet(
+                    const IPv4::Protocol& ip, const UDP::Protocol& udp, const std::string& data )
                 : m_ip( ip )
                 , m_udp( udp )
                 , m_data( data )
@@ -159,7 +159,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_NETWORK_UDP_PACKET_H_
+#endif  // _LIBSTDHL_CPP_NETWORK_UDP_PACKET_H_
 
 //
 //  Local variables:

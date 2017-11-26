@@ -78,16 +78,13 @@ namespace libstdhl
 
                 void notify( const NotificationMessage& message );
 
-                void flush(
-                    const std::function< void( const Message& ) >& callback );
+                void flush( const std::function< void( const Message& ) >& callback );
 
                 /**
                    general
                 */
 
-                virtual InitializeResult initialize(
-                    const InitializeParams& params )
-                    = 0;
+                virtual InitializeResult initialize( const InitializeParams& params ) = 0;
 
                 virtual void initialized( void ) noexcept = 0;
 
@@ -123,8 +120,7 @@ namespace libstdhl
 
                 // New :leftwards_arrow_with_hook: workspace/executeCommand
                 virtual ExecuteCommandResult workspace_executeCommand(
-                    const ExecuteCommandParams& params )
-                    = 0;
+                    const ExecuteCommandParams& params ) = 0;
 
                 // New :arrow_right_hook: workspace/applyEdit
 
@@ -138,13 +134,11 @@ namespace libstdhl
 
                 // :arrow_right: textDocument/didOpen
                 virtual void textDocument_didOpen(
-                    const DidOpenTextDocumentParams& params ) noexcept
-                    = 0;
+                    const DidOpenTextDocumentParams& params ) noexcept = 0;
 
                 // :arrow_right: textDocument/didChange
                 virtual void textDocument_didChange(
-                    const DidChangeTextDocumentParams& params ) noexcept
-                    = 0;
+                    const DidChangeTextDocumentParams& params ) noexcept = 0;
 
                 // :arrow_right: textDocument/willSave
                 // New :leftwards_arrow_with_hook:
@@ -155,9 +149,7 @@ namespace libstdhl
                 // :leftwards_arrow_with_hook: completionItem/resolve
 
                 // :leftwards_arrow_with_hook: textDocument/hover
-                virtual HoverResult textDocument_hover(
-                    const HoverParams& params )
-                    = 0;
+                virtual HoverResult textDocument_hover( const HoverParams& params ) = 0;
 
                 // :leftwards_arrow_with_hook: textDocument/signatureHelp
                 // :leftwards_arrow_with_hook: textDocument/references
@@ -171,13 +163,10 @@ namespace libstdhl
 
                 // :leftwards_arrow_with_hook: textDocument/codeAction
                 virtual CodeActionResult textDocument_codeAction(
-                    const CodeActionParams& params )
-                    = 0;
+                    const CodeActionParams& params ) = 0;
 
                 // :leftwards_arrow_with_hook: textDocument/codeLens
-                virtual CodeLensResult textDocument_codeLens(
-                    const CodeLensParams& params )
-                    = 0;
+                virtual CodeLensResult textDocument_codeLens( const CodeLensParams& params ) = 0;
 
                 // :leftwards_arrow_with_hook: codeLens/resolve
                 // :leftwards_arrow_with_hook: textDocument/documentLink
@@ -199,7 +188,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_NETWORK_LSP_INTERFACE_H_
+#endif  // _LIBSTDHL_CPP_NETWORK_LSP_INTERFACE_H_
 
 //
 //  Local variables:

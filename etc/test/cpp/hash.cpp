@@ -46,11 +46,9 @@ using namespace libstdhl;
 
 TEST( libstdhl_cpp_Hash, combine_example )
 {
-    EXPECT_EQ( libstdhl::Hash::combine( 123, 456 ),
-        libstdhl::Hash::combine( 123, 456 ) );
+    EXPECT_EQ( libstdhl::Hash::combine( 123, 456 ), libstdhl::Hash::combine( 123, 456 ) );
 
-    EXPECT_NE( libstdhl::Hash::combine( 123, 456 ),
-        libstdhl::Hash::combine( 456, 123 ) );
+    EXPECT_NE( libstdhl::Hash::combine( 123, 456 ), libstdhl::Hash::combine( 456, 123 ) );
 }
 
 TEST( libstdhl_cpp_Hash, value_u64_example )

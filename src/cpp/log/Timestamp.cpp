@@ -50,15 +50,13 @@
 using namespace libstdhl;
 using namespace Log;
 
-static inline std::string time2str(
-    const std::tm* datetime, const char* format )
+static inline std::string time2str( const std::tm* datetime, const char* format )
 {
 #if not __clang__ and __GNUC__ < 5
     char buffer[ 512 ];
     if( not strftime( buffer, sizeof( buffer ), format, datetime ) )
     {
-        throw std::domain_error(
-            "unable to format the timestamp with 'strftime'" );
+        throw std::domain_error( "unable to format the timestamp with 'strftime'" );
     }
     return std::string( buffer );
 #else

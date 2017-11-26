@@ -71,8 +71,11 @@ namespace libstdhl
               public:
                 using Ptr = std::shared_ptr< Packet >;
 
-                Packet( const Address& destination, const Address& source,
-                    const Type& type, const std::vector< u8 >& payload );
+                Packet(
+                    const Address& destination,
+                    const Address& source,
+                    const Type& type,
+                    const std::vector< u8 >& payload );
 
                 const Protocol& header( void ) const;
 
@@ -91,7 +94,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_NETWORK_ETHERNET_PACKET_H_
+#endif  // _LIBSTDHL_CPP_NETWORK_ETHERNET_PACKET_H_
 
 //
 //  Local variables:

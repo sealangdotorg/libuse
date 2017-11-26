@@ -77,7 +77,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_LOG_CHANNEL_H_
+#endif  // _LIBSTDHL_CPP_LOG_CHANNEL_H_
 
 //
 //  Local variables:

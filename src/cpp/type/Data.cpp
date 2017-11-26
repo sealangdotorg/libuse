@@ -55,11 +55,11 @@ using namespace Type;
 
 static constexpr const char* digits_definitions[] = {
 
-    NUMBER LOWER_CASE UPPER_CASE "@$", // general digit encoding
+    NUMBER LOWER_CASE UPPER_CASE "@$",  // general digit encoding
 
-    UPPER_CASE LOWER_CASE NUMBER "+/", // base64 encoding
+    UPPER_CASE LOWER_CASE NUMBER "+/",  // base64 encoding
 
-    "./" NUMBER UPPER_CASE LOWER_CASE, // unix radix 64 encoding
+    "./" NUMBER UPPER_CASE LOWER_CASE,  // unix radix 64 encoding
 };
 
 Data::Data( const u64 data, const u1 sign )
@@ -186,10 +186,9 @@ u1 Data::defined( void ) const
 
 std::size_t Data::hash( void ) const
 {
-    const std::size_t seed
-        = ( ( (std::size_t)104729 ) << 2 ) // at pos 2. 10'000st prime number
-          | ( (std::size_t)sign() << 1 )   // at 1. idx the sign
-          | ( (std::size_t)defined() );    // at 0. idx the defined
+    const std::size_t seed = ( ( (std::size_t)104729 ) << 2 )  // at pos 2. 10'000st prime number
+                             | ( (std::size_t)sign() << 1 )    // at 1. idx the sign
+                             | ( (std::size_t)defined() );     // at 0. idx the defined
 
     std::size_t hash = 0;
     if( trivial() )
@@ -217,7 +216,7 @@ u1 Data::operator==( const Data& rhs ) const
     {
         return false;
     }
-    else // both are non-trivial
+    else  // both are non-trivial
     {
         return m_data.ptr == rhs.m_data.ptr;
     }
@@ -235,7 +234,7 @@ std::string Data::to_string( const Radix radix, const Literal literal ) const
 
     switch( literal )
     {
-        case NONE: // fall-through
+        case NONE:  // fall-through
         {
             break;
         }
@@ -254,8 +253,7 @@ std::string Data::to_string( const Radix radix, const Literal literal ) const
                     }
                     else
                     {
-                        throw std::domain_error(
-                            "binary literal format not specified" );
+                        throw std::domain_error( "binary literal format not specified" );
                     }
                     break;
                 }
@@ -308,8 +306,8 @@ std::string Data::to_string( const Radix radix, const Literal literal ) const
             if( radix != RADIX64 )
             {
                 throw std::domain_error(
-                    "base64 literal format not specified for radix '"
-                    + std::to_string( radix ) + "'" );
+                    "base64 literal format not specified for radix '" + std::to_string( radix ) +
+                    "'" );
             }
             break;
         }
@@ -318,8 +316,8 @@ std::string Data::to_string( const Radix radix, const Literal literal ) const
             if( radix != RADIX64 )
             {
                 throw std::domain_error(
-                    "unix literal format not specified for radix '"
-                    + std::to_string( radix ) + "'" );
+                    "unix literal format not specified for radix '" + std::to_string( radix ) +
+                    "'" );
             }
             break;
         }
@@ -356,8 +354,7 @@ std::string Data::to_string( const Radix radix, const Literal literal ) const
     }
 }
 
-u64 Data::to_digit(
-    const char character, const Radix radix, const Literal literal )
+u64 Data::to_digit( const char character, const Radix radix, const Literal literal )
 {
     const char* digits = digits_definitions[ literal / 10 ];
 
@@ -365,18 +362,17 @@ u64 Data::to_digit(
 
     if( not pos )
     {
-        throw std::domain_error( "invalid character '"
-                                 + std::string( 1, character )
-                                 + "' to convert to a digit" );
+        throw std::domain_error(
+            "invalid character '" + std::string( 1, character ) + "' to convert to a digit" );
     }
 
     u64 digit = pos - digits;
 
     if( digit >= radix )
     {
-        throw std::domain_error( "digit '" + std::to_string( digit )
-                                 + "' must be smaller than radix '"
-                                 + std::to_string( radix ) + "'" );
+        throw std::domain_error(
+            "digit '" + std::to_string( digit ) + "' must be smaller than radix '" +
+            std::to_string( radix ) + "'" );
     }
 
     return digit;

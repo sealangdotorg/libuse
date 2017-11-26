@@ -158,13 +158,12 @@ TEST( libstdhl_args_cpp, argument_once_required_parameter_short_no_metatag )
     const char* argv[] = { "program", "file.txt", "-a", "data", "file.txt" };
     Args options( 5, argv );
 
-    options.add( 'a', Args::REQUIRED, __FUNCTION__,
-        [&options, &argument, &cnt]( const char* arg ) {
-            cnt++;
-            EXPECT_LE( cnt, 1 );
-            argument = arg;
-            return 0;
-        } );
+    options.add( 'a', Args::REQUIRED, __FUNCTION__, [&options, &argument, &cnt]( const char* arg ) {
+        cnt++;
+        EXPECT_LE( cnt, 1 );
+        argument = arg;
+        return 0;
+    } );
 
     EXPECT_STRNE( "data", argument );
 
@@ -186,13 +185,12 @@ TEST( libstdhl_args_cpp, argument_once_required_parameter_short_with_metatag )
     const char* argv[] = { "program", "file.txt", "-a", "data", "file.txt" };
     Args options( 5, argv );
 
-    options.add( 'a', Args::REQUIRED, __FUNCTION__,
-        [&options, &argument, &cnt]( const char* arg ) {
-            cnt++;
-            EXPECT_LE( cnt, 1 );
-            argument = arg;
-            return 0;
-        } );
+    options.add( 'a', Args::REQUIRED, __FUNCTION__, [&options, &argument, &cnt]( const char* arg ) {
+        cnt++;
+        EXPECT_LE( cnt, 1 );
+        argument = arg;
+        return 0;
+    } );
 
     EXPECT_STRNE( "data", argument );
 
@@ -247,8 +245,8 @@ TEST_P( cpp_Args, param )
     u32 cnt_files = 0;
     const char* argument = "";
 
-    Args options( argc, (const char**)argv,
-        [&param, &options, &argument, &cnt_files]( const char* arg ) {
+    Args options(
+        argc, (const char**)argv, [&param, &options, &argument, &cnt_files]( const char* arg ) {
             cnt_files++;
             EXPECT_LE( cnt_files, param.cnt_files );
             argument = arg;
@@ -261,22 +259,21 @@ TEST_P( cpp_Args, param )
     for( auto param_opt : param.options )
     {
         cnt_options_chr[ param_opt.chr ] = 0;
-        cnt_options_str[ std::string( param_opt.str ? param_opt.str : "" ) ]
-            = 0;
+        cnt_options_str[ std::string( param_opt.str ? param_opt.str : "" ) ] = 0;
 
-        std::function< i32( const char* ) > hook = [param_opt, &cnt_options_chr,
-            &cnt_options_str]( const char* arg ) {
+        std::function< i32( const char* ) > hook =
+            [param_opt, &cnt_options_chr, &cnt_options_str]( const char* arg ) {
 
-            if( param_opt.chr )
-            {
-                cnt_options_chr[ param_opt.chr ] += 1;
-            }
-            else
-            {
-                cnt_options_str[ param_opt.str ? param_opt.str : "" ] += 1;
-            }
-            return 0;
-        };
+                if( param_opt.chr )
+                {
+                    cnt_options_chr[ param_opt.chr ] += 1;
+                }
+                else
+                {
+                    cnt_options_str[ param_opt.str ? param_opt.str : "" ] += 1;
+                }
+                return 0;
+            };
 
         ASSERT_GE( param_opt.req, 0 );
         ASSERT_LE( param_opt.req, 2 );
@@ -320,32 +317,38 @@ TEST_P( cpp_Args, param )
     for( auto param_opt : param.options )
     {
         EXPECT_EQ(
-            ( cnt_options_chr[ param_opt.chr ]
-                + cnt_options_str[ param_opt.str ? param_opt.str : "" ] ),
+            ( cnt_options_chr[ param_opt.chr ] +
+              cnt_options_str[ param_opt.str ? param_opt.str : "" ] ),
             param_opt.cnt );
     }
 
     ASSERT_EQ( res, param.result );
 }
 
-INSTANTIATE_TEST_CASE_P( libstdhl_cpp_Args_pass, cpp_Args,
-    ::testing::Values( Param{ { "text.txt" }, 1 },
+INSTANTIATE_TEST_CASE_P(
+    libstdhl_cpp_Args_pass,
+    cpp_Args,
+    ::testing::Values(
+        Param{ { "text.txt" }, 1 },
         Param{ { "very_long_file_name", "short_file" }, 2 },
         Param{ { "file0", "file1", "file2", "file3", "file4", "file5" }, 6 },
         Param{ { "-v" }, 0, { { 'v', 0, 0, 1 } } },
-        Param{ { "-f", "-i", "-f", "-o" }, 0,
-            { { 'f', 0, 0, 2 }, { 'i', 0, 0, 1 }, { 'o', 0, 0, 1 } } },
+        Param{ { "-f", "-i", "-f", "-o" },
+               0,
+               { { 'f', 0, 0, 2 }, { 'i', 0, 0, 1 }, { 'o', 0, 0, 1 } } },
         Param{ { "--help" }, 0, { { 0, "help", 0, 1 } } },
         Param{ { "--version" }, 0, { { 'v', "version", 0, 1 } } },
         Param{ { "-v" }, 0, { { 'v', "version", 0, 1 } } } ) );
 
-INSTANTIATE_TEST_CASE_P( libstdhl_cpp_Args_fail, cpp_Args,
-    ::testing::Values( Param{ { "-v" }, 0, {}, 1 },
+INSTANTIATE_TEST_CASE_P(
+    libstdhl_cpp_Args_fail,
+    cpp_Args,
+    ::testing::Values(
+        Param{ { "-v" }, 0, {}, 1 },
         Param{ { "-h" }, 0, { { 'v' } }, 1 },
         Param{ { "-t", "-s", "-e", "-t" }, 0, { { 'v' } }, 4 },
         Param{ { "--long-option-name" }, 0, {}, 1 },
-        Param{ { "--missing-argument", "bla" }, 0,
-            { { 'a', "missing-argument", 1, 1 } } } ) );
+        Param{ { "--missing-argument", "bla" }, 0, { { 'a', "missing-argument", 1, 1 } } } ) );
 
 //
 //  Local variables:

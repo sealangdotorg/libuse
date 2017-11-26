@@ -84,7 +84,8 @@ namespace libstdhl
             class UniformResourceIdentifier
             {
               public:
-                UniformResourceIdentifier( const std::string& scheme,
+                UniformResourceIdentifier(
+                    const std::string& scheme,
                     const std::string& m_authority,
                     const std::string& m_path,
                     const std::string& m_query,
@@ -102,8 +103,7 @@ namespace libstdhl
 
                 std::string toString( void ) const;
 
-                static UniformResourceIdentifier fromString(
-                    const std::string& uri );
+                static UniformResourceIdentifier fromString( const std::string& uri );
 
               private:
                 std::string m_scheme;
@@ -118,7 +118,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_STANDARD_RFC3986_H_
+#endif  // _LIBSTDHL_CPP_STANDARD_RFC3986_H_
 
 //
 //  Local variables:

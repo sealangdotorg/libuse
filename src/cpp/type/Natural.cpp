@@ -60,8 +60,7 @@ Natural Type::createNatural( const Integer& value )
 {
     if( value.sign() )
     {
-        throw std::domain_error(
-            "Natural type cannot be initialized with negative Integer value" );
+        throw std::domain_error( "Natural type cannot be initialized with negative Integer value" );
     }
 
     if( value.trivial() )
@@ -89,8 +88,7 @@ Natural Natural::fromString( const std::string& value, const Type::Radix radix )
 
     if( tmp.sign() )
     {
-        throw std::domain_error(
-            "invalid negative '" + value + "' Natural literal" );
+        throw std::domain_error( "invalid negative '" + value + "' Natural literal" );
     }
 
     return createNatural( tmp );

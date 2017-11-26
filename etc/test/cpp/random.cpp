@@ -63,10 +63,10 @@ void test_random( T from, T to, u32 iteration = 256 )
     }
 }
 
-#define TEST_RANDOM( T, MIN, MAX )                                             \
-    TEST( libstdhl_cpp_Random, uniform_##T )                                   \
-    {                                                                          \
-        test_random< T >( MIN, MAX );                                          \
+#define TEST_RANDOM( T, MIN, MAX )           \
+    TEST( libstdhl_cpp_Random, uniform_##T ) \
+    {                                        \
+        test_random< T >( MIN, MAX );        \
     }
 
 TEST_RANDOM( u8, 12, 98 );

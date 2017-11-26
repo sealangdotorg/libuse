@@ -73,19 +73,16 @@ class TestInterface final : public ServerInterface
     {
     }
 
-    ExecuteCommandResult workspace_executeCommand(
-        const ExecuteCommandParams& params ) override
+    ExecuteCommandResult workspace_executeCommand( const ExecuteCommandParams& params ) override
     {
         return ExecuteCommandResult();
     }
 
-    void textDocument_didOpen(
-        const DidOpenTextDocumentParams& params ) noexcept override
+    void textDocument_didOpen( const DidOpenTextDocumentParams& params ) noexcept override
     {
     }
 
-    void textDocument_didChange(
-        const DidChangeTextDocumentParams& params ) noexcept override
+    void textDocument_didChange( const DidChangeTextDocumentParams& params ) noexcept override
     {
     }
 
@@ -94,14 +91,12 @@ class TestInterface final : public ServerInterface
         return HoverResult();
     }
 
-    CodeActionResult textDocument_codeAction(
-        const CodeActionParams& params ) override
+    CodeActionResult textDocument_codeAction( const CodeActionParams& params ) override
     {
         return CodeActionResult();
     }
 
-    CodeLensResult textDocument_codeLens(
-        const CodeLensParams& params ) override
+    CodeLensResult textDocument_codeLens( const CodeLensParams& params ) override
     {
         return CodeLensResult();
     }
@@ -111,26 +106,27 @@ TEST( libstdhl_cpp_network_lsp, parse_packet_request_initialize )
 {
     std::string req = "Content-Length: 1035\r\n";
     req += "\r\n";
-    req += "{\"jsonrpc\":\"2.0\",\"id\":0,\"method\":\"initialize\",\"params\":{"
-         "\"rootPath\":null,\"rootUri\":null,\"capabilities\":{\"workspace\":{"
-         "\"didChangeConfiguration\":{\"dynamicRegistration\":false},"
-         "\"didChangeWatchedFiles\":{\"dynamicRegistration\":false},\"symbol\":"
-         "{\"dynamicRegistration\":true},\"executeCommand\":{"
-         "\"dynamicRegistration\":true}},\"textDocument\":{\"synchronization\":"
-         "{\"dynamicRegistration\":true},\"completion\":{\"completionItem\":{"
-         "\"snippetSupport\":true},\"dynamicRegistration\":true},\"hover\":{"
-         "\"dynamicRegistration\":true},\"signatureHelp\":{"
-         "\"dynamicRegistration\":true},\"references\":{"
-         "\"dynamicRegistration\":true},\"documentHighlight\":{"
-         "\"dynamicRegistration\":true},\"documentSymbol\":{"
-         "\"dynamicRegistration\":true},\"formatting\":{"
-         "\"dynamicRegistration\":true},\"rangeFormatting\":{"
-         "\"dynamicRegistration\":true},\"onTypeFormatting\":{"
-         "\"dynamicRegistration\":true},\"definition\":{"
-         "\"dynamicRegistration\":true},\"codeAction\":{"
-         "\"dynamicRegistration\":true},\"codeLens\":{\"dynamicRegistration\":"
-         "true},\"documentLink\":{\"dynamicRegistration\":true},\"rename\":{"
-         "\"dynamicRegistration\":true}}},\"trace\":\"off\"}}";
+    req +=
+        "{\"jsonrpc\":\"2.0\",\"id\":0,\"method\":\"initialize\",\"params\":{"
+        "\"rootPath\":null,\"rootUri\":null,\"capabilities\":{\"workspace\":{"
+        "\"didChangeConfiguration\":{\"dynamicRegistration\":false},"
+        "\"didChangeWatchedFiles\":{\"dynamicRegistration\":false},\"symbol\":"
+        "{\"dynamicRegistration\":true},\"executeCommand\":{"
+        "\"dynamicRegistration\":true}},\"textDocument\":{\"synchronization\":"
+        "{\"dynamicRegistration\":true},\"completion\":{\"completionItem\":{"
+        "\"snippetSupport\":true},\"dynamicRegistration\":true},\"hover\":{"
+        "\"dynamicRegistration\":true},\"signatureHelp\":{"
+        "\"dynamicRegistration\":true},\"references\":{"
+        "\"dynamicRegistration\":true},\"documentHighlight\":{"
+        "\"dynamicRegistration\":true},\"documentSymbol\":{"
+        "\"dynamicRegistration\":true},\"formatting\":{"
+        "\"dynamicRegistration\":true},\"rangeFormatting\":{"
+        "\"dynamicRegistration\":true},\"onTypeFormatting\":{"
+        "\"dynamicRegistration\":true},\"definition\":{"
+        "\"dynamicRegistration\":true},\"codeAction\":{"
+        "\"dynamicRegistration\":true},\"codeLens\":{\"dynamicRegistration\":"
+        "true},\"documentLink\":{\"dynamicRegistration\":true},\"rename\":{"
+        "\"dynamicRegistration\":true}}},\"trace\":\"off\"}}";
 
     const auto request = libstdhl::Network::LSP::Packet( req );
 

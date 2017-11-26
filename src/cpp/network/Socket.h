@@ -113,8 +113,8 @@ namespace libstdhl
           public:
             using Ptr = std::shared_ptr< PosixSocket >;
 
-            PosixSocket( const std::string& name, const i32 domain,
-                const i32 type, const i32 protocol )
+            PosixSocket(
+                const std::string& name, const i32 domain, const i32 type, const i32 protocol )
             : Network::Socket< T >( name )
             , m_domain( 0 )
             , m_type( 0 )
@@ -128,8 +128,7 @@ namespace libstdhl
 
                 if( m_socket <= 0 )
                 {
-                    throw std::domain_error(
-                        "unable to open socket '" + this->name() + "'" );
+                    throw std::domain_error( "unable to open socket '" + this->name() + "'" );
                 }
             }
 
@@ -145,8 +144,7 @@ namespace libstdhl
             {
                 if( m_socket <= 0 )
                 {
-                    throw std::domain_error(
-                        "unable to attach sub-socket '" + this->name() + "'" );
+                    throw std::domain_error( "unable to attach sub-socket '" + this->name() + "'" );
                 }
 
                 m_connected = true;
@@ -172,8 +170,7 @@ namespace libstdhl
                 if( not connected() )
                 {
                     throw std::domain_error(
-                        "undefined socket kind to connect to '" + this->name()
-                        + "'" );
+                        "undefined socket kind to connect to '" + this->name() + "'" );
                 }
             }
 
@@ -186,8 +183,7 @@ namespace libstdhl
 
                 if( close( m_socket ) )
                 {
-                    throw std::domain_error(
-                        "unable to close socket '" + this->name() + "'" );
+                    throw std::domain_error( "unable to close socket '" + this->name() + "'" );
                 }
 
                 setConnected( false );
@@ -197,20 +193,17 @@ namespace libstdhl
             {
                 if( connected() )
                 {
-                    const auto result = ::send(
-                        id(), (void*)( data.buffer() ), data.size(), 0 );
+                    const auto result = ::send( id(), (void*)( data.buffer() ), data.size(), 0 );
 
                     if( result < 0 )
                     {
                         throw std::domain_error(
-                            "SOCKET: unable to send, failed with '"
-                            + std::to_string( result ) );
+                            "SOCKET: unable to send, failed with '" + std::to_string( result ) );
                     }
                 }
                 else
                 {
-                    throw std::domain_error(
-                        "SOCKET: unable to send, not connected" );
+                    throw std::domain_error( "SOCKET: unable to send, not connected" );
                 }
             }
 
@@ -218,20 +211,17 @@ namespace libstdhl
             {
                 if( connected() )
                 {
-                    const auto result = ::recv(
-                        id(), (void*)( data.buffer() ), data.size(), 0 );
+                    const auto result = ::recv( id(), (void*)( data.buffer() ), data.size(), 0 );
 
                     if( result < 0 )
                     {
                         throw std::domain_error(
-                            "SOCKET: unable to receive, failed with '"
-                            + std::to_string( result ) );
+                            "SOCKET: unable to receive, failed with '" + std::to_string( result ) );
                     }
                 }
                 else
                 {
-                    throw std::domain_error(
-                        "SOCKET: unable to receive, not connected" );
+                    throw std::domain_error( "SOCKET: unable to receive, not connected" );
                 }
             }
 
@@ -257,7 +247,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_NETWORK_SOCKET_H_
+#endif  // _LIBSTDHL_CPP_NETWORK_SOCKET_H_
 
 //
 //  Local variables:

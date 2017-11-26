@@ -51,8 +51,8 @@ using namespace Log;
 // Data
 //
 
-Data::Data( Level::ID level, const Source::Ptr& source,
-    const Category::Ptr& category, const Items& items )
+Data::Data(
+    Level::ID level, const Source::Ptr& source, const Category::Ptr& category, const Items& items )
 : Item( Item::ID::DATA )
 , m_timestamp()
 , m_level( level )
@@ -62,14 +62,16 @@ Data::Data( Level::ID level, const Source::Ptr& source,
 {
 }
 
-Data::Data( const Level::ID level, const Source::Ptr& source,
-    const Category::Ptr& category )
+Data::Data( const Level::ID level, const Source::Ptr& source, const Category::Ptr& category )
 : Data( level, source, category, Items() )
 {
 }
 
-Data::Data( const Level::ID level, const Source::Ptr& source,
-    const Category::Ptr& category, const std::string& text )
+Data::Data(
+    const Level::ID level,
+    const Source::Ptr& source,
+    const Category::Ptr& category,
+    const std::string& text )
 : Data( level, source, category )
 {
     add< TextItem >( text );

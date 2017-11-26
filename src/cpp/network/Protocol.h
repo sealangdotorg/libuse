@@ -68,7 +68,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_NETWORK_PROTOCOL_H_
+#endif  // _LIBSTDHL_CPP_NETWORK_PROTOCOL_H_
 
 //
 //  Local variables:

@@ -71,7 +71,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_NETWORK_LSP_H_
+#endif  // _LIBSTDHL_CPP_NETWORK_LSP_H_
 
 //
 //  Local variables:

@@ -43,8 +43,8 @@
 #ifndef _LIBSTDHL_CPP_LOG_CHRONOGRAPH_H_
 #define _LIBSTDHL_CPP_LOG_CHRONOGRAPH_H_
 
-#include <libstdhl/log/Item>
 #include <libstdhl/log/Formatter>
+#include <libstdhl/log/Item>
 
 #include <chrono>
 
@@ -103,8 +103,7 @@ namespace libstdhl
           public:
             std::string accept( Formatter& formatter ) override;
 
-            friend std::ostream& operator<<(
-                std::ostream& stream, Chronograph& obj )
+            friend std::ostream& operator<<( std::ostream& stream, Chronograph& obj )
             {
                 stream << std::string( obj );
                 return stream;
@@ -113,7 +112,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_LOG_CHRONOGRAPH_H_
+#endif  // _LIBSTDHL_CPP_LOG_CHRONOGRAPH_H_
 
 //
 //  Local variables:

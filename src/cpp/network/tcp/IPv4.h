@@ -52,8 +52,9 @@ namespace libstdhl
     {
         namespace TCP
         {
-            class IPv4 final : public Interface< IPv4Packet >,
-                               public Session< IPv4 >
+            class IPv4 final
+            : public Interface< IPv4Packet >
+            , public Session< IPv4 >
             {
               public:
                 using Ptr = std::shared_ptr< IPv4 >;
@@ -78,7 +79,7 @@ namespace libstdhl
     };
 }
 
-#endif // _LIBSTDHL_CPP_NETWORK_TCP_IPV4_H_
+#endif  // _LIBSTDHL_CPP_NETWORK_TCP_IPV4_H_
 
 //
 //  Local variables:

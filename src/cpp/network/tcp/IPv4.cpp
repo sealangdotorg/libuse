@@ -100,7 +100,7 @@ void TCP::IPv4::receive( IPv4Packet& data )
 
 IPv4Packet TCP::IPv4::receive( std::string& data )
 {
-    data.resize( 2048 ); // TODO: PPA: FIXME: should be configured etc.
+    data.resize( 2048 );  // TODO: PPA: FIXME: should be configured etc.
 
     IPv4Packet packet{ data };
     receive( packet );

@@ -73,9 +73,8 @@ namespace libstdhl
             {
                 if( this != &rhs )
                 {
-                    if( ( this->name().compare( rhs.name() ) != 0 )
-                        or ( this->description().compare( rhs.description() )
-                               != 0 ) )
+                    if( ( this->name().compare( rhs.name() ) != 0 ) or
+                        ( this->description().compare( rhs.description() ) != 0 ) )
                     {
                         return false;
                     }
@@ -98,8 +97,8 @@ namespace libstdhl
 
             static Category::Ptr defaultCategory( void )
             {
-                static auto cache = std::make_shared< Category >(
-                    "Default", "Default log category of libstdhl" );
+                static auto cache =
+                    std::make_shared< Category >( "Default", "Default log category of libstdhl" );
 
                 return cache;
             }
@@ -109,7 +108,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_LOG_CATEGORY_H_
+#endif  // _LIBSTDHL_CPP_LOG_CATEGORY_H_
 
 //
 //  Local variables:

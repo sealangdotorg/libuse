@@ -84,13 +84,11 @@ void Stream::dump( void )
 
 void Stream::aggregate( const Stream& stream )
 {
-    m_data.insert( std::end( m_data ), std::begin( stream.data() ),
-        std::end( stream.data() ) );
+    m_data.insert( std::end( m_data ), std::begin( stream.data() ), std::end( stream.data() ) );
 
-    std::sort(
-        m_data.begin(), m_data.end(), []( const Data& a, const Data& b ) {
-            return b.timestamp() >= a.timestamp();
-        } );
+    std::sort( m_data.begin(), m_data.end(), []( const Data& a, const Data& b ) {
+        return b.timestamp() >= a.timestamp();
+    } );
 }
 
 //

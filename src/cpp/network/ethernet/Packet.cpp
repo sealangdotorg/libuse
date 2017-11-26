@@ -46,14 +46,20 @@ using namespace libstdhl;
 using namespace Network;
 using namespace Ethernet;
 
-Ethernet::Packet::Packet( const Address& destination, const Address& source,
-    const Type& type, const std::vector< u8 >& payload )
-: m_header( destination, source,
-      ( payload.size() < 64 ) ? RUNT : type ) // runt frame prevention
+Ethernet::Packet::Packet(
+    const Address& destination,
+    const Address& source,
+    const Type& type,
+    const std::vector< u8 >& payload )
+: m_header(
+      destination,
+      source,
+      ( payload.size() < 64 ) ? RUNT : type )  // runt frame prevention
 , m_payload{}
-, m_size( ( payload.size() < 64 ) // runt frame prevention
-              ? 64
-              : payload.size() )
+, m_size(
+      ( payload.size() < 64 )  // runt frame prevention
+          ? 64
+          : payload.size() )
 {
     std::copy( payload.begin(), payload.end(), m_payload.begin() );
 }

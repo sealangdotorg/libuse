@@ -49,14 +49,13 @@
 
 using namespace libstdhl;
 
-Args::Args( int argc, const char** argv,
-    std::function< i32( const char* ) > process_non_option )
+Args::Args( int argc, const char** argv, std::function< i32( const char* ) > process_non_option )
 : Args( argc, argv, DEFAULT, process_non_option )
 {
 }
 
-Args::Args( int argc, const char** argv, Mode mode,
-    std::function< i32( const char* ) > process_non_option )
+Args::Args(
+    int argc, const char** argv, Mode mode, std::function< i32( const char* ) > process_non_option )
 : m_argc( argc )
 , m_argv( argv )
 , m_mode( mode )
@@ -97,8 +96,11 @@ int Args::parse( Logger& log )
     {
         int getopt_index = 0;
 
-        getopt_ctrl = m_getopt_func( m_argc, (char* const*)m_argv,
-            (const char*)( m_format_str.c_str() ), getopt_options,
+        getopt_ctrl = m_getopt_func(
+            m_argc,
+            (char* const*)m_argv,
+            (const char*)( m_format_str.c_str() ),
+            getopt_options,
             &getopt_index );
 
         if( getopt_ctrl == -1 )
@@ -114,13 +116,11 @@ int Args::parse( Logger& log )
 
                 if( optarg )
                 {
-                    ret = m_options[ getopt_options[ getopt_index ].name ]
-                              .action( optarg );
+                    ret = m_options[ getopt_options[ getopt_index ].name ].action( optarg );
                 }
                 else
                 {
-                    ret = m_options[ getopt_options[ getopt_index ].name ]
-                              .action( "" );
+                    ret = m_options[ getopt_options[ getopt_index ].name ].action( "" );
                 }
 
                 if( ret >= 0 )
@@ -137,8 +137,7 @@ int Args::parse( Logger& log )
 
         if( getopt_ctrl == ':' )
         {
-            log.error(
-                "option '%s' requires an argument", m_argv[ optind - 1 ] );
+            log.error( "option '%s' requires an argument", m_argv[ optind - 1 ] );
             err++;
             continue;
         }
@@ -251,27 +250,38 @@ int Args::parse( Logger& log )
     return err;
 }
 
-void Args::add( const char arg_char, Kind kind, const std::string& description,
-    std::function< i32( const char* ) > action, const std::string& metatag )
+void Args::add(
+    const char arg_char,
+    Kind kind,
+    const std::string& description,
+    std::function< i32( const char* ) > action,
+    const std::string& metatag )
 {
     add( arg_char, 0, kind, description, action, metatag );
 }
 
-void Args::add( const char* arg_str, Kind kind, const std::string& description,
-    std::function< i32( const char* ) > action, const std::string& metatag )
+void Args::add(
+    const char* arg_str,
+    Kind kind,
+    const std::string& description,
+    std::function< i32( const char* ) > action,
+    const std::string& metatag )
 {
     add( 0, arg_str, kind, description, action, metatag );
 }
 
-void Args::add( const char arg_char, const char* arg_str, Kind kind,
-    const std::string& description, std::function< i32( const char* ) > action,
+void Args::add(
+    const char arg_char,
+    const char* arg_str,
+    Kind kind,
+    const std::string& description,
+    std::function< i32( const char* ) > action,
     const std::string& metatag )
 {
-    assert( ( ( arg_char == 0 ) || ( arg_char == '+' )
-                || ( arg_char >= 'a' && arg_char <= 'z' )
-                || ( arg_char >= 'A' && arg_char <= 'Z' )
-                || ( arg_char >= '0' && arg_char <= '9' ) )
-            && "invalid 'arg_char' value" );
+    assert(
+        ( ( arg_char == 0 ) || ( arg_char == '+' ) || ( arg_char >= 'a' && arg_char <= 'z' ) ||
+          ( arg_char >= 'A' && arg_char <= 'Z' ) || ( arg_char >= '0' && arg_char <= '9' ) ) &&
+        "invalid 'arg_char' value" );
 
     std::string key;
 
@@ -281,9 +291,8 @@ void Args::add( const char arg_char, const char* arg_str, Kind kind,
 
         if( m_options.find( key ) != m_options.end() )
         {
-            throw std::domain_error( "option argument '"
-                                     + std::string( 1, arg_char )
-                                     + "' is not unique" );
+            throw std::domain_error(
+                "option argument '" + std::string( 1, arg_char ) + "' is not unique" );
         }
     }
 
@@ -291,9 +300,8 @@ void Args::add( const char arg_char, const char* arg_str, Kind kind,
     {
         if( m_options.find( arg_str ) != m_options.end() )
         {
-            throw std::domain_error( "option argument '"
-                                     + std::string( arg_str )
-                                     + "' is not unique" );
+            throw std::domain_error(
+                "option argument '" + std::string( arg_str ) + "' is not unique" );
         }
 
         key = std::string( arg_str );
@@ -395,8 +403,7 @@ std::string Args::usage( void ) const
 
         char buffer[ 256 ];
 
-        sprintf( buffer, "  %-30.30s %s\n", str.c_str(),
-            opt.second.description.c_str() );
+        sprintf( buffer, "  %-30.30s %s\n", str.c_str(), opt.second.description.c_str() );
 
         stream << buffer;
     }

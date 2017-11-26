@@ -149,8 +149,12 @@ namespace libstdhl
           public:
             LocationItem( const TextItem& filename, const RangeItem& range );
 
-            LocationItem( const std::string& filename, const u64 beginLine,
-                const u64 beginColumn, const u64 endLine, const u64 endColumn );
+            LocationItem(
+                const std::string& filename,
+                const u64 beginLine,
+                const u64 beginColumn,
+                const u64 endLine,
+                const u64 endColumn );
 
             TextItem filename( void ) const;
 
@@ -166,7 +170,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_LOG_ITEM_H_
+#endif  // _LIBSTDHL_CPP_LOG_ITEM_H_
 
 //
 //  Local variables:

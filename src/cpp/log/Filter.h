@@ -75,8 +75,7 @@ namespace libstdhl
             template < typename T, typename... Args >
             typename T::Ptr set( Args&&... args )
             {
-                const auto obj
-                    = std::make_shared< T >( std::forward< Args >( args )... );
+                const auto obj = std::make_shared< T >( std::forward< Args >( args )... );
                 setChannel( obj );
                 return obj;
             }
@@ -114,7 +113,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_LOG_FILTER_H_
+#endif  // _LIBSTDHL_CPP_LOG_FILTER_H_
 
 //
 //  Local variables:

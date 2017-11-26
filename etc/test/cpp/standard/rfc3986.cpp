@@ -56,14 +56,13 @@ TEST( libstdhl_cpp_standard_rfc3986, https_link )
     EXPECT_STREQ( uri.path().c_str(), "/docs/extensions/overview" );
     EXPECT_STREQ( uri.query().c_str(), "" );
     EXPECT_STREQ( uri.fragment().c_str(), "frag" );
-    EXPECT_STREQ( uri.toString().c_str(),
-        "https://code.visualstudio.com/docs/extensions/overview#frag" );
+    EXPECT_STREQ(
+        uri.toString().c_str(), "https://code.visualstudio.com/docs/extensions/overview#frag" );
 }
 
 TEST( libstdhl_cpp_standard_rfc3986, file_path_ascii_only )
 {
-    const auto uri = UniformResourceIdentifier::fromString(
-        "file:///users/me/c-projects/" );
+    const auto uri = UniformResourceIdentifier::fromString( "file:///users/me/c-projects/" );
 
     EXPECT_STREQ( uri.scheme().c_str(), "file" );
     EXPECT_STREQ( uri.authority().c_str(), "" );
@@ -75,15 +74,13 @@ TEST( libstdhl_cpp_standard_rfc3986, file_path_ascii_only )
 
 TEST( libstdhl_cpp_standard_rfc3986, invalid_uri_path )
 {
-    EXPECT_THROW(
-        UniformResourceIdentifier::fromString( "this is not a valid uri path" );
-        , std::invalid_argument );
+    EXPECT_THROW( UniformResourceIdentifier::fromString( "this is not a valid uri path" );
+                  , std::invalid_argument );
 }
 
 TEST( DISABLED_libstdhl_cpp_standard_rfc3986, file_path_with_sharp )
 {
-    const auto uri = UniformResourceIdentifier::fromString(
-        "file:///users/me/c#-projects/" );
+    const auto uri = UniformResourceIdentifier::fromString( "file:///users/me/c#-projects/" );
 
     EXPECT_STREQ( uri.scheme().c_str(), "file" );
     EXPECT_STREQ( uri.authority().c_str(), "" );

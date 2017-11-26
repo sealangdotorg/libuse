@@ -62,8 +62,7 @@ namespace libstdhl
 
             using Integer::Integer;
 
-            static Natural fromString(
-                const std::string& value, const Radix radix );
+            static Natural fromString( const std::string& value, const Radix radix );
 
             inline friend Natural operator~( Natural arg )
             {
@@ -74,7 +73,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_TYPE_NATURAL_H_
+#endif  // _LIBSTDHL_CPP_TYPE_NATURAL_H_
 
 //
 //  Local variables:

@@ -66,8 +66,7 @@ namespace libstdhl
 
             using Data::Data;
 
-            static Integer fromString(
-                const std::string& value, const Radix radix );
+            static Integer fromString( const std::string& value, const Radix radix );
 
             const u64 operator[]( std::size_t idx ) const;
 
@@ -343,8 +342,7 @@ namespace libstdhl
 
             IntegerLayout& operator+=( const u64 rhs );
 
-            inline friend IntegerLayout operator+(
-                IntegerLayout lhs, const u64 rhs )
+            inline friend IntegerLayout operator+( IntegerLayout lhs, const u64 rhs )
             {
                 lhs += rhs;
                 return lhs;
@@ -356,8 +354,7 @@ namespace libstdhl
 
             IntegerLayout& operator-=( const u64 rhs );
 
-            inline friend IntegerLayout operator-(
-                IntegerLayout lhs, const u64 rhs )
+            inline friend IntegerLayout operator-( IntegerLayout lhs, const u64 rhs )
             {
                 lhs -= rhs;
                 return lhs;
@@ -369,8 +366,7 @@ namespace libstdhl
 
             IntegerLayout& operator*=( const u64 rhs );
 
-            inline friend IntegerLayout operator*(
-                IntegerLayout lhs, const u64 rhs )
+            inline friend IntegerLayout operator*( IntegerLayout lhs, const u64 rhs )
             {
                 lhs *= rhs;
                 return lhs;
@@ -388,8 +384,7 @@ namespace libstdhl
 
             IntegerLayout& operator<<=( const u64 rhs );
 
-            inline friend IntegerLayout operator<<(
-                IntegerLayout lhs, const u64 rhs )
+            inline friend IntegerLayout operator<<( IntegerLayout lhs, const u64 rhs )
             {
                 lhs <<= rhs;
                 return lhs;
@@ -401,8 +396,7 @@ namespace libstdhl
 
             IntegerLayout& operator>>=( const u64 rhs );
 
-            inline friend IntegerLayout operator>>(
-                IntegerLayout lhs, const u64 rhs )
+            inline friend IntegerLayout operator>>( IntegerLayout lhs, const u64 rhs )
             {
                 lhs >>= rhs;
                 return lhs;
@@ -414,7 +408,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_TYPE_INTEGER_H_
+#endif  // _LIBSTDHL_CPP_TYPE_INTEGER_H_
 
 //
 //  Local variables:
