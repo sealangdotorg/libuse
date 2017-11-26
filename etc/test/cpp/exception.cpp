@@ -40,42 +40,22 @@
 //  statement from your version.
 //
 
-#ifndef _LIBSTDHL_H_
-#define _LIBSTDHL_H_
+#include <libstdhl/Test>
 
-/**
-   @brief    TODO
+using namespace libstdhl;
 
-   TODO
-*/
-
-#include <libstdhl/Allocator>
-#include <libstdhl/Ansi>
-#include <libstdhl/Args>
-#include <libstdhl/Binding>
-#include <libstdhl/Enum>
-#include <libstdhl/Exception>
-#include <libstdhl/File>
-#include <libstdhl/Hash>
-#include <libstdhl/Json>
-#include <libstdhl/Labeling>
-#include <libstdhl/List>
-#include <libstdhl/Log>
-#include <libstdhl/Memory>
-#include <libstdhl/Network>
-#include <libstdhl/Random>
-#include <libstdhl/Standard>
-#include <libstdhl/String>
-#include <libstdhl/Type>
-#include <libstdhl/Variadic>
-#include <libstdhl/Version>
-#include <libstdhl/Xml>
-
-namespace libstdhl
+TEST( libstdhl_cpp_Exception, creation )
 {
+    const auto e = new Exception( "message" );
+
+    EXPECT_NE( e, nullptr );
+    EXPECT_STREQ( e->what(), "message" );
 }
 
-#endif  // _LIBSTDHL_H_
+TEST( libstdhl_cpp_Exception, throwing )
+{
+    EXPECT_THROW( throw Exception( "msg" ), Exception );
+}
 
 //
 //  Local variables:

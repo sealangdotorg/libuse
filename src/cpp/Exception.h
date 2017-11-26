@@ -57,9 +57,16 @@ namespace libstdhl
     /**
        @extends Stdhl
     */
-    namespace Exception
+    class Exception : public std::exception
     {
-    }
+      public:
+        Exception( const std::string& message );
+
+        const char* what( void ) const noexcept;
+
+      private:
+        const std::string m_message;
+    };
 }
 
 #endif  // _LIBSTDHL_CPP_EXCEPTION_H_

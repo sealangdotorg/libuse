@@ -43,6 +43,7 @@
 add_library( ${PROJECT}-cpp OBJECT
   Ansi.cpp
   Args.cpp
+  Exception.cpp
   file/TextDocument.cpp
   log/Category.cpp
   log/Chronograph.cpp
