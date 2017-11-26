@@ -42,4 +42,14 @@
 
 TARGET = libstdhl
 
+FORMAT  = src/cpp
+FORMAT += src/cpp/file
+FORMAT += src/cpp/log
+FORMAT += src/cpp/network
+FORMAT += src/cpp/network/*
+FORMAT += src/cpp/standard
+FORMAT += src/cpp/type
+FORMAT += etc/test/cpp
+FORMAT += etc/test/cpp/*
+
 include .cmake/config.mk
