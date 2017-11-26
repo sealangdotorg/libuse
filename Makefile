@@ -52,4 +52,6 @@ FORMAT += src/cpp/type
 FORMAT += etc/test/cpp
 FORMAT += etc/test/cpp/*
 
+UPDATE_ROOT = .
+
 include .cmake/config.mk
