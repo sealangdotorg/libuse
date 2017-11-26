@@ -67,16 +67,14 @@ void RawPosixSocket::connect( void )
 
     if( ioctl( id(), SIOCGIFINDEX, &info ) < 0 )
     {
-        throw std::domain_error(
-            "unable to connect to socket '" + name() + "'" );
+        throw std::domain_error( "unable to connect to socket '" + name() + "'" );
     }
 
     m_ifridx = info.ifr_ifindex;
 
     if( ioctl( id(), SIOCGIFHWADDR, &info ) < 0 )
     {
-        throw std::domain_error(
-            "unable to read socket '" + name() + "' hardware address" );
+        throw std::domain_error( "unable to read socket '" + name() + "' hardware address" );
     }
 
     m_address = { {
@@ -95,8 +93,7 @@ void RawPosixSocket::send( const Packet& data ) const
 {
     if( not connected() )
     {
-        throw std::logic_error(
-            "unable to send, socket '" + name() + "'is not connected" );
+        throw std::logic_error( "unable to send, socket '" + name() + "'is not connected" );
     }
 
     const auto& destination = data.header().destination();
@@ -112,7 +109,8 @@ void RawPosixSocket::send( const Packet& data ) const
     configuration.sll_addr[ 4 ] = destination[ 4 ];
     configuration.sll_addr[ 5 ] = destination[ 5 ];
 
-    auto result = sendto( id(),
+    auto result = sendto(
+        id(),
         data.buffer(),
         data.size(),
         0,
@@ -121,8 +119,7 @@ void RawPosixSocket::send( const Packet& data ) const
 
     if( result < 0 )
     {
-        throw std::domain_error(
-            "unable to send, failed with '" + std::to_string( result ) );
+        throw std::domain_error( "unable to send, failed with '" + std::to_string( result ) );
     }
 }
 

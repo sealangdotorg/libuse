@@ -54,8 +54,7 @@ namespace libstdhl
         {
             static constexpr std::size_t ADDR = 4;
 
-            static constexpr std::size_t HEADER
-                = 1 + 1 + 2 + 2 + 2 + 1 + 1 + 2 + ADDR + ADDR;
+            static constexpr std::size_t HEADER = 1 + 1 + 2 + 2 + 2 + 1 + 1 + 2 + ADDR + ADDR;
 
             static constexpr std::size_t LENGTH = 65535;
 
@@ -86,12 +85,12 @@ namespace libstdhl
 
                 const u8* buffer( void ) const override
                 {
-                    return 0; // m_version4_ihl4.data();
+                    return 0;  // m_version4_ihl4.data();
                 }
 
                 std::size_t size( void ) const override
                 {
-                    return 0; // m_header.size() + m_size;
+                    return 0;  // m_header.size() + m_size;
                 }
 
                 const Address& source( void ) const
@@ -123,7 +122,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_NETWORK_PROTOCOL_H_
+#endif  // _LIBSTDHL_CPP_NETWORK_PROTOCOL_H_
 
 //
 //  Local variables:

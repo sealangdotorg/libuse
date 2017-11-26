@@ -73,8 +73,8 @@ namespace libstdhl
         {
             if( m_label == 0 )
             {
-                m_label = std::make_shared< std::string >(
-                    labelName() + std::to_string( labelId() ) );
+                m_label =
+                    std::make_shared< std::string >( labelName() + std::to_string( labelId() ) );
                 assert( m_label );
             }
 
@@ -93,7 +93,7 @@ namespace libstdhl
     };
 }
 
-#endif // _LIBSTDHL_CPP_LABELING_H_
+#endif  // _LIBSTDHL_CPP_LABELING_H_
 
 //
 //  Local variables:

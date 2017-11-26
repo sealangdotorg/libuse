@@ -75,7 +75,7 @@ namespace libstdhl
             namespace _3
             {
                 static constexpr Type NIL = { { 0x00, 0x00 } };
-                static constexpr Type MIN = { { 0x00, 0x30 } }; // runt frame
+                static constexpr Type MIN = { { 0x00, 0x30 } };  // runt frame
                 static constexpr Type MAX = { { 0x05, 0xDC } };
             }
 
@@ -305,7 +305,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_STANDARD_IEEE802_H_
+#endif  // _LIBSTDHL_CPP_STANDARD_IEEE802_H_
 
 //
 //  Local variables:

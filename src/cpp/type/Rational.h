@@ -64,8 +64,7 @@ namespace libstdhl
 
             Rational( const Integer& numerator, const Integer& denominator );
 
-            static Rational fromString(
-                const std::string& value, const Radix radix );
+            static Rational fromString( const std::string& value, const Radix radix );
 
             const Integer& numerator( void ) const;
 
@@ -97,8 +96,7 @@ namespace libstdhl
           public:
             using Ptr = std::unique_ptr< RationalLayout >;
 
-            RationalLayout(
-                const Integer& numerator, const Integer& denominator );
+            RationalLayout( const Integer& numerator, const Integer& denominator );
 
             Layout* clone( void ) const override;
 
@@ -129,7 +127,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_RATIONAL_H_
+#endif  // _LIBSTDHL_CPP_RATIONAL_H_
 
 //
 //  Local variables:

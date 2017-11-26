@@ -59,7 +59,7 @@ namespace libstdhl
        @class Limits
        @extends Stdhl
     */
-    
+
     template < typename T >
     class Limits
     {
@@ -106,7 +106,7 @@ namespace libstdhl
     };
 }
 
-#endif // _LIBSTDHL_CPP_LIMITS_H_
+#endif  // _LIBSTDHL_CPP_LIMITS_H_
 
 //
 //  Local variables:

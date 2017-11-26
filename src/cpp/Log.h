@@ -86,7 +86,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_LOG_H_
+#endif  // _LIBSTDHL_CPP_LOG_H_
 
 //
 //  Local variables:

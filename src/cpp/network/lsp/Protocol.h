@@ -64,8 +64,7 @@ namespace libstdhl
             static const std::string NL = "\r\n";
             static const std::string CL = "Content-Length";
             static const std::string CT = "Content-Type";
-            static const std::string TYPE
-                = "application/vscode-jsonrpc; charset=utf-8";
+            static const std::string TYPE = "application/vscode-jsonrpc; charset=utf-8";
 
             class Protocol final : public Network::Protocol
             {
@@ -90,7 +89,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_NETWORK_LSP_PROTOCOL_H_
+#endif  // _LIBSTDHL_CPP_NETWORK_LSP_PROTOCOL_H_
 
 //
 //  Local variables:

@@ -68,8 +68,8 @@ namespace libstdhl
             return file.is_open();
         }
 
-        inline std::fstream open( const std::string& filename,
-            const std::ios_base::openmode mode = std::fstream::in )
+        inline std::fstream open(
+            const std::string& filename, const std::ios_base::openmode mode = std::fstream::in )
         {
             std::fstream file;
 
@@ -77,8 +77,7 @@ namespace libstdhl
 
             if( not exists( file ) )
             {
-                throw std::invalid_argument(
-                    "filename '" + filename + "' does not exist" );
+                throw std::invalid_argument( "filename '" + filename + "' does not exist" );
             }
 
             return file;
@@ -103,26 +102,24 @@ namespace libstdhl
             if( not exists( filename ) )
             {
                 throw std::invalid_argument(
-                    "removing file '" + filename
-                    + "' failed, because it does not exist" );
+                    "removing file '" + filename + "' failed, because it does not exist" );
             }
 
             auto result = std::remove( filename.c_str() );
 
             if( result != 0 )
             {
-                throw std::invalid_argument( "removing file '" + filename
-                                             + "' failed (error "
-                                             + std::to_string( result )
-                                             + ")" );
+                throw std::invalid_argument(
+                    "removing file '" + filename + "' failed (error " + std::to_string( result ) +
+                    ")" );
             }
 
             assert( not exists( filename ) );
         }
 
-        inline u8 readLines( const std::string& filename,
-            std::function< void( u32, const std::string& ) >
-                process_line )
+        inline u8 readLines(
+            const std::string& filename,
+            std::function< void( u32, const std::string& ) > process_line )
         {
             u32 cnt = 0;
             std::string line;
@@ -143,22 +140,19 @@ namespace libstdhl
             return 0;
         }
 
-        inline std::fstream& gotoLine(
-            std::fstream& file, const std::size_t num )
+        inline std::fstream& gotoLine( std::fstream& file, const std::size_t num )
         {
             file.seekg( std::ios::beg );
 
             for( std::size_t c = 0; c < ( num - 1 ); c++ )
             {
-                file.ignore(
-                    std::numeric_limits< std::streamsize >::max(), '\n' );
+                file.ignore( std::numeric_limits< std::streamsize >::max(), '\n' );
             }
 
             return file;
         }
 
-        inline std::string readLine(
-            const std::string& filename, const u32 num )
+        inline std::string readLine( const std::string& filename, const u32 num )
         {
             std::string line;
 
@@ -173,7 +167,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_FILE_H_
+#endif  // _LIBSTDHL_CPP_FILE_H_
 
 //
 //  Local variables:

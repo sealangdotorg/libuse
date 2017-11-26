@@ -114,15 +114,14 @@ namespace libstdhl
            from boost, see:
            http://www.boost.org/doc/libs/1_55_0/boost/functional/hash/hash.hpp
          */
-        inline constexpr std::size_t combine(
-            const std::size_t seed, const std::size_t hash )
+        inline constexpr std::size_t combine( const std::size_t seed, const std::size_t hash )
         {
             return seed ^ ( hash + 0x9e3779b9 + ( seed << 6 ) + ( seed >> 2 ) );
         }
     }
 }
 
-#endif // _LIBSTDHL_CPP_HASH_H_
+#endif  // _LIBSTDHL_CPP_HASH_H_
 
 //
 //  Local variables:

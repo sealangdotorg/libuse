@@ -78,12 +78,12 @@ namespace libstdhl
 
                 const u8* buffer( void ) const override
                 {
-                    return 0; // m_source.data();
+                    return 0;  // m_source.data();
                 }
 
                 std::size_t size( void ) const override
                 {
-                    return 0; // m_header.size() + m_size;
+                    return 0;  // m_header.size() + m_size;
                 }
 
                 const Port& source( void ) const
@@ -106,7 +106,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_NETWORK_TCP_PROTOCOL_H_
+#endif  // _LIBSTDHL_CPP_NETWORK_TCP_PROTOCOL_H_
 
 //
 //  Local variables:

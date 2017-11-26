@@ -46,18 +46,15 @@ using namespace libstdhl;
 using namespace Network;
 using namespace TCP;
 
-IPv4PosixSocket::IPv4PosixSocket(
-    const IPv4::Address& address, const Port& port )
-: PosixSocket< IPv4Packet >(
-      "IPv4", PF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP )
+IPv4PosixSocket::IPv4PosixSocket( const IPv4::Address& address, const Port& port )
+: PosixSocket< IPv4Packet >( "IPv4", PF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP )
 , m_address( address )
 , m_port( port )
 {
 }
 
 IPv4PosixSocket::IPv4PosixSocket( const std::string& name )
-: PosixSocket< IPv4Packet >(
-      name, PF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP )
+: PosixSocket< IPv4Packet >( name, PF_INET, SOCK_STREAM | SOCK_NONBLOCK, IPPROTO_TCP )
 , m_address( { { 0 } } )
 , m_port( { { 0 } } )
 {
@@ -76,8 +73,10 @@ IPv4PosixSocket::IPv4PosixSocket( const std::string& name )
     }
 
     m_address = { {
-        (u8)std::stoi( address[ 0 ] ), (u8)std::stoi( address[ 1 ] ),
-        (u8)std::stoi( address[ 2 ] ), (u8)std::stoi( addrPort[ 0 ] ),
+        (u8)std::stoi( address[ 0 ] ),
+        (u8)std::stoi( address[ 1 ] ),
+        (u8)std::stoi( address[ 2 ] ),
+        (u8)std::stoi( addrPort[ 0 ] ),
     } };
 
     u16 port = std::stoi( addrPort[ 1 ] );
@@ -103,33 +102,26 @@ void IPv4PosixSocket::connect( void )
 
     configuration.sin_family = AF_INET;
 
-    configuration.sin_addr.s_addr
-        = ( (u32)m_address[ 3 ] << 24 ) | ( (u32)m_address[ 2 ] << 16 )
-          | ( (u32)m_address[ 1 ] << 8 ) | (u32)m_address[ 0 ];
+    configuration.sin_addr.s_addr = ( (u32)m_address[ 3 ] << 24 ) | ( (u32)m_address[ 2 ] << 16 ) |
+                                    ( (u32)m_address[ 1 ] << 8 ) | (u32)m_address[ 0 ];
 
     configuration.sin_port = ( (u16)m_port[ 1 ] << 8 ) | (u16)m_port[ 0 ];
 
     if( not server() )
     {
-        if(::connect(
-               id(), (struct sockaddr*)&configuration, sizeof( configuration ) )
-            < 0 )
+        if(::connect( id(), (struct sockaddr*)&configuration, sizeof( configuration ) ) < 0 )
         {
-            throw std::domain_error(
-                "unable to connect to TCP address '" + name() + "'" );
+            throw std::domain_error( "unable to connect to TCP address '" + name() + "'" );
         }
     }
     else
     {
-        if(::bind(
-               id(), (struct sockaddr*)&configuration, sizeof( configuration ) )
-            < 0 )
+        if(::bind( id(), (struct sockaddr*)&configuration, sizeof( configuration ) ) < 0 )
         {
-            throw std::domain_error(
-                "unable to bind to TCP address '" + name() + "'" );
+            throw std::domain_error( "unable to bind to TCP address '" + name() + "'" );
         }
         ::listen( id(),
-            5 ); // TODO: PPA: listening queue limit as configurable parameter
+                  5 );  // TODO: PPA: listening queue limit as configurable parameter
     }
 
     setConnected( true );
@@ -173,24 +165,21 @@ IPv4PosixSocket IPv4PosixSocket::accept( void ) const
     {
         throw std::domain_error(
             "cannot accept new connection, because socket is not connected to "
-            "TCP address '"
-            + name()
-            + "'" );
+            "TCP address '" +
+            name() + "'" );
     }
 
     if( not server() )
     {
         throw std::domain_error(
-            "client cannot use accept functionality for TCP address '" + name()
-            + "'" );
+            "client cannot use accept functionality for TCP address '" + name() + "'" );
     }
 
     struct sockaddr_in configuration = { 0 };
 
     socklen_t len = sizeof( configuration );
 
-    i32 connection = ::accept4(
-        id(), (struct sockaddr*)&configuration, &len, SOCK_NONBLOCK );
+    i32 connection = ::accept4( id(), (struct sockaddr*)&configuration, &len, SOCK_NONBLOCK );
 
     return IPv4PosixSocket( PosixSocket< IPv4Packet >( *this, connection ) );
 }

@@ -105,8 +105,7 @@ namespace libstdhl
 
         class Integer;
 
-        Integer createInteger(
-            const std::string& value, const Radix radix = DECIMAL );
+        Integer createInteger( const std::string& value, const Radix radix = DECIMAL );
 
         Integer createInteger( const u64 value );
 
@@ -118,8 +117,7 @@ namespace libstdhl
 
         class Natural;
 
-        Natural createNatural(
-            const std::string& value, const Radix radix = DECIMAL );
+        Natural createNatural( const std::string& value, const Radix radix = DECIMAL );
 
         Natural createNatural( const Integer& value );
 
@@ -131,11 +129,9 @@ namespace libstdhl
 
         class Rational;
 
-        Rational createRational(
-            const std::string& value, const Radix radix = DECIMAL );
+        Rational createRational( const std::string& value, const Radix radix = DECIMAL );
 
-        Rational createRational(
-            const Integer& numerator, const Integer& denominator );
+        Rational createRational( const Integer& numerator, const Integer& denominator );
 
         //
         // Decimal
@@ -143,8 +139,7 @@ namespace libstdhl
 
         class Decimal;
 
-        Decimal createDecimal(
-            const std::string& value, const Radix radix = DECIMAL );
+        Decimal createDecimal( const std::string& value, const Radix radix = DECIMAL );
 
         Decimal createDecimal( const double value );
 
@@ -162,7 +157,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_TYPE_H_
+#endif  // _LIBSTDHL_CPP_TYPE_H_
 
 //
 //  Local variables:

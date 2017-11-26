@@ -68,14 +68,19 @@ namespace libstdhl
           public:
             using Ptr = std::shared_ptr< Data >;
 
-            Data( Level::ID level, const Source::Ptr& source,
-                const Category::Ptr& category, const Items& items );
+            Data(
+                Level::ID level,
+                const Source::Ptr& source,
+                const Category::Ptr& category,
+                const Items& items );
 
-            Data( Level::ID level, const Source::Ptr& source,
-                const Category::Ptr& category );
+            Data( Level::ID level, const Source::Ptr& source, const Category::Ptr& category );
 
-            Data( Level::ID level, const Source::Ptr& source,
-                const Category::Ptr& category, const std::string& text );
+            Data(
+                Level::ID level,
+                const Source::Ptr& source,
+                const Category::Ptr& category,
+                const std::string& text );
 
             Data( Level::ID level, const std::string& text );
 
@@ -100,8 +105,7 @@ namespace libstdhl
             template < typename T, typename... Args >
             void add( Args&&... args )
             {
-                m_items.add(
-                    std::make_shared< T >( std::forward< Args >( args )... ) );
+                m_items.add( std::make_shared< T >( std::forward< Args >( args )... ) );
             }
 
           private:
@@ -117,7 +121,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_LOG_DATA_H_
+#endif  // _LIBSTDHL_CPP_LOG_DATA_H_
 
 //
 //  Local variables:

@@ -87,7 +87,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_NETWORK_ETHERNET_SOCKET_H_
+#endif  // _LIBSTDHL_CPP_NETWORK_ETHERNET_SOCKET_H_
 
 //
 //  Local variables:

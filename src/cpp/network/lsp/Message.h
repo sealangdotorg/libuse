@@ -113,11 +113,9 @@ namespace libstdhl
               public:
                 RequestMessage( const Data& data );
 
-                RequestMessage(
-                    const std::size_t id, const std::string& method );
+                RequestMessage( const std::size_t id, const std::string& method );
 
-                RequestMessage(
-                    const std::string& id, const std::string& method );
+                RequestMessage( const std::string& id, const std::string& method );
 
                 std::string id( void ) const;
 
@@ -129,8 +127,7 @@ namespace libstdhl
 
                 void setParams( const Data& data );
 
-                virtual void process(
-                    ServerInterface& interface ) const override;
+                virtual void process( ServerInterface& interface ) const override;
 
                 static u1 isValid( const Data& data );
             };
@@ -176,8 +173,7 @@ namespace libstdhl
 
                 void setParams( const Data& data );
 
-                virtual void process(
-                    ServerInterface& interface ) const override;
+                virtual void process( ServerInterface& interface ) const override;
 
                 static u1 isValid( const Data& data );
             };
@@ -218,11 +214,9 @@ namespace libstdhl
 
                 void setError( const ErrorCode code, const std::string& name );
 
-                void setError( const ErrorCode code, const std::string& name,
-                    const Data& data );
+                void setError( const ErrorCode code, const std::string& name, const Data& data );
 
-                virtual void process(
-                    ServerInterface& interface ) const override;
+                virtual void process( ServerInterface& interface ) const override;
 
                 static u1 isValid( const Data& data );
             };
@@ -230,7 +224,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_NETWORK_LSP_MESSAGE_H_
+#endif  // _LIBSTDHL_CPP_NETWORK_LSP_MESSAGE_H_
 
 //
 //  Local variables:

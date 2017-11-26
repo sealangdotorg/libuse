@@ -83,7 +83,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_TYPE_BOOLEAN_H_
+#endif  // _LIBSTDHL_CPP_TYPE_BOOLEAN_H_
 
 //
 //  Local variables:

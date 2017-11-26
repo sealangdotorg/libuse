@@ -62,7 +62,7 @@ namespace libstdhl
     };
 }
 
-#endif // _LIBSTDHL_CPP_JSON_H_
+#endif  // _LIBSTDHL_CPP_JSON_H_
 
 //
 //  Local variables:

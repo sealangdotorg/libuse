@@ -89,7 +89,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_FILE_TEXT_DOCUMENT_H_
+#endif  // _LIBSTDHL_CPP_FILE_TEXT_DOCUMENT_H_
 
 //
 //  Local variables:

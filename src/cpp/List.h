@@ -62,19 +62,16 @@ namespace libstdhl
 
         using iterator = typename std::vector< typename T::Ptr >::iterator;
 
-        using reverse_iterator =
-            typename std::vector< typename T::Ptr >::reverse_iterator;
+        using reverse_iterator = typename std::vector< typename T::Ptr >::reverse_iterator;
 
-        using const_iterator =
-            typename std::vector< typename T::Ptr >::const_iterator;
+        using const_iterator = typename std::vector< typename T::Ptr >::const_iterator;
 
         using const_reverse_iterator =
             typename std::vector< typename T::Ptr >::const_reverse_iterator;
 
         using reference = typename std::vector< typename T::Ptr >::reference;
 
-        using const_reference =
-            typename std::vector< typename T::Ptr >::const_reference;
+        using const_reference = typename std::vector< typename T::Ptr >::const_reference;
 
         List( void )
         {
@@ -238,7 +235,7 @@ namespace libstdhl
     };
 }
 
-#endif // _LIBSTDHL_LIST_H_
+#endif  // _LIBSTDHL_LIST_H_
 
 //
 //  Local variables:

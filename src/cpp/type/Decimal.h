@@ -69,8 +69,7 @@ namespace libstdhl
 
             Decimal( const Natural& integer );
 
-            static Decimal fromString(
-                const std::string& value, const Radix radix );
+            static Decimal fromString( const std::string& value, const Radix radix );
 
             Integer toInteger( void ) const;
 
@@ -149,7 +148,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_TYPE_DECIMAL_H_
+#endif  // _LIBSTDHL_CPP_TYPE_DECIMAL_H_
 
 //
 //  Local variables:

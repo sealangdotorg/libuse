@@ -57,7 +57,8 @@ using namespace libstdhl;
 using namespace Standard;
 using namespace RFC3986;
 
-UniformResourceIdentifier::UniformResourceIdentifier( const std::string& scheme,
+UniformResourceIdentifier::UniformResourceIdentifier(
+    const std::string& scheme,
     const std::string& authority,
     const std::string& path,
     const std::string& query,
@@ -119,8 +120,7 @@ std::string UniformResourceIdentifier::toString( void ) const
     return tmp;
 }
 
-UniformResourceIdentifier UniformResourceIdentifier::fromString(
-    const std::string& uri )
+UniformResourceIdentifier UniformResourceIdentifier::fromString( const std::string& uri )
 {
     std::regex uri_regex(
         // 1: scheme
@@ -139,8 +139,7 @@ UniformResourceIdentifier UniformResourceIdentifier::fromString(
 
     if( uri_start == uri_end )
     {
-        throw std::invalid_argument(
-            "invalid URI to parse from string '" + uri + "'" );
+        throw std::invalid_argument( "invalid URI to parse from string '" + uri + "'" );
     }
 
     auto match = *uri_start;
@@ -162,8 +161,7 @@ UniformResourceIdentifier UniformResourceIdentifier::fromString(
             "invalid URI path '" + path + "' found in string '" + uri + "'" );
     }
 
-    return UniformResourceIdentifier(
-        scheme, authority, path, query, fragment );
+    return UniformResourceIdentifier( scheme, authority, path, query, fragment );
 }
 
 //

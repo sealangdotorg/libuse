@@ -72,8 +72,7 @@ LSP::Packet::Packet( const std::string& data )
             const auto type = String::trim( p.substr( CL.size() + 1 ) );
             if( type.compare( TYPE ) != 0 )
             {
-                throw std::domain_error(
-                    "LSP: invalid content type '" + type + "'" );
+                throw std::domain_error( "LSP: invalid content type '" + type + "'" );
             }
         }
         // check for json rpc content data
@@ -83,8 +82,7 @@ LSP::Packet::Packet( const std::string& data )
         }
         else
         {
-            throw std::domain_error(
-                "LSP: invalid packet content '" + p + "'" );
+            throw std::domain_error( "LSP: invalid packet content '" + p + "'" );
         }
     }
 }

@@ -67,7 +67,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_TYPE_LAYOUT_H_
+#endif  // _LIBSTDHL_CPP_TYPE_LAYOUT_H_
 
 //
 //  Local variables:

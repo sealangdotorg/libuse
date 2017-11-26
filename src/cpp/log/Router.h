@@ -72,8 +72,7 @@ namespace libstdhl
             template < typename T, typename... Args >
             typename T::Ptr add( Args&&... args )
             {
-                const auto obj
-                    = std::make_shared< T >( std::forward< Args >( args )... );
+                const auto obj = std::make_shared< T >( std::forward< Args >( args )... );
                 addFilter( obj );
                 return obj;
             }
@@ -87,7 +86,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_LOG_ROUTER_H_
+#endif  // _LIBSTDHL_CPP_LOG_ROUTER_H_
 
 //
 //  Local variables:

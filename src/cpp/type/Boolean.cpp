@@ -73,12 +73,12 @@ Boolean Boolean::fromString( const std::string& value )
 
     switch( v )
     {
-        case libstdhl::String::value( "0" ): // [fallthrough]
+        case libstdhl::String::value( "0" ):  // [fallthrough]
         case libstdhl::String::value( "false" ):
         {
             return createBoolean( false );
         }
-        case libstdhl::String::value( "1" ): // [fallthrough]
+        case libstdhl::String::value( "1" ):  // [fallthrough]
         case libstdhl::String::value( "true" ):
         {
             return createBoolean( true );

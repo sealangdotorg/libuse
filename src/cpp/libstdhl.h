@@ -74,7 +74,7 @@ namespace libstdhl
 {
 }
 
-#endif // _LIBSTDHL_H_
+#endif  // _LIBSTDHL_H_
 
 //
 //  Local variables:

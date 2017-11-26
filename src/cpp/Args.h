@@ -79,27 +79,41 @@ namespace libstdhl
         };
 
       public:
-        Args( int argc, const char** argv,
-            std::function< i32( const char* ) > process_non_option
-            = []( const char* arg ) { return 0; } );
+        Args(
+            int argc,
+            const char** argv,
+            std::function< i32( const char* ) > process_non_option = []( const char* arg ) {
+                return 0;
+            } );
 
-        Args( int argc, const char** argv, Mode mode,
-            std::function< i32( const char* ) > process_non_option
-            = []( const char* arg ) { return 0; } );
+        Args(
+            int argc,
+            const char** argv,
+            Mode mode,
+            std::function< i32( const char* ) > process_non_option = []( const char* arg ) {
+                return 0;
+            } );
 
         int parse( Logger& log );
 
-        void add( const char arg_char, Kind kind,
+        void add(
+            const char arg_char,
+            Kind kind,
             const std::string& description,
             std::function< i32( const char* ) > process_option,
             const std::string& metatag = "arg" );
 
-        void add( const char* arg_str, Kind kind,
+        void add(
+            const char* arg_str,
+            Kind kind,
             const std::string& description,
             std::function< i32( const char* ) > process_option,
             const std::string& metatag = "arg" );
 
-        void add( const char arg_char, const char* arg_str, Kind kind,
+        void add(
+            const char arg_char,
+            const char* arg_str,
+            Kind kind,
             const std::string& description,
             std::function< i32( const char* ) > process_option,
             const std::string& metatag = "arg" );
@@ -129,12 +143,11 @@ namespace libstdhl
 
         std::unordered_map< std::string, Option > m_options;
 
-        int ( *m_getopt_func )(
-            int, char* const*, const char*, const option*, int* );
+        int ( *m_getopt_func )( int, char* const*, const char*, const option*, int* );
     };
 }
 
-#endif // _LIBSTDHL_CPP_ARGS_H_
+#endif  // _LIBSTDHL_CPP_ARGS_H_
 
 //
 //  Local variables:

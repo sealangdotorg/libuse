@@ -65,8 +65,7 @@ namespace libstdhl
         template < typename T, typename... Args >
         std::unique_ptr< T > make_unique( Args&&... args )
         {
-            return std::unique_ptr< T >(
-                new T( std::forward< Args >( args )... ) );
+            return std::unique_ptr< T >( new T( std::forward< Args >( args )... ) );
             // TODO: PPA: change this when C++14 make_unique is ready
         }
 
@@ -98,8 +97,7 @@ namespace libstdhl
             }
 
             auto ptr = make< T >( obj );
-            return std::static_pointer_cast< T >(
-                obj.cache().emplace( h, ptr ).first->second );
+            return std::static_pointer_cast< T >( obj.cache().emplace( h, ptr ).first->second );
         }
 
         //
@@ -115,7 +113,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_MEMORY_H_
+#endif  // _LIBSTDHL_CPP_MEMORY_H_
 
 //
 //  Local variables:

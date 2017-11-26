@@ -111,42 +111,35 @@ namespace libstdhl
 
                 constexpr const char* diagnostics = "diagnostics";
 
-                constexpr const char* didChangeConfiguration
-                    = "didChangeConfiguration";
+                constexpr const char* didChangeConfiguration = "didChangeConfiguration";
 
-                constexpr const char* didChangeWatchedFiles
-                    = "didChangeWatchedFiles";
+                constexpr const char* didChangeWatchedFiles = "didChangeWatchedFiles";
 
                 constexpr const char* didSave = "didSave";
 
                 constexpr const char* documentChanges = "documentChanges";
 
-                constexpr const char* documentFormattingProvider
-                    = "documentFormattingProvider";
+                constexpr const char* documentFormattingProvider = "documentFormattingProvider";
 
                 constexpr const char* documentHighlight = "documentHighlight";
 
-                constexpr const char* documentHighlightProvider
-                    = "documentHighlightProvider";
+                constexpr const char* documentHighlightProvider = "documentHighlightProvider";
 
                 constexpr const char* documentLink = "documentLink";
 
-                constexpr const char* documentLinkProvider
-                    = "documentLinkProvider";
+                constexpr const char* documentLinkProvider = "documentLinkProvider";
 
-                constexpr const char* documentOnTypeFormattingProvider
-                    = "documentOnTypeFormattingProvider";
+                constexpr const char* documentOnTypeFormattingProvider =
+                    "documentOnTypeFormattingProvider";
 
-                constexpr const char* documentRangeFormattingProvider
-                    = "documentRangeFormattingProvider";
+                constexpr const char* documentRangeFormattingProvider =
+                    "documentRangeFormattingProvider";
 
                 constexpr const char* documentSymbol = "documentSymbol";
 
-                constexpr const char* documentSymbolProvider
-                    = "documentSymbolProvider";
+                constexpr const char* documentSymbolProvider = "documentSymbolProvider";
 
-                constexpr const char* dynamicRegistration
-                    = "dynamicRegistration";
+                constexpr const char* dynamicRegistration = "dynamicRegistration";
 
                 // E
 
@@ -158,8 +151,7 @@ namespace libstdhl
 
                 constexpr const char* executeCommand = "executeCommand";
 
-                constexpr const char* executeCommandProvider
-                    = "executeCommandProvider";
+                constexpr const char* executeCommandProvider = "executeCommandProvider";
 
                 constexpr const char* exit = "exit";
 
@@ -167,8 +159,7 @@ namespace libstdhl
 
                 // F
 
-                constexpr const char* firstTriggerCharacter
-                    = "firstTriggerCharacter";
+                constexpr const char* firstTriggerCharacter = "firstTriggerCharacter";
 
                 constexpr const char* formatting = "formatting";
 
@@ -186,8 +177,7 @@ namespace libstdhl
 
                 constexpr const char* includeText = "includeText";
 
-                constexpr const char* initializationOptions
-                    = "initializationOptions";
+                constexpr const char* initializationOptions = "initializationOptions";
 
                 constexpr const char* initialize = "initialize";
 
@@ -215,8 +205,7 @@ namespace libstdhl
 
                 constexpr const char* method = "method";
 
-                constexpr const char* moreTriggerCharacter
-                    = "moreTriggerCharacter";
+                constexpr const char* moreTriggerCharacter = "moreTriggerCharacter";
 
                 // N
 
@@ -276,8 +265,7 @@ namespace libstdhl
 
                 constexpr const char* signatureHelp = "signatureHelp";
 
-                constexpr const char* signatureHelpProvider
-                    = "signatureHelpProvider";
+                constexpr const char* signatureHelpProvider = "signatureHelpProvider";
 
                 constexpr const char* snippetSupport = "snippetSupport";
 
@@ -297,22 +285,18 @@ namespace libstdhl
 
                 constexpr const char* textDocumentSync = "textDocumentSync";
 
-                constexpr const char* textDocument_codeAction
-                    = "textDocument/codeAction";
+                constexpr const char* textDocument_codeAction = "textDocument/codeAction";
 
-                constexpr const char* textDocument_codeLens
-                    = "textDocument/codeLens";
+                constexpr const char* textDocument_codeLens = "textDocument/codeLens";
 
-                constexpr const char* textDocument_didChange
-                    = "textDocument/didChange";
+                constexpr const char* textDocument_didChange = "textDocument/didChange";
 
-                constexpr const char* textDocument_didOpen
-                    = "textDocument/didOpen";
+                constexpr const char* textDocument_didOpen = "textDocument/didOpen";
 
                 constexpr const char* textDocument_hover = "textDocument/hover";
 
-                constexpr const char* textDocument_publishDiagnostics
-                    = "textDocument/publishDiagnostics";
+                constexpr const char* textDocument_publishDiagnostics =
+                    "textDocument/publishDiagnostics";
 
                 constexpr const char* title = "title";
 
@@ -340,11 +324,9 @@ namespace libstdhl
 
                 constexpr const char* workspaceEdit = "workspaceEdit";
 
-                constexpr const char* workspaceSymbolProvider
-                    = "workspaceSymbolProvider";
+                constexpr const char* workspaceSymbolProvider = "workspaceSymbolProvider";
 
-                constexpr const char* workspace_executeCommand
-                    = "workspace/executeCommand";
+                constexpr const char* workspace_executeCommand = "workspace/executeCommand";
 
                 // X
 
@@ -356,7 +338,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_NETWORK_LSP_IDENTIFIER_H_
+#endif  // _LIBSTDHL_CPP_NETWORK_LSP_IDENTIFIER_H_
 
 //
 //  Local variables:

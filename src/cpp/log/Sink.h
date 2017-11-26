@@ -76,7 +76,7 @@ namespace libstdhl
     }
 }
 
-#endif // _LIBSTDHL_CPP_LOG_SINK_H_
+#endif  // _LIBSTDHL_CPP_LOG_SINK_H_
 
 //
 //  Local variables:

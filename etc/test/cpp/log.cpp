@@ -135,8 +135,7 @@ TEST( libstdhl_cpp_log, chronograph )
 
     c.stop();
 
-    s.add( Log::Level::ID::INFORMATIONAL,
-        "setup took '" + std::string( c ) + "'" );
+    s.add( Log::Level::ID::INFORMATIONAL, "setup took '" + std::string( c ) + "'" );
 
     s.add( Log::Level::ID::INFORMATIONAL, c );
 

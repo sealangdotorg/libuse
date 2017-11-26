@@ -45,8 +45,8 @@
 
 #include <libstdhl/Type>
 
-#include <unordered_set>
 #include <cassert>
+#include <unordered_set>
 
 /**
    @brief    TODO
@@ -83,7 +83,7 @@ namespace libstdhl
     };
 }
 
-#endif // _LIBSTDHL_CPP_ALLOCATOR_H_
+#endif  // _LIBSTDHL_CPP_ALLOCATOR_H_
 
 //
 //  Local variables:

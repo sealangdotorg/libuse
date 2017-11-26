@@ -60,7 +60,6 @@ namespace libstdhl
     */
     namespace Array
     {
-
         template < std::size_t... Is >
         struct seq
         {
@@ -74,11 +73,12 @@ namespace libstdhl
         {
         };
 
-        template < std::size_t N1, std::size_t... I1, std::size_t N2,
-            std::size_t... I2 >
+        template < std::size_t N1, std::size_t... I1, std::size_t N2, std::size_t... I2 >
         constexpr std::array< u8, N1 + N2 > concat(
-            const std::array< u8, N1 >& a1, const std::array< u8, N2 >& a2,
-            seq< I1... >, seq< I2... > )
+            const std::array< u8, N1 >& a1,
+            const std::array< u8, N2 >& a2,
+            seq< I1... >,
+            seq< I2... > )
         {
             return { { a1[ I1 ]..., a2[ I2 ]... } };
         }
@@ -95,12 +95,11 @@ namespace libstdhl
     constexpr std::array< u8, N1 + N2 > operator+(
         const std::array< u8, N1 >& a1, const std::array< u8, N2 >& a2 )
     {
-        return Array::concat(
-            a1, a2, Array::gen_seq< N1 >{}, Array::gen_seq< N2 >{} );
+        return Array::concat( a1, a2, Array::gen_seq< N1 >{}, Array::gen_seq< N2 >{} );
     }
 }
 
-#endif // _LIBSTDHL_CPP_ARRAY_H_
+#endif  // _LIBSTDHL_CPP_ARRAY_H_
 
 //
 //  Local variables:

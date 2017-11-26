@@ -116,8 +116,8 @@ namespace libstdhl
         template < const Log::Level::ID LEVEL, typename... Args >
         void log( Args&&... args )
         {
-            m_stream.add( LEVEL, source(), category(),
-                Log::Items( { std::forward< Args >( args )... } ) );
+            m_stream.add(
+                LEVEL, source(), category(), Log::Items( { std::forward< Args >( args )... } ) );
             diagnostic( m_stream.data().back() );
         }
 
@@ -142,7 +142,7 @@ namespace libstdhl
     };
 }
 
-#endif // _LIBSTDHL_CPP_LOG_LOGGER_H_
+#endif  // _LIBSTDHL_CPP_LOG_LOGGER_H_
 
 //
 //  Local variables:

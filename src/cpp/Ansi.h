@@ -163,30 +163,27 @@ namespace libstdhl
         template < const Style STYLE >
         std::string format( const std::string& text )
         {
-            const auto enable
-                = ( SGR )( (std::size_t)SGR::BOLD_ON + (std::size_t)STYLE );
+            const auto enable = ( SGR )( (std::size_t)SGR::BOLD_ON + (std::size_t)STYLE );
 
-            const auto disable
-                = ( SGR )( (std::size_t)SGR::BOLD_OFF + (std::size_t)STYLE );
+            const auto disable = ( SGR )( (std::size_t)SGR::BOLD_OFF + (std::size_t)STYLE );
 
             return format< enable, disable >( text );
         }
 
         template < const Color COLOR >
-        std::string format(
-            const std::string& text, const u1 background = false )
+        std::string format( const std::string& text, const u1 background = false )
         {
             if( not background )
             {
-                const auto color = ( SGR )(
-                    (std::size_t)SGR::FOREGROUND_BLACK + (std::size_t)COLOR );
+                const auto color =
+                    ( SGR )( (std::size_t)SGR::FOREGROUND_BLACK + (std::size_t)COLOR );
 
                 return format< color, SGR::FOREGROUND_DEFAULT >( text );
             }
             else
             {
-                const auto color = ( SGR )(
-                    (std::size_t)SGR::BACKGROUND_BLACK + (std::size_t)COLOR );
+                const auto color =
+                    ( SGR )( (std::size_t)SGR::BACKGROUND_BLACK + (std::size_t)COLOR );
 
                 return format< color, SGR::BACKGROUND_DEFAULT >( text );
             }
@@ -194,49 +191,45 @@ namespace libstdhl
 
         // 24bit RGB -- ISO/IEC 8613-6 : 1994 (E) -- ITU-T Rec. T.416 (1993 E)
         template < const u8 R, const u8 G, const u8 B >
-        std::string format(
-            const std::string& text, const u1 background = false )
+        std::string format( const std::string& text, const u1 background = false )
         {
-            const auto option = ";2;" + std::to_string( R ) + ";"
-                                + std::to_string( G ) + ";"
-                                + std::to_string( B );
+            const auto option =
+                ";2;" + std::to_string( R ) + ";" + std::to_string( G ) + ";" + std::to_string( B );
 
             if( not background )
             {
-                return CSI( SGR::FOREGROUND_EXTENSION, option ) + text
-                       + CSI( SGR::FOREGROUND_DEFAULT );
+                return CSI( SGR::FOREGROUND_EXTENSION, option ) + text +
+                       CSI( SGR::FOREGROUND_DEFAULT );
             }
             else
             {
-                return CSI( SGR::BACKGROUND_EXTENSION, option ) + text
-                       + CSI( SGR::BACKGROUND_DEFAULT );
+                return CSI( SGR::BACKGROUND_EXTENSION, option ) + text +
+                       CSI( SGR::BACKGROUND_DEFAULT );
             }
         }
 
         // 32bit CMYK -- ISO/IEC 8613-6 : 1994 (E) -- ITU-T Rec. T.416 (1993 E)
         template < const u8 C, const u8 M, const u8 Y, const u8 K >
-        std::string format(
-            const std::string& text, const u1 background = false )
+        std::string format( const std::string& text, const u1 background = false )
         {
-            const auto option
-                = ";4;" + std::to_string( C ) + ";" + std::to_string( M ) + ";"
-                  + std::to_string( Y ) + ";" + std::to_string( K );
+            const auto option = ";4;" + std::to_string( C ) + ";" + std::to_string( M ) + ";" +
+                                std::to_string( Y ) + ";" + std::to_string( K );
 
             if( not background )
             {
-                return CSI( SGR::FOREGROUND_EXTENSION, option ) + text
-                       + CSI( SGR::FOREGROUND_DEFAULT );
+                return CSI( SGR::FOREGROUND_EXTENSION, option ) + text +
+                       CSI( SGR::FOREGROUND_DEFAULT );
             }
             else
             {
-                return CSI( SGR::BACKGROUND_EXTENSION, option ) + text
-                       + CSI( SGR::BACKGROUND_DEFAULT );
+                return CSI( SGR::BACKGROUND_EXTENSION, option ) + text +
+                       CSI( SGR::BACKGROUND_DEFAULT );
             }
         }
     };
 }
 
-#endif // _LIBSTDHL_CPP_ANSI_H_
+#endif  // _LIBSTDHL_CPP_ANSI_H_
 
 //
 //  Local variables:

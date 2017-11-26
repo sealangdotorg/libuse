@@ -88,8 +88,7 @@ namespace libstdhl
               public:
                 ResponseError( const Data& data );
 
-                ResponseError(
-                    const ErrorCode code, const std::string& message );
+                ResponseError( const ErrorCode code, const std::string& message );
 
                 ErrorCode code( void ) const;
 
@@ -106,8 +105,7 @@ namespace libstdhl
 
             namespace TextDocument
             {
-                constexpr const std::array< const char*, 3 > EOL
-                    = { { "\n", "\r\n", "\r" } };
+                constexpr const std::array< const char*, 3 > EOL = { { "\n", "\r\n", "\r" } };
             }
 
             class Position : public Data
@@ -240,8 +238,7 @@ namespace libstdhl
                 static u1 isValid( const Data& data );
             };
 
-            class VersionedTextDocumentIdentifier
-                : public TextDocumentIdentifier
+            class VersionedTextDocumentIdentifier : public TextDocumentIdentifier
             {
               public:
                 VersionedTextDocumentIdentifier( const Data& data );
@@ -283,8 +280,7 @@ namespace libstdhl
 
                 Data documentChanges( void ) const;
 
-                void addDocumentChange(
-                    const TextDocumentEdit& documentChange );
+                void addDocumentChange( const TextDocumentEdit& documentChange );
 
                 static u1 isValid( const Data& data );
             };
@@ -294,7 +290,8 @@ namespace libstdhl
               public:
                 TextDocumentItem( const Data& data );
 
-                TextDocumentItem( const DocumentUri& uri,
+                TextDocumentItem(
+                    const DocumentUri& uri,
                     const std::string& languageId,
                     const std::size_t version,
                     const std::string& text );
@@ -316,8 +313,7 @@ namespace libstdhl
                 TextDocumentPositionParams( const Data& data );
 
                 TextDocumentPositionParams(
-                    const TextDocumentIdentifier& textDocument,
-                    const Position& position );
+                    const TextDocumentIdentifier& textDocument, const Position& position );
 
                 TextDocumentIdentifier textDocument( void ) const;
 
@@ -359,8 +355,7 @@ namespace libstdhl
               public:
                 DocumentSelector( const Data& data );
 
-                DocumentSelector(
-                    const std::vector< DocumentFilter >& documentFilters );
+                DocumentSelector( const std::vector< DocumentFilter >& documentFilters );
 
                 static u1 isValid( const Data& data );
             };
@@ -409,15 +404,13 @@ namespace libstdhl
 
                 DynamicRegistration didChangeConfiguration( void ) const;
 
-                void setDidChangeConfiguration(
-                    const DynamicRegistration& didChangeConfiguration );
+                void setDidChangeConfiguration( const DynamicRegistration& didChangeConfiguration );
 
                 u1 hasDidChangeWatchedFiles( void ) const;
 
                 DynamicRegistration didChangeWatchedFiles( void ) const;
 
-                void didChangeWatchedFiles(
-                    const DynamicRegistration& didChangeWatchedFiles );
+                void didChangeWatchedFiles( const DynamicRegistration& didChangeWatchedFiles );
 
                 u1 hasSymbol( void ) const;
 
@@ -429,8 +422,7 @@ namespace libstdhl
 
                 DynamicRegistration executeCommand( void ) const;
 
-                void executeCommand(
-                    const DynamicRegistration& executeCommand );
+                void executeCommand( const DynamicRegistration& executeCommand );
 
                 static u1 isValid( const Data& data );
             };
@@ -518,8 +510,7 @@ namespace libstdhl
 
                 Synchronization synchronization( void ) const;
 
-                void setSynchronization(
-                    const Synchronization& synchronization );
+                void setSynchronization( const Synchronization& synchronization );
 
                 u1 hasCompletion( void ) const;
 
@@ -537,8 +528,7 @@ namespace libstdhl
 
                 DynamicRegistration signatureHelp( void ) const;
 
-                void setSignatureHelp(
-                    const DynamicRegistration& signatureHelp );
+                void setSignatureHelp( const DynamicRegistration& signatureHelp );
 
                 u1 hasReferences( void ) const;
 
@@ -550,15 +540,13 @@ namespace libstdhl
 
                 DynamicRegistration documentHighlight( void ) const;
 
-                void setDocumentHighlight(
-                    const DynamicRegistration& documentHighlight );
+                void setDocumentHighlight( const DynamicRegistration& documentHighlight );
 
                 u1 hasDocumentSymbol( void ) const;
 
                 DynamicRegistration documentSymbol( void ) const;
 
-                void setDocumentSymbol(
-                    const DynamicRegistration& documentSymbol );
+                void setDocumentSymbol( const DynamicRegistration& documentSymbol );
 
                 u1 hasFormatting( void ) const;
 
@@ -570,15 +558,13 @@ namespace libstdhl
 
                 DynamicRegistration rangeFormatting( void ) const;
 
-                void setRangeFormatting(
-                    const DynamicRegistration& rangeFormatting );
+                void setRangeFormatting( const DynamicRegistration& rangeFormatting );
 
                 u1 hasOnTypeFormatting( void ) const;
 
                 DynamicRegistration onTypeFormatting( void ) const;
 
-                void setOnTypeFormatting(
-                    const DynamicRegistration& onTypeFormatting );
+                void setOnTypeFormatting( const DynamicRegistration& onTypeFormatting );
 
                 u1 hasDefinition( void ) const;
 
@@ -624,15 +610,13 @@ namespace libstdhl
 
                 WorkspaceClientCapabilities workspace( void ) const;
 
-                void setWorkspace(
-                    const WorkspaceClientCapabilities& workspace );
+                void setWorkspace( const WorkspaceClientCapabilities& workspace );
 
                 u1 hasTextDocument( void ) const;
 
                 TextDocumentClientCapabilities textDocument( void ) const;
 
-                void setTextDocument(
-                    const TextDocumentClientCapabilities& textDocument );
+                void setTextDocument( const TextDocumentClientCapabilities& textDocument );
 
                 u1 hasExperimental( void ) const;
 
@@ -723,8 +707,7 @@ namespace libstdhl
 
                 Data triggerCharacters( void ) const;
 
-                void addTriggerCharacters(
-                    const std::string& triggerCharacter );
+                void addTriggerCharacters( const std::string& triggerCharacter );
 
                 static u1 isValid( const Data& data );
             };
@@ -740,8 +723,7 @@ namespace libstdhl
 
                 Data triggerCharacters( void ) const;
 
-                void addTriggerCharacters(
-                    const std::string& triggerCharacter );
+                void addTriggerCharacters( const std::string& triggerCharacter );
 
                 static u1 isValid( const Data& data );
             };
@@ -767,8 +749,7 @@ namespace libstdhl
               public:
                 DocumentOnTypeFormattingOptions( const Data& data );
 
-                DocumentOnTypeFormattingOptions(
-                    const std::string& firstTriggerCharacter );
+                DocumentOnTypeFormattingOptions( const std::string& firstTriggerCharacter );
 
                 std::string firstTriggerCharacter( void ) const;
 
@@ -776,8 +757,7 @@ namespace libstdhl
 
                 Data moreTriggerCharacter( void ) const;
 
-                void addMoreTriggerCharacter(
-                    const Data& moreTriggerCharacter );
+                void addMoreTriggerCharacter( const Data& moreTriggerCharacter );
 
                 static u1 isValid( const Data& data );
             };
@@ -811,11 +791,9 @@ namespace libstdhl
 
                 TextDocumentSyncOptions textDocumentSync( void ) const;
 
-                void setTextDocumentSync(
-                    const TextDocumentSyncOptions& textDocumentSync );
+                void setTextDocumentSync( const TextDocumentSyncOptions& textDocumentSync );
 
-                void setTextDocumentSync(
-                    const TextDocumentSyncKind& textDocumentSync );
+                void setTextDocumentSync( const TextDocumentSyncKind& textDocumentSync );
 
                 u1 hasHoverProvider( void ) const;
 
@@ -827,15 +805,13 @@ namespace libstdhl
 
                 CompletionOptions completionProvider( void ) const;
 
-                void setCompletionProvider(
-                    const CompletionOptions& completionProvider );
+                void setCompletionProvider( const CompletionOptions& completionProvider );
 
                 u1 hasSignatureHelpProvider( void ) const;
 
                 SignatureHelpOptions signatureHelpProvider( void ) const;
 
-                void setSignatureHelpProvider(
-                    const SignatureHelpOptions& signatureHelpProvider );
+                void setSignatureHelpProvider( const SignatureHelpOptions& signatureHelpProvider );
 
                 u1 hasDefinitionProvider( void ) const;
 
@@ -853,22 +829,19 @@ namespace libstdhl
 
                 u1 documentHighlightProvider( void ) const;
 
-                void setDocumentHighlightProvider(
-                    const u1 documentHighlightProvider );
+                void setDocumentHighlightProvider( const u1 documentHighlightProvider );
 
                 u1 hasDocumentSymbolProvider( void ) const;
 
                 u1 documentSymbolProvider( void ) const;
 
-                void setDocumentSymbolProvider(
-                    const u1 documentSymbolProvider );
+                void setDocumentSymbolProvider( const u1 documentSymbolProvider );
 
                 u1 hasWorkspaceSymbolProvider( void ) const;
 
                 u1 workspaceSymbolProvider( void ) const;
 
-                void setWorkspaceSymbolProvider(
-                    const u1 workspaceSymbolProvider );
+                void setWorkspaceSymbolProvider( const u1 workspaceSymbolProvider );
 
                 u1 hasCodeActionProvider( void ) const;
 
@@ -880,31 +853,26 @@ namespace libstdhl
 
                 CodeLensOptions codeLensProvider( void ) const;
 
-                void setCodeLensProvider(
-                    const CodeLensOptions& codeLensProvider );
+                void setCodeLensProvider( const CodeLensOptions& codeLensProvider );
 
                 u1 hasDocumentFormattingProvider( void ) const;
 
                 u1 documentFormattingProvider( void ) const;
 
-                void setDocumentFormattingProvider(
-                    const u1 documentFormattingProvider );
+                void setDocumentFormattingProvider( const u1 documentFormattingProvider );
 
                 u1 hasDocumentRangeFormattingProvider( void ) const;
 
                 u1 documentRangeFormattingProvider( void ) const;
 
-                void setDocumentRangeFormattingProvider(
-                    const u1 documentRangeFormattingProvider );
+                void setDocumentRangeFormattingProvider( const u1 documentRangeFormattingProvider );
 
                 u1 hasDocumentOnTypeFormattingProvider( void ) const;
 
-                DocumentOnTypeFormattingOptions
-                documentOnTypeFormattingProvider( void ) const;
+                DocumentOnTypeFormattingOptions documentOnTypeFormattingProvider( void ) const;
 
                 void setDocumentOnTypeFormattingProvider(
-                    const DocumentOnTypeFormattingOptions&
-                        documentOnTypeFormattingProvider );
+                    const DocumentOnTypeFormattingOptions& documentOnTypeFormattingProvider );
 
                 u1 hasRenameProvider( void ) const;
 
@@ -916,8 +884,7 @@ namespace libstdhl
 
                 DocumentLinkOptions documentLinkProvider( void ) const;
 
-                void setDocumentLinkProvider(
-                    const DocumentLinkOptions& documentLinkProvider );
+                void setDocumentLinkProvider( const DocumentLinkOptions& documentLinkProvider );
 
                 u1 hasExecuteCommandProvider( void ) const;
 
@@ -940,7 +907,8 @@ namespace libstdhl
               public:
                 InitializeParams( const Data& data );
 
-                InitializeParams( const std::size_t processId,
+                InitializeParams(
+                    const std::size_t processId,
                     const DocumentUri& rootUri,
                     const ClientCapabilities& capabilities );
 
@@ -954,8 +922,7 @@ namespace libstdhl
 
                 Data initializationOptions( void ) const;
 
-                void setInitializationOptions(
-                    const Data& initializationOptions );
+                void setInitializationOptions( const Data& initializationOptions );
 
                 ClientCapabilities capabilities( void ) const;
 
@@ -997,8 +964,7 @@ namespace libstdhl
               public:
                 DidOpenTextDocumentParams( const Data& data );
 
-                DidOpenTextDocumentParams(
-                    const TextDocumentItem& textDocument );
+                DidOpenTextDocumentParams( const TextDocumentItem& textDocument );
 
                 TextDocumentItem textDocument( void ) const;
 
@@ -1036,8 +1002,7 @@ namespace libstdhl
 
                 DidChangeTextDocumentParams(
                     const VersionedTextDocumentIdentifier& textDocument,
-                    const std::vector< TextDocumentContentChangeEvent >&
-                        contentChanges );
+                    const std::vector< TextDocumentContentChangeEvent >& contentChanges );
 
                 VersionedTextDocumentIdentifier textDocument( void ) const;
 
@@ -1051,8 +1016,7 @@ namespace libstdhl
               public:
                 CodeActionContext( const Data& data );
 
-                CodeActionContext(
-                    const std::vector< Diagnostic >& diagnostics );
+                CodeActionContext( const std::vector< Diagnostic >& diagnostics );
 
                 Data diagnostics( void ) const;
 
@@ -1064,8 +1028,10 @@ namespace libstdhl
               public:
                 CodeActionParams( const Data& data );
 
-                CodeActionParams( const TextDocumentIdentifier& textDocument,
-                    const Range& range, const CodeActionContext& context );
+                CodeActionParams(
+                    const TextDocumentIdentifier& textDocument,
+                    const Range& range,
+                    const CodeActionContext& context );
 
                 TextDocumentIdentifier textDocument( void ) const;
 
@@ -1095,8 +1061,8 @@ namespace libstdhl
               public:
                 PublishDiagnosticsParams( const Data& data );
 
-                PublishDiagnosticsParams( const DocumentUri& uri,
-                    const std::vector< Diagnostic >& diagnostics );
+                PublishDiagnosticsParams(
+                    const DocumentUri& uri, const std::vector< Diagnostic >& diagnostics );
 
                 DocumentUri uri( void ) const;
 
@@ -1112,8 +1078,7 @@ namespace libstdhl
               public:
                 MarkedString( const Data& data );
 
-                MarkedString(
-                    const std::string& language, const std::string& value );
+                MarkedString( const std::string& language, const std::string& value );
 
                 std::string language( void ) const;
 
@@ -1208,12 +1173,12 @@ namespace libstdhl
                 static u1 isValid( const Data& data );
             };
 
-            using ExecuteCommandResult = Data; // TODO: PPA: FIXME:
+            using ExecuteCommandResult = Data;  // TODO: PPA: FIXME:
         }
     }
 }
 
-#endif // _LIBSTDHL_CPP_NETWORK_LSP_CONTENT_H_
+#endif  // _LIBSTDHL_CPP_NETWORK_LSP_CONTENT_H_
 
 //
 //  Local variables:

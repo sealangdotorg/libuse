@@ -86,10 +86,8 @@ Message::Message( const Data& data )
     if( jsonrpc.compare( Identifier::jsonrpc_version ) != 0 )
     {
         throw std::invalid_argument(
-            "invalid data found, unsupported JSON-RPC version '" + jsonrpc
-            + "', only version '"
-            + Identifier::jsonrpc_version
-            + "' is supported" );
+            "invalid data found, unsupported JSON-RPC version '" + jsonrpc + "', only version '" +
+            Identifier::jsonrpc_version + "' is supported" );
     }
 
     if( find( Identifier::id ) != end() )
@@ -100,8 +98,7 @@ Message::Message( const Data& data )
             m_id = ID::REQUEST_MESSAGE;
             if( not RequestMessage::isValid( data ) )
             {
-                throw std::invalid_argument(
-                    "invalid data provided for 'RequestMessage'" );
+                throw std::invalid_argument( "invalid data provided for 'RequestMessage'" );
             }
         }
         else
@@ -109,8 +106,7 @@ Message::Message( const Data& data )
             m_id = ID::RESPONSE_MESSAGE;
             if( not ResponseMessage::isValid( data ) )
             {
-                throw std::invalid_argument(
-                    "invalid data provided for 'ResponseMessage'" );
+                throw std::invalid_argument( "invalid data provided for 'ResponseMessage'" );
             }
         }
     }
@@ -122,8 +118,7 @@ Message::Message( const Data& data )
             m_id = ID::NOTIFICATION_MESSAGE;
             if( not NotificationMessage::isValid( data ) )
             {
-                throw std::invalid_argument(
-                    "invalid data provided for 'NotificationMessage'" );
+                throw std::invalid_argument( "invalid data provided for 'NotificationMessage'" );
             }
         }
     }
@@ -156,19 +151,17 @@ void Message::process( ServerInterface& interface ) const
         }
         case ID::NOTIFICATION_MESSAGE:
         {
-            const auto msg
-                = reinterpret_cast< const NotificationMessage& >( *this );
+            const auto msg = reinterpret_cast< const NotificationMessage& >( *this );
             msg.process( interface );
             break;
         }
         case ID::RESPONSE_MESSAGE:
         {
-            const auto msg
-                = reinterpret_cast< const ResponseMessage& >( *this );
+            const auto msg = reinterpret_cast< const ResponseMessage& >( *this );
             msg.process( interface );
             break;
         }
-        case ID::UNKNOWN: // [[fallthrough]]
+        case ID::UNKNOWN:  // [[fallthrough]]
         case ID::_SIZE_:
         {
             auto msg = ResponseMessage();
@@ -181,8 +174,8 @@ void Message::process( ServerInterface& interface ) const
 
 u1 Message::isValid( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::jsonrpc ) != data.end()
-        and data[ Identifier::jsonrpc ].is_string() )
+    if( data.is_object() and data.find( Identifier::jsonrpc ) != data.end() and
+        data[ Identifier::jsonrpc ].is_string() )
     {
         return true;
     }
@@ -202,8 +195,7 @@ RequestMessage::RequestMessage( const Data& data )
 {
 }
 
-RequestMessage::RequestMessage(
-    const std::size_t id, const std::string& method )
+RequestMessage::RequestMessage( const std::size_t id, const std::string& method )
 : Message( ID::REQUEST_MESSAGE )
 {
     operator[]( Identifier::id ) = id;
@@ -211,8 +203,7 @@ RequestMessage::RequestMessage(
     operator[]( Identifier::params ) = Data::object();
 }
 
-RequestMessage::RequestMessage(
-    const std::string& id, const std::string& method )
+RequestMessage::RequestMessage( const std::string& id, const std::string& method )
 : Message( ID::REQUEST_MESSAGE )
 {
     operator[]( Identifier::id ) = id;
@@ -282,8 +273,7 @@ void RequestMessage::process( ServerInterface& interface ) const
             case String::value( Identifier::workspace_executeCommand ):
             {
                 const auto& parameters = ExecuteCommandParams( params() );
-                const auto& result
-                    = interface.workspace_executeCommand( parameters );
+                const auto& result = interface.workspace_executeCommand( parameters );
                 response.setResult( result );
                 break;
             }
@@ -298,24 +288,22 @@ void RequestMessage::process( ServerInterface& interface ) const
             case String::value( Identifier::textDocument_codeAction ):
             {
                 const auto& parameters = CodeActionParams( params() );
-                const auto& result
-                    = interface.textDocument_codeAction( parameters );
+                const auto& result = interface.textDocument_codeAction( parameters );
                 response.setResult( result );
                 break;
             }
             case String::value( Identifier::textDocument_codeLens ):
             {
                 const auto& parameters = CodeLensParams( params() );
-                const auto& result
-                    = interface.textDocument_codeLens( parameters );
+                const auto& result = interface.textDocument_codeLens( parameters );
                 response.setResult( result );
                 break;
             }
             default:
             {
-                response.setError( ErrorCode::MethodNotFound,
-                    "request method '" + m
-                        + "' not specified in interface implementation" );
+                response.setError(
+                    ErrorCode::MethodNotFound,
+                    "request method '" + m + "' not specified in interface implementation" );
                 break;
             }
         };
@@ -326,8 +314,8 @@ void RequestMessage::process( ServerInterface& interface ) const
     }
     catch( const std::invalid_argument& e )
     {
-        response.setError( ErrorCode::ParseError,
-            "parse error: '" + std::string( e.what() ) + "'" );
+        response.setError(
+            ErrorCode::ParseError, "parse error: '" + std::string( e.what() ) + "'" );
     }
 
     interface.respond( response );
@@ -335,14 +323,12 @@ void RequestMessage::process( ServerInterface& interface ) const
 
 u1 RequestMessage::isValid( const Data& data )
 {
-    if( data.find( Identifier::id ) != data.end()
-        and ( data[ Identifier::id ].is_string()
-                or data[ Identifier::id ].is_number() )
-        and data.find( Identifier::method ) != data.end()
-        and data[ Identifier::method ].is_string() )
+    if( data.find( Identifier::id ) != data.end() and
+        ( data[ Identifier::id ].is_string() or data[ Identifier::id ].is_number() ) and
+        data.find( Identifier::method ) != data.end() and data[ Identifier::method ].is_string() )
     {
-        if( data.find( Identifier::params ) != data.end()
-            and not data[ Identifier::params ].is_object() )
+        if( data.find( Identifier::params ) != data.end() and
+            not data[ Identifier::params ].is_object() )
         {
             return false;
         }
@@ -423,26 +409,24 @@ void NotificationMessage::process( ServerInterface& interface ) const
             }
             case String::value( Identifier::textDocument_didChange ):
             {
-                const auto& parameters
-                    = DidChangeTextDocumentParams( params() );
+                const auto& parameters = DidChangeTextDocumentParams( params() );
                 interface.textDocument_didChange( parameters );
                 break;
             }
             default:
             {
-                response.setError( ErrorCode::MethodNotFound,
-                    "notification method '" + m
-                        + "' not specified in interface implementation" );
+                response.setError(
+                    ErrorCode::MethodNotFound,
+                    "notification method '" + m + "' not specified in interface implementation" );
                 break;
             }
         };
     }
     catch( const std::invalid_argument& e )
     {
-        response.setError( ErrorCode::ParseError,
-            "notification method '" + m + "': parse error: '"
-                + std::string( e.what() )
-                + "'" );
+        response.setError(
+            ErrorCode::ParseError,
+            "notification method '" + m + "': parse error: '" + std::string( e.what() ) + "'" );
     }
 
     if( response.hasError() )
@@ -453,11 +437,10 @@ void NotificationMessage::process( ServerInterface& interface ) const
 
 u1 NotificationMessage::isValid( const Data& data )
 {
-    if( data.find( Identifier::method ) != data.end()
-        and data[ Identifier::method ].is_string() )
+    if( data.find( Identifier::method ) != data.end() and data[ Identifier::method ].is_string() )
     {
-        if( data.find( Identifier::params ) != data.end()
-            and not data[ Identifier::params ].is_object() )
+        if( data.find( Identifier::params ) != data.end() and
+            not data[ Identifier::params ].is_object() )
         {
             return false;
         }
@@ -510,8 +493,7 @@ Data ResponseMessage::result( void ) const
 
 void ResponseMessage::setResult( const Data& result )
 {
-    operator[]( Identifier::result )
-        = Data::from_cbor( Data::to_cbor( result ) );
+    operator[]( Identifier::result ) = Data::from_cbor( Data::to_cbor( result ) );
 }
 
 u1 ResponseMessage::hasError( void ) const
@@ -534,8 +516,7 @@ void ResponseMessage::setError( const ErrorCode code, const std::string& name )
     setError( ResponseError( code, name ) );
 }
 
-void ResponseMessage::setError(
-    const ErrorCode code, const std::string& name, const Data& data )
+void ResponseMessage::setError( const ErrorCode code, const std::string& name, const Data& data )
 {
     auto error = ResponseError( code, name );
     error.setData( data );
@@ -549,18 +530,17 @@ void ResponseMessage::process( ServerInterface& interface ) const
 
 u1 ResponseMessage::isValid( const Data& data )
 {
-    if( data.find( Identifier::id ) != data.end()
-        and ( data[ Identifier::id ].is_string()
-                or data[ Identifier::id ].is_number() ) )
+    if( data.find( Identifier::id ) != data.end() and
+        ( data[ Identifier::id ].is_string() or data[ Identifier::id ].is_number() ) )
     {
-        if( data.find( Identifier::result ) != data.end()
-            and not data[ Identifier::result ].is_object() )
+        if( data.find( Identifier::result ) != data.end() and
+            not data[ Identifier::result ].is_object() )
         {
             return false;
         }
 
-        if( data.find( Identifier::error ) != data.end()
-            and not ResponseError::isValid( data[ Identifier::error ] ) )
+        if( data.find( Identifier::error ) != data.end() and
+            not ResponseError::isValid( data[ Identifier::error ] ) )
         {
             return false;
         }
