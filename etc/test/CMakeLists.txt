@@ -48,6 +48,7 @@ include_directories(
 
 add_library( ${PROJECT}-test OBJECT
   main.cpp
+  cpp/exception.cpp
   cpp/hash.cpp
   cpp/variadic.cpp
   cpp/type.cpp
