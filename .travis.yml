@@ -70,14 +70,12 @@ before_install:
   - docker run -itd --name build -v $(pwd):/repo ${IMAGE} bash
 
 install:
-  - docker exec build echo       ${TRAVIS_OS_NAME}
-  - docker exec build echo       ${BUILD}
   - docker exec build uname      -a
   - docker exec build make       --version
   - docker exec build cmake      --version
+  - docker exec build ld         --version
   - docker exec build ${ENV_CC}  --version
   - docker exec build ${ENV_CXX} --version
-  - docker exec build ld         --version
 
 script:
   - docker exec build make -C /repo ${BUILD}
