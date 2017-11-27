@@ -53,18 +53,18 @@ git:
 matrix:
   include:
     - os: linux
-      env: BUILD="debug"    IMAGE="ppaulweber/cpp:clang-5.0.0" ENV_CC="clang" ENV_CXX="clang++"
+      env: IMAGE="ppaulweber/docker-cpp:clang-5.0.0" BUILD="debug"    ENV_CC="clang" ENV_CXX="clang++"
     - os: linux
-      env: BUILD="sanitize" IMAGE="ppaulweber/cpp:clang-5.0.0" ENV_CC="clang" ENV_CXX="clang++"
+      env: IMAGE="ppaulweber/docker-cpp:clang-5.0.0" BUILD="sanitize" ENV_CC="clang" ENV_CXX="clang++"
     - os: linux
-      env: BUILD="release"  IMAGE="ppaulweber/cpp:clang-5.0.0" ENV_CC="clang" ENV_CXX="clang++"
+      env: IMAGE="ppaulweber/docker-cpp:clang-5.0.0" BUILD="release"  ENV_CC="clang" ENV_CXX="clang++"
 
     - os: linux
-      env: BUILD="debug"    IMAGE="ppaulweber/cpp" ENV_CC="gcc" ENV_CXX="g++"
+      env: IMAGE="ppaulweber/docker-cpp" BUILD="debug"    ENV_CC="gcc" ENV_CXX="g++"
     - os: linux
-      env: BUILD="sanitize" IMAGE="ppaulweber/cpp" ENV_CC="gcc" ENV_CXX="g++"
+      env: IMAGE="ppaulweber/docker-cpp" BUILD="sanitize" ENV_CC="gcc" ENV_CXX="g++"
     - os: linux
-      env: BUILD="release"  IMAGE="ppaulweber/cpp" ENV_CC="gcc" ENV_CXX="g++"
+      env: IMAGE="ppaulweber/docker-cpp" BUILD="release"  ENV_CC="gcc" ENV_CXX="g++"
 
   allow_failures:
     - os: osx
