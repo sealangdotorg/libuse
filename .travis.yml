@@ -54,6 +54,17 @@ matrix:
   include:
     - os: linux
       env: IMAGE="ppaulweber/cpp" ENV_CC="clang" ENV_CXX="clang++" BUILD="debug"
+    - os: linux
+      env: IMAGE="ppaulweber/cpp" ENV_CC="clang" ENV_CXX="clang++" BUILD="sanitize"
+    - os: linux
+      env: IMAGE="ppaulweber/cpp" ENV_CC="clang" ENV_CXX="clang++" BUILD="release"
+
+    - os: linux
+      env: IMAGE="ppaulweber/cpp" ENV_CC="gcc" ENV_CXX="g++" BUILD="debug"
+    - os: linux
+      env: IMAGE="ppaulweber/cpp" ENV_CC="gcc" ENV_CXX="g++" BUILD="sanitize"
+    - os: linux
+      env: IMAGE="ppaulweber/cpp" ENV_CC="gcc" ENV_CXX="g++" BUILD="release"
 
   allow_failures:
     - os: osx
