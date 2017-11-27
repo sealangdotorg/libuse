@@ -53,11 +53,11 @@ git:
 matrix:
   include:
     - os: linux
-      env: IMAGE="ppaulweber/docker-cpp:clang-5.0.0" BUILD="debug"    ENV_CC="clang" ENV_CXX="clang++"
+      env: IMAGE="ppaulweber/docker-cpp" BUILD="debug"    ENV_CC="clang" ENV_CXX="clang++"
     - os: linux
-      env: IMAGE="ppaulweber/docker-cpp:clang-5.0.0" BUILD="sanitize" ENV_CC="clang" ENV_CXX="clang++"
+      env: IMAGE="ppaulweber/docker-cpp" BUILD="sanitize" ENV_CC="clang" ENV_CXX="clang++"
     - os: linux
-      env: IMAGE="ppaulweber/docker-cpp:clang-5.0.0" BUILD="release"  ENV_CC="clang" ENV_CXX="clang++"
+      env: IMAGE="ppaulweber/docker-cpp" BUILD="release"  ENV_CC="clang" ENV_CXX="clang++"
 
     - os: linux
       env: IMAGE="ppaulweber/docker-cpp" BUILD="debug"    ENV_CC="gcc" ENV_CXX="g++"
