@@ -52,28 +52,38 @@ git:
 
 matrix:
   include:
-    - os: linux
-      env: IMAGE="ppaulweber/docker-cpp" BUILD="debug"    ENV_CC="clang" ENV_CXX="clang++"
-    - os: linux
-      env: IMAGE="ppaulweber/docker-cpp" BUILD="sanitize" ENV_CC="clang" ENV_CXX="clang++"
-    - os: linux
-      env: IMAGE="ppaulweber/docker-cpp" BUILD="release"  ENV_CC="clang" ENV_CXX="clang++"
+    - os:  linux
+      env: IMAGE="ppaulweber/docker-cpp:base" BUILD="debug"    ENV_CC="clang" ENV_CXX="clang++"
+    - os:  linux
+      env: IMAGE="ppaulweber/docker-cpp:base" BUILD="release"  ENV_CC="clang" ENV_CXX="clang++"
 
-    - os: linux
-      env: IMAGE="ppaulweber/docker-cpp" BUILD="debug"    ENV_CC="gcc" ENV_CXX="g++"
-    - os: linux
-      env: IMAGE="ppaulweber/docker-cpp" BUILD="sanitize" ENV_CC="gcc" ENV_CXX="g++"
-    - os: linux
-      env: IMAGE="ppaulweber/docker-cpp" BUILD="release"  ENV_CC="gcc" ENV_CXX="g++"
+    - os:  linux
+      env: IMAGE="ppaulweber/docker-cpp:base" BUILD="debug"    ENV_CC="gcc"   ENV_CXX="g++"
+    - os:  linux
+      env: IMAGE="ppaulweber/docker-cpp:base" BUILD="release"  ENV_CC="gcc"   ENV_CXX="g++"
 
   allow_failures:
-    - os: osx
-      osx_image: xcode8
-      compiler: clang
+    - os:  linux
+      env: IMAGE="ppaulweber/docker-cpp" BUILD="debug"    ENV_CC="clang" ENV_CXX="clang++"
+    - os:  linux
+      env: IMAGE="ppaulweber/docker-cpp" BUILD="sanitize" ENV_CC="clang" ENV_CXX="clang++"
+    - os:  linux
+      env: IMAGE="ppaulweber/docker-cpp" BUILD="release"  ENV_CC="clang" ENV_CXX="clang++"
 
-    - os: osx
+    - os:  linux
+      env: IMAGE="ppaulweber/docker-cpp" BUILD="debug"    ENV_CC="gcc" ENV_CXX="g++"
+    - os:  linux
+      env: IMAGE="ppaulweber/docker-cpp" BUILD="sanitize" ENV_CC="gcc" ENV_CXX="g++"
+    - os:  linux
+      env: IMAGE="ppaulweber/docker-cpp" BUILD="release"  ENV_CC="gcc" ENV_CXX="g++"
+
+    - os:        osx
       osx_image: xcode8
-      compiler: gcc
+      compiler:  clang
+
+    - os:        osx
+      osx_image: xcode8
+      compiler:  gcc
 
 before_install:
   - git submodule update --init --remote
