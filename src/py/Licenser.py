@@ -191,6 +191,7 @@ def searcher( dirpath, rootdir = True ) :
         or filename in \
         [ "Makefile"          # Makefile Script
         , "Doxyfile"          # Doxygen Configuration
+        , "Dockerfile"        # Docker Configuration
         , "CMakeLists.txt"    # CMake Script
         , ".clang-format"     # Clang Format Configuration
         ] :
