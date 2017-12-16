@@ -43,8 +43,9 @@
 #ifndef _LIBSTDHL_CPP_ENUM_H_
 #define _LIBSTDHL_CPP_ENUM_H_
 
-#include <type_traits>
 #include <cassert>
+#include <initializer_list>
+#include <type_traits>
 
 /**
    @brief    TODO
@@ -79,10 +80,22 @@ namespace libstdhl
             }
 
             /**
+               Init flags from initializer list
+             */
+            Flags( std::initializer_list< Enum > flags )
+            : Flags()
+            {
+                for( const auto flag : flags )
+                {
+                    set( flag );
+                }
+            }
+
+            /**
                Sets the flag \a e on initialization, all other flags will be
                cleared.
              */
-            Flags( Enum e )
+            explicit Flags( Enum e )
             : m_flags( asBitValue( e ) )
             {
             }

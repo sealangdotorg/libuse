@@ -225,6 +225,16 @@ TEST( libstdhl_cpp_Enum_Flags, or_operator_merge_should_persist )
     EXPECT_TRUE( mergedColors.isSet( Color::Blue ) );
 }
 
+TEST( libstdhl_cpp_Enum_Flags, ctor_init_list )
+{
+    // PREPARE
+    Colors colors( { Color::Red, Color::Blue } );
+
+    EXPECT_FALSE( colors.isSet( Color::Green ) );
+    EXPECT_TRUE( colors.isSet( Color::Red ) );
+    EXPECT_TRUE( colors.isSet( Color::Blue ) );
+}
+
 //
 //  Local variables:
 //  mode: c++
