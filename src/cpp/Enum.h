@@ -44,6 +44,7 @@
 #define _LIBSTDHL_CPP_ENUM_H_
 
 #include <type_traits>
+#include <cassert>
 
 /**
    @brief    TODO
