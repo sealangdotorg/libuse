@@ -235,6 +235,37 @@ TEST( libstdhl_cpp_Enum_Flags, ctor_init_list )
     EXPECT_TRUE( colors.isSet( Color::Blue ) );
 }
 
+
+TEST( libstdhl_cpp_Enum_Flags, star_operator_intersection )
+{
+    // PREPARE
+    Colors colors1;
+    colors1.set( Color::Red );
+
+    Colors colors2;
+    colors2.set( Color::Blue );
+
+    Colors colors3;
+    colors3.set( Color::Red );
+    colors3.set( Color::Blue );
+
+    // WHEN
+    const Colors mergedColors1 = colors1 * colors2;
+
+    // WHEN
+    const Colors mergedColors2 = colors1 * colors3;
+
+    // THEN
+    EXPECT_FALSE( mergedColors1.isSet( Color::Red ) );
+    EXPECT_FALSE( mergedColors1.isSet( Color::Blue ) );
+    EXPECT_FALSE( mergedColors1.isSet( Color::Green ) );
+
+    // THEN
+    EXPECT_TRUE( mergedColors2.isSet( Color::Red ) );
+    EXPECT_FALSE( mergedColors2.isSet( Color::Blue ) );
+    EXPECT_FALSE( mergedColors2.isSet( Color::Green ) );
+}
+
 //
 //  Local variables:
 //  mode: c++

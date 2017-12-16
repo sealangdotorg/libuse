@@ -191,6 +191,15 @@ namespace libstdhl
             }
 
             /**
+               Intersection \a lhs and \a rhs
+             */
+            friend Flags operator*( Flags lhs, Flags rhs )
+            {
+                lhs.m_flags &= rhs.m_flags;
+                return lhs;
+            }
+
+            /**
                Sets the flag \a e if it's not already set, or clears it if it's
                set.
              */
@@ -228,6 +237,13 @@ typename std::enable_if< std::is_enum< T >::value, libstdhl::Enum::Flags< T > >:
     T lhs, T rhs )
 {
     return libstdhl::Enum::Flags< T >( lhs ) | libstdhl::Enum::Flags< T >( rhs );
+}
+
+template < typename T >
+typename std::enable_if< std::is_enum< T >::value, libstdhl::Enum::Flags< T > >::type operator*(
+    T lhs, T rhs )
+{
+    return libstdhl::Enum::Flags< T >( lhs ) * libstdhl::Enum::Flags< T >( rhs );
 }
 
 #endif  // _LIBSTDHL_CPP_ENUM_H_
