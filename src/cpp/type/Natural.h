@@ -69,6 +69,18 @@ namespace libstdhl
                 auto tmp = ~static_cast< Integer& >( arg );
                 return static_cast< Natural& >( tmp );
             }
+
+            //
+            // operator '^=' and '^'
+            //
+
+            Natural& operator^=( const Natural& rhs );
+
+            inline friend Natural operator^( Natural lhs, const Natural& rhs )
+            {
+                lhs ^= rhs;
+                return lhs;
+            }
         };
     }
 }

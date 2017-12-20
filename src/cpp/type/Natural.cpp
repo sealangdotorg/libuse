@@ -44,6 +44,8 @@
 
 #include "../String.h"
 
+#include <cassert>
+
 using namespace libstdhl;
 using namespace Type;
 
@@ -92,6 +94,23 @@ Natural Natural::fromString( const std::string& value, const Type::Radix radix )
     }
 
     return createNatural( tmp );
+}
+
+//
+// operator '^=' and '^'
+//
+
+Natural& Natural::operator^=( const Natural& rhs )
+{
+    assert( this->trivial() );
+    assert( rhs.trivial() );
+
+    const u64 a = value();
+    const u64 b = rhs.value();
+
+    m_data.value = a ^ b;
+
+    return *this;
 }
 
 //
