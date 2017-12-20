@@ -133,6 +133,8 @@ namespace libstdhl
 
         Rational createRational( const Integer& numerator, const Integer& denominator );
 
+        Rational createRational( const Integer& numerator );
+
         //
         // Decimal
         //

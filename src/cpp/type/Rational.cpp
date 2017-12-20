@@ -41,6 +41,7 @@
 //
 
 #include "Rational.h"
+
 #include "../String.h"
 
 #include <cassert>
@@ -65,6 +66,11 @@ Rational Type::createRational( const Integer& numerator, const Integer& denomina
     }
 
     return Rational( new RationalLayout( numerator, denominator ) );
+}
+
+Rational Type::createRational( const Integer& numerator )
+{
+    return createRational( numerator, Type::createInteger( (u64)1 ) );
 }
 
 //
