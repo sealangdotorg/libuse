@@ -56,7 +56,7 @@ if not os.path.exists( licensepath ) :
 licensetext = []
 with open( licensepath, "r" ) as fd :
     for line in fd :
-        if line.startswith( "----------" ) :
+        if line.startswith( "---" ) :
             break
         licensetext.append( line.replace( "\n", "" ).replace( "\r", "" ) )
 
