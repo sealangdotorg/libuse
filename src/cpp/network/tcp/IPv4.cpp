@@ -63,48 +63,26 @@ TCP::IPv4::IPv4( void )
 void TCP::IPv4::send( const IPv4Packet& data )
 {
     auto& link = static_cast< IPv4PosixSocket& >( *socket() );
-
-    if( not link.server() )
-    {
-        link.send( data );
-    }
-    else
-    {
-        auto client = link.accept();
-        client.send( data );
-        client.disconnect();
-    }
+    link.send( data );
 }
+
 void TCP::IPv4::send( const std::string& data )
 {
-    assert( !" TODO " );
-    // const auto packet = StringData{ data };
-    // send( packet );
+    std::string d = data;
+    IPv4Packet packet{ d };
+    send( packet );
 }
 
 void TCP::IPv4::receive( IPv4Packet& data )
 {
     auto& link = static_cast< IPv4PosixSocket& >( *socket() );
-
-    if( not link.server() )
-    {
-        link.receive( data );
-    }
-    else
-    {
-        auto client = link.accept();
-        client.receive( data );
-        client.disconnect();
-    }
+    link.receive( data );
 }
 
 IPv4Packet TCP::IPv4::receive( std::string& data )
 {
-    data.resize( 2048 );  // TODO: PPA: FIXME: should be configured etc.
-
     IPv4Packet packet{ data };
     receive( packet );
-
     return packet;
 }
 
@@ -119,7 +97,6 @@ TCP::IPv4 TCP::IPv4::session( void )
     else
     {
         auto client = link.accept();
-
         auto socket = std::make_shared< IPv4PosixSocket >( client );
         socket->setServer( false );
 
