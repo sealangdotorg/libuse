@@ -57,7 +57,6 @@ LSP::Packet::Packet( const std::string& data )
     String::split( data, "\r\n", parts );
 
     u64 length = 0;
-
     for( auto p : parts )
     {
         // check for content length field
@@ -129,6 +128,32 @@ std::string LSP::Packet::dump( const u1 formatted ) const
 void LSP::Packet::process( ServerInterface& interface ) const
 {
     payload().process( interface );
+}
+
+std::vector< LSP::Packet > LSP::Packet::fromString(
+    const std::string& data, std::vector< LSP::Packet >& packages )
+{
+    std::vector< std::string > lines;
+    String::split( data, "\r\n", lines );
+
+    std::string message = "";
+    for( const auto& line : lines )
+    {
+        if( String::startsWith( line, "Content-Length:" ) )
+        {
+            if( message.size() > 0 )
+            {
+                packages.emplace_back( LSP::Packet( message ) );
+            }
+            message = line + "\r\n";
+        }
+        else
+        {
+            message += line + "\r\n";
+        }
+    }
+    packages.emplace_back( LSP::Packet( message ) );
+    return packages;
 }
 
 //

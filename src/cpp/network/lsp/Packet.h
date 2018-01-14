@@ -88,6 +88,9 @@ namespace libstdhl
 
                 void process( ServerInterface& interface ) const;
 
+                static std::vector< Packet > fromString(
+                    const std::string& data, std::vector< LSP::Packet >& packages );
+
               private:
                 Protocol m_header;
                 Message m_payload;
