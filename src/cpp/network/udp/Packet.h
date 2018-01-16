@@ -68,30 +68,35 @@ namespace libstdhl
             {
               public:
                 IPv4Packet(
-                    const IPv4::Protocol& ip, const UDP::Protocol& udp, const std::string& data )
+                    const IPv4::Protocol& ip,
+                    const UDP::Protocol& udp,
+                    const std::vector< u8 >& data )
                 : m_ip( ip )
                 , m_udp( udp )
                 , m_data( data )
-                , m_ref( m_data )
                 {
                 }
 
-                IPv4Packet( std::string& data )
+                IPv4Packet( const std::vector< u8 >& data )
                 : m_ip()
                 , m_udp()
-                , m_data()
-                , m_ref( data )
+                , m_data( data )
                 {
                 }
 
                 const u8* buffer( void ) const override
                 {
-                    return reinterpret_cast< const u8* >( m_ref.data() );
+                    return m_data.buffer();
                 }
 
-                u64 size( void ) const override
+                std::size_t size( void ) const override
                 {
-                    return m_ref.size();
+                    return m_data.size();
+                }
+
+                void resize( const std::size_t size ) override
+                {
+                    return m_data.resize( size );
                 }
 
                 const IPv4::Protocol& ip( void ) const
@@ -117,44 +122,8 @@ namespace libstdhl
               private:
                 IPv4::Protocol m_ip;
                 UDP::Protocol m_udp;
-                std::string m_data;
-                std::string& m_ref;
-
-                // StringData data;
-
-                // const u8* buffer( void ) const override
-                // {
-                //     return data.buffer();
-                // }
-
-                // std::size_t size( void ) const override
-                // {
-                //     return data.size();
-                // }
+                BinaryData m_data;
             };
-
-            // class Packet final : public Network::Packet
-            // {
-            //   public:
-            //     using Ptr = std::shared_ptr< Packet >;
-
-            //     Packet( const Port& source, const Port& destination, const
-            //     std::vector< u8 >& payload );
-
-            //     const Protocol& header( void ) const;
-
-            //     const Data& payload( void ) const;
-
-            //     const u8* buffer( void ) const override;
-
-            //     std::size_t size( void ) const override;
-
-            //   private:
-            //     const Protocol m_header;
-            //     std::vector< u8 >
-            //     Data m_payload;
-            //     const std::size_t m_size;
-            // };
         }
     }
 }

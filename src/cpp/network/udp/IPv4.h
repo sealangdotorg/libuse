@@ -61,17 +61,11 @@ namespace libstdhl
 
                 void send( const IPv4Packet& data ) override;
 
-                void send( const std::string& data ) override;
-
-                void send( const std::string& data, const Address& address, const Port& port );
-
-                void send( const Network::Packet& data, const Address& address, const Port& port );
-
-                void send( const Network::Packet& data, const IPv4Packet& destination );
+                IPv4Packet send( const std::vector< u8 >& data ) override;
 
                 void receive( IPv4Packet& data ) override;
 
-                IPv4Packet receive( std::string& data ) override;
+                IPv4Packet receive( std::vector< u8 >& data ) override;
             };
         }
     };

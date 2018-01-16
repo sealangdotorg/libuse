@@ -57,48 +57,15 @@ UDP::IPv4::IPv4( const std::string& name )
 
 void UDP::IPv4::send( const IPv4Packet& data )
 {
-    auto& link = static_cast< IPv4PosixSocket& >( *socket() );
+    const auto& link = static_cast< IPv4PosixSocket& >( *socket() );
     link.send( data );
 }
 
-void UDP::IPv4::send( const std::string& data )
+IPv4Packet UDP::IPv4::send( const std::vector< u8 >& data )
 {
-    auto packet = IPv4Packet{ Network::IPv4::Protocol{}, Network::UDP::Protocol{}, data };
-
+    const auto packet = IPv4Packet{ Network::IPv4::Protocol{}, Network::UDP::Protocol{}, data };
     send( packet );
-}
-
-void UDP::IPv4::send( const std::string& data, const Address& address, const Port& port )
-{
-    auto packet = IPv4Packet{
-        Network::IPv4::Protocol{ address, address }, Network::UDP::Protocol{ port, port }, data
-    };
-
-    send( packet );
-}
-
-void UDP::IPv4::send( const Network::Packet& data, const Address& address, const Port& port )
-{
-    const std::string str( (const char*)data.buffer() );
-
-    auto packet = IPv4Packet{
-        Network::IPv4::Protocol{ address, address }, Network::UDP::Protocol{ port, port }, str
-    };
-
-    send( packet );
-}
-
-void UDP::IPv4::send( const Network::Packet& data, const IPv4Packet& destination )
-{
-    const std::string str( (const char*)data.buffer() );
-
-    IPv4Packet packet{
-        Network::IPv4::Protocol{ destination.ip() },
-        Network::UDP::Protocol{ destination.udp() },
-        str,
-    };
-
-    send( packet );
+    return packet;
 }
 
 void UDP::IPv4::receive( IPv4Packet& data )
@@ -107,15 +74,45 @@ void UDP::IPv4::receive( IPv4Packet& data )
     link.receive( data );
 }
 
-IPv4Packet UDP::IPv4::receive( std::string& data )
+IPv4Packet UDP::IPv4::receive( std::vector< u8 >& data )
 {
-    data.resize( 2048 );  // TODO: PPA: FIXME: should be configured etc.
-
     IPv4Packet packet{ data };
     receive( packet );
-
     return packet;
 }
+
+// void UDP::IPv4::send( const std::string& data, const Address& address, const Port& port )
+// {
+//     auto packet = IPv4Packet{
+//         Network::IPv4::Protocol{ address, address }, Network::UDP::Protocol{ port, port }, data
+//     };
+
+//     send( packet );
+// }
+
+// void UDP::IPv4::send( const Network::Packet& data, const Address& address, const Port& port )
+// {
+//     const std::string str( (const char*)data.buffer() );
+
+//     auto packet = IPv4Packet{
+//         Network::IPv4::Protocol{ address, address }, Network::UDP::Protocol{ port, port }, str
+//     };
+
+//     send( packet );
+// }
+
+// void UDP::IPv4::send( const Network::Packet& data, const IPv4Packet& destination )
+// {
+//     const std::string str( (const char*)data.buffer() );
+
+//     IPv4Packet packet{
+//         Network::IPv4::Protocol{ destination.ip() },
+//         Network::UDP::Protocol{ destination.udp() },
+//         str,
+//     };
+
+//     send( packet );
+// }
 
 //
 //  Local variables:

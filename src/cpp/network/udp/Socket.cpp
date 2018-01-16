@@ -107,7 +107,7 @@ void IPv4PosixSocket::connect( void )
     setConnected( true );
 }
 
-void IPv4PosixSocket::send( const IPv4Packet& data ) const
+std::size_t IPv4PosixSocket::send( const IPv4Packet& data ) const
 {
     if( not connected() )
     {
@@ -134,9 +134,11 @@ void IPv4PosixSocket::send( const IPv4Packet& data ) const
     {
         throw std::domain_error( "UDP: unable to send, failed with '" + std::to_string( result ) );
     }
+
+    return result;
 }
 
-void IPv4PosixSocket::receive( IPv4Packet& data ) const
+std::size_t IPv4PosixSocket::receive( IPv4Packet& data ) const
 {
     if( not connected() )
     {
@@ -173,6 +175,8 @@ void IPv4PosixSocket::receive( IPv4Packet& data ) const
         throw std::domain_error(
             "UDP: unable to receive, failed with '" + std::to_string( result ) );
     }
+
+    return result;
 }
 
 //

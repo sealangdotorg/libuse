@@ -64,9 +64,9 @@ namespace libstdhl
 
                 void connect( void ) override;
 
-                void send( const IPv4Packet& data ) const override;
+                std::size_t send( const IPv4Packet& data ) const override;
 
-                void receive( IPv4Packet& data ) const override;
+                std::size_t receive( IPv4Packet& data ) const override;
 
               private:
                 Address m_address;
