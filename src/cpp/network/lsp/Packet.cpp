@@ -105,7 +105,7 @@ const Message& LSP::Packet::payload( void ) const
 
 const u8* LSP::Packet::buffer( void ) const
 {
-    return m_data.buffer();
+    return (const u8*)m_data.data();
 }
 
 std::size_t LSP::Packet::size( void ) const
@@ -113,11 +113,16 @@ std::size_t LSP::Packet::size( void ) const
     return m_data.size();
 }
 
+void LSP::Packet::resize( const std::size_t size )
+{
+    throw std::domain_error( "LSP message cannot be resized!" );
+}
+
 std::string LSP::Packet::dump( const u1 formatted ) const
 {
     if( not formatted )
     {
-        return m_data.data();
+        return m_data;
     }
     else
     {

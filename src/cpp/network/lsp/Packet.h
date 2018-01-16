@@ -84,6 +84,8 @@ namespace libstdhl
 
                 std::size_t size( void ) const override;
 
+                void resize( std::size_t size ) override;
+
                 std::string dump( const u1 formatted = false ) const;
 
                 void process( ServerInterface& interface ) const;
@@ -94,7 +96,7 @@ namespace libstdhl
               private:
                 Protocol m_header;
                 Message m_payload;
-                StringData m_data;
+                std::string m_data;
             };
         }
     }
