@@ -68,14 +68,16 @@ namespace libstdhl
             {
               public:
                 IPv4Packet(
-                    const IPv4::Protocol& ip, const TCP::Protocol& tcp, const std::string& data )
+                    const IPv4::Protocol& ip,
+                    const TCP::Protocol& tcp,
+                    const std::vector< u8 >& data )
                 : m_ip( ip )
                 , m_tcp( tcp )
                 , m_data( data )
                 {
                 }
 
-                IPv4Packet( std::string& data )
+                IPv4Packet( const std::vector< u8 >& data )
                 : m_ip()
                 , m_tcp()
                 , m_data( data )
@@ -87,9 +89,14 @@ namespace libstdhl
                     return m_data.buffer();
                 }
 
-                u64 size( void ) const override
+                std::size_t size( void ) const override
                 {
                     return m_data.size();
+                }
+
+                void resize( const std::size_t size ) override
+                {
+                    return m_data.resize( size );
                 }
 
                 const IPv4::Protocol& ip( void ) const
@@ -112,10 +119,15 @@ namespace libstdhl
                     m_tcp = tcp;
                 }
 
+                const BinaryData& data( void ) const
+                {
+                    return m_data;
+                }
+
               private:
                 IPv4::Protocol m_ip;
                 TCP::Protocol m_tcp;
-                StringData m_data;
+                BinaryData m_data;
             };
         }
     }

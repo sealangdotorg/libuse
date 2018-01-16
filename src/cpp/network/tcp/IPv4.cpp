@@ -48,6 +48,11 @@ using namespace libstdhl;
 using namespace Network;
 using namespace TCP;
 
+//
+//
+// TCP::IPv4
+//
+
 TCP::IPv4::IPv4( const std::string& name, const u1 server )
 {
     auto socket = std::make_shared< IPv4PosixSocket >( name );
@@ -58,32 +63,6 @@ TCP::IPv4::IPv4( const std::string& name, const u1 server )
 
 TCP::IPv4::IPv4( void )
 {
-}
-
-void TCP::IPv4::send( const IPv4Packet& data )
-{
-    auto& link = static_cast< IPv4PosixSocket& >( *socket() );
-    link.send( data );
-}
-
-void TCP::IPv4::send( const std::string& data )
-{
-    std::string d = data;
-    IPv4Packet packet{ d };
-    send( packet );
-}
-
-void TCP::IPv4::receive( IPv4Packet& data )
-{
-    auto& link = static_cast< IPv4PosixSocket& >( *socket() );
-    link.receive( data );
-}
-
-IPv4Packet TCP::IPv4::receive( std::string& data )
-{
-    IPv4Packet packet{ data };
-    receive( packet );
-    return packet;
 }
 
 TCP::IPv4 TCP::IPv4::session( void )
@@ -106,6 +85,48 @@ TCP::IPv4 TCP::IPv4::session( void )
 
         return connection;
     }
+}
+
+void TCP::IPv4::send( const IPv4Packet& data )
+{
+    auto& link = static_cast< IPv4PosixSocket& >( *socket() );
+    link.send( data );
+}
+
+IPv4Packet TCP::IPv4::send( const std::vector< u8 >& data )
+{
+    // fetch session TCP and IPv4 info, create package, send it, and return it!
+    IPv4Packet packet{ data };
+    send( packet );
+    return packet;
+}
+
+void TCP::IPv4::send( const std::string& data )
+{
+    std::vector< u8 > buffer( data.begin(), data.end() );
+    send( buffer );
+}
+
+void TCP::IPv4::receive( IPv4Packet& data )
+{
+    auto& link = static_cast< IPv4PosixSocket& >( *socket() );
+    link.receive( data );
+}
+
+IPv4Packet TCP::IPv4::receive( std::vector< u8 >& data )
+{
+    IPv4Packet packet{ data };
+    receive( packet );
+    return packet;
+}
+
+std::string TCP::IPv4::receive( void )
+{
+    static constexpr auto bufferSize = 64 * 1024;  // 64K
+    std::vector< u8 > buffer;
+    buffer.resize( bufferSize );
+    const auto packet = receive( buffer );
+    return packet.data().toString();
 }
 
 //

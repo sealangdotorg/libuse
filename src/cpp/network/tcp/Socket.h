@@ -67,10 +67,6 @@ namespace libstdhl
               public:
                 void connect( void ) override;
 
-                void send( const IPv4Packet& data ) const override;
-
-                void receive( IPv4Packet& data ) const override;
-
                 IPv4PosixSocket accept( void ) const;
 
               private:

@@ -127,16 +127,6 @@ void IPv4PosixSocket::connect( void )
     setConnected( true );
 }
 
-void IPv4PosixSocket::send( const IPv4Packet& data ) const
-{
-    PosixSocket::send( data );
-}
-
-void IPv4PosixSocket::receive( IPv4Packet& data ) const
-{
-    PosixSocket::receive( data );
-}
-
 /**
    blocking call!
  */
