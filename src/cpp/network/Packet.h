@@ -66,41 +66,29 @@ namespace libstdhl
             virtual const u8* buffer( void ) const = 0;
 
             virtual std::size_t size( void ) const = 0;
+
+            virtual void resize( std::size_t size ) = 0;
         };
 
-        class BinaryData final : public Packet
+        class BinaryData : public Packet
         {
           public:
             BinaryData( const std::vector< u8 >& data );
 
-            const u8* buffer( void ) const override;
+            BinaryData( const std::string& data );
 
-            u64 size( void ) const override;
+            const u8* buffer( void ) const override final;
+
+            std::size_t size( void ) const override final;
+
+            void resize( std::size_t size ) override final;
 
             const std::vector< u8 >& data( void ) const;
 
+            std::string toString( void ) const;
+
           private:
             std::vector< u8 > m_data;
-        };
-
-        class StringData final : public Packet
-        {
-          public:
-            StringData( const std::string& data );
-
-            StringData( std::string& data );
-
-            const u8* buffer( void ) const override;
-
-            u64 size( void ) const override;
-
-            std::string data( void ) const;
-
-            std::string& data( void );
-
-          private:
-            std::string m_data;
-            std::string& m_ref;
         };
     }
 }

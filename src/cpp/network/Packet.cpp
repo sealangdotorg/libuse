@@ -55,14 +55,26 @@ BinaryData::BinaryData( const std::vector< u8 >& data )
 {
 }
 
+BinaryData::BinaryData( const std::string& data )
+: m_data( data.size() )
+{
+    // resize(  );
+    std::copy( data.c_str(), data.c_str() + data.size(), back_inserter( m_data ) );
+}
+
 const u8* BinaryData::buffer( void ) const
 {
     return m_data.data();
 }
 
-u64 BinaryData::size( void ) const
+std::size_t BinaryData::size( void ) const
 {
     return m_data.size();
+}
+
+void BinaryData::resize( std::size_t size )
+{
+    m_data.resize( size );
 }
 
 const std::vector< u8 >& BinaryData::data( void ) const
@@ -70,41 +82,9 @@ const std::vector< u8 >& BinaryData::data( void ) const
     return m_data;
 }
 
-//
-//
-// StringData
-//
-
-StringData::StringData( const std::string& data )
-: m_data( data )
-, m_ref( m_data )
+std::string BinaryData::toString( void ) const
 {
-}
-
-StringData::StringData( std::string& data )
-: m_data()
-, m_ref( data )
-{
-}
-
-const u8* StringData::buffer( void ) const
-{
-    return reinterpret_cast< const u8* >( m_ref.data() );
-}
-
-u64 StringData::size( void ) const
-{
-    return m_ref.size();
-}
-
-std::string StringData::data( void ) const
-{
-    return m_ref;
-}
-
-std::string& StringData::data( void )
-{
-    return m_ref;
+    return std::string( (char*)buffer(), size() );
 }
 
 //

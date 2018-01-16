@@ -59,8 +59,8 @@ add_library( ${PROJECT}-cpp OBJECT
   log/Stream.cpp
   log/Switch.cpp
   log/Timestamp.cpp
+  network/ethernet/Frame.cpp
   network/ethernet/Link.cpp
-  network/ethernet/Packet.cpp
   network/ethernet/Protocol.cpp
   network/ethernet/Socket.cpp
   network/Interface.cpp
@@ -243,8 +243,8 @@ ecm_generate_headers( ${PROJECT}_NETWORK_ETHERNET_HEADERS_CPP
   ORIGINAL
     CAMELCASE
   HEADER_NAMES
+    Frame
     Link
-    Packet
     Protocol
     Socket
   PREFIX

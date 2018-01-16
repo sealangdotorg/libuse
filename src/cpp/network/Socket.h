@@ -96,9 +96,9 @@ namespace libstdhl
 
             virtual void disconnect( void ) = 0;
 
-            virtual void send( const T& data ) const = 0;
+            virtual std::size_t send( const T& data ) const = 0;
 
-            virtual void receive( T& data ) const = 0;
+            virtual std::size_t receive( T& data ) const = 0;
 
           private:
             const std::string m_name;
@@ -189,40 +189,48 @@ namespace libstdhl
                 setConnected( false );
             }
 
-            void send( const T& data ) const override
+            std::size_t send( const T& data ) const override
             {
-                if( connected() )
-                {
-                    const auto result = ::send( id(), (void*)( data.buffer() ), data.size(), 0 );
-
-                    if( result < 0 )
-                    {
-                        throw std::domain_error(
-                            "SOCKET: unable to send, failed with '" + std::to_string( result ) );
-                    }
-                }
-                else
+                if( not connected() )
                 {
                     throw std::domain_error( "SOCKET: unable to send, not connected" );
                 }
+
+                const auto result = ::send( id(), (void*)data.buffer(), data.size(), 0 );
+
+                if( result < 0 )
+                {
+                    throw std::domain_error(
+                        "SOCKET: unable to send, failed with '" + std::to_string( result ) );
+                }
+
+                return result;
             }
 
-            void receive( T& data ) const override
+            std::size_t receive( T& data ) const override
             {
-                if( connected() )
-                {
-                    const auto result = ::recv( id(), (void*)( data.buffer() ), data.size(), 0 );
-
-                    if( result < 0 )
-                    {
-                        throw std::domain_error(
-                            "SOCKET: unable to receive, failed with '" + std::to_string( result ) );
-                    }
-                }
-                else
+                if( not connected() )
                 {
                     throw std::domain_error( "SOCKET: unable to receive, not connected" );
                 }
+
+                const auto result = ::recv( id(), (void*)data.buffer(), data.size(), 0 );
+
+                if( result < 0 )
+                {
+                    throw std::domain_error(
+                        "SOCKET: unable to receive, failed with '" + std::to_string( result ) +
+                        "'" );
+                }
+
+                if( result >= data.size() )
+                {
+                    throw std::domain_error(
+                        "SOCKET: received to many bytes '" + std::to_string( result ) + "'" );
+                }
+
+                ( (u8*)data.buffer() )[ result ] = '\0';
+                return result;
             }
 
             void setServer( const u1 enable )
