@@ -40,8 +40,8 @@
 //  statement from your version.
 //
 
-#ifndef _LIBSTDHL_CPP_NETWORK_ETHERNET_PACKET_H_
-#define _LIBSTDHL_CPP_NETWORK_ETHERNET_PACKET_H_
+#ifndef _LIBSTDHL_CPP_NETWORK_ETHERNET_FRAME_H_
+#define _LIBSTDHL_CPP_NETWORK_ETHERNET_FRAME_H_
 
 #include <libstdhl/network/Packet>
 #include <libstdhl/network/ethernet/Protocol>
@@ -66,12 +66,12 @@ namespace libstdhl
             /**
                @extends Ethernet
             */
-            class Packet final : public Network::Packet
+            class Frame final : public Network::Packet
             {
               public:
-                using Ptr = std::shared_ptr< Packet >;
+                using Ptr = std::shared_ptr< Frame >;
 
-                Packet(
+                Frame(
                     const Address& destination,
                     const Address& source,
                     const Type& type,
@@ -85,6 +85,8 @@ namespace libstdhl
 
                 std::size_t size( void ) const override;
 
+                void resize( const std::size_t size ) override;
+
               private:
                 const Protocol m_header;
                 Data m_payload;
@@ -94,7 +96,7 @@ namespace libstdhl
     }
 }
 
-#endif  // _LIBSTDHL_CPP_NETWORK_ETHERNET_PACKET_H_
+#endif  // _LIBSTDHL_CPP_NETWORK_ETHERNET_FRAME_H_
 
 //
 //  Local variables:

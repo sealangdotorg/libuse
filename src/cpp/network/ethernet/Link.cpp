@@ -51,45 +51,37 @@ using namespace Ethernet;
 Link::Link( const std::string& name )
 {
     auto socket = std::make_shared< RawPosixSocket >( name );
-    auto link = std::static_pointer_cast< Socket< Packet > >( socket );
+    auto link = std::static_pointer_cast< Socket< Frame > >( socket );
     setSocket( link );
 }
 
-void Link::send( const Ethernet::Packet& data )
+void Link::send( const Frame& data )
 {
     auto& link = static_cast< RawPosixSocket& >( *socket() );
     link.send( data );
 }
 
-void Link::send( const std::string& data )
-{
-    send( std::vector< u8 >( data.begin(), data.end() ) );
-}
-
-void Link::send( const std::vector< u8 >& data )
+Frame Link::send( const std::vector< u8 >& data )
 {
     const auto size = data.size();
     assert( size <= 1500 );
 
     auto& link = static_cast< RawPosixSocket& >( *socket() );
     const Type type = { { ( u8 )( size >> 8 ), (u8)size } };
-    const auto frame = Packet( BROADCAST, link.address(), type, data );
+    const auto frame = Frame( BROADCAST, link.address(), type, data );
     send( frame );
+    return frame;
 }
 
-void Link::receive( Ethernet::Packet& data )
+void Link::receive( Frame& data )
 {
     assert( !" TODO! " );
 }
 
-Ethernet::Packet Link::receive( std::string& data )
+Frame Link::receive( std::vector< u8 >& data )
 {
     assert( !" TODO! " );
-}
-
-void Link::receive( std::vector< u8 >& data )
-{
-    assert( !" TODO! " );
+    return Frame( {}, {}, {}, data );
 }
 
 //

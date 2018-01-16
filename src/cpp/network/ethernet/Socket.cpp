@@ -49,7 +49,7 @@ using namespace Network;
 using namespace Ethernet;
 
 RawPosixSocket::RawPosixSocket( const std::string& name )
-: PosixSocket< Packet >( name, AF_PACKET, SOCK_RAW, 0 )
+: PosixSocket< Frame >( name, AF_PACKET, SOCK_RAW, 0 )
 , m_address( { { 0 } } )
 {
 }
@@ -89,7 +89,7 @@ void RawPosixSocket::connect( void )
     setConnected( true );
 }
 
-void RawPosixSocket::send( const Packet& data ) const
+std::size_t RawPosixSocket::send( const Frame& data ) const
 {
     if( not connected() )
     {
@@ -121,12 +121,15 @@ void RawPosixSocket::send( const Packet& data ) const
     {
         throw std::domain_error( "unable to send, failed with '" + std::to_string( result ) );
     }
+
+    return result;
 }
 
-void RawPosixSocket::receive( Packet& data ) const
+std::size_t RawPosixSocket::receive( Frame& data ) const
 {
     // recvfrom
-    assert( 0 );
+    assert( !" TODO! " );
+    return 0;
 }
 
 //

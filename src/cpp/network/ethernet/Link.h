@@ -44,7 +44,7 @@
 #define _LIBSTDHL_CPP_NETWORK_ETHERNET_LINK_H_
 
 #include <libstdhl/network/Interface>
-#include <libstdhl/network/ethernet/Packet>
+#include <libstdhl/network/ethernet/Frame>
 
 namespace libstdhl
 {
@@ -52,24 +52,20 @@ namespace libstdhl
     {
         namespace Ethernet
         {
-            class Link final : public Network::Interface< Packet >
+            class Link final : public Network::Interface< Frame >
             {
               public:
                 using Ptr = std::shared_ptr< Link >;
 
                 Link( const std::string& name );
 
-                void send( const Packet& data ) override;
+                void send( const Frame& data ) override;
 
-                void send( const std::string& data ) override;
+                Frame send( const std::vector< u8 >& data ) override;
 
-                void send( const std::vector< u8 >& data );
+                void receive( Frame& data ) override;
 
-                void receive( Packet& data ) override;
-
-                Packet receive( std::string& data ) override;
-
-                void receive( std::vector< u8 >& data );
+                Frame receive( std::vector< u8 >& data ) override;
             };
         }
     };

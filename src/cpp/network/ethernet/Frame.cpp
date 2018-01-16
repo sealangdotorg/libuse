@@ -40,13 +40,13 @@
 //  statement from your version.
 //
 
-#include "Packet.h"
+#include "Frame.h"
 
 using namespace libstdhl;
 using namespace Network;
 using namespace Ethernet;
 
-Ethernet::Packet::Packet(
+Frame::Frame(
     const Address& destination,
     const Address& source,
     const Type& type,
@@ -64,24 +64,29 @@ Ethernet::Packet::Packet(
     std::copy( payload.begin(), payload.end(), m_payload.begin() );
 }
 
-const Ethernet::Protocol& Ethernet::Packet::header( void ) const
+const Ethernet::Protocol& Frame::header( void ) const
 {
     return m_header;
 }
 
-const Data& Ethernet::Packet::payload( void ) const
+const Data& Frame::payload( void ) const
 {
     return m_payload;
 }
 
-const u8* Ethernet::Packet::buffer( void ) const
+const u8* Frame::buffer( void ) const
 {
     return m_header.buffer();
 }
 
-std::size_t Ethernet::Packet::size( void ) const
+std::size_t Frame::size( void ) const
 {
     return m_header.size() + m_size;
+}
+
+void Frame::resize( const std::size_t )
+{
+    throw std::domain_error( "Ethernet frames cannot be resized!" );
 }
 
 //

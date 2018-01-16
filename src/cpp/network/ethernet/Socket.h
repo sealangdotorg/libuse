@@ -44,7 +44,7 @@
 #define _LIBSTDHL_CPP_NETWORK_ETHERNET_SOCKET_H_
 
 #include <libstdhl/network/Socket>
-#include <libstdhl/network/ethernet/Packet>
+#include <libstdhl/network/ethernet/Frame>
 
 /**
    @brief    TBD
@@ -64,7 +64,7 @@ namespace libstdhl
             /**
                @extends Ethernet
             */
-            class RawPosixSocket final : public PosixSocket< Packet >
+            class RawPosixSocket final : public PosixSocket< Frame >
             {
               public:
                 using Ptr = std::shared_ptr< RawPosixSocket >;
@@ -75,9 +75,9 @@ namespace libstdhl
 
                 void connect( void ) override;
 
-                void send( const Packet& data ) const override;
+                std::size_t send( const Frame& data ) const override;
 
-                void receive( Packet& data ) const override;
+                std::size_t receive( Frame& data ) const override;
 
               private:
                 Address m_address;
