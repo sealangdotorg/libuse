@@ -235,7 +235,6 @@ TEST( libstdhl_cpp_Enum_Flags, ctor_init_list )
     EXPECT_TRUE( colors.isSet( Color::Blue ) );
 }
 
-
 TEST( libstdhl_cpp_Enum_Flags, star_operator_intersection )
 {
     // PREPARE
