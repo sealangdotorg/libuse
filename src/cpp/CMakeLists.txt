@@ -88,6 +88,12 @@ add_library( ${PROJECT}-cpp OBJECT
 
 configure_file(
   Version.in.h
+  ${PROJECT}/Version.h
+  )
+
+
+configure_file(
+  Version.in.h
   ${PROJECT}/Version
   )
 
@@ -131,7 +137,7 @@ install(
   FILES
     ${${PROJECT}_HEADERS}
     ${${PROJECT}_HEADERS_CPP}
-    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}/Version
+    ${CMAKE_CURRENT_BINARY_DIR}/Version
   DESTINATION
     "include/${PROJECT}"
   )
