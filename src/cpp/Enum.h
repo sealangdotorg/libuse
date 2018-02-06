@@ -46,6 +46,7 @@
 #include <libstdhl/Type>
 
 #include <cassert>
+#include <functional>
 #include <initializer_list>
 #include <type_traits>
 
@@ -153,6 +154,28 @@ namespace libstdhl
             u1 empty( void ) const
             {
                 return m_flags == 0;
+            }
+
+            /**
+               Provides the ability to iterate and process each flag through callback
+               function \a processFlag which can abort the iteration if it returns `false`.
+             */
+            void foreach( std::function< u1( const Enum ) > processFlag )
+            {
+                std::size_t position = 0;
+                auto flags = m_flags;
+                while( flags != 0 )
+                {
+                    if( flags & 0x1 )
+                    {
+                        if( not processFlag( static_cast< const Enum >( position ) ) )
+                        {
+                            break;
+                        }
+                    }
+                    position++;
+                    flags >>= 1;
+                }
             }
 
             /**
