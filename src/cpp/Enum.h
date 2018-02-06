@@ -160,7 +160,7 @@ namespace libstdhl
                Provides the ability to iterate and process each flag through callback
                function \a processFlag which can abort the iteration if it returns `false`.
              */
-            void foreach( std::function< u1( const Enum ) > processFlag )
+            void foreach( std::function< u1( const Enum ) > processFlag ) const
             {
                 std::size_t position = 0;
                 auto flags = m_flags;
