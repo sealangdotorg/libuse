@@ -162,6 +162,9 @@ def searcher( dirpath, rootdir = True ) :
         , ".js"               # Javascript
         , ".ts"               # Typescript
         , ".casm"             # CASM Specification
+        , ".p"                # PAWN Source
+        , ".inc"              # PAWN Header
+        , ".m2m"              # rapidM2M Map Machine Profile
         ] :
             relicense( filepath, "//" )
 
