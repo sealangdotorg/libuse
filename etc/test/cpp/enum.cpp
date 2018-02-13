@@ -265,6 +265,67 @@ TEST( libstdhl_cpp_Enum_Flags, star_operator_intersection )
     EXPECT_FALSE( mergedColors2.isSet( Color::Green ) );
 }
 
+TEST( libstdhl_cpp_Enum_Flags, foreach_iterate_over_no_flags )
+{
+    // PREPARE
+    Colors input;
+    Colors output;
+    EXPECT_TRUE( output.empty() );
+
+    // WHEN
+    input.foreach( [&output]( const Color c ) -> u1 {
+        output.set( c );
+        return true;
+    } );
+
+    // THEN
+    EXPECT_TRUE( output.empty() );
+}
+
+TEST( libstdhl_cpp_Enum_Flags, foreach_iterate_over_partial_flags )
+{
+    // PREPARE
+    Colors input;
+    input.set( Color::Green );
+    Colors output;
+    EXPECT_TRUE( output.empty() );
+
+    // WHEN
+    input.foreach( [&output]( const Color c ) -> u1 {
+        output.set( c );
+        return true;
+    } );
+
+    // THEN
+    EXPECT_TRUE( not output.empty() );
+    EXPECT_FALSE( output.isSet( Color::Red ) );
+    EXPECT_TRUE( output.isSet( Color::Green ) );
+    EXPECT_FALSE( output.isSet( Color::Blue ) );
+}
+
+TEST( libstdhl_cpp_Enum_Flags, foreach_iterate_over_all_set_flags )
+{
+    // PREPARE
+    Colors input;
+    input.set( Color::Red );
+    input.set( Color::Green );
+    input.set( Color::Blue );
+    Colors output;
+    EXPECT_TRUE( output.empty() );
+
+    // WHEN
+    input.foreach( [&output]( const Color c ) -> u1 {
+        output.set( c );
+        return true;
+    } );
+
+    // THEN
+    EXPECT_TRUE( not output.empty() );
+    EXPECT_TRUE( output.isSet( Color::Red ) );
+    EXPECT_TRUE( output.isSet( Color::Green ) );
+    EXPECT_TRUE( output.isSet( Color::Blue ) );
+}
+
 //
 //  Local variables:
 //  mode: c++

@@ -45,6 +45,10 @@
 TEST( libstdhl, main )
 {
     std::cout << libstdhl::REVTAG << "\n";
+    std::cout << libstdhl::COMMIT << "\n";
+    std::cout << libstdhl::BRANCH << "\n";
+    std::cout << libstdhl::LICENSE << "\n";
+    std::cout << libstdhl::NOTICE << "\n";
 }
 
 //

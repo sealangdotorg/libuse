@@ -81,6 +81,11 @@ def relicense( filepath, comment, licensetext = licensetext ) :
             continue
         # end if
 
+        if line.startswith( "#!/" ) :
+            print "%s" % line.replace( "\n", "" )
+            continue
+        # end if
+
         cnt = cnt + 1
         if cnt == 1 :
             sys.stderr.write( "'%s' '%s' '%s'\n" % ( line, comment, licensetext[0] ) )
