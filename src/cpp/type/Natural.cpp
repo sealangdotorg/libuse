@@ -114,6 +114,56 @@ Natural& Natural::operator^=( const Natural& rhs )
 }
 
 //
+// operator '|=' and '|'
+//
+
+Natural& Natural::operator|=( const Natural& rhs )
+{
+    assert( this->trivial() );
+    assert( rhs.trivial() );
+
+    const u64 a = value();
+    const u64 b = rhs.value();
+
+    m_data.value = a | b;
+
+    return *this;
+}
+
+//
+// operator '&=' and '&'
+//
+
+Natural& Natural::operator&=( const Natural& rhs )
+{
+    assert( this->trivial() );
+    assert( rhs.trivial() );
+
+    const u64 a = value();
+    const u64 b = rhs.value();
+
+    m_data.value = a & b;
+
+    return *this;
+}
+
+//
+// operator '<<=' and '<<'
+//
+
+Natural& Natural::operator<<=( const u64 rhs )
+{
+    static_cast< Integer* >( this )->operator<<=( rhs );
+    return *this;
+}
+
+Natural& Natural::operator<<=( const Natural& rhs )
+{
+    static_cast< Integer* >( this )->operator<<=( rhs );
+    return *this;
+}
+
+//
 //  Local variables:
 //  mode: c++
 //  indent-tabs-mode: nil

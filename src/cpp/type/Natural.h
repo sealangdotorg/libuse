@@ -81,6 +81,50 @@ namespace libstdhl
                 lhs ^= rhs;
                 return lhs;
             }
+
+            //
+            // operator '|=' and '|'
+            //
+
+            Natural& operator|=( const Natural& rhs );
+
+            inline friend Natural operator|( Natural lhs, const Natural& rhs )
+            {
+                lhs |= rhs;
+                return lhs;
+            }
+
+            //
+            // operator '&=' and '&'
+            //
+
+            Natural& operator&=( const Natural& rhs );
+
+            inline friend Natural operator&( Natural lhs, const Natural& rhs )
+            {
+                lhs &= rhs;
+                return lhs;
+            }
+
+            //
+            // operator '<<=' and '<<'
+            //
+
+            Natural& operator<<=( const u64 rhs );
+
+            inline friend Natural operator<<( Natural lhs, const u64 rhs )
+            {
+                lhs <<= rhs;
+                return lhs;
+            }
+
+            Natural& operator<<=( const Natural& rhs );
+
+            inline friend Natural operator<<( Natural lhs, const Natural& rhs )
+            {
+                lhs <<= rhs;
+                return lhs;
+            }
         };
     }
 }
