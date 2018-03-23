@@ -846,7 +846,7 @@ Integer& Integer::operator^=( const Natural& rhs )
 // operator '~' (INVERSE)
 //
 
-Integer Integer::operator~(void)const
+Integer Integer::operator~( void ) const
 {
     Integer tmp( *this );
 

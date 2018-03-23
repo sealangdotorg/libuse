@@ -260,7 +260,7 @@ namespace libstdhl
             // operator '~' (INVERSE)
             //
 
-            Integer operator~(void)const;
+            Integer operator~( void ) const;
 
             //
             // operator '<<=' and '<<'

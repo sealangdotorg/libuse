@@ -263,7 +263,6 @@ TEST_P( cpp_Args, param )
 
         std::function< i32( const char* ) > hook =
             [param_opt, &cnt_options_chr, &cnt_options_str]( const char* arg ) {
-
                 if( param_opt.chr )
                 {
                     cnt_options_chr[ param_opt.chr ] += 1;
