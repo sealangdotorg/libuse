@@ -259,7 +259,9 @@ std::string ApplicationFormatter::visit( Data& item )
 {
     std::string tmp = m_name + ": ";
 
-    tmp = Ansi::format< Ansi::Style::BOLD >( tmp + item.level().accept( *this ) ) + " ";
+    tmp = Ansi::format< Ansi::Style::BOLD >( tmp + item.level().accept( *this ) );
+    tmp += Ansi::CSI( Ansi::SGR::RESET );
+    tmp += " ";
 
     if( item.level() == Level::ID::OUTPUT and m_rawOutput )
     {
