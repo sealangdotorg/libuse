@@ -44,7 +44,7 @@
 
 using namespace libstdhl;
 
-static constexpr const char* ESC = "\x1B[";
+static constexpr const char* ESC = "\u001b[";
 
 std::string Ansi::CSI( SGR command, const std::string& option )
 {
