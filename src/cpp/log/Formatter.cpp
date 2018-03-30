@@ -322,7 +322,8 @@ std::string ApplicationFormatter::visit( Data& item )
             }
 
             tmp += Ansi::format< Ansi::Color::GREEN >(
-                Ansi::format< Ansi::Style::BOLD >( "^" ) + underline );
+                Ansi::format< Ansi::Style::BOLD >( "^" ) + Ansi::CSI( Ansi::SGR::RESET ) );
+            tmp += Ansi::format< Ansi::Color::GREEN >( underline );
         }
     }
 
@@ -331,7 +332,8 @@ std::string ApplicationFormatter::visit( Data& item )
 
 std::string ApplicationFormatter::visit( LocationItem& item )
 {
-    return Ansi::format< Ansi::Style::BOLD >( StringFormatter::visit( item ) );
+    return Ansi::format< Ansi::Style::BOLD >( StringFormatter::visit( item ) ) +
+           Ansi::CSI( Ansi::SGR::RESET );
 }
 
 //
