@@ -46,7 +46,7 @@
 # This CMake library contains besides the embedded 'LibFindMacros.cmake' some
 # small and basic functions to define git-based projects with sub-module
 # dependencies. The origin of this file is located at:
-# https://github.com/ppaulweber/libstdhl/blob/master/.cmake/LibPackage.cmake
+# https://github.com/casm-lang/libstdhl/blob/master/.cmake/LibPackage.cmake
 #
 
 ################################################################################
