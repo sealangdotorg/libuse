@@ -165,7 +165,9 @@ def searcher( dirpath, rootdir = True ) :
         , ".cc"               # C++ Source
         , ".cpp"              # C++ Source
         , ".js"               # Javascript
+        , ".jsx"              # Javascript Extended
         , ".ts"               # Typescript
+        , ".tsx"              # Typescript Extended
         , ".casm"             # CASM Specification
         , ".p"                # PAWN Source
         , ".inc"              # PAWN Header
