@@ -81,7 +81,9 @@ def relicense( filepath, comment, licensetext = licensetext ) :
             continue
         # end if
 
-        if line.startswith( "#!/" ) :
+        if line.startswith( "#!/" ) \
+        or line.startswith( "CoreASM" ) \
+        :
             print "%s" % line.replace( "\n", "" )
             continue
         # end if
