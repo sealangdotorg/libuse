@@ -169,6 +169,9 @@ def searcher( dirpath, rootdir = True ) :
         , ".ts"               # Typescript
         , ".tsx"              # Typescript Extended
         , ".casm"             # CASM Specification
+        , ".coreasm"          # CoreASM Specification
+        , ".asml"             # AsmL Specification
+        , ".asmetal"          # AsmetaL Specification
         , ".p"                # PAWN Source
         , ".inc"              # PAWN Header
         , ".m2m"              # rapidM2M Map Machine Profile
