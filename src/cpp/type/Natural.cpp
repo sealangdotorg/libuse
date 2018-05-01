@@ -96,6 +96,15 @@ Natural Natural::fromString( const std::string& value, const Type::Radix radix )
     return createNatural( tmp );
 }
 
+u1 Natural::isSet( const u64 bit ) const
+{
+    assert( bit > 0 );
+    assert( bit <= 64 );
+    assert( trivial() );
+
+    return value() & ( 1 << ( bit - 1 ) );
+}
+
 //
 // operator '^=' and '^'
 //

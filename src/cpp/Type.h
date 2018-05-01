@@ -89,11 +89,14 @@ namespace libstdhl
             UNIX = 20
         };
 
+        class Boolean;
+        class Natural;
+        class Integer;
+        class Rational;
+
         //
         // Boolean
         //
-
-        class Boolean;
 
         Boolean createBoolean( const std::string& value );
 
@@ -103,19 +106,17 @@ namespace libstdhl
         // Integer
         //
 
-        class Integer;
-
         Integer createInteger( const std::string& value, const Radix radix = DECIMAL );
 
         Integer createInteger( const u64 value );
 
         Integer createInteger( const i64 value );
 
+        Integer createInteger( const Natural& value, const u1 sign );
+
         //
         // Natural
         //
-
-        class Natural;
 
         Natural createNatural( const std::string& value, const Radix radix = DECIMAL );
 
@@ -126,8 +127,6 @@ namespace libstdhl
         //
         // Rational
         //
-
-        class Rational;
 
         Rational createRational( const std::string& value, const Radix radix = DECIMAL );
 
