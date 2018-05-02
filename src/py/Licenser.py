@@ -198,6 +198,7 @@ def searcher( dirpath, rootdir = True ) :
         if fileext in \
         [ ".py"               # Python Script
         , ".mk"               # Makefile Script
+        , ".pro"              # QtProject Script
         , ".cmake"            # CMake Script
         , ".yml"              # YAML Configuration
         , ".cfg"              # UNIX Configuration
