@@ -96,6 +96,15 @@ Natural Natural::fromString( const std::string& value, const Type::Radix radix )
     return createNatural( tmp );
 }
 
+u1 Natural::isSet( const u64 bit ) const
+{
+    assert( bit > 0 );
+    assert( bit <= 64 );
+    assert( trivial() );
+
+    return value() & ( 1 << ( bit - 1 ) );
+}
+
 //
 // operator '^=' and '^'
 //
@@ -110,6 +119,56 @@ Natural& Natural::operator^=( const Natural& rhs )
 
     m_data.value = a ^ b;
 
+    return *this;
+}
+
+//
+// operator '|=' and '|'
+//
+
+Natural& Natural::operator|=( const Natural& rhs )
+{
+    assert( this->trivial() );
+    assert( rhs.trivial() );
+
+    const u64 a = value();
+    const u64 b = rhs.value();
+
+    m_data.value = a | b;
+
+    return *this;
+}
+
+//
+// operator '&=' and '&'
+//
+
+Natural& Natural::operator&=( const Natural& rhs )
+{
+    assert( this->trivial() );
+    assert( rhs.trivial() );
+
+    const u64 a = value();
+    const u64 b = rhs.value();
+
+    m_data.value = a & b;
+
+    return *this;
+}
+
+//
+// operator '<<=' and '<<'
+//
+
+Natural& Natural::operator<<=( const u64 rhs )
+{
+    static_cast< Integer* >( this )->operator<<=( rhs );
+    return *this;
+}
+
+Natural& Natural::operator<<=( const Natural& rhs )
+{
+    static_cast< Integer* >( this )->operator<<=( rhs );
     return *this;
 }
 

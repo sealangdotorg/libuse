@@ -64,6 +64,8 @@ namespace libstdhl
 
             static Natural fromString( const std::string& value, const Radix radix );
 
+            u1 isSet( const u64 bit ) const;
+
             inline friend Natural operator~( Natural arg )
             {
                 auto tmp = ~static_cast< Integer& >( arg );
@@ -79,6 +81,50 @@ namespace libstdhl
             inline friend Natural operator^( Natural lhs, const Natural& rhs )
             {
                 lhs ^= rhs;
+                return lhs;
+            }
+
+            //
+            // operator '|=' and '|'
+            //
+
+            Natural& operator|=( const Natural& rhs );
+
+            inline friend Natural operator|( Natural lhs, const Natural& rhs )
+            {
+                lhs |= rhs;
+                return lhs;
+            }
+
+            //
+            // operator '&=' and '&'
+            //
+
+            Natural& operator&=( const Natural& rhs );
+
+            inline friend Natural operator&( Natural lhs, const Natural& rhs )
+            {
+                lhs &= rhs;
+                return lhs;
+            }
+
+            //
+            // operator '<<=' and '<<'
+            //
+
+            Natural& operator<<=( const u64 rhs );
+
+            inline friend Natural operator<<( Natural lhs, const u64 rhs )
+            {
+                lhs <<= rhs;
+                return lhs;
+            }
+
+            Natural& operator<<=( const Natural& rhs );
+
+            inline friend Natural operator<<( Natural lhs, const Natural& rhs )
+            {
+                lhs <<= rhs;
                 return lhs;
             }
         };

@@ -102,6 +102,20 @@ Integer Type::createInteger( const i64 value )
     return tmp;
 }
 
+Integer Type::createInteger( const Natural& value, const u1 sign )
+{
+    Integer tmp( value );
+
+    if( sign )
+    {
+        return -tmp;
+    }
+    else
+    {
+        return tmp;
+    }
+}
+
 //
 // Integer
 //
