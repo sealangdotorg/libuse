@@ -210,6 +210,7 @@ def searcher( dirpath, rootdir = True ) :
         , "Dockerfile"        # Docker Configuration
         , "CMakeLists.txt"    # CMake Script
         , ".clang-format"     # Clang Format Configuration
+        , "PKGBUILD"          # Archlinux Package Manager Configuration
         ] :
             relicense( filepath, "#" )
 
