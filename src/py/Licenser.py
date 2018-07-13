@@ -203,6 +203,7 @@ def searcher( dirpath, rootdir = True ) :
         , ".yml"              # YAML Configuration
         , ".cfg"              # UNIX Configuration
         , ".sh"               # BASH Shell Script
+        , ".desktop"          # Freedesktop Application Configuration
         ] \
         or filename in \
         [ "Makefile"          # Makefile Script
