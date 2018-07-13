@@ -211,6 +211,7 @@ def searcher( dirpath, rootdir = True ) :
         , "CMakeLists.txt"    # CMake Script
         , ".clang-format"     # Clang Format Configuration
         , "PKGBUILD"          # Archlinux Package Manager Configuration
+        , "AppRun"            # AppImage Start Script
         ] :
             relicense( filepath, "#" )
 
