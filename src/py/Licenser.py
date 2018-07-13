@@ -151,6 +151,7 @@ def searcher( dirpath, rootdir = True ) :
         and filename in \
         [ "node_modules"
         , "obj"
+        , ".flatpak-builder"
         ] :
             continue
 
