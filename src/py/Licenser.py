@@ -203,7 +203,8 @@ def searcher( dirpath, rootdir = True ) :
         , ".cmake"            # CMake Script
         , ".yml"              # YAML Configuration
         , ".cfg"              # UNIX Configuration
-        , ".sh"               # BASH Shell Script
+        , ".sh"               # BASH/Shell Script
+        , ".conf"             # BASH/Shell Configuration
         , ".desktop"          # Freedesktop Application Configuration
         ] \
         or filename in \
