@@ -291,7 +291,9 @@ $(OBJ):
 ifeq ($(ENV_PLAT),Unix)
 	@mkdir -p $(OBJ)
 else
+ifeq ("$(wildcard $(OBJ)","")
 	@mkdir $(OBJ)
+endif
 endif
 
 clean:
@@ -301,7 +303,11 @@ endif
 
 clean-all:
 	@echo "-- Removing build directory" $(OBJ)
+ifeq ($(ENV_PLAT),Unix)
 	@rm -rf $(OBJ)
+else
+	@rmdir /S /Q $(OBJ)
+endif
 
 TYPES = debug sanitize release
 
@@ -472,7 +478,9 @@ SCAN_BUILD_REPORT_ATTIC = $(SCAN_BUILD_REPORT).attic
 ifeq ($(ENV_PLAT),Unix)
 	@mkdir -p $(SCAN_BUILD_REPORT_ATTIC)
 else
+ifeq ("$(wildcard $(SCAN_BUILD_REPORT_ATTIC)","")
 	@mkdir $(SCAN_BUILD_REPORT_ATTIC)
+endif
 endif
 
 	scan-build \
