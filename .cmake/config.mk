@@ -50,8 +50,12 @@ BIN = install
 .NOTPARALLEL: $(OBJ)
 
 ENV_ARCH := $(shell uname -m)
+# x86_64
+# i686
 ifneq ($(ENV_ARCH),x86_64)
+ifneq ($(ENV_ARCH),i686)
   $(error environment architecture '$(ENV_ARCH)' not supported!)
+endif
 endif
 
 ENV_OS := $(shell uname -o)
