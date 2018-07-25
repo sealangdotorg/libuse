@@ -303,11 +303,7 @@ endif
 
 clean-all:
 	@echo "-- Removing build directory" $(OBJ)
-ifeq ($(ENV_PLAT),Unix)
 	@rm -rf $(OBJ)
-else
-	@rmdir /S /Q $(OBJ)
-endif
 
 TYPES = debug sanitize release
 
