@@ -50,201 +50,215 @@ BIN = install
 .NOTPARALLEL: $(OBJ)
 
 CLANG := $(shell clang --version 2> /dev/null)
-ifdef CLANG
-  CC=clang
-  CXX=clang++
+
+ifdef C
+  ENV_CC=$(C)
+else
+  ifdef CLANG
+    ENV_CC=clang
+  endif
 endif
 
-ifdef ENV_CC
-  CC=$(ENV_CC)
-else
-  ENV_CC=$(CC)
+ifeq ($(ENV_CC),)
+  $(error environment C compiler '$(C)' not defined!)
 endif
 
-ifdef ENV_CXX
-  CXX=$(ENV_CXX)
+ifdef X
+  ENV_CXX=$(X)
 else
-  ENV_CXX=$(CXX)
+  ifdef CLANG
+    ENV_CXX=clang++
+  endif
+endif
+
+ifeq ($(ENV_CXX),)
+  $(error environment C++ compiler '$(X)' not defined!)
+endif
+
+
+ifdef ENV_GEN
+  G=$(ENV_GEN)
 endif
 
 ifndef G
   G=make
-else
-  G:=$(G)
 endif
 
 # Unix Makefiles
 ifeq ($(G),make)
-  G:="Unix Makefiles"
+  $(eval ENV_GEN="Unix Makefiles")
 endif
 ifeq ($(G),make-cb)
-  G="CodeBlocks - Unix Makefiles"
+  $(eval ENV_GEN="CodeBlocks - Unix Makefiles")
 endif
 ifeq ($(G),make-cl)
-  G="CodeLite - Unix Makefiles"
+  $(eval ENV_GEN="CodeLite - Unix Makefiles")
 endif
 ifeq ($(G),make-s2)
-  G="Sublime Text 2 - Unix Makefiles"
+  $(eval ENV_GEN="Sublime Text 2 - Unix Makefiles")
 endif
 ifeq ($(G),make-kp)
-  G="Kate - Unix Makefiles"
+  $(eval ENV_GEN="Kate - Unix Makefiles")
 endif
 ifeq ($(G),make-e4)
-  G="Eclipse CDT4 - Unix Makefiles"
+  $(eval ENV_GEN="Eclipse CDT4 - Unix Makefiles")
 endif
 
 # MinGW Makefiles
 ifeq ($(G),make-gw)
-  G="MinGW Makefiles"
+  $(eval ENV_GEN="MinGW Makefiles")
 endif
 ifeq ($(G),make-gw-cb)
-  G="CodeBlocks - MinGW Makefiles"
+  $(eval ENV_GEN="CodeBlocks - MinGW Makefiles")
 endif
 ifeq ($(G),make-gw-cl)
-  G="CodeLite - MinGW Makefiles"
+  $(eval ENV_GEN="CodeLite - MinGW Makefiles")
 endif
 ifeq ($(G),make-gw-s2)
-  G="Sublime Text 2 - MinGW Makefiles"
+  $(eval ENV_GEN="Sublime Text 2 - MinGW Makefiles")
 endif
 ifeq ($(G),make-gw-kp)
-  G="Kate - MinGW Makefiles"
+  $(eval ENV_GEN="Kate - MinGW Makefiles")
 endif
 ifeq ($(G),make-gw-e4)
-  G="Eclipse CDT4 - MinGW Makefiles"
+  $(eval ENV_GEN="Eclipse CDT4 - MinGW Makefiles")
 endif
 
 # Msys Makefiles
 ifeq ($(G),make-ms)
-  G="MSYS Makefiles"
+  $(eval ENV_GEN="MSYS Makefiles")
 endif
 
 # Watcom Makefiles
 ifeq ($(G),make-wc)
-  G="Watcom WMake"
+  $(eval ENV_GEN="Watcom WMake")
 endif
 
 # Borland Makefiles
 ifeq ($(G),make-bl)
-  G="Borland Makefiles"
+  $(eval ENV_GEN="Borland Makefiles")
 endif
 
 # NMake Makefiles
 ifeq ($(G),make-nm)
-  G="NMake Makefiles"
+  $(eval ENV_GEN="NMake Makefiles")
 endif
 ifeq ($(G),make-nm-cb)
-  G="CodeBlocks - NMake Makefiles"
+  $(eval ENV_GEN="CodeBlocks - NMake Makefiles")
 endif
 ifeq ($(G),make-nm-cl)
-  G="CodeLite - NMake Makefiles"
+  $(eval ENV_GEN="CodeLite - NMake Makefiles")
 endif
 ifeq ($(G),make-nm-s2)
-  G="Sublime Text 2 - NMake Makefiles"
+  $(eval ENV_GEN="Sublime Text 2 - NMake Makefiles")
 endif
 ifeq ($(G),make-nm-kp)
-  G="Kate - NMake Makefiles"
+  $(eval ENV_GEN="Kate - NMake Makefiles")
 endif
 ifeq ($(G),make-nm-e4)
-  G="Eclipse CDT4 - NMake Makefiles"
+  $(eval ENV_GEN="Eclipse CDT4 - NMake Makefiles")
 endif
 ifeq ($(G),make-nj)
-  G="NMake Makefiles JOM"
+  $(eval ENV_GEN="NMake Makefiles JOM")
 endif
 ifeq ($(G),make-nj-cb)
-  G="CodeBlocks - NMake Makefiles JOM"
+  $(eval ENV_GEN="CodeBlocks - NMake Makefiles JOM")
 endif
 
 # Green Hills MULTI
 ifeq ($(G),multi)
-  G="Green Hills MULTI"
+  $(eval ENV_GEN="Green Hills MULTI")
 endif
 
 # Ninja
 ifeq ($(G),ninja)
-  G:="Ninja"
+  $(eval ENV_GEN="Ninja")
 endif
 ifeq ($(G),ninja-cb)
-  G="CodeBlocks - Ninja"
+  $(eval ENV_GEN="CodeBlocks - Ninja")
 endif
 ifeq ($(G),ninja-cl)
-  G="CodeLite - Ninja"
+  $(eval ENV_GEN="CodeLite - Ninja")
 endif
 ifeq ($(G),ninja-s2)
-  G="Sublime Text 2 - Ninja"
+  $(eval ENV_GEN="Sublime Text 2 - Ninja")
 endif
 ifeq ($(G),ninja-kp)
-  G="Kate - Ninja"
+  $(eval ENV_GEN="Kate - Ninja")
 endif
 ifeq ($(G),ninja-e4)
-  G="Eclipse CDT4 - Ninja"
+  $(eval ENV_GEN="Eclipse CDT4 - Ninja")
 endif
 
 # Visual Studio 2017 (Version 15)
 ifeq ($(G),vs17)
-  G="Visual Studio 15 2017"
+  $(eval ENV_GEN="Visual Studio 15 2017")
 endif
 ifeq ($(G),vs17w64)
-  G="Visual Studio 15 2017 Win64"
+  $(eval ENV_GEN="Visual Studio 15 2017 Win64")
 endif
 ifeq ($(G),vs17arm)
-  G="Visual Studio 15 2017 ARM"
+  $(eval ENV_GEN="Visual Studio 15 2017 ARM")
 endif
 
 # Visual Studio 2015 (Version 14)
 ifeq ($(G),vs15)
-  G="Visual Studio 14 2015"
+  $(eval ENV_GEN="Visual Studio 14 2015")
 endif
 ifeq ($(G),vs15w64)
-  G="Visual Studio 14 2015 Win64"
+  $(eval ENV_GEN="Visual Studio 14 2015 Win64")
 endif
 ifeq ($(G),vs15arm)
-  G="Visual Studio 14 2015 ARM"
+  $(eval ENV_GEN="Visual Studio 14 2015 ARM")
 endif
 
 # Visual Studio 2013 (Version 12)
 ifeq ($(G),vs13)
-  G="Visual Studio 12 2013"
+  $(eval ENV_GEN="Visual Studio 12 2013")
 endif
 ifeq ($(G),vs13w64)
-  G="Visual Studio 12 2013 Win64"
+  $(eval ENV_GEN="Visual Studio 12 2013 Win64")
 endif
 ifeq ($(G),vs13arm)
-  G="Visual Studio 12 2013 ARM"
+  $(eval ENV_GEN="Visual Studio 12 2013 ARM")
 endif
 
 # Visual Studio 2012 (Version 11)
 ifeq ($(G),vs12)
-  G="Visual Studio 11 2012"
+  $(eval ENV_GEN="Visual Studio 11 2012")
 endif
 ifeq ($(G),vs12w64)
-  G="Visual Studio 11 2012 Win64"
+  $(eval ENV_GEN="Visual Studio 11 2012 Win64")
 endif
 ifeq ($(G),vs12arm)
-  G="Visual Studio 11 2012 ARM"
+  $(eval ENV_GEN="Visual Studio 11 2012 ARM")
 endif
 
 # Visual Studio 2010 (Version 10)
 ifeq ($(G),vs10)
-  G="Visual Studio 10 2010"
+  $(eval ENV_GEN="Visual Studio 10 2010")
 endif
 ifeq ($(G),vs10w64)
-  G="Visual Studio 10 2010 Win64"
+  $(eval ENV_GEN="Visual Studio 10 2010 Win64")
 endif
 ifeq ($(G),vs10ia64)
-  G="Visual Studio 10 2010 IA64"
+  $(eval ENV_GEN="Visual Studio 10 2010 IA64")
 endif
 
 # Visual Studio 2008 (Version 10)
 ifeq ($(G),vs08)
-  G="Visual Studio 9 2008"
+  $(eval ENV_GEN="Visual Studio 9 2008")
 endif
 ifeq ($(G),vs08w64)
-  G="Visual Studio 9 2008 Win64"
+  $(eval ENV_GEN="Visual Studio 9 2008 Win64")
 endif
 ifeq ($(G),vs08ia64)
-  G="Visual Studio 9 2008 IA64"
+  $(eval ENV_GEN="Visual Studio 9 2008 IA64")
 endif
 
+ifeq ($(ENV_GEN),)
+  $(error environment generator '$(G)' not supported!, see 'make info-generators')
+endif
 
 
 default: debug
@@ -280,7 +294,7 @@ ifeq ("$(wildcard $(OBJ)/CMakeCache.txt)","")
 	@(\
 	cd $(OBJ); \
 	cmake \
-	-G $(G) \
+	-G $(ENV_GEN) \
 	-D CMAKE_INSTALL_PREFIX=$(BIN) \
 	-D CMAKE_BUILD_TYPE=$(TYPE) \
 	-D CMAKE_C_COMPILER=$(ENV_CC) \
@@ -452,7 +466,7 @@ SCAN_BUILD_REPORT_ATTIC = $(SCAN_BUILD_REPORT).attic
 
 info:
 	@echo "-- Environment Configuration"
-	@echo "   G =" $(G)
+	@echo "   G =" $(ENV_GEN)
 	@echo "   C =" $(ENV_CC)
 	@echo "   X =" $(ENV_CXX)
 
