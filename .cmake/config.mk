@@ -57,10 +57,14 @@ endif
 
 ifdef ENV_CC
   CC=$(ENV_CC)
+else
+  ENV_CC=$(CC)
 endif
 
 ifdef ENV_CXX
   CXX=$(ENV_CXX)
+else
+  ENV_CXX=$(CXX)
 endif
 
 
@@ -99,8 +103,8 @@ ifeq ("$(wildcard $(OBJ)/CMakeCache.txt)","")
 	cmake \
 	-D CMAKE_INSTALL_PREFIX=$(BIN) \
 	-D CMAKE_BUILD_TYPE=$(TYPE) \
-	-D CMAKE_C_COMPILER=$(CC) \
-	-D CMAKE_CXX_COMPILER=$(CXX) \
+	-D CMAKE_C_COMPILER=$(ENV_CC) \
+	-D CMAKE_CXX_COMPILER=$(ENV_CXX) \
 	.. \
 	)
 else
