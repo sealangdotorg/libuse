@@ -49,7 +49,21 @@ BIN = install
 .PHONY: $(OBJ)
 .NOTPARALLEL: $(OBJ)
 
-CLANG := $(shell clang --version 2> /dev/null)
+ENV_ARCH := $(shell uname -m)
+ifneq ($(ENV_ARCH),x86_64)
+  $(error environment architecture '$(ENV_ARCH)' not supported!)
+endif
+
+ENV_OS := `uname -o`
+# GNU/Linux
+# Msys
+# Cygwin
+
+ifeq ($(ENV_OS),GNU/Linux)
+  CLANG := $(shell clang --version 2> /dev/null)
+else
+  CLANG := $(shell clang --version 2> nul)
+endif
 
 ifdef C
   ENV_CC=$(C)
@@ -465,6 +479,9 @@ SCAN_BUILD_REPORT_ATTIC = $(SCAN_BUILD_REPORT).attic
 
 
 info:
+	@echo "-- Environment Host System"
+	@echo "   O =" $(ENV_OS)
+	@echo "   A =" $(ENV_ARCH)
 	@echo "-- Environment Configuration"
 	@echo "   G =" $(ENV_GEN)
 	@echo "   C =" $(ENV_CC)
