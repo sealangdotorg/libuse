@@ -292,12 +292,8 @@ help:
 
 
 $(OBJ):
-ifeq ($(ENV_PLAT),Unix)
-	@mkdir -p $(OBJ)
-else
-  ifeq ("$(wildcard $(OBJ))","")
+ifeq ($(wildcard $(OBJ)/.*),)
 	@mkdir $(OBJ)
-  endif
 endif
 
 clean:
@@ -479,12 +475,8 @@ SCAN_BUILD_REPORT_ATTIC = $(SCAN_BUILD_REPORT).attic
 
 %-analyze-scan-build: clean
 	@echo "-- Running 'scan-build' $(patsubst %-analyze-scan-build,%,$@)"
-ifeq ($(ENV_PLAT),Unix)
-	@mkdir -p $(SCAN_BUILD_REPORT_ATTIC)
-else
-  ifeq ("$(wildcard $(SCAN_BUILD_REPORT_ATTIC))","")
+ifeq ($(wildcard $(SCAN_BUILD_REPORT_ATTIC)/.*),)
 	@mkdir $(SCAN_BUILD_REPORT_ATTIC)
-  endif
 endif
 
 	scan-build \
