@@ -54,7 +54,7 @@ ifneq ($(ENV_ARCH),x86_64)
   $(error environment architecture '$(ENV_ARCH)' not supported!)
 endif
 
-ENV_OS := `uname -o`
+ENV_OS := $(shell uname -o)
 # GNU/Linux
 # Msys
 # Cygwin
