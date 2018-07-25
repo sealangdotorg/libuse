@@ -60,6 +60,12 @@ ENV_OS := $(shell uname -o)
 # Cygwin
 
 ifeq ($(ENV_OS),GNU/Linux)
+  ENV_PLAT := Unix
+else
+  ENV_PLAT := Windows
+endif
+
+ifeq ($(ENV_PLAT),Unix)
   CLANG := $(shell clang --version 2> /dev/null)
 else
   CLANG := $(shell clang --version 2> nul)
@@ -282,7 +288,11 @@ help:
 
 
 $(OBJ):
+ifeq ($(ENV_PLAT),Unix)
 	@mkdir -p $(OBJ)
+else
+	@mkdir $(OBJ)
+endif
 
 clean:
 ifneq ("$(wildcard $(OBJ)/CMakeCache.txt)","")
@@ -459,7 +469,11 @@ SCAN_BUILD_REPORT_ATTIC = $(SCAN_BUILD_REPORT).attic
 
 %-analyze-scan-build: clean
 	@echo "-- Running 'scan-build' $(patsubst %-analyze-scan-build,%,$@)"
+ifeq ($(ENV_PLAT),Unix)
 	@mkdir -p $(SCAN_BUILD_REPORT_ATTIC)
+else
+	@mkdir $(SCAN_BUILD_REPORT_ATTIC)
+endif
 
 	scan-build \
 	-v \
@@ -481,6 +495,7 @@ SCAN_BUILD_REPORT_ATTIC = $(SCAN_BUILD_REPORT).attic
 info:
 	@echo "-- Environment Host System"
 	@echo "   O =" $(ENV_OS)
+	@echo "   P =" $(ENV_PLAT)
 	@echo "   A =" $(ENV_ARCH)
 	@echo "-- Environment Configuration"
 	@echo "   G =" $(ENV_GEN)
