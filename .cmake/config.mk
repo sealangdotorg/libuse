@@ -67,6 +67,185 @@ else
   ENV_CXX=$(CXX)
 endif
 
+ifndef G
+  G=make
+else
+  G:=$(G)
+endif
+
+# Unix Makefiles
+ifeq ($(G),make)
+  G:="Unix Makefiles"
+endif
+ifeq ($(G),make-cb)
+  G="CodeBlocks - Unix Makefiles"
+endif
+ifeq ($(G),make-cl)
+  G="CodeLite - Unix Makefiles"
+endif
+ifeq ($(G),make-s2)
+  G="Sublime Text 2 - Unix Makefiles"
+endif
+ifeq ($(G),make-kp)
+  G="Kate - Unix Makefiles"
+endif
+ifeq ($(G),make-e4)
+  G="Eclipse CDT4 - Unix Makefiles"
+endif
+
+# MinGW Makefiles
+ifeq ($(G),make-gw)
+  G="MinGW Makefiles"
+endif
+ifeq ($(G),make-gw-cb)
+  G="CodeBlocks - MinGW Makefiles"
+endif
+ifeq ($(G),make-gw-cl)
+  G="CodeLite - MinGW Makefiles"
+endif
+ifeq ($(G),make-gw-s2)
+  G="Sublime Text 2 - MinGW Makefiles"
+endif
+ifeq ($(G),make-gw-kp)
+  G="Kate - MinGW Makefiles"
+endif
+ifeq ($(G),make-gw-e4)
+  G="Eclipse CDT4 - MinGW Makefiles"
+endif
+
+# Msys Makefiles
+ifeq ($(G),make-ms)
+  G="MSYS Makefiles"
+endif
+
+# Watcom Makefiles
+ifeq ($(G),make-wc)
+  G="Watcom WMake"
+endif
+
+# Borland Makefiles
+ifeq ($(G),make-bl)
+  G="Borland Makefiles"
+endif
+
+# NMake Makefiles
+ifeq ($(G),make-nm)
+  G="NMake Makefiles"
+endif
+ifeq ($(G),make-nm-cb)
+  G="CodeBlocks - NMake Makefiles"
+endif
+ifeq ($(G),make-nm-cl)
+  G="CodeLite - NMake Makefiles"
+endif
+ifeq ($(G),make-nm-s2)
+  G="Sublime Text 2 - NMake Makefiles"
+endif
+ifeq ($(G),make-nm-kp)
+  G="Kate - NMake Makefiles"
+endif
+ifeq ($(G),make-nm-e4)
+  G="Eclipse CDT4 - NMake Makefiles"
+endif
+ifeq ($(G),make-nj)
+  G="NMake Makefiles JOM"
+endif
+ifeq ($(G),make-nj-cb)
+  G="CodeBlocks - NMake Makefiles JOM"
+endif
+
+# Green Hills MULTI
+ifeq ($(G),multi)
+  G="Green Hills MULTI"
+endif
+
+# Ninja
+ifeq ($(G),ninja)
+  G:="Ninja"
+endif
+ifeq ($(G),ninja-cb)
+  G="CodeBlocks - Ninja"
+endif
+ifeq ($(G),ninja-cl)
+  G="CodeLite - Ninja"
+endif
+ifeq ($(G),ninja-s2)
+  G="Sublime Text 2 - Ninja"
+endif
+ifeq ($(G),ninja-kp)
+  G="Kate - Ninja"
+endif
+ifeq ($(G),ninja-e4)
+  G="Eclipse CDT4 - Ninja"
+endif
+
+# Visual Studio 2017 (Version 15)
+ifeq ($(G),vs17)
+  G="Visual Studio 15 2017"
+endif
+ifeq ($(G),vs17w64)
+  G="Visual Studio 15 2017 Win64"
+endif
+ifeq ($(G),vs17arm)
+  G="Visual Studio 15 2017 ARM"
+endif
+
+# Visual Studio 2015 (Version 14)
+ifeq ($(G),vs15)
+  G="Visual Studio 14 2015"
+endif
+ifeq ($(G),vs15w64)
+  G="Visual Studio 14 2015 Win64"
+endif
+ifeq ($(G),vs15arm)
+  G="Visual Studio 14 2015 ARM"
+endif
+
+# Visual Studio 2013 (Version 12)
+ifeq ($(G),vs13)
+  G="Visual Studio 12 2013"
+endif
+ifeq ($(G),vs13w64)
+  G="Visual Studio 12 2013 Win64"
+endif
+ifeq ($(G),vs13arm)
+  G="Visual Studio 12 2013 ARM"
+endif
+
+# Visual Studio 2012 (Version 11)
+ifeq ($(G),vs12)
+  G="Visual Studio 11 2012"
+endif
+ifeq ($(G),vs12w64)
+  G="Visual Studio 11 2012 Win64"
+endif
+ifeq ($(G),vs12arm)
+  G="Visual Studio 11 2012 ARM"
+endif
+
+# Visual Studio 2010 (Version 10)
+ifeq ($(G),vs10)
+  G="Visual Studio 10 2010"
+endif
+ifeq ($(G),vs10w64)
+  G="Visual Studio 10 2010 Win64"
+endif
+ifeq ($(G),vs10ia64)
+  G="Visual Studio 10 2010 IA64"
+endif
+
+# Visual Studio 2008 (Version 10)
+ifeq ($(G),vs08)
+  G="Visual Studio 9 2008"
+endif
+ifeq ($(G),vs08w64)
+  G="Visual Studio 9 2008 Win64"
+endif
+ifeq ($(G),vs08ia64)
+  G="Visual Studio 9 2008 IA64"
+endif
+
+
 
 default: debug
 
@@ -101,6 +280,7 @@ ifeq ("$(wildcard $(OBJ)/CMakeCache.txt)","")
 	@(\
 	cd $(OBJ); \
 	cmake \
+	-G $(G) \
 	-D CMAKE_INSTALL_PREFIX=$(BIN) \
 	-D CMAKE_BUILD_TYPE=$(TYPE) \
 	-D CMAKE_C_COMPILER=$(ENV_CC) \
@@ -268,3 +448,66 @@ SCAN_BUILD_REPORT_ATTIC = $(SCAN_BUILD_REPORT).attic
 	@ln -f -s \
 	$(SCAN_BUILD_REPORT_ATTIC)/`ls -t $(SCAN_BUILD_REPORT_ATTIC) | head -1` \
 	$(SCAN_BUILD_REPORT)
+
+
+info:
+	@echo "-- Environment Configuration"
+	@echo "   G =" $(G)
+	@echo "   C =" $(ENV_CC)
+	@echo "   X =" $(ENV_CXX)
+
+
+info-variables:
+	$(foreach v, $(.VARIABLES), $(info $(v) = $($(v))))
+
+
+info-generators:
+	@echo "-- Enviroment CMake Generator Aliases"
+	@echo "   make       = 'Unix Makefiles'"
+	@echo "   make-cb    = 'CodeBlocks - Unix Makefiles'"
+	@echo "   make-cl    = 'CodeLite - Unix Makefiles'"
+	@echo "   make-s2    = 'Sublime Text 2 - Unix Makefiles'"
+	@echo "   make-kp    = 'Kate - Unix Makefiles'"
+	@echo "   make-e4    = 'Eclipse CDT4 - Unix Makefiles'"
+	@echo "   make-gw    = 'MinGW Makefiles'"
+	@echo "   make-gw-cb = 'CodeBlocks - MinGW Makefiles'"
+	@echo "   make-gw-cl = 'CodeLite - MinGW Makefiles'"
+	@echo "   make-gw-s2 = 'Sublime Text 2 - MinGW Makefiles'"
+	@echo "   make-gw-kp = 'Kate - MinGW Makefiles'"
+	@echo "   make-gw-e4 = 'Eclipse CDT4 - MinGW Makefiles'"
+	@echo "   make-ms    = 'MSYS Makefiles'"
+	@echo "   make-wc    = 'Watcom WMake'"
+	@echo "   make-bl    = 'Borland Makefiles'"
+	@echo "   make-nm    = 'NMake Makefiles'"
+	@echo "   make-nm-cb = 'CodeBlocks - NMake Makefiles'"
+	@echo "   make-nm-cl = 'CodeLite - NMake Makefiles'"
+	@echo "   make-nm-s2 = 'Sublime Text 2 - NMake Makefiles'"
+	@echo "   make-nm-kp = 'Kate - NMake Makefiles'"
+	@echo "   make-nm-e4 = 'Eclipse CDT4 - NMake Makefiles'"
+	@echo "   make-nj    = 'NMake Makefiles JOM'"
+	@echo "   make-nj-cb = 'CodeBlocks - NMake Makefiles JOM'"
+	@echo "   multi      = 'Green Hills MULTI'"
+	@echo "   ninja      = 'Ninja'"
+	@echo "   ninja-cb   = 'CodeBlocks - Ninja'"
+	@echo "   ninja-cl   = 'CodeLite - Ninja'"
+	@echo "   ninja-s2   = 'Sublime Text 2 - Ninja'"
+	@echo "   ninja-kp   = 'Kate - Ninja'"
+	@echo "   ninja-e4   = 'Eclipse CDT4 - Ninja'"
+	@echo "   vs17       = 'Visual Studio 15 2017'"
+	@echo "   vs17w64    = 'Visual Studio 15 2017 Win64'"
+	@echo "   vs17arm    = 'Visual Studio 15 2017 ARM'"
+	@echo "   vs15       = 'Visual Studio 14 2015'"
+	@echo "   vs15w64    = 'Visual Studio 14 2015 Win64'"
+	@echo "   vs15arm    = 'Visual Studio 14 2015 ARM'"
+	@echo "   vs13       = 'Visual Studio 12 2013'"
+	@echo "   vs13w64    = 'Visual Studio 12 2013 Win64'"
+	@echo "   vs13arm    = 'Visual Studio 12 2013 ARM'"
+	@echo "   vs12       = 'Visual Studio 11 2012'"
+	@echo "   vs12w64    = 'Visual Studio 11 2012 Win64'"
+	@echo "   vs12arm    = 'Visual Studio 11 2012 ARM'"
+	@echo "   vs10       = 'Visual Studio 10 2010'"
+	@echo "   vs10w64    = 'Visual Studio 10 2010 Win64'"
+	@echo "   vs10ia64   = 'Visual Studio 10 2010 IA64'"
+	@echo "   vs08       = 'Visual Studio 9 2008'"
+	@echo "   vs08w64    = 'Visual Studio 9 2008 Win64'"
+	@echo "   vs08ia64   = 'Visual Studio 9 2008 IA64'"
