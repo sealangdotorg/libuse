@@ -72,7 +72,7 @@ endif
 ifeq ($(ENV_PLAT),Unix)
   CLANG := $(shell clang --version 2> /dev/null)
 else
-  CLANG := $(shell clang --version 2> nul)
+  CLANG := $(shell clang --version 2> null)
 endif
 
 ifdef C
