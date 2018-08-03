@@ -315,8 +315,8 @@ ANALY = $(TYPES:%=%-analyze)
 ALL   = $(TYPES:%=%-all)
 
 
-$(OBJ)/Makefile: $(OBJ)
 ifeq ("$(wildcard $(OBJ)/CMakeCache.txt)","")
+$(OBJ)/Makefile: $(OBJ) info
 	@(\
 	cd $(OBJ); \
 	cmake \
@@ -328,6 +328,7 @@ ifeq ("$(wildcard $(OBJ)/CMakeCache.txt)","")
 	.. \
 	)
 else
+$(OBJ)/Makefile: $(OBJ)
 	@$(MAKE) $(MFLAGS) --no-print-directory -C $(OBJ) rebuild_cache
 endif
 
@@ -493,11 +494,10 @@ endif
 
 
 info:
-	@echo "-- Environment Host System"
+	@echo "-- Environment"
 	@echo "   O =" $(ENV_OS)
 	@echo "   P =" $(ENV_PLAT)
 	@echo "   A =" $(ENV_ARCH)
-	@echo "-- Environment Configuration"
 	@echo "   G =" $(ENV_GEN)
 	@echo "   C =" $(ENV_CC)
 	@echo "   X =" $(ENV_CXX)
