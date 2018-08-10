@@ -53,29 +53,20 @@ git:
 matrix:
   include:
     - os:  linux
-      env: IMAGE="ppaulweber/docker-cpp:base" BUILD="debug"    ENV_CC="clang" ENV_CXX="clang++"
+      env: IMAGE="ppaulweber/docker-cpp" BUILD="debug"    C="clang" X="clang++"
     - os:  linux
-      env: IMAGE="ppaulweber/docker-cpp:base" BUILD="release"  ENV_CC="clang" ENV_CXX="clang++"
+      env: IMAGE="ppaulweber/docker-cpp" BUILD="release"  C="clang" X="clang++"
 
     - os:  linux
-      env: IMAGE="ppaulweber/docker-cpp:base" BUILD="debug"    ENV_CC="gcc"   ENV_CXX="g++"
+      env: IMAGE="ppaulweber/docker-cpp" BUILD="debug"    C="gcc"   X="g++"
     - os:  linux
-      env: IMAGE="ppaulweber/docker-cpp:base" BUILD="release"  ENV_CC="gcc"   ENV_CXX="g++"
+      env: IMAGE="ppaulweber/docker-cpp" BUILD="release"  C="gcc"   X="g++"
 
   allow_failures:
     - os:  linux
-      env: IMAGE="ppaulweber/docker-cpp" BUILD="debug"    ENV_CC="clang" ENV_CXX="clang++"
+      env: IMAGE="ppaulweber/docker-cpp" BUILD="sanitize"  C="clang" X="clang++"
     - os:  linux
-      env: IMAGE="ppaulweber/docker-cpp" BUILD="sanitize" ENV_CC="clang" ENV_CXX="clang++"
-    - os:  linux
-      env: IMAGE="ppaulweber/docker-cpp" BUILD="release"  ENV_CC="clang" ENV_CXX="clang++"
-
-    - os:  linux
-      env: IMAGE="ppaulweber/docker-cpp" BUILD="debug"    ENV_CC="gcc" ENV_CXX="g++"
-    - os:  linux
-      env: IMAGE="ppaulweber/docker-cpp" BUILD="sanitize" ENV_CC="gcc" ENV_CXX="g++"
-    - os:  linux
-      env: IMAGE="ppaulweber/docker-cpp" BUILD="release"  ENV_CC="gcc" ENV_CXX="g++"
+      env: IMAGE="ppaulweber/docker-cpp" BUILD="sanitize"  C="gcc"   X="g++"
 
     - os:        osx
       osx_image: xcode8
@@ -91,12 +82,12 @@ before_install:
   - docker run -itd --name build -v $(pwd):/repo ${IMAGE} bash
 
 install:
-  - docker exec build uname      -a
-  - docker exec build make       --version
-  - docker exec build cmake      --version
-  - docker exec build ld         --version
-  - docker exec build ${ENV_CC}  --version
-  - docker exec build ${ENV_CXX} --version
+  - docker exec build uname -a
+  - docker exec build make  --version
+  - docker exec build cmake --version
+  - docker exec build ld    --version
+  - docker exec build ${C}  --version
+  - docker exec build ${X}  --version
 
 script:
   - docker exec build make -C /repo ${BUILD}
