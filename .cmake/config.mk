@@ -317,16 +317,13 @@ ALL   = $(TYPES:%=%-all)
 
 ifeq ("$(wildcard $(OBJ)/CMakeCache.txt)","")
 $(OBJ)/Makefile: $(OBJ) info
-	@(\
-	cd $(OBJ); \
-	cmake \
+	@cd $(OBJ) && cmake \
 	-G $(ENV_GEN) \
 	-D CMAKE_INSTALL_PREFIX=$(BIN) \
 	-D CMAKE_BUILD_TYPE=$(TYPE) \
 	-D CMAKE_C_COMPILER=$(ENV_CC) \
 	-D CMAKE_CXX_COMPILER=$(ENV_CXX) \
-	.. \
-	)
+	..
 else
 $(OBJ)/Makefile: $(OBJ)
 	@$(MAKE) $(MFLAGS) --no-print-directory -C $(OBJ) rebuild_cache
