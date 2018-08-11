@@ -84,15 +84,15 @@ install:
   - set MINGW=C:\msys64\mingw64
   - copy %MINGW%\bin\mingw32-make.exe %MINGW%\bin\make.exe
   - set PATH=%MINGW%\bin;%PATH%
-  - ren "C:\Program Files\Git\usr\bin\sh.exe" sh-disabled.exe
+#  - ren "C:\Program Files\Git\usr\bin\sh.exe" sh-disabled.exe
   - cmake --version
   - make --version
   - gcc --version
   - clang --version
 
 build_script:
-  - cd %APPVEYOR_BUILD_FOLDER%
-  - make G="%G%" C="%C%" X="%X%" %BUILD%
+#  - cd %APPVEYOR_BUILD_FOLDER%
+  - make SHELL=cmd G="%G%" C="%C%" X="%X%" %BUILD%
 
 #   - if "%ENV_T%"=="MinGW Makefiles" (
 #       
@@ -106,4 +106,4 @@ build_script:
 #     )
 
 test_script:
-  - make G="%G%" C="%C%" X="%X%" %BUILD%-test
+  - make SHELL=cmd G="%G%" C="%C%" X="%X%" %BUILD%-test
