@@ -54,15 +54,11 @@ clone_script:
 environment:
   matrix:
 
-    - BUILD: debug
-      G: "make-gw"
+    - B: debug
       C: gcc
-      X: g++
 
-    - BUILD: release
-      G: "make-gw"
+    - B: release
       C: gcc
-      X: g++
 
     # - BUILD: debug
     #   G: "make-gw"
@@ -92,7 +88,7 @@ install:
 
 build_script:
 #  - cd %APPVEYOR_BUILD_FOLDER%
-  - make SHELL=cmd G="%G%" C="%C%" X="%X%" %BUILD%
+  - make SHELL=cmd C="%C%" %B%
 
 #   - if "%ENV_T%"=="MinGW Makefiles" (
 #       
@@ -101,9 +97,9 @@ build_script:
 #       md obj &&
 #       cd obj &&
 #       cmake .. -G"%ENV_T%" &&
-#       msbuild /m /nologo /v:quiet /p:Configuration=%BUILD% %TARGET%.sln &&
+#       msbuild /m /nologo /v:quiet /p:Configuration=%B% %TARGET%.sln &&
 #       dir
 #     )
 
 test_script:
-  - make SHELL=cmd G="%G%" C="%C%" X="%X%" %BUILD%-test
+  - make SHELL=cmd C="%C%" %B%-test

@@ -53,20 +53,20 @@ git:
 matrix:
   include:
     - os:  linux
-      env: IMAGE="ppaulweber/docker-cpp" BUILD="debug"    C="clang" X="clang++"
+      env: B="debug"    C="clang" IMAGE="ppaulweber/docker-cpp"
     - os:  linux
-      env: IMAGE="ppaulweber/docker-cpp" BUILD="release"  C="clang" X="clang++"
+      env: B="release"  C="clang" IMAGE="ppaulweber/docker-cpp"
 
     - os:  linux
-      env: IMAGE="ppaulweber/docker-cpp" BUILD="debug"    C="gcc"   X="g++"
+      env: B="debug"    C="gcc"   IMAGE="ppaulweber/docker-cpp"
     - os:  linux
-      env: IMAGE="ppaulweber/docker-cpp" BUILD="release"  C="gcc"   X="g++"
+      env: B="release"  C="gcc"   IMAGE="ppaulweber/docker-cpp"
 
   allow_failures:
     - os:  linux
-      env: IMAGE="ppaulweber/docker-cpp" BUILD="sanitize"  C="clang" X="clang++"
+      env: B="sanitize" C="clang" IMAGE="ppaulweber/docker-cpp"
     - os:  linux
-      env: IMAGE="ppaulweber/docker-cpp" BUILD="sanitize"  C="gcc"   X="g++"
+      env: B="sanitize" C="gcc"   IMAGE="ppaulweber/docker-cpp"
 
     - os:        osx
       osx_image: xcode8
@@ -90,9 +90,9 @@ install:
   - docker exec build ${X}  --version
 
 script:
-  - docker exec build make -C /repo ${BUILD}
-  - docker exec build make -C /repo ${BUILD}-test
-  - docker exec build make -C /repo ${BUILD}-benchmark
+  - docker exec build make -C /repo C=${C} ${B}
+  - docker exec build make -C /repo C=${C} ${B}-test
+  - docker exec build make -C /repo C=${C} ${B}-benchmark
 
 after_success:
-  - docker exec build make -C /repo ${BUILD}-analyze
+  - docker exec build make -C /repo ${B}-analyze

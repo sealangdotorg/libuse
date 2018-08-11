@@ -69,48 +69,31 @@ else
   ENV_PLAT := Windows
 endif
 
-ifeq ($(ENV_PLAT),Unix)
-  CLANG := $(shell clang --version 2> /dev/null)
-  XLANG := $(shell clang++ --version 2> /dev/null)
-else
-  CLANG := $(shell clang --version 2> null)
-  XLANG := $(shell clang++ --version 2> null)
-endif
 
 ifeq ($(ENV_PLAT),Unix)
-  GCC := $(shell gcc --version 2> /dev/null)
-  GXX := $(shell g++ --version 2> /dev/null)
+  CLANG := $(shell clang --version 2> /dev/null)
 else
-  GCC := $(shell gcc --version 2> null)
-  GXX := $(shell g++ --version 2> null)
+  CLANG := $(shell clang --version 2> null)
 endif
 
 ifdef C
-  ENV_CC=$(C)
+  ifeq ($(C),clang)
+    ENV_CC=clang
+    ENV_CXX=clang++
+  endif
+  ifeq ($(C),gcc)
+    ENV_CC=gcc
+    ENV_CXX=g++
+  endif
 else
   ifdef CLANG
     ENV_CC=clang
-  else
-    ifdef GCC
-      ENV_CC=gcc
-    endif
+    ENV_CXX=clang++
   endif
 endif
 
 ifeq ($(ENV_CC),)
   $(error environment C compiler '$(C)' not defined!)
-endif
-
-ifdef X
-  ENV_CXX=$(X)
-else
-  ifdef XLANG
-    ENV_CXX=clang++
-  else
-    ifdef GXX
-      ENV_CXX=g++
-    endif
-  endif
 endif
 
 ifeq ($(ENV_CXX),)
