@@ -82,14 +82,14 @@ environment:
 
 install:
   - set MINGW=C:\msys64\mingw64
+  - set GIT4W=C:\Program Files\Git
+  - set PATH=%PATH%;%MINGW%\bin
+  - set PATH=%PATH%;%GIT4W%\bin
   - copy %MINGW%\bin\mingw32-make.exe %MINGW%\bin\make.exe
-  - set PATH=%MINGW%\bin;%PATH%
-#  - set PATH=%PATH:C:\Program Files\Git\usr\bin;=%
   - cmake --version
   - make --version
   - gcc --version
   - clang --version
-  - make G="%G%" C="%C%" X="%X%" info
 
 build_script:
   - cd %APPVEYOR_BUILD_FOLDER%
