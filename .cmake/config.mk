@@ -71,14 +71,18 @@ endif
 
 ifeq ($(ENV_PLAT),Unix)
   CLANG := $(shell clang --version 2> /dev/null)
+  XLANG := $(shell clang++ --version 2> /dev/null)
 else
   CLANG := $(shell clang --version 2> null)
+  XLANG := $(shell clang++ --version 2> null)
 endif
 
 ifeq ($(ENV_PLAT),Unix)
   GCC := $(shell gcc --version 2> /dev/null)
+  GXX := $(shell g++ --version 2> /dev/null)
 else
   GCC := $(shell gcc --version 2> null)
+  GXX := $(shell g++ --version 2> null)
 endif
 
 ifdef C
@@ -100,11 +104,11 @@ endif
 ifdef X
   ENV_CXX=$(X)
 else
-  ifdef CLANG
-    ENV_CC=clang++
+  ifdef XLANG
+    ENV_CXX=clang++
   else
-    ifdef GCC
-      ENV_CC=g++
+    ifdef GXX
+      ENV_CXX=g++
     endif
   endif
 endif
@@ -417,9 +421,8 @@ license: $(UPDATE_ROOT:%=%-license) $(UPDATE_PATH:%=%-license)
 
 %-license:
 	@echo "-- Relicense: $(patsubst %-update,%,$@)"
-	@(cd $(patsubst %-update,%,$@); \
-	  python2 $(UPDATE_ROOT)/src/py/Licenser.py \
-	)
+	@cd $(patsubst %-update,%,$@); \
+	python2 $(UPDATE_ROOT)/src/py/Licenser.py
 
 license-info:
 	@grep LICENSE.txt -e "---:" | sed "s/---://g"
