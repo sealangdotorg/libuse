@@ -75,11 +75,21 @@ else
   CLANG := $(shell clang --version 2> null)
 endif
 
+ifeq ($(ENV_PLAT),Unix)
+  GCC := $(shell gcc --version 2> /dev/null)
+else
+  GCC := $(shell gcc --version 2> null)
+endif
+
 ifdef C
   ENV_CC=$(C)
 else
   ifdef CLANG
     ENV_CC=clang
+  else
+    ifdef GCC
+      ENV_CC=gcc
+    endif
   endif
 endif
 
@@ -91,7 +101,11 @@ ifdef X
   ENV_CXX=$(X)
 else
   ifdef CLANG
-    ENV_CXX=clang++
+    ENV_CC=clang++
+  else
+    ifdef GCC
+      ENV_CC=g++
+    endif
   endif
 endif
 
