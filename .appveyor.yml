@@ -85,11 +85,11 @@ install:
   - copy %MINGW%\bin\mingw32-make.exe %MINGW%\bin\make.exe
   - set PATH=%MINGW%\bin;%PATH%
   - set PATH=%PATH:C:\Program Files\Git\usr\bin;=%
-  - cmake --help
   - cmake --version
   - make --version
   - gcc --version
   - clang --version
+  - make G="%G%" C="%C%" X="%X%" info
 
 build_script:
   - cd %APPVEYOR_BUILD_FOLDER%
