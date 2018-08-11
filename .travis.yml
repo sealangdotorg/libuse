@@ -85,9 +85,6 @@ install:
   - docker exec build uname -a
   - docker exec build make  --version
   - docker exec build cmake --version
-  - docker exec build ld    --version
-  - docker exec build ${C}  --version
-  - docker exec build ${X}  --version
 
 script:
   - docker exec build make -C /repo C=${C} ${B}
