@@ -84,7 +84,7 @@ install:
   - set MINGW=C:\msys64\mingw64
   - copy %MINGW%\bin\mingw32-make.exe %MINGW%\bin\make.exe
   - set PATH=%MINGW%\bin;%PATH%
-  - set PATH=%PATH:C:\Program Files\Git\usr\bin;=%
+#  - set PATH=%PATH:C:\Program Files\Git\usr\bin;=%
   - cmake --version
   - make --version
   - gcc --version
