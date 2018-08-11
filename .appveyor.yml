@@ -85,7 +85,7 @@ install:
   - copy %MINGW%\bin\mingw32-make.exe %MINGW%\bin\make.exe
   - set PATH=%PATH%;%MINGW%\bin
   - set GIT4W=C:\Program Files\Git
-  - rename %GIT4W%\usr\bin\sh.exe %GIT4W%\usr\bin\sh-disabled.exe
+  - ren %GIT4W%\usr\bin\sh.exe sh-disabled.exe
   - cmake --version
   - make --version
   - gcc --version
