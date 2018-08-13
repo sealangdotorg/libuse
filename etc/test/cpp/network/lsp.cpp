@@ -42,7 +42,7 @@
 
 #include <libstdhl/Test>
 
-#include <libstdhl/network/lsp*>
+#include <libstdhl/network/lsp/LSP>
 
 using namespace libstdhl;
 using namespace Network;

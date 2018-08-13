@@ -248,7 +248,6 @@ ecm_generate_headers( ${PROJECT}_NETWORK_HEADERS_CPP
     Packet
     Protocol
     Socket
-    lsp*
   PREFIX
     ${PROJECT}/network
   RELATIVE
@@ -314,6 +313,7 @@ ecm_generate_headers( ${PROJECT}_NETWORK_LSP_HEADERS_CPP
   ORIGINAL
     CAMELCASE
   HEADER_NAMES
+    LSP
     Content
     Exception
     Identifier
