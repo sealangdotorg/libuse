@@ -43,7 +43,7 @@
 #ifndef _LIBSTDHL_CPP_FILE_TEXT_DOCUMENT_H_
 #define _LIBSTDHL_CPP_FILE_TEXT_DOCUMENT_H_
 
-#include <libstdhl/File>
+#include <libstdhl/file/File>
 #include <libstdhl/standard/rfc3986>
 
 #include <memory>

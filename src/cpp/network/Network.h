@@ -40,15 +40,18 @@
 //  statement from your version.
 //
 
-#ifndef _LIBSTDHL_CPP_JSON_H_
-#define _LIBSTDHL_CPP_JSON_H_
+#ifndef _LIBSTDHL_CPP_NETWORK_NETWORK_H_
+#define _LIBSTDHL_CPP_NETWORK_NETWORK_H_
 
-#include <libstdhl/json/json>
+#include <libstdhl/network/Interface>
+#include <libstdhl/network/Packet>
+#include <libstdhl/network/Protocol>
+#include <libstdhl/network/Socket>
 
 /**
-   @brief    C++ JSON Wrapper
+   @brief    TBD
 
-   https://github.com/nlohmann/json
+   TBD
 */
 
 namespace libstdhl
@@ -56,13 +59,12 @@ namespace libstdhl
     /**
        @extends Stdhl
     */
-    namespace Json
+    namespace Network
     {
-        using Object = nlohmann::json;
     };
 }
 
-#endif  // _LIBSTDHL_CPP_JSON_H_
+#endif  // _LIBSTDHL_CPP_NETWORK_NETWORK_H_
 
 //
 //  Local variables:

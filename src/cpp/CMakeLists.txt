@@ -82,7 +82,7 @@ add_library( ${PROJECT}-cpp OBJECT
   type/Natural.cpp
   type/Rational.cpp
   type/String.cpp
-  xml/pugixml.cpp
+  xml/vendor/pugixml.cpp
   )
 
 
@@ -107,6 +107,7 @@ ecm_generate_headers( ${PROJECT}_HEADERS_CPP
   ORIGINAL
     CAMELCASE
   HEADER_NAMES
+    libstdhl
     Allocator
     Ansi
     Args
@@ -114,25 +115,16 @@ ecm_generate_headers( ${PROJECT}_HEADERS_CPP
     Binding
     Enum
     Exception
-    File
     Hash
-    Json
     Labeling
     Limits
     List
-    Log
     Math
     Memory
-    Network
     Random
-    Standard
     String
     Test
-    Type
     Variadic
-    Xml
-    libstdhl
-    file/TextDocument
   PREFIX
     ${PROJECT}
   REQUIRED_HEADERS
@@ -151,6 +143,7 @@ ecm_generate_headers( ${PROJECT}_FILE_HEADERS_CPP
   ORIGINAL
     CAMELCASE
   HEADER_NAMES
+    File
     TextDocument
   PREFIX
     ${PROJECT}/file
@@ -172,7 +165,7 @@ ecm_generate_headers( ${PROJECT}_JSON_HEADERS_CPP
   ORIGINAL
     CAMELCASE
   HEADER_NAMES
-    json
+    Json
   PREFIX
     ${PROJECT}/json
   RELATIVE
@@ -189,10 +182,32 @@ install(
   )
 
 
+ecm_generate_headers( ${PROJECT}_JSON_VENDOR_HEADERS_CPP
+  ORIGINAL
+    CAMELCASE
+  HEADER_NAMES
+    json
+  PREFIX
+    ${PROJECT}/json/vendor
+  RELATIVE
+    json/vendor
+  REQUIRED_HEADERS
+    ${PROJECT}_JSON_VENDOR_HEADERS
+  )
+install(
+  FILES
+    ${${PROJECT}_JSON_VENDOR_HEADERS}
+    ${${PROJECT}_JSON_VENDOR_HEADERS_CPP}
+  DESTINATION
+    "include/${PROJECT}/json/vendor"
+  )
+
+
 ecm_generate_headers( ${PROJECT}_LOG_HEADERS_CPP
   ORIGINAL
     CAMELCASE
   HEADER_NAMES
+    Log
     Category
     Channel
     Chronograph
@@ -228,6 +243,7 @@ ecm_generate_headers( ${PROJECT}_NETWORK_HEADERS_CPP
   ORIGINAL
     CAMELCASE
   HEADER_NAMES
+    Network
     Interface
     Lsp
     Packet
@@ -374,6 +390,7 @@ ecm_generate_headers( ${PROJECT}_STANDARD_HEADERS_CPP
   ORIGINAL
     CAMELCASE
   HEADER_NAMES
+    Standard
     ieee802
     rfc3986
   PREFIX
@@ -396,6 +413,7 @@ ecm_generate_headers( ${PROJECT}_TYPE_HEADERS_CPP
   ORIGINAL
     CAMELCASE
   HEADER_NAMES
+    Type
     Boolean
     Data
     Decimal
@@ -424,8 +442,7 @@ ecm_generate_headers( ${PROJECT}_XML_HEADERS_CPP
   ORIGINAL
     CAMELCASE
   HEADER_NAMES
-    pugiconfig
-    pugixml
+    Xml
   PREFIX
     ${PROJECT}/xml
   RELATIVE
@@ -439,4 +456,26 @@ install(
     ${${PROJECT}_XML_HEADERS_CPP}
   DESTINATION
     "include/${PROJECT}/xml"
+  )
+
+
+ecm_generate_headers( ${PROJECT}_XML_VENDOR_HEADERS_CPP
+  ORIGINAL
+    CAMELCASE
+  HEADER_NAMES
+    pugiconfig
+    pugixml
+  PREFIX
+    ${PROJECT}/xml/vendor
+  RELATIVE
+    xml/vendor
+  REQUIRED_HEADERS
+    ${PROJECT}_XML_VENDOR_HEADERS
+  )
+install(
+  FILES
+    ${${PROJECT}_XML_VENDOR_HEADERS}
+    ${${PROJECT}_XML_VENDOR_HEADERS_CPP}
+  DESTINATION
+    "include/${PROJECT}/xml/vendor"
   )

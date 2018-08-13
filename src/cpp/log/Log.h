@@ -40,31 +40,53 @@
 //  statement from your version.
 //
 
-#ifndef _LIBSTDHL_CPP_NETWORK_H_
-#define _LIBSTDHL_CPP_NETWORK_H_
+#ifndef _LIBSTDHL_CPP_LOG_LOG_H_
+#define _LIBSTDHL_CPP_LOG_LOG_H_
 
-#include <libstdhl/network/Interface>
-#include <libstdhl/network/Packet>
-#include <libstdhl/network/Protocol>
-#include <libstdhl/network/Socket>
+#include <libstdhl/type/Type>
 
 /**
-   @brief    TBD
+   @brief    TODO
 
-   TBD
+   TODO
 */
+
+#include <libstdhl/log/Category>
+#include <libstdhl/log/Channel>
+#include <libstdhl/log/Data>
+#include <libstdhl/log/Filter>
+#include <libstdhl/log/Formatter>
+#include <libstdhl/log/Item>
+#include <libstdhl/log/Level>
+#include <libstdhl/log/Logger>
+#include <libstdhl/log/Router>
+#include <libstdhl/log/Sink>
+#include <libstdhl/log/Source>
+#include <libstdhl/log/Stream>
+#include <libstdhl/log/Switch>
+#include <libstdhl/log/Timestamp>
 
 namespace libstdhl
 {
     /**
        @extends Stdhl
     */
-    namespace Network
+
+    namespace Log
     {
-    };
+        Source::Ptr defaultSource( const Source::Ptr& source = nullptr );
+
+        void log( Level::ID level, const std::string& text );
+
+        void error( const char* format, ... );
+
+        void warning( const char* format, ... );
+
+        void info( const char* format, ... );
+    }
 }
 
-#endif  // _LIBSTDHL_CPP_NETWORK_H_
+#endif  // _LIBSTDHL_CPP_LOG_LOG_H_
 
 //
 //  Local variables:

@@ -40,15 +40,15 @@
 //  statement from your version.
 //
 
-#ifndef _LIBSTDHL_CPP_XML_H_
-#define _LIBSTDHL_CPP_XML_H_
+#ifndef _LIBSTDHL_CPP_JSON_JSON_H_
+#define _LIBSTDHL_CPP_JSON_JSON_H_
 
-#include <libstdhl/xml/pugixml>
+#include <libstdhl/json/vendor/json>
 
 /**
-   @brief    C++ XML Wrapper
+   @brief    C++ JSON Wrapper
 
-   https://github.com/zeux/pugixml
+   https://github.com/nlohmann/json
 */
 
 namespace libstdhl
@@ -56,13 +56,13 @@ namespace libstdhl
     /**
        @extends Stdhl
     */
-    namespace Xml
+    namespace Json
     {
-        using Document = pugi::xml_document;
+        using Object = nlohmann::json;
     };
 }
 
-#endif  // _LIBSTDHL_CPP_XML_H_
+#endif  // _LIBSTDHL_CPP_JSON_JSON_H_
 
 //
 //  Local variables:

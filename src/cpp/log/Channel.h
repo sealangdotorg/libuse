@@ -44,7 +44,7 @@
 #define _LIBSTDHL_CPP_LOG_CHANNEL_H_
 
 #include <libstdhl/List>
-#include <libstdhl/Type>
+#include <libstdhl/type/Type>
 
 /**
    @brief    TODO

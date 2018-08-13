@@ -43,7 +43,7 @@
 #ifndef _LIBSTDHL_CPP_LOG_LOGGER_H_
 #define _LIBSTDHL_CPP_LOG_LOGGER_H_
 
-#include <libstdhl/Type>
+#include <libstdhl/type/Type>
 #include <libstdhl/log/Category>
 #include <libstdhl/log/Channel>
 #include <libstdhl/log/Data>

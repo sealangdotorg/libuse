@@ -43,7 +43,7 @@
 #ifndef _LIBSTDHL_CPP_ALLOCATOR_H_
 #define _LIBSTDHL_CPP_ALLOCATOR_H_
 
-#include <libstdhl/Type>
+#include <libstdhl/type/Type>
 
 #include <cassert>
 #include <unordered_set>

@@ -43,7 +43,7 @@
 #ifndef _LIBSTDHL_CPP_ANSI_H_
 #define _LIBSTDHL_CPP_ANSI_H_
 
-#include <libstdhl/Type>
+#include <libstdhl/type/Type>
 
 /**
    @brief    TODO

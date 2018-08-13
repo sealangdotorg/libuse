@@ -40,17 +40,15 @@
 //  statement from your version.
 //
 
-#ifndef _LIBSTDHL_CPP_STANDARD_H_
-#define _LIBSTDHL_CPP_STANDARD_H_
+#ifndef _LIBSTDHL_CPP_XML_XML_H_
+#define _LIBSTDHL_CPP_XML_XML_H_
 
-#include <libstdhl/standard/ieee802>
-#include <libstdhl/standard/rfc3986>
+#include <libstdhl/xml/vendor/pugixml>
 
 /**
-   @brief    TBD
+   @brief    C++ XML Wrapper
 
-
-   TBD
+   https://github.com/zeux/pugixml
 */
 
 namespace libstdhl
@@ -58,12 +56,13 @@ namespace libstdhl
     /**
        @extends Stdhl
     */
-    namespace Standard
+    namespace Xml
     {
-    }
+        using Document = pugi::xml_document;
+    };
 }
 
-#endif  // _LIBSTDHL_CPP_STANDARD_H_
+#endif  // _LIBSTDHL_CPP_XML_XML_H_
 
 //
 //  Local variables:

@@ -43,7 +43,7 @@
 #ifndef _LIBSTDHL_CPP_STANDARD_IEEE802_H_
 #define _LIBSTDHL_CPP_STANDARD_IEEE802_H_
 
-#include <libstdhl/Type>
+#include <libstdhl/type/Type>
 
 #include <array>
 

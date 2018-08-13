@@ -43,9 +43,9 @@
 #ifndef _LIBSTDHL_CPP_NETWORK_LSP_CONTENT_H_
 #define _LIBSTDHL_CPP_NETWORK_LSP_CONTENT_H_
 
-#include <libstdhl/Json>
-#include <libstdhl/Type>
+#include <libstdhl/json/Json>
 #include <libstdhl/standard/rfc3986>
+#include <libstdhl/type/Type>
 
 /**
    @brief    TBD

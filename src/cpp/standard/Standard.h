@@ -40,15 +40,17 @@
 //  statement from your version.
 //
 
-#ifndef _LIBSTDHL_CPP_LABELING_H_
-#define _LIBSTDHL_CPP_LABELING_H_
+#ifndef _LIBSTDHL_CPP_STANDARD_STANDARD_H_
+#define _LIBSTDHL_CPP_STANDARD_STANDARD_H_
 
-#include <libstdhl/type/Type>
+#include <libstdhl/standard/ieee802>
+#include <libstdhl/standard/rfc3986>
 
 /**
-   @brief    TODO
+   @brief    TBD
 
-   TODO
+
+   TBD
 */
 
 namespace libstdhl
@@ -56,44 +58,12 @@ namespace libstdhl
     /**
        @extends Stdhl
     */
-    class Labeling
+    namespace Standard
     {
-      private:
-        std::shared_ptr< std::string > m_label;
-
-      public:
-        Labeling()
-        : m_label( 0 )
-        {
-        }
-
-        virtual ~Labeling() = default;
-
-        virtual const char* label( void )
-        {
-            if( m_label == 0 )
-            {
-                m_label =
-                    std::make_shared< std::string >( labelName() + std::to_string( labelId() ) );
-                assert( m_label );
-            }
-
-            return m_label->c_str();
-        }
-
-        virtual const char* labelName( void )
-        {
-            return "lbl";
-        }
-
-        virtual u64 labelId( void )
-        {
-            return (u64)this;
-        }
-    };
+    }
 }
 
-#endif  // _LIBSTDHL_CPP_LABELING_H_
+#endif  // _LIBSTDHL_CPP_STANDARD_STANDARD_H_
 
 //
 //  Local variables:

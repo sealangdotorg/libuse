@@ -40,10 +40,11 @@
 //  statement from your version.
 //
 
-#ifndef _LIBSTDHL_CPP_LOG_H_
-#define _LIBSTDHL_CPP_LOG_H_
+#ifndef _LIBSTDHL_CPP_TYPE_TYPE_H_
+#define _LIBSTDHL_CPP_TYPE_TYPE_H_
 
-#include <libstdhl/Type>
+#include <cstdint>
+#include <string>
 
 /**
    @brief    TODO
@@ -51,42 +52,113 @@
    TODO
 */
 
-#include <libstdhl/log/Category>
-#include <libstdhl/log/Channel>
-#include <libstdhl/log/Data>
-#include <libstdhl/log/Filter>
-#include <libstdhl/log/Formatter>
-#include <libstdhl/log/Item>
-#include <libstdhl/log/Level>
-#include <libstdhl/log/Logger>
-#include <libstdhl/log/Router>
-#include <libstdhl/log/Sink>
-#include <libstdhl/log/Source>
-#include <libstdhl/log/Stream>
-#include <libstdhl/log/Switch>
-#include <libstdhl/log/Timestamp>
-
 namespace libstdhl
 {
+    using u1 = bool;
+    using u8 = std::uint8_t;
+    using u16 = std::uint16_t;
+    using u32 = std::uint32_t;
+    using u64 = std::uint64_t;
+    using i8 = std::int8_t;
+    using i16 = std::int16_t;
+    using i32 = std::int32_t;
+    using i64 = std::int64_t;
+
     /**
        @extends Stdhl
     */
-
-    namespace Log
+    namespace Type
     {
-        Source::Ptr defaultSource( const Source::Ptr& source = nullptr );
+        enum Radix : u8
+        {
+            BINARY = 2,
+            OCTAL = 8,
+            DECIMAL = 10,
+            HEXADECIMAL = 16,
+            SEXAGESIMAL = 60,
+            RADIX64 = 64,
+        };
 
-        void log( Level::ID level, const std::string& text );
+        enum Literal : u8
+        {
+            NONE = 0,
+            STDHL = 1,
+            C = 2,
+            CPP14 = 3,
+            BASE64 = 10,
+            UNIX = 20
+        };
 
-        void error( const char* format, ... );
+        class Boolean;
+        class Natural;
+        class Integer;
+        class Rational;
 
-        void warning( const char* format, ... );
+        //
+        // Boolean
+        //
 
-        void info( const char* format, ... );
+        Boolean createBoolean( const std::string& value );
+
+        Boolean createBoolean( const u1 value );
+
+        //
+        // Integer
+        //
+
+        Integer createInteger( const std::string& value, const Radix radix = DECIMAL );
+
+        Integer createInteger( const u64 value );
+
+        Integer createInteger( const i64 value );
+
+        Integer createInteger( const Natural& value, const u1 sign );
+
+        //
+        // Natural
+        //
+
+        Natural createNatural( const std::string& value, const Radix radix = DECIMAL );
+
+        Natural createNatural( const Integer& value );
+
+        Natural createNatural( const u64 value );
+
+        //
+        // Rational
+        //
+
+        Rational createRational( const std::string& value, const Radix radix = DECIMAL );
+
+        Rational createRational( const Integer& numerator, const Integer& denominator );
+
+        Rational createRational( const Integer& numerator );
+
+        //
+        // Decimal
+        //
+
+        class Decimal;
+
+        Decimal createDecimal( const std::string& value, const Radix radix = DECIMAL );
+
+        Decimal createDecimal( const double value );
+
+        Decimal createDecimal( const Integer& value );
+
+        Decimal createDecimal( const Natural& value );
+
+        //
+        // String
+        //
+
+        class String;
+
+        String createString( const std::string& value );
     }
 }
 
-#endif  // _LIBSTDHL_CPP_LOG_H_
+#endif  // _LIBSTDHL_CPP_TYPE_TYPE_H_
 
 //
 //  Local variables:

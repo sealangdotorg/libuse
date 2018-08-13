@@ -43,7 +43,7 @@
 #ifndef _LIBSTDHL_LIST_H_
 #define _LIBSTDHL_LIST_H_
 
-#include <libstdhl/Type>
+#include <libstdhl/type/Type>
 
 #include <memory>
 #include <vector>

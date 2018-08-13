@@ -43,8 +43,9 @@
 #include "Formatter.h"
 
 #include <libstdhl/String>
-#include "../Ansi.h"
-#include "../File.h"
+#include <libstdhl/Ansi>
+#include <libstdhl/file/File>
+
 #include "Data.h"
 
 #include <cassert>
