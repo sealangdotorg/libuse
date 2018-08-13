@@ -245,10 +245,10 @@ ecm_generate_headers( ${PROJECT}_NETWORK_HEADERS_CPP
   HEADER_NAMES
     Network
     Interface
-    Lsp
     Packet
     Protocol
     Socket
+    lsp*
   PREFIX
     ${PROJECT}/network
   RELATIVE
