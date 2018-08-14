@@ -40,6 +40,7 @@
 //  statement from your version.
 //
 
+#pragma once
 #ifndef _LIBSTDHL_CPP_FILE_TEXT_DOCUMENT_H_
 #define _LIBSTDHL_CPP_FILE_TEXT_DOCUMENT_H_
 

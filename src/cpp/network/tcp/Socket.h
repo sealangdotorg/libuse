@@ -40,6 +40,7 @@
 //  statement from your version.
 //
 
+#pragma once
 #ifndef _LIBSTDHL_CPP_NETWORK_TCP_SOCKET_H_
 #define _LIBSTDHL_CPP_NETWORK_TCP_SOCKET_H_
 

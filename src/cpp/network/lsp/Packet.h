@@ -40,6 +40,7 @@
 //  statement from your version.
 //
 
+#pragma once
 #ifndef _LIBSTDHL_CPP_NETWORK_LSP_PACKET_H_
 #define _LIBSTDHL_CPP_NETWORK_LSP_PACKET_H_
 
