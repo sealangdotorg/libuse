@@ -80,9 +80,8 @@ install:
   - set MINGW=C:\msys64\mingw64
   - copy %MINGW%\bin\mingw32-make.exe %MINGW%\bin\make.exe
   - set PATH=%MINGW%\bin;%PATH%
-#  - ren "C:\Program Files\Git\usr\bin\sh.exe" sh-disabled.exe
-  - cmake --version
   - make --version
+  - cmake --version
   - gcc --version
   - clang --version
 
