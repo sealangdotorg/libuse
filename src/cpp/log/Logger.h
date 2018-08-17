@@ -44,7 +44,6 @@
 #ifndef _LIBSTDHL_CPP_LOG_LOGGER_H_
 #define _LIBSTDHL_CPP_LOG_LOGGER_H_
 
-#include <libstdhl/type/Type>
 #include <libstdhl/log/Category>
 #include <libstdhl/log/Channel>
 #include <libstdhl/log/Data>
@@ -58,6 +57,7 @@
 #include <libstdhl/log/Stream>
 #include <libstdhl/log/Switch>
 #include <libstdhl/log/Timestamp>
+#include <libstdhl/type/Type>
 
 /**
    @brief    TODO

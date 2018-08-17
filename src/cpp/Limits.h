@@ -44,9 +44,9 @@
 #ifndef _LIBSTDHL_CPP_LIMITS_H_
 #define _LIBSTDHL_CPP_LIMITS_H_
 
-#include <libstdhl/type/Type>
 #include <libstdhl/type/Decimal>
 #include <libstdhl/type/Integer>
+#include <libstdhl/type/Type>
 
 /**
    @brief    TODO
