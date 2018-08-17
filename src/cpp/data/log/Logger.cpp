@@ -40,7 +40,9 @@
 //  statement from your version.
 //
 
-#include "Log.h"
+#include "Logger.h"
+
+#include <libstdhl/Log>
 
 #include <cassert>
 #include <cstdarg>
