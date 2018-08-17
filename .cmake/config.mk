@@ -383,7 +383,7 @@ test: debug-test
 test-all: $(TYPES:%=%-test)
 
 $(TESTS):%-test: %
-	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) $(TARGET)-check
+	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) --target $(TARGET)-check
 	@echo "-- Running unit test"
 	@$(ENV_FLAGS) ./$(OBJ)/$(TARGET)-check --gtest_output=xml:obj/report.xml $(ENV_ARGS)
 
@@ -393,7 +393,7 @@ benchmark: debug-benchmark
 benchmark-all: $(TYPES:%=%-benchmark)
 
 $(BENCH):%-benchmark: %
-	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) $(TARGET)-run
+	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) --target $(TARGET)-run
 	@echo "-- Running benchmark"
 	@$(ENV_FLAGS) ./$(OBJ)/$(TARGET)-run -o console -o json:obj/report.json $(ENV_ARGS)
 
@@ -403,7 +403,7 @@ install: debug-install
 install-all: $(TYPES:%=%-install)
 
 $(INSTA):%-install: %
-	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) install
+	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) --target install
 
 
 format: $(FORMAT:%=%-format-cpp)
