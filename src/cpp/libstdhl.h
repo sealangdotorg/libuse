@@ -56,22 +56,21 @@
 #include <libstdhl/Binding>
 #include <libstdhl/Enum>
 #include <libstdhl/Exception>
+#include <libstdhl/File>
 #include <libstdhl/Hash>
+#include <libstdhl/Json>
 #include <libstdhl/Labeling>
 #include <libstdhl/List>
+#include <libstdhl/Log>
 #include <libstdhl/Memory>
+#include <libstdhl/Network>
 #include <libstdhl/Random>
+#include <libstdhl/Standard>
 #include <libstdhl/String>
+#include <libstdhl/Type>
 #include <libstdhl/Variadic>
 #include <libstdhl/Version>
-
-#include <libstdhl/file/File>
-#include <libstdhl/json/Json>
-#include <libstdhl/log/Log>
-#include <libstdhl/network/Network>
-#include <libstdhl/standard/Standard>
-#include <libstdhl/type/Type>
-#include <libstdhl/xml/Xml>
+#include <libstdhl/Xml>
 
 namespace libstdhl
 {

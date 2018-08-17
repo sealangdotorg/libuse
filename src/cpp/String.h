@@ -44,7 +44,7 @@
 #ifndef _LIBSTDHL_CPP_STRING_H_
 #define _LIBSTDHL_CPP_STRING_H_
 
-#include <libstdhl/type/Type>
+#include <libstdhl/Type>
 
 #include <cstring>
 #include <memory>

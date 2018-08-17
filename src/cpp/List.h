@@ -41,10 +41,10 @@
 //
 
 #pragma once
-#ifndef _LIBSTDHL_LIST_H_
-#define _LIBSTDHL_LIST_H_
+#ifndef _LIBSTDHL_CPP_LIST_H_
+#define _LIBSTDHL_CPP_LIST_H_
 
-#include <libstdhl/type/Type>
+#include <libstdhl/Type>
 
 #include <memory>
 #include <vector>
@@ -236,7 +236,7 @@ namespace libstdhl
     };
 }
 
-#endif  // _LIBSTDHL_LIST_H_
+#endif  // _LIBSTDHL_CPP_LIST_H_
 
 //
 //  Local variables:

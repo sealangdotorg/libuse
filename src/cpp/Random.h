@@ -46,7 +46,7 @@
 
 #include <libstdhl/Limits>
 #include <libstdhl/Math>
-#include <libstdhl/type/Type>
+#include <libstdhl/Type>
 
 #include <random>
 

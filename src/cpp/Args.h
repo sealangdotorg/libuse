@@ -44,8 +44,8 @@
 #ifndef _LIBSTDHL_CPP_ARGS_H_
 #define _LIBSTDHL_CPP_ARGS_H_
 
-#include <libstdhl/log/Log>
-#include <libstdhl/type/Type>
+#include <libstdhl/Log>
+#include <libstdhl/Type>
 
 #include <functional>
 #include <unordered_map>
