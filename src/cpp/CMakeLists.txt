@@ -40,6 +40,10 @@
 #   statement from your version.
 #
 
+include_directories(
+  ${PROJECT_BINARY_DIR}/src/cpp
+  )
+
 add_library( ${PROJECT}-cpp OBJECT
   Ansi.cpp
   Args.cpp
