@@ -50,7 +50,11 @@
 #include <functional>
 #include <unordered_map>
 
+#if defined( WIN32 ) or defined( _WIN32 )
+#include <libstdhl/vendor/getopt/getopt>
+#else
 #include <getopt.h>
+#endif
 
 /**
    @brief    TODO

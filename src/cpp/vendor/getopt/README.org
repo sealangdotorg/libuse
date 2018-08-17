@@ -1,0 +1,11 @@
+
+* 3rd-Party getopt Function
+
+The content of this directory includes a C/C++ 'getopt' function. 
+
+** getopt
+
+- url = https://github.com/Alexpux/mingw-w64
+        https://github.com/Alexpux/mingw-w64/blob/master/mingw-w64-headers/crt/getopt.h
+        https://github.com/Alexpux/mingw-w64/blob/master/mingw-w64-crt/misc/getopt.c
+- rev = 603c9f034f4dcfc7c0beeb33cae218620693a69f
