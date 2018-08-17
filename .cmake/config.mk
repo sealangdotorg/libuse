@@ -64,13 +64,13 @@ ENV_PLAT := $(shell uname -o)
 # Cygwin
 
 ifeq ($(ENV_PLAT),GNU/Linux)
-  ENV_OSYS := Unix
+  ENV_OSYS := Linux
 else
   ENV_OSYS := Windows
 endif
 
 
-ifeq ($(ENV_OSYS),Unix)
+ifeq ($(ENV_OSYS),Linux)
   CLANG := $(shell clang --version 2> /dev/null)
 else
   CLANG := $(shell clang --version 2> null)
@@ -84,6 +84,10 @@ ifdef C
   ifeq ($(C),gcc)
     ENV_CC=gcc
     ENV_CXX=g++
+  endif
+  ifeq ($(C),msvc)
+    ENV_CC=msvc
+    ENV_CXX=msvc
   endif
 else
   ifdef CLANG
@@ -293,7 +297,7 @@ help:
 
 
 $(OBJ):
-ifeq ($(wildcard $(OBJ)/.*),)
+ifeq ($(wildcard $(OBJ)),)
 	@mkdir $(OBJ)
 endif
 
@@ -316,15 +320,41 @@ ANALY = $(TYPES:%=%-analyze)
 ALL   = $(TYPES:%=%-all)
 
 
+ENV_CMAKE_FLAGS  = -G$(ENV_GEN)
+ENV_CMAKE_FLAGS += -DCMAKE_BUILD_TYPE=$(TYPE)
+ENV_CMAKE_FLAGS += -DCMAKE_INSTALL_PREFIX=$(BIN)
+
+ifneq ($(ENV_PLAT),Windows)
+  ENV_CMAKE_FLAGS += -DCMAKE_C_COMPILER=$(ENV_CC)
+  ENV_CMAKE_FLAGS += -DCMAKE_CXX_COMPILER=$(ENV_CXX)
+else
+  ENV_CMAKE_FLAGS += -DCMAKE_CXX_FLAGS="\
+   /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING\
+   /D_CRT_SECURE_NO_WARNINGS\
+   /WX-\
+   /EHsc\
+   /MTd\
+  "
+  ENV_CMAKE_FLAGS += -DCMAKE_STATIC_LINKER_FLAGS="\
+   /VERBOSE:LIB\
+  "
+  ENV_CMAKE_FLAGS += -DCMAKE_EXE_LINKER_FLAGS="\
+   /VERBOSE:LIB\
+  "
+  ifeq ($(ENV_CC),clang)
+    ENV_CMAKE_FLAGS += -T LLVM-vs2017
+    $(eval ENV_CC=clang-cl)
+    $(eval ENV_CXX=clang-cl)
+  endif
+endif
+
+
 ifeq ("$(wildcard $(OBJ)/CMakeCache.txt)","")
 $(OBJ)/Makefile: $(OBJ) info
-	@cd $(OBJ) && cmake \
-	-G $(ENV_GEN) \
-	-D CMAKE_INSTALL_PREFIX=$(BIN) \
-	-D CMAKE_BUILD_TYPE=$(TYPE) \
-	-D CMAKE_C_COMPILER=$(ENV_CC) \
-	-D CMAKE_CXX_COMPILER=$(ENV_CXX) \
-	..
+	cd $(OBJ) && cmake $(ENV_CMAKE_FLAGS) ..
+  ifeq ($(ENV_CC),msvc)
+	printf "rebuild_cache:\n" > $@
+  endif
 else
 $(OBJ)/Makefile: $(OBJ)
 	@$(MAKE) $(MFLAGS) --no-print-directory -C $(OBJ) rebuild_cache
@@ -340,12 +370,12 @@ $(SYNCS):%-sync: $(OBJ)
 
 
 $(TYPES):%: %-sync
-	@$(MAKE) $(MFLAGS) --no-print-directory -C $(OBJ) ${TARGET}
+	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) --target $(TARGET)
 
 all: debug-all
 
 $(ALL):%-all: %-sync
-	@$(MAKE) $(MFLAGS) --no-print-directory -C $(OBJ)
+	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@)
 
 
 test: debug-test
@@ -353,8 +383,7 @@ test: debug-test
 test-all: $(TYPES:%=%-test)
 
 $(TESTS):%-test: %
-	@$(MAKE) $(MFLAGS) --no-print-directory \
-	-C $(OBJ) $(TARGET)-check
+	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) $(TARGET)-check
 	@echo "-- Running unit test"
 	@$(ENV_FLAGS) ./$(OBJ)/$(TARGET)-check --gtest_output=xml:obj/report.xml $(ENV_ARGS)
 
@@ -364,8 +393,7 @@ benchmark: debug-benchmark
 benchmark-all: $(TYPES:%=%-benchmark)
 
 $(BENCH):%-benchmark: %
-	@$(MAKE) $(MFLAGS) --no-print-directory \
-	-C $(OBJ) $(TARGET)-run
+	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) $(TARGET)-run
 	@echo "-- Running benchmark"
 	@$(ENV_FLAGS) ./$(OBJ)/$(TARGET)-run -o console -o json:obj/report.json $(ENV_ARGS)
 
@@ -375,7 +403,7 @@ install: debug-install
 install-all: $(TYPES:%=%-install)
 
 $(INSTA):%-install: %
-	@$(MAKE) $(MFLAGS) --no-print-directory -C $(OBJ) install
+	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) install
 
 
 format: $(FORMAT:%=%-format-cpp)
@@ -498,6 +526,11 @@ info:
 	@echo "   G =" $(ENV_GEN)
 	@echo "   C =" $(ENV_CC)
 	@echo "   X =" $(ENV_CXX)
+
+
+info-config: info
+	@echo "-- Configuration"
+	@echo "   CMAKE_FLAGS =" $(ENV_CMAKE_FLAGS)
 
 
 info-variables:
