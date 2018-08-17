@@ -39,10 +39,12 @@
 #   not obliged to do so. If you do not wish to do so, delete this exception
 #   statement from your version.
 #
+
 [submodule "lib/gtest"]
 	path = lib/gtest
 	url = https://github.com/casm-lang/libgtest
 	branch = master
+
 [submodule "lib/hayai"]
 	path = lib/hayai
 	url = https://github.com/casm-lang/libhayai
