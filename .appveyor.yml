@@ -55,10 +55,15 @@ environment:
   matrix:
 
     - B: debug
-      C: gcc
+      C: clang
+      G: vs17
 
-    - B: release
-      C: gcc
+    - B: debug
+      C: msvc
+      G: vs17
+
+#    - B: release
+#     C: gcc
 
     # - BUILD: debug
     #   G: "make-gw"
@@ -84,10 +89,13 @@ install:
   - cmake --version
   - gcc --version
   - clang --version
+  - git clone https://github.com/plasmacel/llvm-vs2017-integration C:\llvm-vs2017-integration
+  - cd C:\llvm-vs2017-integration
+  - AutoSetup.bat
 
 build_script:
-#  - cd %APPVEYOR_BUILD_FOLDER%
-  - make SHELL=cmd C="%C%" %B%
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - make SHELL=cmd G="%G" C="%C%" %B%
 
 #   - if "%ENV_T%"=="MinGW Makefiles" (
 #       
