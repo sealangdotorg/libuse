@@ -85,14 +85,14 @@ install:
   - set MINGW=C:\msys64\mingw64
   - copy %MINGW%\bin\mingw32-make.exe %MINGW%\bin\make.exe
   - set PATH=%MINGW%\bin;%PATH%
+  - git clone https://github.com/plasmacel/llvm-vs2017-integration C:\llvm-vs2017-integration
+  - cd C:\llvm-vs2017-integration
+  - sed -i "s/pause/rem pause/g" AutoSetup.bat
+  - AutoSetup.bat
   - make --version
   - cmake --version
   - gcc --version
   - clang --version
-  - git clone https://github.com/plasmacel/llvm-vs2017-integration C:\llvm-vs2017-integration
-  - cd C:\llvm-vs2017-integration
-  - timeout /t 0 /nobreak
-  - AutoSetup.bat
 
 build_script:
   - cd %APPVEYOR_BUILD_FOLDER%
