@@ -96,7 +96,7 @@ install:
 
 build_script:
   - cd %APPVEYOR_BUILD_FOLDER%
-  - make SHELL=cmd G="%G" C="%C%" %B%
+  - make SHELL=cmd G="%G%" C="%C%" %B%
 
 #   - if "%ENV_T%"=="MinGW Makefiles" (
 #       
