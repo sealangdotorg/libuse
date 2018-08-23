@@ -41,11 +41,13 @@
 //
 
 #pragma once
-#ifndef _LIBSTDHL_CPP_NETWORK_ETHERNET_SOCKET_H_
-#define _LIBSTDHL_CPP_NETWORK_ETHERNET_SOCKET_H_
+#ifndef _LIBSTDHL_CPP_NETWORK_ETHERNET_FRAME_H_
+#define _LIBSTDHL_CPP_NETWORK_ETHERNET_FRAME_H_
 
-#include <libstdhl/net/Socket>
-#include <libstdhl/net/ethernet/Frame>
+#include <libstdhl/net/Packet>
+#include <libstdhl/net/eth/Protocol>
+
+#include <memory>
 
 /**
    @brief    TBD
@@ -65,30 +67,37 @@ namespace libstdhl
             /**
                @extends Ethernet
             */
-            class RawPosixSocket final : public PosixSocket< Frame >
+            class Frame final : public Network::Packet
             {
               public:
-                using Ptr = std::shared_ptr< RawPosixSocket >;
+                using Ptr = std::shared_ptr< Frame >;
 
-                RawPosixSocket( const std::string& name );
+                Frame(
+                    const Address& destination,
+                    const Address& source,
+                    const Type& type,
+                    const std::vector< u8 >& payload );
 
-                const Address& address( void ) const;
+                const Protocol& header( void ) const;
 
-                void connect( void ) override;
+                const Data& payload( void ) const;
 
-                std::size_t send( const Frame& data ) const override;
+                const u8* buffer( void ) const override;
 
-                std::size_t receive( Frame& data ) const override;
+                std::size_t size( void ) const override;
+
+                void resize( const std::size_t size ) override;
 
               private:
-                Address m_address;
-                i32 m_ifridx;
+                const Protocol m_header;
+                Data m_payload;
+                const std::size_t m_size;
             };
         }
     }
 }
 
-#endif  // _LIBSTDHL_CPP_NETWORK_ETHERNET_SOCKET_H_
+#endif  // _LIBSTDHL_CPP_NETWORK_ETHERNET_FRAME_H_
 
 //
 //  Local variables:

@@ -42,19 +42,29 @@
 
 #include "Socket.h"
 
+#include <libstdhl/String>
+
+#include <net/if.h>
+#include <netinet/in.h>
+#include <netpacket/packet.h>
+#include <sys/ioctl.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h>
+
 using namespace libstdhl;
 using namespace Network;
 using namespace UDP;
 
-IPv4PosixSocket::IPv4PosixSocket( const Address& address, const Port& port )
-: PosixSocket< IPv4Packet >( "IPv4", AF_INET, SOCK_DGRAM, IPPROTO_UDP )
+UDP::IPv4Socket::IPv4Socket( const IPv4::Address& address, const Port& port )
+: Socket< IPv4Packet >( "IPv4" )
 , m_address( address )
 , m_port( port )
 {
 }
 
-IPv4PosixSocket::IPv4PosixSocket( const std::string& name )
-: PosixSocket< IPv4Packet >( name, AF_INET, SOCK_DGRAM, IPPROTO_UDP )
+IPv4Socket::IPv4Socket( const std::string& name )
+: Socket< IPv4Packet >( name )
 , m_address( { { 0 } } )
 , m_port( { { 0 } } )
 {
@@ -62,14 +72,14 @@ IPv4PosixSocket::IPv4PosixSocket( const std::string& name )
 
     if( address.size() != 4 )
     {
-        throw std::invalid_argument( "UDP: invalid IPv4 address '" + name + "'" );
+        throw std::invalid_argument( "invalid IPv4 address '" + name + "'" );
     }
 
     const auto addrPort = String::split( address[ 3 ], ":" );
 
     if( addrPort.size() != 2 )
     {
-        throw std::invalid_argument( "UDP: invalid IPv4 port '" + name + "'" );
+        throw std::invalid_argument( "invalid IPv4 port '" + name + "'" );
     }
 
     m_address = { {
@@ -84,16 +94,19 @@ IPv4PosixSocket::IPv4PosixSocket( const std::string& name )
     m_port = { { ( u8 )( port >> 8 ), (u8)port } };
 }
 
-void IPv4PosixSocket::connect( void )
+void IPv4Socket::connect( void )
 {
-    if( connected() )
+    const i32 fd = socket( AF_INET, SOCK_DGRAM, IPPROTO_UDP );
+
+    if( fd <= 0 )
     {
-        return;
+        throw std::domain_error( "unable to open socket '" + name() + "'" );
     }
 
     struct sockaddr_in configuration = { 0 };
 
     configuration.sin_family = AF_INET;
+
     configuration.sin_addr.s_addr = ( (u32)m_address[ 3 ] << 24 ) | ( (u32)m_address[ 2 ] << 16 ) |
                                     ( (u32)m_address[ 1 ] << 8 ) | (u32)m_address[ 0 ];
 
@@ -101,17 +114,27 @@ void IPv4PosixSocket::connect( void )
 
     if(::bind( id(), (struct sockaddr*)&configuration, sizeof( configuration ) ) < 0 )
     {
-        throw std::domain_error( "UDP: unable to bind address '" + name() + "'" );
+        throw std::domain_error( "unable to bind to UDP address '" + name() + "'" );
     }
 
-    setConnected( true );
+    setId( fd );
 }
 
-std::size_t IPv4PosixSocket::send( const IPv4Packet& data ) const
+void IPv4Socket::disconnect( void )
+{
+    if( close( id() ) )
+    {
+        throw std::domain_error( "unable to close socket '" + name() + "'" );
+    }
+
+    setId( 0 );
+}
+
+std::size_t IPv4Socket::send( const IPv4Packet& data ) const
 {
     if( not connected() )
     {
-        throw std::logic_error( "UDP: unable to send, socket '" + name() + "' is not connected" );
+        throw std::domain_error( "unable to send, not connected" );
     }
 
     const auto& dest_addr = data.ip().destination();
@@ -132,18 +155,17 @@ std::size_t IPv4PosixSocket::send( const IPv4Packet& data ) const
 
     if( result < 0 )
     {
-        throw std::domain_error( "UDP: unable to send, failed with '" + std::to_string( result ) );
+        throw std::domain_error( "unable to send, failed with '" + std::to_string( result ) );
     }
 
     return result;
 }
 
-std::size_t IPv4PosixSocket::receive( IPv4Packet& data ) const
+std::size_t IPv4Socket::receive( IPv4Packet& data ) const
 {
     if( not connected() )
     {
-        throw std::logic_error(
-            "UDP: unable to receive, socket '" + name() + "' is not connected" );
+        throw std::domain_error( "unable to receive, not connected" );
     }
 
     struct sockaddr_in cfg;
@@ -173,10 +195,26 @@ std::size_t IPv4PosixSocket::receive( IPv4Packet& data ) const
     if( result < 0 )
     {
         throw std::domain_error(
-            "UDP: unable to receive, failed with '" + std::to_string( result ) );
+            "unable to receive, failed with '" + std::to_string( result ) + "'" );
     }
 
+    if( result >= data.size() )
+    {
+        throw std::domain_error( "received to many bytes '" + std::to_string( result ) + "'" );
+    }
+
+    ( (u8*)data.buffer() )[ result ] = '\0';
     return result;
+}
+
+const Address& IPv4Socket::address( void ) const
+{
+    return m_address;
+}
+
+const Port& IPv4Socket::port( void ) const
+{
+    return m_port;
 }
 
 //

@@ -54,20 +54,26 @@ namespace libstdhl
     {
         namespace UDP
         {
-            class IPv4PosixSocket final : public PosixSocket< IPv4Packet >
+            class IPv4Socket final : public Network::Socket< IPv4Packet >
             {
               public:
-                using Ptr = std::shared_ptr< IPv4PosixSocket >;
+                using Ptr = std::shared_ptr< IPv4Socket >;
 
-                IPv4PosixSocket( const Address& address, const Port& port );
+                IPv4Socket( const Address& address, const Port& port );
 
-                IPv4PosixSocket( const std::string& name );
+                IPv4Socket( const std::string& name );
 
                 void connect( void ) override;
+
+                void disconnect( void ) override;
 
                 std::size_t send( const IPv4Packet& data ) const override;
 
                 std::size_t receive( IPv4Packet& data ) const override;
+
+                const Address& address( void ) const;
+
+                const Port& port( void ) const;
 
               private:
                 Address m_address;

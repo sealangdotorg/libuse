@@ -72,10 +72,10 @@ add_library( ${PROJECT}-cpp OBJECT
   data/type/String.cpp
   net/Interface.cpp
   net/Packet.cpp
-  net/ethernet/Frame.cpp
-  net/ethernet/Link.cpp
-  net/ethernet/Protocol.cpp
-  net/ethernet/Socket.cpp
+  net/eth/Frame.cpp
+  net/eth/Link.cpp
+  net/eth/Protocol.cpp
+  net/eth/Socket.cpp
   net/lsp/Content.cpp
   net/lsp/Interface.cpp
   net/lsp/Message.cpp
@@ -258,7 +258,7 @@ install(
   )
 
 
-ecm_generate_headers( ${PROJECT}_NET_ETHERNET_HEADERS_CPP
+ecm_generate_headers( ${PROJECT}_NET_ETH_HEADERS_CPP
   ORIGINAL
     CAMELCASE
   HEADER_NAMES
@@ -267,39 +267,39 @@ ecm_generate_headers( ${PROJECT}_NET_ETHERNET_HEADERS_CPP
     Protocol
     Socket
   PREFIX
-    ${PROJECT}/net/ethernet
+    ${PROJECT}/net/eth
   RELATIVE
-    net/ethernet
+    net/eth
   REQUIRED_HEADERS
-    ${PROJECT}_NET_ETHERNET_HEADERS
+    ${PROJECT}_NET_ETH_HEADERS
   )
 install(
   FILES
-    ${${PROJECT}_NET_ETHERNET_HEADERS}
-    ${${PROJECT}_NET_ETHERNET_HEADERS_CPP}
+    ${${PROJECT}_NET_ETH_HEADERS}
+    ${${PROJECT}_NET_ETH_HEADERS_CPP}
   DESTINATION
-    "include/${PROJECT}/net/ethernet"
+    "include/${PROJECT}/net/eth"
   )
 
 
-ecm_generate_headers( ${PROJECT}_NET_IPV4_HEADERS_CPP
+ecm_generate_headers( ${PROJECT}_NET_IP4_HEADERS_CPP
   ORIGINAL
     CAMELCASE
   HEADER_NAMES
     Protocol
   PREFIX
-    ${PROJECT}/net/ipv4
+    ${PROJECT}/net/ip4
   RELATIVE
-    net/ipv4
+    net/ip4
   REQUIRED_HEADERS
-    ${PROJECT}_NET_IPV4_HEADERS
+    ${PROJECT}_NET_IP4_HEADERS
   )
 install(
   FILES
-    ${${PROJECT}_NET_IPV4_HEADERS}
-    ${${PROJECT}_NET_IPV4_HEADERS_CPP}
+    ${${PROJECT}_NET_IP4_HEADERS}
+    ${${PROJECT}_NET_IP4_HEADERS_CPP}
   DESTINATION
-    "include/${PROJECT}/net/ipv4"
+    "include/${PROJECT}/net/ip4"
   )
 
 

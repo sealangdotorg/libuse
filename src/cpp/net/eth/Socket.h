@@ -40,49 +40,57 @@
 //  statement from your version.
 //
 
-#include "Link.h"
+#pragma once
+#ifndef _LIBSTDHL_CPP_NETWORK_ETHERNET_SOCKET_H_
+#define _LIBSTDHL_CPP_NETWORK_ETHERNET_SOCKET_H_
 
-#include "Socket.h"
+#include <libstdhl/net/Socket>
+#include <libstdhl/net/eth/Frame>
 
-using namespace libstdhl;
-using namespace Network;
-using namespace Ethernet;
+/**
+   @brief    TBD
 
-Link::Link( const std::string& name )
+   TBD
+*/
+
+namespace libstdhl
 {
-    auto socket = std::make_shared< RawPosixSocket >( name );
-    auto link = std::static_pointer_cast< Socket< Frame > >( socket );
-    setSocket( link );
+    /**
+       @extends Stdhl
+    */
+    namespace Network
+    {
+        namespace Ethernet
+        {
+            /**
+               @extends Ethernet
+            */
+            class Socket final : public Network::Socket< Frame >
+            {
+              public:
+                using Ptr = std::shared_ptr< Socket >;
+
+                Socket( const std::string& name );
+
+                const Address& address( void ) const;
+
+                void connect( void ) override;
+
+                void disconnect( void ) override;
+
+                std::size_t send( const Frame& data ) const override;
+
+                std::size_t receive( Frame& data ) const override;
+
+              private:
+                Address m_address;
+                i32 m_ifridx;
+            };
+        }
+    }
 }
 
-void Link::send( const Frame& data )
-{
-    auto& link = static_cast< RawPosixSocket& >( *socket() );
-    link.send( data );
-}
-
-Frame Link::send( const std::vector< u8 >& data )
-{
-    const auto size = data.size();
-    assert( size <= 1500 );
-
-    auto& link = static_cast< RawPosixSocket& >( *socket() );
-    const Type type = { { ( u8 )( size >> 8 ), (u8)size } };
-    const auto frame = Frame( BROADCAST, link.address(), type, data );
-    send( frame );
-    return frame;
-}
-
-void Link::receive( Frame& data )
-{
-    assert( !" TODO! " );
-}
-
-Frame Link::receive( std::vector< u8 >& data )
-{
-    assert( !" TODO! " );
-    return Frame( {}, {}, {}, data );
-}
+#endif  // _LIBSTDHL_CPP_NETWORK_ETHERNET_SOCKET_H_
 
 //
 //  Local variables:

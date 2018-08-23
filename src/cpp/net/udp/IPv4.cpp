@@ -50,14 +50,14 @@ using namespace UDP;
 
 UDP::IPv4::IPv4( const std::string& name )
 {
-    auto socket = std::make_shared< IPv4PosixSocket >( name );
+    auto socket = std::make_shared< IPv4Socket >( name );
     auto link = std::static_pointer_cast< Socket< IPv4Packet > >( socket );
     setSocket( link );
 }
 
 void UDP::IPv4::send( const IPv4Packet& data )
 {
-    const auto& link = static_cast< IPv4PosixSocket& >( *socket() );
+    const auto& link = static_cast< IPv4Socket& >( *socket() );
     link.send( data );
 }
 
@@ -70,7 +70,7 @@ IPv4Packet UDP::IPv4::send( const std::vector< u8 >& data )
 
 void UDP::IPv4::receive( IPv4Packet& data )
 {
-    auto& link = static_cast< IPv4PosixSocket& >( *socket() );
+    auto& link = static_cast< IPv4Socket& >( *socket() );
     link.receive( data );
 }
 

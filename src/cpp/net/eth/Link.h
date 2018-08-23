@@ -40,43 +40,39 @@
 //  statement from your version.
 //
 
-#include "Protocol.h"
+#pragma once
+#ifndef _LIBSTDHL_CPP_NETWORK_ETHERNET_LINK_H_
+#define _LIBSTDHL_CPP_NETWORK_ETHERNET_LINK_H_
 
-#include "../../Array.h"
+#include <libstdhl/net/Interface>
+#include <libstdhl/net/eth/Frame>
 
-using namespace libstdhl;
-using namespace Network;
-using namespace Ethernet;
-
-constexpr std::array< u8, HEADER > Ethernet::Protocol::data( void ) const
+namespace libstdhl
 {
-    return m_destination + m_source + m_type;
+    namespace Network
+    {
+        namespace Ethernet
+        {
+            class Link final : public Network::Interface< Frame >
+            {
+              public:
+                using Ptr = std::shared_ptr< Link >;
+
+                Link( const std::string& name );
+
+                void send( const Frame& data ) override;
+
+                Frame send( const std::vector< u8 >& data ) override;
+
+                void receive( Frame& data ) override;
+
+                Frame receive( std::vector< u8 >& data ) override;
+            };
+        }
+    };
 }
 
-const Address& Ethernet::Protocol::destination( void ) const
-{
-    return m_destination;
-}
-
-const Address& Ethernet::Protocol::source( void ) const
-{
-    return m_source;
-}
-
-const Ethernet::Type& Ethernet::Protocol::type( void ) const
-{
-    return m_type;
-}
-
-const u8* Ethernet::Protocol::buffer( void ) const
-{
-    return m_destination.data();
-}
-
-std::size_t Ethernet::Protocol::size( void ) const
-{
-    return data().size();
-}
+#endif  // _LIBSTDHL_CPP_NETWORK_ETHERNET_LINK_H_
 
 //
 //  Local variables:

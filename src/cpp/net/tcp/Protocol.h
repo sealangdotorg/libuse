@@ -45,7 +45,7 @@
 #define _LIBSTDHL_CPP_NETWORK_TCP_PROTOCOL_H_
 
 #include <libstdhl/net/Protocol>
-#include <libstdhl/net/ipv4/Protocol>
+#include <libstdhl/net/ip4/Protocol>
 #include <libstdhl/net/udp/Protocol>
 
 /**

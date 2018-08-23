@@ -55,7 +55,7 @@ using namespace TCP;
 
 TCP::IPv4::IPv4( const std::string& name, const u1 server )
 {
-    auto socket = std::make_shared< IPv4PosixSocket >( name );
+    auto socket = std::make_shared< IPv4Socket >( name );
     socket->setServer( server );
     auto link = std::static_pointer_cast< Socket< IPv4Packet > >( socket );
     setSocket( link );
@@ -67,7 +67,7 @@ TCP::IPv4::IPv4( void )
 
 TCP::IPv4 TCP::IPv4::session( void )
 {
-    auto& link = static_cast< IPv4PosixSocket& >( *socket() );
+    auto& link = static_cast< IPv4Socket& >( *socket() );
 
     if( not link.server() )
     {
@@ -76,7 +76,7 @@ TCP::IPv4 TCP::IPv4::session( void )
     else
     {
         auto client = link.accept();
-        auto socket = std::make_shared< IPv4PosixSocket >( client );
+        auto socket = std::make_shared< IPv4Socket >( client );
         socket->setServer( false );
 
         auto link = std::static_pointer_cast< Socket< IPv4Packet > >( socket );
@@ -89,7 +89,7 @@ TCP::IPv4 TCP::IPv4::session( void )
 
 void TCP::IPv4::send( const IPv4Packet& data )
 {
-    auto& link = static_cast< IPv4PosixSocket& >( *socket() );
+    auto& link = static_cast< IPv4Socket& >( *socket() );
     link.send( data );
 }
 
@@ -109,7 +109,7 @@ void TCP::IPv4::send( const std::string& data )
 
 void TCP::IPv4::receive( IPv4Packet& data )
 {
-    auto& link = static_cast< IPv4PosixSocket& >( *socket() );
+    auto& link = static_cast< IPv4Socket& >( *socket() );
     link.receive( data );
 }
 

@@ -54,21 +54,34 @@ namespace libstdhl
     {
         namespace TCP
         {
-            class IPv4PosixSocket final : public PosixSocket< IPv4Packet >
+            class IPv4Socket final : public Network::Socket< IPv4Packet >
             {
               public:
-                using Ptr = std::shared_ptr< IPv4PosixSocket >;
+                using Ptr = std::shared_ptr< IPv4Socket >;
 
-                IPv4PosixSocket( const Address& address, const Port& port );
+                IPv4Socket( const Address& address, const Port& port );
 
-                IPv4PosixSocket( const std::string& name );
+                IPv4Socket( const std::string& name );
 
-                IPv4PosixSocket( const PosixSocket< IPv4Packet >& socket );
+                IPv4Socket( const IPv4Socket& socket, const i32 connection );
 
-              public:
                 void connect( void ) override;
 
-                IPv4PosixSocket accept( void ) const;
+                void disconnect( void ) override;
+
+                std::size_t send( const IPv4Packet& data ) const override;
+
+                std::size_t receive( IPv4Packet& data ) const override;
+
+                const Address& address( void ) const;
+
+                const Port& port( void ) const;
+
+                IPv4Socket accept( void ) const;
+
+                void setServer( const u1 enable );
+
+                u1 server( void ) const;
 
               private:
                 Address m_address;

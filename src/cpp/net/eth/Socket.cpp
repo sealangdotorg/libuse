@@ -43,36 +43,49 @@
 #include "Socket.h"
 
 #include <cassert>
+#include <cstring>
+
+#include <net/if.h>
+#include <netpacket/packet.h>
+#include <sys/ioctl.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 using namespace libstdhl;
 using namespace Network;
-using namespace Ethernet;
 
-RawPosixSocket::RawPosixSocket( const std::string& name )
-: PosixSocket< Frame >( name, AF_PACKET, SOCK_RAW, 0 )
+Ethernet::Socket::Socket( const std::string& name )
+: Network::Socket< Frame >( name )
 , m_address( { { 0 } } )
+, m_ifridx( 0 )
 {
 }
 
-const Address& RawPosixSocket::address( void ) const
+const Ethernet::Address& Ethernet::Socket::address( void ) const
 {
     return m_address;
 }
 
-void RawPosixSocket::connect( void )
+void Ethernet::Socket::connect( void )
 {
+    const i32 fd = socket( AF_PACKET, SOCK_RAW, 0 );
+
+    if( fd <= 0 )
+    {
+        throw std::domain_error( "unable to open socket '" + name() + "'" );
+    }
+
     struct ifreq info = { { { 0 } } };
 
     strncpy( info.ifr_name, name().c_str(), IFNAMSIZ - 1 );
-
-    if( ioctl( id(), SIOCGIFINDEX, &info ) < 0 )
+    if( ioctl( fd, SIOCGIFINDEX, &info ) < 0 )
     {
         throw std::domain_error( "unable to connect to socket '" + name() + "'" );
     }
 
     m_ifridx = info.ifr_ifindex;
-
-    if( ioctl( id(), SIOCGIFHWADDR, &info ) < 0 )
+    if( ioctl( fd, SIOCGIFHWADDR, &info ) < 0 )
     {
         throw std::domain_error( "unable to read socket '" + name() + "' hardware address" );
     }
@@ -86,10 +99,20 @@ void RawPosixSocket::connect( void )
         static_cast< u8 >( info.ifr_hwaddr.sa_data[ 5 ] ),
     } };
 
-    setConnected( true );
+    setId( fd );
 }
 
-std::size_t RawPosixSocket::send( const Frame& data ) const
+void Ethernet::Socket::disconnect( void )
+{
+    if( close( id() ) )
+    {
+        throw std::domain_error( "unable to close socket '" + name() + "'" );
+    }
+
+    setId( 0 );
+}
+
+std::size_t Ethernet::Socket::send( const Frame& data ) const
 {
     if( not connected() )
     {
@@ -125,7 +148,7 @@ std::size_t RawPosixSocket::send( const Frame& data ) const
     return result;
 }
 
-std::size_t RawPosixSocket::receive( Frame& data ) const
+std::size_t Ethernet::Socket::receive( Frame& data ) const
 {
     // recvfrom
     assert( !" TODO! " );

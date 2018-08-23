@@ -40,64 +40,49 @@
 //  statement from your version.
 //
 
-#pragma once
-#ifndef _LIBSTDHL_CPP_NETWORK_ETHERNET_FRAME_H_
-#define _LIBSTDHL_CPP_NETWORK_ETHERNET_FRAME_H_
+#include "Link.h"
 
-#include <libstdhl/net/Packet>
-#include <libstdhl/net/ethernet/Protocol>
+#include "Socket.h"
 
-#include <memory>
+using namespace libstdhl;
+using namespace Network;
+using namespace Ethernet;
 
-/**
-   @brief    TBD
-
-   TBD
-*/
-
-namespace libstdhl
+Link::Link( const std::string& name )
 {
-    /**
-       @extends Stdhl
-    */
-    namespace Network
-    {
-        namespace Ethernet
-        {
-            /**
-               @extends Ethernet
-            */
-            class Frame final : public Network::Packet
-            {
-              public:
-                using Ptr = std::shared_ptr< Frame >;
-
-                Frame(
-                    const Address& destination,
-                    const Address& source,
-                    const Type& type,
-                    const std::vector< u8 >& payload );
-
-                const Protocol& header( void ) const;
-
-                const Data& payload( void ) const;
-
-                const u8* buffer( void ) const override;
-
-                std::size_t size( void ) const override;
-
-                void resize( const std::size_t size ) override;
-
-              private:
-                const Protocol m_header;
-                Data m_payload;
-                const std::size_t m_size;
-            };
-        }
-    }
+    auto socket = std::make_shared< Ethernet::Socket >( name );
+    auto link = std::static_pointer_cast< Network::Socket< Frame > >( socket );
+    setSocket( link );
 }
 
-#endif  // _LIBSTDHL_CPP_NETWORK_ETHERNET_FRAME_H_
+void Link::send( const Frame& data )
+{
+    auto& link = static_cast< Ethernet::Socket& >( *socket() );
+    link.send( data );
+}
+
+Frame Link::send( const std::vector< u8 >& data )
+{
+    const auto size = data.size();
+    assert( size <= 1500 );
+
+    auto& link = static_cast< Ethernet::Socket& >( *socket() );
+    const Type type = { { ( u8 )( size >> 8 ), (u8)size } };
+    const auto frame = Frame( BROADCAST, link.address(), type, data );
+    send( frame );
+    return frame;
+}
+
+void Link::receive( Frame& data )
+{
+    assert( !" TODO! " );
+}
+
+Frame Link::receive( std::vector< u8 >& data )
+{
+    assert( !" TODO! " );
+    return Frame( {}, {}, {}, data );
+}
 
 //
 //  Local variables:
