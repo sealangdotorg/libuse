@@ -319,7 +319,6 @@ INSTA = $(TYPES:%=%-install)
 ANALY = $(TYPES:%=%-analyze)
 ALL   = $(TYPES:%=%-all)
 
-
 ENV_CMAKE_FLAGS  = -G$(ENV_GEN)
 ENV_CMAKE_FLAGS += -DCMAKE_BUILD_TYPE=$(TYPE)
 ENV_CMAKE_FLAGS += -DCMAKE_INSTALL_PREFIX=$(BIN)
@@ -348,6 +347,11 @@ else
   endif
 endif
 
+ENV_BUILD_FLAGS  =
+ifneq (,$(findstring Makefile,$(ENV_GEN)))
+  ENV_BUILD_FLAGS += --no-print-directory $(MFLAGS)
+endif
+
 
 ifeq ("$(wildcard $(OBJ)/CMakeCache.txt)","")
 $(OBJ)/Makefile: $(OBJ) info
@@ -370,12 +374,12 @@ $(SYNCS):%-sync: $(OBJ)
 
 
 $(TYPES):%: %-sync
-	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) --target $(TARGET)
+	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) --target $(TARGET) -- $(ENV_BUILD_FLAGS)
 
 all: debug-all
 
 $(ALL):%-all: %-sync
-	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@)
+	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) -- $(ENV_BUILD_FLAGS)
 
 
 test: debug-test
@@ -383,7 +387,7 @@ test: debug-test
 test-all: $(TYPES:%=%-test)
 
 $(TESTS):%-test: %
-	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) --target $(TARGET)-check
+	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) --target $(TARGET)-check -- $(ENV_BUILD_FLAGS)
 	@echo "-- Running unit test"
 	@$(ENV_FLAGS) ./$(OBJ)/$(TARGET)-check --gtest_output=xml:obj/report.xml $(ENV_ARGS)
 
@@ -393,7 +397,7 @@ benchmark: debug-benchmark
 benchmark-all: $(TYPES:%=%-benchmark)
 
 $(BENCH):%-benchmark: %
-	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) --target $(TARGET)-run
+	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) --target $(TARGET)-run -- $(ENV_BUILD_FLAGS)
 	@echo "-- Running benchmark"
 	@$(ENV_FLAGS) ./$(OBJ)/$(TARGET)-run -o console -o json:obj/report.json $(ENV_ARGS)
 
@@ -403,7 +407,7 @@ install: debug-install
 install-all: $(TYPES:%=%-install)
 
 $(INSTA):%-install: %
-	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) --target install
+	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) --target install -- $(ENV_BUILD_FLAGS)
 
 
 format: $(FORMAT:%=%-format-cpp)
