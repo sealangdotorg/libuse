@@ -46,6 +46,7 @@
 
 #include <exception>
 #include <stdexcept>
+#include <string>
 
 /**
    @brief    TODO
