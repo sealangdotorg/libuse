@@ -58,7 +58,7 @@ ifneq ($(ENV_ARCH),i686)
 endif
 endif
 
-ENV_PLAT := $(shell uname -a)
+ENV_PLAT := "$(shell uname -a)"
 ifneq (,$(findstring Linux,$(ENV_PLAT)))
   ENV_OSYS := Linux
 endif
