@@ -58,19 +58,24 @@ ifneq ($(ENV_ARCH),i686)
 endif
 endif
 
-ENV_PLAT := $(shell uname -o)
-# GNU/Linux
-# Msys
-# Cygwin
-
-ifeq ($(ENV_PLAT),GNU/Linux)
+ENV_PLAT := $(shell uname -a)
+ifneq (,$(findstring Linux,$(ENV_PLAT)))
   ENV_OSYS := Linux
-else
+endif
+ifneq (,$(findstring Darwin,$(ENV_PLAT)))
+  ENV_OSYS := Mac
+endif
+ifneq (,$(findstring MSYS,$(ENV_PLAT)))
   ENV_OSYS := Windows
 endif
+ifneq (,$(findstring CYGWIN,$(ENV_PLAT)))
+  ENV_OSYS := Windows
+endif
+ifeq ($(ENV_OSYS),)
+  $(error environment OS '$(ENV_PLAT)' not supported!)
+endif
 
-
-ifeq ($(ENV_OSYS),Linux)
+ifneq ($(ENV_OSYS),Windows)
   CLANG := $(shell clang --version 2> /dev/null)
 else
   CLANG := $(shell clang --version 2> null)
@@ -524,8 +529,8 @@ endif
 
 info:
 	@echo "-- Environment"
-	@echo "   O =" $(ENV_OSYS)
 	@echo "   P =" $(ENV_PLAT)
+	@echo "   O =" $(ENV_OSYS)
 	@echo "   A =" $(ENV_ARCH)
 	@echo "   G =" $(ENV_GEN)
 	@echo "   C =" $(ENV_CC)
