@@ -370,7 +370,7 @@ sync: debug-sync
 sync-all: $(TYPES:%=%-sync)
 
 $(SYNCS):%-sync: $(OBJ)
-	@$(MAKE) $(MFLAGS) --no-print-directory TYPE=$(patsubst %-sync,%,$@) $(OBJ)/Makefile
+	@$(MAKE) --no-print-directory TYPE=$(patsubst %-sync,%,$@) $(OBJ)/Makefile
 
 
 $(TYPES):%: %-sync
