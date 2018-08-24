@@ -81,6 +81,26 @@ static inline u64 umull_carry( u64 a, u64 b )
     return ( s3 << 32 ) | s2;
 }
 
+static inline u1 uaddl_overflow( u64 a, u64 b, u64* res )
+{
+#if defined( __GNUG__ ) || defined( __clang__ )
+    return __builtin_uaddl_overflow( a, b, (long unsigned int*)res );
+#else
+    *res = a + b;
+    return ( a + b ) < a;
+#endif
+}
+
+static inline bool umull_overflow( u64 a, u64 b, u64* res )
+{
+#if defined( __GNUG__ ) || defined( __clang__ )
+    return __builtin_umull_overflow( a, b, (long unsigned int*)res );
+#else
+    *res = a * b;
+    return b > 0 && a > ( ULONG_MAX / b );
+#endif
+}
+
 //
 // Type::create*
 //
@@ -529,7 +549,7 @@ Integer& Integer::operator+=( const u64 rhs )
         }
         else
         {
-            const auto addof = __builtin_uaddl_overflow( lhs, rhs, (u64*)&m_data.value );
+            const auto addof = uaddl_overflow( lhs, rhs, (u64*)&m_data.value );
 
             if( addof )
             {
@@ -587,7 +607,7 @@ IntegerLayout& IntegerLayout::operator+=( const u64 rhs )
     for( std::size_t c = 0; c < m_word.size(); c++ )
     {
         const auto lhs = m_word[ c ];
-        const auto addof = __builtin_uaddl_overflow( lhs, carry, &m_word[ c ] );
+        const auto addof = uaddl_overflow( lhs, carry, &m_word[ c ] );
         carry = addof;
     }
 
@@ -730,7 +750,7 @@ Integer& Integer::operator*=( const u64 rhs )
     if( trivial() )
     {
         const auto lhs = m_data.value;
-        const auto mulof = __builtin_umull_overflow( lhs, rhs, &m_data.value );
+        const auto mulof = umull_overflow( lhs, rhs, &m_data.value );
 
         if( mulof )
         {
@@ -773,9 +793,9 @@ IntegerLayout& IntegerLayout::operator*=( const u64 rhs )
     for( std::size_t c = 0; c < m_word.size(); c++ )
     {
         const auto lhs = m_word[ c ];
-        const auto mulof = __builtin_umull_overflow( lhs, rhs, &m_word[ c ] );
+        const auto mulof = umull_overflow( lhs, rhs, &m_word[ c ] );
 
-        const auto addof = __builtin_uaddl_overflow( m_word[ c ], carry, &m_word[ c ] );
+        const auto addof = uaddl_overflow( m_word[ c ], carry, &m_word[ c ] );
 
         assert( not addof );
 
