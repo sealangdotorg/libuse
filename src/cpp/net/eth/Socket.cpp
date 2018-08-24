@@ -45,12 +45,14 @@
 #include <cassert>
 #include <cstring>
 
+#if defined( __linux__ )
 #include <net/if.h>
 #include <netpacket/packet.h>
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
+#endif
 
 using namespace libstdhl;
 using namespace Network;
@@ -69,6 +71,7 @@ const Ethernet::Address& Ethernet::Socket::address( void ) const
 
 void Ethernet::Socket::connect( void )
 {
+#if defined( __linux__ )
     const i32 fd = socket( AF_PACKET, SOCK_RAW, 0 );
 
     if( fd <= 0 )
@@ -100,16 +103,19 @@ void Ethernet::Socket::connect( void )
     } };
 
     setId( fd );
+#endif
 }
 
 void Ethernet::Socket::disconnect( void )
 {
+#if defined( __linux__ )
     if( close( id() ) )
     {
         throw std::domain_error( "unable to close socket '" + name() + "'" );
     }
 
     setId( 0 );
+#endif
 }
 
 std::size_t Ethernet::Socket::send( const Frame& data ) const
@@ -119,6 +125,7 @@ std::size_t Ethernet::Socket::send( const Frame& data ) const
         throw std::logic_error( "unable to send, socket '" + name() + "'is not connected" );
     }
 
+#if defined( __linux__ )
     const auto& destination = data.header().destination();
 
     struct sockaddr_ll configuration = { 0 };
@@ -146,6 +153,9 @@ std::size_t Ethernet::Socket::send( const Frame& data ) const
     }
 
     return result;
+#else
+    return -1;
+#endif
 }
 
 std::size_t Ethernet::Socket::receive( Frame& data ) const
