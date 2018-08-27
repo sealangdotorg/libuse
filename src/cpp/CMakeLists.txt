@@ -70,7 +70,6 @@ add_library( ${PROJECT}-cpp OBJECT
   data/type/Natural.cpp
   data/type/Rational.cpp
   data/type/String.cpp
-  net/Interface.cpp
   net/Packet.cpp
   net/eth/Frame.cpp
   net/eth/Link.cpp
