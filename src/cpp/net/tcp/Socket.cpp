@@ -46,7 +46,6 @@
 
 #include <net/if.h>
 #include <netinet/in.h>
-#include <netpacket/packet.h>
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <sys/types.h>
