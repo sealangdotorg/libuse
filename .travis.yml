@@ -60,30 +60,7 @@ matrix:
       env: B="release"  C="gcc"   I="ppaulweber/docker-cpp"
       services: docker
 
-    # Linux Ubuntu 14.04 (trusty)
-    - os:  linux
-      env: B="debug"    C="clang" I="linux"
-      dist: trusty
-      addons:
-        apt:
-          sources:
-            - llvm-toolchain-trusty-5.0
-          packages:
-            - clang-5.0
-    - os:  linux
-      env: B="debug"    C="gcc"   I="linux"
-      dist: trusty
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-7
-
     # Mac OS 10.13
-    - os:  osx
-      env: B="debug"    C="clang" I="osx"
-      osx_image: xcode10
     - os:  osx
       env: B="debug"    C="clang" I="osx"
       osx_image: xcode9.4
