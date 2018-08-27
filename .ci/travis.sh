@@ -96,6 +96,6 @@ else
     if [ "$KIND" = "native" ]; then
 	make C=$COMPILER $BUILD-$STEP
     else
-	docker exec build make -C /repo C=$COMPILER $BUILD-STEP
+	docker exec build make -C /repo C=$COMPILER $BUILD-$STEP
     fi
 fi
