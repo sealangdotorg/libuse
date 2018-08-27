@@ -82,31 +82,16 @@ matrix:
 
     # Mac OS 10.13
     - os:  osx
+      env: B="debug"    C="clang" I="osx"
       osx_image: xcode10
-      env: B="debug"    C="clang" I="osx"
-      compiler: clang
     - os:  osx
-      osx_image: xcode9.4
       env: B="debug"    C="clang" I="osx"
-      compiler: clang
+      osx_image: xcode9.4
 
     # Mac OS 10.12
     - os:  osx
+      env: B="debug"    C="clang" I="osx"
       osx_image: xcode8.3
-      env: B="debug"    C="clang" I="osx"
-      compiler: clang
-
-    # Mac OS 10.11
-    - os:  osx
-      osx_image: xcode7.3
-      env: B="debug"    C="clang" I="osx"
-      compiler: clang
-
-    # Mac OS 10.10
-    - os:  osx
-      osx_image: xcode6.4
-      env: B="debug"    C="clang" I="osx"
-      compiler: clang
 
 before_install:
   - git submodule update --init --remote
