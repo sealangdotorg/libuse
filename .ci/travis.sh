@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 #   Copyright (C) 2014-2018 CASM Organization <https://casm-lang.org>
 #   All rights reserved.
@@ -39,25 +40,62 @@
 #   not obliged to do so. If you do not wish to do so, delete this exception
 #   statement from your version.
 #
----
-platform: linux
-image_resource:
-  type: docker-image
-  source:
-    repository: ppaulweber/container-cpp-clang
-inputs:
-  - name: gtest
-    path: in/gtest
-  - name: libstdhl
-    path: in/stdhl
-outputs:
-  - name: out
-run:
-  path: sh
-  args:
-    - -exc
-    - |
-      date
-      uname -a
-      make -C in/stdhl
-      cp -rf in/* out/
+
+if [ -z $1 ]; then
+    echo architecture/image not set!
+    exit -1
+fi
+IMAGE=$1
+
+if [ -z $2 ]; then
+    echo compiler not set!
+    exit -1
+fi
+COMPILER=$2
+
+if [ -z $3 ]; then
+    echo build not set!
+    exit -1
+fi
+BUILD=$3
+
+if [ -z $4 ]; then
+    echo step not set!
+    exit -1
+fi
+STEP=$4
+
+
+KIND=
+if [ "$IMAGE" = "osx" ]; then
+    KIND=native
+elif [ "$IMAGE" = "linux" ]; then
+    KIND=native
+else # docker
+    KIND=docker
+fi
+
+
+if [ "$STEP" = "install" ]; then
+    if [ "$IMAGE" = "osx" ]; then
+	system_profiler SPSoftwareDataType
+    elif [ "$IMAGE" = "linux" ]; then
+        lsb_release -a
+    else # docker
+	docker --version
+	docker pull $IMAGE
+	docker run -itd --name build -v `pwd`:/repo $IMAGE
+    fi
+elif [ "$STEP" = "build" ]; then
+    if [ "$KIND" = "native" ]; then
+	make $BUILD
+    else
+	docker exec build make -C /repo C=$COMPILER $BUILD
+    fi
+else
+    if [ "$KIND" = "native" ]; then
+	make C=$COMPILER $BUILD-$STEP
+    else
+	docker exec build make -C /repo C=$COMPILER $BUILD-STEP
+    fi
+fi

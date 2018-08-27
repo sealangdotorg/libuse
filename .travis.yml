@@ -53,43 +53,34 @@ git:
 matrix:
   include:
     - os:  linux
-      env: B="debug"    C="clang" IMAGE="ppaulweber/docker-cpp"
+      env: B="debug"    C="clang" I="ppaulweber/docker-cpp"
     - os:  linux
-      env: B="release"  C="clang" IMAGE="ppaulweber/docker-cpp"
+      env: B="release"  C="clang" I="ppaulweber/docker-cpp"
 
     - os:  linux
-      env: B="debug"    C="gcc"   IMAGE="ppaulweber/docker-cpp"
+      env: B="debug"    C="gcc"   I="ppaulweber/docker-cpp"
     - os:  linux
-      env: B="release"  C="gcc"   IMAGE="ppaulweber/docker-cpp"
+      env: B="release"  C="gcc"   I="ppaulweber/docker-cpp"
+
+    - os:  osx
+      osx_image: xcode10
+      env: B="debug"    C="clang" I="osx"
 
   allow_failures:
-    - os:  linux
-      env: B="sanitize" C="clang" IMAGE="ppaulweber/docker-cpp"
-    - os:  linux
-      env: B="sanitize" C="gcc"   IMAGE="ppaulweber/docker-cpp"
-
-    - os:        osx
-      osx_image: xcode8
-      compiler:  clang
-
     - os:        osx
       osx_image: xcode8
       compiler:  gcc
 
 before_install:
   - git submodule update --init --remote
-  - docker pull ${IMAGE}
-  - docker run -itd --name build -v $(pwd):/repo ${IMAGE} bash
 
 install:
-  - docker exec build uname -a
-  - docker exec build make  --version
-  - docker exec build cmake --version
+  - .ci/travis.sh $I $C $B install
 
 script:
-  - docker exec build make -C /repo C=${C} ${B}
-  - docker exec build make -C /repo C=${C} ${B}-test
-  - docker exec build make -C /repo C=${C} ${B}-benchmark
+  - .ci/travis.sh $I $C $B build
+  - .ci/travis.sh $I $C $B test
+  - .ci/travis.sh $I $C $B benchmark
 
 after_success:
-  - docker exec build make -C /repo ${B}-analyze
+  - .ci/travis.sh $I $C $B analyze
