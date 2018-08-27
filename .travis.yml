@@ -56,9 +56,6 @@ matrix:
       env: B="debug"    C="clang" I="ppaulweber/docker-cpp"
     - os:  linux
       env: B="release"  C="clang" I="ppaulweber/docker-cpp"
-
-    - os:  linux
-      env: B="debug"    C="gcc"   I="ppaulweber/docker-cpp"
     - os:  linux
       env: B="release"  C="gcc"   I="ppaulweber/docker-cpp"
 
