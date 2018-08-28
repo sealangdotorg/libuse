@@ -41,15 +41,10 @@
 #
 
 linux_task:
-#  matrix:
   container:
     cpu: 1
     memory: 1
     image: casmlang/container.linux
-#    windows_container:
-#      image: cirrusci/windowsservercore:2016
-#    osx_instance:
-#      image: high-sierra-xcode-9.4.1
   matrix:
     env:
       B: "debug"
@@ -71,3 +66,26 @@ linux_task:
     - make C=$C $B-test
   benchmark_script:
     - make C=$C $B-benchmark
+
+macos_task:
+  osx_instance:
+    image: high-sierra-xcode-9.4.1
+  matrix:
+    env:
+      B: "debug"
+      C: "clang"
+    env:
+      B: "debug"
+      C: "gcc"
+  fetch_script:
+    - git submodule update --init --remote
+  build_script:
+    - make C=$C $B
+  test_script:
+    - make C=$C $B-test
+  benchmark_script:
+    - make C=$C $B-benchmark
+
+#windows_task:
+#  windows_container:
+#    image: cirrusci/windowsservercore:2016
