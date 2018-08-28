@@ -75,6 +75,16 @@ ifeq ($(ENV_OSYS),)
   $(error environment OS '$(ENV_PLAT)' not supported!)
 endif
 
+ifeq ($(ENV_OSYS),Linux)
+  ENV_CPUM := $(shell cat /proc/cpuinfo | grep -e "model name" | sed "s/model name.*: //g" | head -n1 )
+endif
+ifeq ($(ENV_OSYS),Mac)
+  ENV_CPUM := $(shell sysctl -n machdep.cpu.brand_string )
+endif
+ifeq ($(ENV_OSYS),Windows)
+  ENV_CPUM := $(shell wmic CPU get NAME | head -n2 | tail -n1 )
+endif
+
 ifneq ($(ENV_OSYS),Windows)
   CLANG := $(shell clang --version 2> /dev/null)
 else
@@ -529,17 +539,18 @@ endif
 
 info:
 	@echo "-- Environment"
-	@echo "   P =" $(ENV_PLAT)
-	@echo "   O =" $(ENV_OSYS)
-	@echo "   A =" $(ENV_ARCH)
-	@echo "   G =" $(ENV_GEN)
-	@echo "   C =" $(ENV_CC)
-	@echo "   X =" $(ENV_CXX)
+	@echo "   P = $(ENV_PLAT)"
+	@echo "   O = $(ENV_OSYS)"
+	@echo "   A = $(ENV_ARCH)"
+	@echo "   M = $(ENV_CPUM)"
+	@echo "   G = $(ENV_GEN)"
+	@echo "   C = $(ENV_CC)"
+	@echo "   X = $(ENV_CXX)"
 
 
 info-config: info
 	@echo "-- Configuration"
-	@echo "   CMAKE_FLAGS =" $(ENV_CMAKE_FLAGS)
+	@echo "   CMAKE_FLAGS = $(ENV_CMAKE_FLAGS)"
 
 
 info-variables:
