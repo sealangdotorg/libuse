@@ -45,16 +45,22 @@ task:
   container:
     cpu: 1
     memory: 1
-    image: ppaulweber/docker-cpp
+    image: casmlang/container.linux
 #    windows_container:
 #      image: cirrusci/windowsservercore:2016
 #    osx_instance:
 #      image: high-sierra-xcode-9.4.1
-  env:
-    B: "debug"
-    C: "clang"
-  script:
+  matrix:
+    env:
+      B: "debug"
+      C: "clang"
+    env:
+      B: "debug"
+      C: "gcc"
+  fetch_script:
     - git submodule update --init --remote
+  build_script:
     - make C=$C $B
+  test_script:
     - make C=$C $B-test
     - make C=$C $B-benchmark
