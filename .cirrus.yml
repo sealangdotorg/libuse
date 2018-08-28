@@ -79,11 +79,10 @@ macos_task:
       C: "gcc"
   fetch_script:
     - git submodule update --init --remote
-    - cd /tmp
-    - wget https://cmake.org/files/v3.12/cmake-3.12.1-Darwin-x86_64.tar.gz
-    - tar xfz cmake-3.12.1-Darwin-x86_64.tar.gz
-    - export PATH="`pwd`/cmake-3.12.1-Darwin-x86_64/CMake.app/Contents/bin":$PATH:
-    - cd -
+    - cd /opt; \
+      wget https://cmake.org/files/v3.12/cmake-3.12.1-Darwin-x86_64.tar.gz; \
+      tar xfz cmake-3.12.1-Darwin-x86_64.tar.gz; \
+      export PATH="/opt/cmake-3.12.1-Darwin-x86_64/CMake.app/Contents/bin":$PATH:
   build_script:
     - make C=$C $B
   test_script:
