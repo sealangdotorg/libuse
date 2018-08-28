@@ -40,7 +40,7 @@
 #   statement from your version.
 #
 
-task:
+linux_task:
 #  matrix:
   container:
     cpu: 1
@@ -55,7 +55,13 @@ task:
       B: "debug"
       C: "clang"
     env:
-      B: "debug"
+      B: "sanitize"
+      C: "clang"
+    env:
+      B: "release"
+      C: "clang"
+    env:
+      B: "release"
       C: "gcc"
   fetch_script:
     - git submodule update --init --remote
@@ -63,4 +69,5 @@ task:
     - make C=$C $B
   test_script:
     - make C=$C $B-test
+  benchmark_script:
     - make C=$C $B-benchmark
