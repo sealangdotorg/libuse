@@ -80,7 +80,6 @@ macos_task:
   fetch_script:
     - git submodule update --init --remote
     - brew install cmake
-    - camke --version
   build_script:
     - make C=$C $B
   test_script:
