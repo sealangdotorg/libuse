@@ -67,7 +67,7 @@ linux_task:
   benchmark_script:
     - make C=$C $B-benchmark
 
-macos_task:
+mac_task:
   osx_instance:
     image: high-sierra-xcode-9.4.1
   matrix:
@@ -87,6 +87,18 @@ macos_task:
   benchmark_script:
     - make C=$C $B-benchmark
 
-#windows_task:
-#  windows_container:
-#    image: cirrusci/windowsservercore:2016
+win_task:
+  windows_container:
+    image: casmlang/container.windows
+  matrix:
+    env:
+      B: "debug"
+      C: "clang"
+  fetch_script:
+    - git submodule update --init --remote
+  build_script:
+    - make C=$C $B
+  test_script:
+    - make C=$C $B-test
+  benchmark_script:
+    - make C=$C $B-benchmark
