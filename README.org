@@ -46,7 +46,7 @@ This library includes some basic data-structures, classes, definitions etc.
 which are used in several projects for different languages.
 
 
-** Status [[https://travis-ci.org/casm-lang/libstdhl][https://api.travis-ci.org/casm-lang/libstdhl.svg?branch=master]]
+** Status [[https://cirrus-ci.com/github/casm-lang/libstdhl][https://api.cirrus-ci.com/github/casm-lang/libstdhl.svg]]
 
 Currently the repository covers some Python and C/C++ libraries.
 
