@@ -64,6 +64,7 @@ ifneq (,$(findstring Linux,$(ENV_PLAT)))
 endif
 ifneq (,$(findstring Darwin,$(ENV_PLAT)))
   ENV_OSYS := Mac
+  $(eval ENV_PLAT="$(shell uname -vns | sed 's/; / /g' | sed 's/: / /g' | sed 's/Darwin Kernel Version//g')")
 endif
 ifneq (,$(findstring MSYS,$(ENV_PLAT)))
   ENV_OSYS := Windows
