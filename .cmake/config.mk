@@ -457,7 +457,7 @@ license: $(UPDATE_ROOT:%=%-license) $(UPDATE_PATH:%=%-license)
 
 license-info:
 	@grep LICENSE.txt -e "---:" | sed "s/---://g"
-	@head LICENSE.txt -n `grep -B1 -ne "---" LICENSE.txt | head -n 1 | sed "s/-//g"` > $(OBJ)/notice.txt
+	@head -n `grep -B1 -ne "---" LICENSE.txt | head -n 1 | sed "s/-//g"` LICENSE.txt > $(OBJ)/notice.txt
 	@cat $(OBJ)/notice.txt | sed "s/^/  /g" | sed "s/$$/\\\n/g" | tr -d '\n' > $(OBJ)/notice
 
 
