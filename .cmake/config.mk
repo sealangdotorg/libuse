@@ -131,7 +131,7 @@ else
     ENV_CC=clang
     ENV_CXX=clang++
   else
-    ifdef CLANG
+    ifdef GCC
       ENV_CC=gcc
       ENV_CXX=g++
     endif
