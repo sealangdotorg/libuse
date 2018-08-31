@@ -72,6 +72,7 @@ ifneq (,$(findstring MSYS,$(ENV_PLAT)))
 endif
 ifneq (,$(findstring CYGWIN,$(ENV_PLAT)))
   ENV_OSYS := Windows
+  $(eval ENV_PLAT="$(shell uname -vnsmo)")
 endif
 ifeq ($(ENV_OSYS),)
   $(error environment OS '$(ENV_PLAT)' not supported!)
