@@ -66,6 +66,9 @@ endif
 ifeq ($(shell ${WHICH} uname 2>${DEVNUL}),)
   $(error "'uname' is not in your system PATH")
 endif
+ifeq ($(shell ${WHICH} cmake 2>${DEVNUL}),)
+  $(error "'cmake' is not in your system PATH")
+endif
 
 ENV_ARCH := $(shell uname -m)
 # x86_64
@@ -397,9 +400,9 @@ endif
 
 ifeq ("$(wildcard $(OBJ)/CMakeCache.txt)","")
 $(OBJ)/Makefile: $(OBJ) info
-	cd $(OBJ) && cmake $(ENV_CMAKE_FLAGS) ..
+	@cd $(OBJ) && cmake $(ENV_CMAKE_FLAGS) ..
   ifeq ($(ENV_CC),msvc)
-	printf "rebuild_cache:\n" > $@
+	@printf "rebuild_cache:\n" > $@
   endif
 else
 $(OBJ)/Makefile: $(OBJ)
@@ -566,19 +569,16 @@ endif
 
 info:
 	@echo "-- Environment"
+	@echo "   M = $(ENV_CPUM)"
 	@echo "   P = $(ENV_PLAT)"
 	@echo "   O = $(ENV_OSYS)"
 	@echo "   A = $(ENV_ARCH)"
-	@echo "   M = $(ENV_CPUM)"
-	@echo "   G = $(ENV_GEN)"
-	@echo "   S = $(SHELL)"
-	@echo "   C = $(ENV_CC)"
-	@echo "   X = $(ENV_CXX)"
-
-
-info-config: info
-	@echo "-- Configuration"
-	@echo "   CMAKE_FLAGS = $(ENV_CMAKE_FLAGS)"
+	@echo "   S = $(shell ${WHICH} $(SHELL))"
+	@echo "   C = $(shell ${WHICH} $(ENV_CC))"
+	@echo "   X = $(shell ${WHICH} $(ENV_CXX))"
+	@echo "   G = $(shell ${WHICH} cmake)"
+	$(eval F=$(subst -D,\n       -D,$(ENV_CMAKE_FLAGS)))
+	@printf '   F = $(F)\n'
 
 
 info-variables:
