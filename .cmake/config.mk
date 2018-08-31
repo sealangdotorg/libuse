@@ -49,6 +49,24 @@ BIN = install
 .PHONY: $(OBJ)
 .NOTPARALLEL: $(OBJ)
 
+ifneq (,$(findstring sh,$(SHELL)))
+ENV_SHELL := sh
+WHICH := which
+DEVNUL := /dev/null
+endif
+ifneq (,$(findstring cmd,$(SHELL)))
+ENV_SHELL := cmd
+WHICH := where
+DEVNUL := NUL
+endif
+ifeq ($(ENV_SHELL),)
+  $(error environment shell '$(ENV_SHELL)' not supported!)
+endif
+
+ifeq ($(shell ${WHICH} uname 2>${DEVNUL}),)
+  $(error "'uname' is not in your system PATH")
+endif
+
 ENV_ARCH := $(shell uname -m)
 # x86_64
 # i686
@@ -88,11 +106,8 @@ ifeq ($(ENV_OSYS),Windows)
   ENV_CPUM := $(shell wmic CPU get NAME | head -n2 | tail -n1 )
 endif
 
-ifeq (,$(findstring cmd,$(SHELL)))
-  CLANG := $(shell clang --version 2> /dev/null)
-else
-  CLANG := $(shell clang --version 2> null)
-endif
+CLANG := $(shell ${WHICH} clang 2>${DEVNUL})
+GCC := $(shell gcc --version 2>${DEVNUL})
 
 ifdef C
   ifeq ($(C),clang)
@@ -107,10 +122,19 @@ ifdef C
     ENV_CC=msvc
     ENV_CXX=msvc
   endif
+  ifeq ($(C),emcc)
+    ENV_CC=emcc
+    ENV_CXX=em++
+  endif
 else
   ifdef CLANG
     ENV_CC=clang
     ENV_CXX=clang++
+  else
+    ifdef CLANG
+      ENV_CC=gcc
+      ENV_CXX=g++
+    endif
   endif
 endif
 
