@@ -87,7 +87,7 @@ ifeq ($(ENV_OSYS),Windows)
   ENV_CPUM := $(shell wmic CPU get NAME | head -n2 | tail -n1 )
 endif
 
-ifneq ($(ENV_OSYS),Windows)
+ifeq (,$(findstring cmd,$(SHELL)))
   CLANG := $(shell clang --version 2> /dev/null)
 else
   CLANG := $(shell clang --version 2> null)
@@ -546,6 +546,7 @@ info:
 	@echo "   A = $(ENV_ARCH)"
 	@echo "   M = $(ENV_CPUM)"
 	@echo "   G = $(ENV_GEN)"
+	@echo "   S = $(SHELL)"
 	@echo "   C = $(ENV_CC)"
 	@echo "   X = $(ENV_CXX)"
 
