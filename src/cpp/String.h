@@ -136,6 +136,41 @@ namespace libstdhl
             }
         }
 
+        inline std::string expansion(
+            const std::string& str,
+            const std::size_t start,
+            const std::size_t length,
+            const std::size_t tabSize,
+            const char symbol )
+        {
+            std::string tmp = "";
+            std::size_t bound = start + length;
+
+            if( str.size() == 0 )
+            {
+                return tmp;
+            }
+
+            if( bound >= str.size() )
+            {
+                bound = str.size() - 1;
+            }
+
+            for( auto c = start; c < bound; c++ )
+            {
+                if( str[ c ] == '\t' )
+                {
+                    tmp += std::string( tabSize, symbol );
+                }
+                else
+                {
+                    tmp += symbol;
+                }
+            }
+
+            return tmp;
+        }
+
         /**
            adopted from: https://stackoverflow.com/a/29962178
         */
