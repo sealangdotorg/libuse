@@ -41,6 +41,8 @@
 //
 
 #include "Formatter.h"
+
+#include <libstdhl/String>
 #include "../Ansi.h"
 #include "../File.h"
 #include "Data.h"
@@ -194,9 +196,20 @@ std::string ConsoleFormatter::visit( Data& item )
 
 ApplicationFormatter::ApplicationFormatter( const std::string& name )
 : m_name( name )
+, m_tabSize( 8 )
 , m_rawOutput( true )
 , m_detailedLocation( true )
 {
+}
+
+void ApplicationFormatter::setTabSize( const u8 tabSize )
+{
+    m_tabSize = tabSize;
+}
+
+u8 ApplicationFormatter::tabSize( void ) const
+{
+    return m_tabSize;
 }
 
 void ApplicationFormatter::setRawOutput( const u1 enable )
@@ -307,22 +320,33 @@ std::string ApplicationFormatter::visit( Data& item )
                 File::readLine( location.filename().text(), location.range().begin().line() );
 
             tmp += "\n" + Ansi::format< 192, 192, 192 >( line ) + "\n";
-            tmp += std::string( location.range().begin().column() - 1, ' ' );
+            tmp +=
+                String::expansion( line, 0, location.range().begin().column() - 1, tabSize(), ' ' );
+            tmp += Ansi::format< Ansi::Color::GREEN >(
+                Ansi::format< Ansi::Style::BOLD >( "^" ) + Ansi::CSI( Ansi::SGR::RESET ) );
 
             std::string underline;
             if( ( location.range().begin().line() == location.range().end().line() ) and
                 ( location.range().end().column() > location.range().begin().column() ) )
             {
-                underline = std::string(
-                    location.range().end().column() - location.range().begin().column() - 1, '-' );
+                const auto lineStart = location.range().begin().column() - 1;
+                const auto lineLength =
+                    location.range().end().column() - location.range().begin().column();
+                underline = String::expansion( line, lineStart, lineLength, tabSize(), '-' );
+                underline.pop_back();
             }
             else
             {
-                underline = std::string( line.size(), '-' ) + "...";
+                const auto lineStart = 0;
+                auto lineLength = line.size();
+                if( lineLength > 0 )
+                {
+                    lineLength -= 1;
+                }
+                underline =
+                    String::expansion( line, lineStart, lineLength, tabSize(), '-' ) + "...";
             }
 
-            tmp += Ansi::format< Ansi::Color::GREEN >(
-                Ansi::format< Ansi::Style::BOLD >( "^" ) + Ansi::CSI( Ansi::SGR::RESET ) );
             tmp += Ansi::format< Ansi::Color::GREEN >( underline );
         }
     }
