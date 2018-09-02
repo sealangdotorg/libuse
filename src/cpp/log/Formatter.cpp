@@ -316,38 +316,40 @@ std::string ApplicationFormatter::visit( Data& item )
 
             const auto& location = static_cast< const LocationItem& >( *i );
 
-            std::string line =
+            const auto line =
                 File::readLine( location.filename().text(), location.range().begin().line() );
+            const auto lineStart = location.range().begin().column();
+            auto lineLength = location.range().end().column() - location.range().begin().column();
 
             tmp += "\n" + Ansi::format< 192, 192, 192 >( line ) + "\n";
             tmp +=
                 String::expansion( line, 0, location.range().begin().column() - 1, tabSize(), ' ' );
-            tmp += Ansi::format< Ansi::Color::GREEN >(
-                Ansi::format< Ansi::Style::BOLD >( "^" ) + Ansi::CSI( Ansi::SGR::RESET ) );
+            tmp += Ansi::format< Ansi::Color::GREEN >( Ansi::format< Ansi::Style::BOLD >( "^" ) );
+            tmp += Ansi::CSI( Ansi::SGR::RESET );
 
-            std::string underline;
             if( ( location.range().begin().line() == location.range().end().line() ) and
                 ( location.range().end().column() > location.range().begin().column() ) )
             {
-                const auto lineStart = location.range().begin().column() - 1;
-                const auto lineLength =
-                    location.range().end().column() - location.range().begin().column();
-                underline = String::expansion( line, lineStart, lineLength, tabSize(), '-' );
-                underline.pop_back();
+                if( lineLength > 2 )
+                {
+                    lineLength -= 2;
+                    tmp += Ansi::format< Ansi::Color::GREEN >(
+                        String::expansion( line, lineStart, lineLength, tabSize(), '-' ) );
+                    tmp += Ansi::format< Ansi::Color::GREEN >(
+                        Ansi::format< Ansi::Style::BOLD >( "^" ) );
+                }
+                else if( lineLength == 2 )
+                {
+                    tmp += Ansi::format< Ansi::Color::GREEN >(
+                        Ansi::format< Ansi::Style::BOLD >( "^" ) );
+                }
             }
             else
             {
-                const auto lineStart = 0;
-                auto lineLength = line.size();
-                if( lineLength > 0 )
-                {
-                    lineLength -= 1;
-                }
-                underline =
-                    String::expansion( line, lineStart, lineLength, tabSize(), '-' ) + "...";
+                tmp += Ansi::format< Ansi::Color::GREEN >(
+                    String::expansion( line, lineStart, lineLength, tabSize(), '-' ) + "..." );
             }
-
-            tmp += Ansi::format< Ansi::Color::GREEN >( underline );
+            tmp += Ansi::CSI( Ansi::SGR::RESET );
         }
     }
 
