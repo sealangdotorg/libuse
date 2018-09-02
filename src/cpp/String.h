@@ -144,21 +144,11 @@ namespace libstdhl
             const char symbol )
         {
             std::string tmp = "";
-            std::size_t bound = start + length;
-
-            if( str.size() == 0 )
-            {
-                return tmp;
-            }
-
-            if( bound >= str.size() )
-            {
-                bound = str.size() - 1;
-            }
+            const std::size_t bound = start + length;
 
             for( auto c = start; c < bound; c++ )
             {
-                if( str[ c ] == '\t' )
+                if( c < str.size() and str[ c ] == '\t' )
                 {
                     tmp += std::string( tabSize, symbol );
                 }
