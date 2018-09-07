@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 #   Copyright (C) 2014-2018 CASM Organization <https://casm-lang.org>
 #   All rights reserved.
@@ -40,86 +41,30 @@
 #   statement from your version.
 #
 
-coverage_task:
-  container:
-    image: casmlang/container.linux
-    memory: 2
-    cpu: 1
-  matrix:
-    env:
-      B: "coverage"
-      C: "gcc"
-      CODECOV_TOKEN: ENCRYPTED[ceee7eaf47c0a284df935aa88ebe2d2eacdcaab15160711793efd9526a013d7a8003eb8820f7b2bd5d6e005cdacaec97]
-  fetch_script:
-    - .ci/script.sh fetch
-  build_script:
-    - .ci/script.sh build
-  test_script:
-    - .ci/script.sh test
+APP=`basename $0`
 
-linux_task:
-  depends_on: coverage_task
-  container:
-    image: casmlang/container.linux
-    memory: 2
-    cpu: 1
-  matrix:
-    env:
-      B: "debug"
-      C: "clang"
-    env:
-      B: "sanitize"
-      C: "clang"
-    env:
-      B: "release"
-      C: "clang"
-    env:
-      B: "release"
-      C: "gcc"
-  fetch_script:
-    - .ci/script.sh fetch
-  build_script:
-    - .ci/script.sh build
-  test_script:
-    - .ci/script.sh test
-  benchmark_script:
-    - .ci/script.sh benchmark
+function usage
+{
+    echo "usage: $APP <command>"
+    exit -1
+}
 
-mac_task:
-  depends_on: coverage_task
-  osx_instance:
-    image: high-sierra-xcode-9.4.1
-  matrix:
-    env:
-      B: "debug"
-      C: "clang"
-    env:
-      B: "debug"
-      C: "gcc"
-  fetch_script:
-    - .ci/script.sh fetch
-  build_script:
-    - .ci/script.sh build
-  test_script:
-    - .ci/script.sh test
-  benchmark_script:
-    - .ci/script.sh benchmark
+if [ -z "$1" ]; then
+    usage
+fi
 
-win_task:
-  depends_on: coverage_task
-  windows_container:
-    image: casmlang/container.windows
-    os_version: 2016
-    cpu: 4
-  matrix:
-    env:
-      B: "debug"
-      C: "clang"
-  fetch_script:
-    - .ci/script.sh fetch
-  build_script:
-    - .ci/script.sh build
-  test_script:
-    - .ci/script.sh test
-  benchmark_script:
-    - .ci/script.sh benchmark
+if [ "$1" = "fetch" ]; then
+    git submodule update --init --remote
+    git submodule
+elif [ "$1" = "build" ]; then
+    make C=$C G=$G $B
+else
+    make C=$C G=$G $B-$1
+    if [ "$1" = "test" ]; then
+	if [ "$B" = "coverage" ]; then
+	    if [ "$C" = "gcc" ]; then
+		bash <(curl -s https://codecov.io/bash)
+	    fi
+	fi
+    fi
+fi

@@ -42,11 +42,11 @@
 
 * libstdhl: General Purpose High-level Library
 
+[[https://cirrus-ci.com/github/casm-lang/libstdhl][https://api.cirrus-ci.com/github/casm-lang/libstdhl.svg]]
+[[https://codecov.io/gh/casm-lang/libstdhl][https://codecov.io/gh/casm-lang/libstdhl/badge.svg]]
+
 This library includes some basic data-structures, classes, definitions etc.
 which are used in several projects for different languages.
-
-
-** Status [[https://cirrus-ci.com/github/casm-lang/libstdhl][https://api.cirrus-ci.com/github/casm-lang/libstdhl.svg]]
 
 Currently the repository covers some Python and C/C++ libraries.
 
