@@ -70,8 +70,6 @@ linux_task:
 mac_task:
   osx_instance:
     image: high-sierra-xcode-9.4.1
-    memory: 4
-    cpu: 1
   matrix:
     env:
       B: "debug"
