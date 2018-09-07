@@ -355,7 +355,7 @@ clean-all:
 	@echo "-- Removing build directory" $(OBJ)
 	@rm -rf $(OBJ)
 
-TYPES = debug sanitize release
+TYPES = debug sanitize coverage release
 
 SYNCS = $(TYPES:%=%-sync)
 TESTS = $(TYPES:%=%-test)
@@ -371,6 +371,20 @@ ENV_CMAKE_FLAGS += -DCMAKE_INSTALL_PREFIX=$(BIN)
 ifeq (,$(findstring Visual,$(ENV_GEN)))
   ENV_CMAKE_FLAGS += -DCMAKE_C_COMPILER=$(ENV_CC)
   ENV_CMAKE_FLAGS += -DCMAKE_CXX_COMPILER=$(ENV_CXX)
+
+  ifeq ("$(TYPE)","sanitize")
+    ENV_CMAKE_FLAGS += -DCMAKE_CXX_FLAGS="\
+      -O1 -g -Wall -Wextra\
+      -fno-omit-frame-pointer -fno-optimize-sibling-calls\
+      -fsanitize=undefined -fsanitize=address\
+    "
+  endif
+  ifeq ("$(TYPE)","coverage")
+    ENV_CMAKE_FLAGS += -DCMAKE_CXX_FLAGS="\
+      -O0 -g -Wall -Wextra\
+      -fprofile-arcs -ftest-coverage\
+    "
+  endif
 else
   ENV_CMAKE_FLAGS += -DCMAKE_CXX_FLAGS="\
    /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING\
