@@ -58,7 +58,7 @@ coverage_task:
     - .ci/script.sh test
 
 linux_task:
-  depends_on: coverage_task
+  depends_on: coverage
   container:
     image: casmlang/container.linux
     memory: 2
@@ -86,7 +86,7 @@ linux_task:
     - .ci/script.sh benchmark
 
 mac_task:
-  depends_on: coverage_task
+  depends_on: coverage
   osx_instance:
     image: high-sierra-xcode-9.4.1
   matrix:
@@ -106,7 +106,7 @@ mac_task:
     - .ci/script.sh benchmark
 
 win_task:
-  depends_on: coverage_task
+  depends_on: coverage
   windows_container:
     image: casmlang/container.windows
     os_version: 2016
