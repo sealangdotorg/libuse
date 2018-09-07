@@ -42,9 +42,9 @@
 
 linux_task:
   container:
-    cpu: 1
-    memory: 1
     image: casmlang/container.linux
+    memory: 2
+    cpu: 1
   matrix:
     env:
       B: "debug"
@@ -70,6 +70,8 @@ linux_task:
 mac_task:
   osx_instance:
     image: high-sierra-xcode-9.4.1
+    memory: 4
+    cpu: 1
   matrix:
     env:
       B: "debug"
@@ -90,6 +92,8 @@ mac_task:
 win_task:
   windows_container:
     image: casmlang/container.windows
+    memory: 8
+    cpu: 1
   matrix:
     env:
       B: "debug"
