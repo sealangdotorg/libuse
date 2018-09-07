@@ -90,7 +90,8 @@ mac_task:
 win_task:
   windows_container:
     image: casmlang/container.windows
-    memory: 8
+    os_version: 2016
+    disk: 20
     cpu: 1
   matrix:
     env:
