@@ -57,9 +57,9 @@ if [ "$1" = "fetch" ]; then
     git submodule update --init --remote
     git submodule
 elif [ "$1" = "build" ]; then
-    make C=$C G=$G $B
+    make C=$C $B
 else
-    make C=$C G=$G $B-$1
+    make C=$C $B-$1
     if [ "$1" = "test" ]; then
 	if [ "$B" = "coverage" ]; then
 	    if [ "$C" = "gcc" ]; then
