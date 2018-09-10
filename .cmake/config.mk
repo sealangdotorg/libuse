@@ -447,6 +447,13 @@ test-all: $(TYPES:%=%-test)
 
 $(TESTS):%-test: %
 	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) --target $(TARGET)-check -- $(ENV_BUILD_FLAGS)
+ifeq ($(ENV_CC),emcc)
+	cd ./$(OBJ) && \
+	`cat CMakeFiles/$(TARGET)-check.dir/link.txt | \
+	sed "s/$(TARGET)-check/$(TARGET)-check.js -s MAIN_MODULE=1/g"`
+	cd ./$(OBJ) && ln -fs $(TARGET)-check.js $(TARGET)-check
+	$(eval ENV_FLAGS=$(ENV_FLAGS) node)
+endif
 	@echo "-- Running unit test"
 	@$(ENV_FLAGS) ./$(OBJ)/$(TARGET)-check --gtest_output=xml:obj/report.xml $(ENV_ARGS)
 
@@ -457,6 +464,13 @@ benchmark-all: $(TYPES:%=%-benchmark)
 
 $(BENCH):%-benchmark: %
 	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) --target $(TARGET)-run -- $(ENV_BUILD_FLAGS)
+ifeq ($(ENV_CC),emcc)
+	cd ./$(OBJ) && \
+	`cat CMakeFiles/$(TARGET)-run.dir/link.txt | \
+	sed "s/$(TARGET)-run/$(TARGET)-run.js -s MAIN_MODULE=1/g"`
+	cd ./$(OBJ) && ln -fs $(TARGET)-run.js $(TARGET)-run
+	$(eval ENV_FLAGS=$(ENV_FLAGS) node)
+endif
 	@echo "-- Running benchmark"
 	@$(ENV_FLAGS) ./$(OBJ)/$(TARGET)-run -o console -o json:obj/report.json $(ENV_ARGS)
 
