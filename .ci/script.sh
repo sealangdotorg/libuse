@@ -63,9 +63,7 @@ else
     if [ "$1" = "test" ]; then
 	if [ "$B" = "coverage" ]; then
 	    if [ "$C" = "gcc" ]; then
-		bash <(curl -s https://codecov.io/bash) > obj/codecov.log
-		head obj/codecov.log
-		tail obj/codecov.log
+		bash <(curl -s https://codecov.io/bash) 2> /dev/null
 	    fi
 	fi
     fi
