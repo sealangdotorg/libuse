@@ -49,13 +49,14 @@ coverage_task:
     env:
       B: "coverage"
       C: "gcc"
-      CODECOV_TOKEN: ENCRYPTED[ceee7eaf47c0a284df935aa88ebe2d2eacdcaab15160711793efd9526a013d7a8003eb8820f7b2bd5d6e005cdacaec97]
+      CODECOV_TOKEN: ENCRYPTED[29e8db677e55a2ca56428f3f5b0fdaed358d278a41570b312fcd265ecb67e90f003f6afef761fa0d5097f1c3f6696549]
   fetch_script:
     - make ci-fetch
   build_script:
     - make ci-build
   test_script:
     - make ci-test
+    - bash <(curl -s https://codecov.io/bash) 2> /dev/null
 
 linux_task:
   depends_on: coverage
@@ -85,7 +86,7 @@ linux_task:
   benchmark_script:
     - make ci-benchmark
 
-mac_task:
+darwin_task:
   depends_on: coverage
   osx_instance:
     image: high-sierra-xcode-9.4.1
@@ -96,6 +97,8 @@ mac_task:
     env:
       B: "debug"
       C: "gcc"
+  install_script:
+    - brew install cmake
   fetch_script:
     - make ci-fetch
   build_script:
@@ -105,7 +108,7 @@ mac_task:
   benchmark_script:
     - make ci-benchmark
 
-win_task:
+windows_task:
   depends_on: coverage
   windows_container:
     image: casmlang/container.windows

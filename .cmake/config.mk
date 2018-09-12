@@ -715,30 +715,12 @@ ci-info: ci-check info
 ci-fetch: ci-info
 	@git submodule update --init --remote
 	@git submodule
-ifeq ($(CI),true)
- ifneq ($(CIRRUS_CI),true)
-  ifeq ($(ENV_OSYS),Mac)
-	brew install cmake
-  endif
- endif
-endif
 
 ci-build: ci-check
 	@make --no-print-directory C=$(C) $(B)
 
 ci-test: ci-check
 	@make --no-print-directory C=$(C) $(B)-test
-ifeq ($(CI),true)
- ifneq ($(CIRRUS_CI),true)
-  ifeq ($(ENV_OSYS),Linux)
-   ifeq ($(B),coverage)
-    ifeq ($(C),gcc)
-	bash <(curl -s https://codecov.io/bash) 2> /dev/null
-    endif
-   endif
-  endif
- endif
-endif
 
 ci-benchmark: ci-check
 	@make --no-print-directory C=$(C) $(B)-benchmark
