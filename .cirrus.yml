@@ -51,11 +51,11 @@ coverage_task:
       C: "gcc"
       CODECOV_TOKEN: ENCRYPTED[ceee7eaf47c0a284df935aa88ebe2d2eacdcaab15160711793efd9526a013d7a8003eb8820f7b2bd5d6e005cdacaec97]
   fetch_script:
-    - .ci/script.sh fetch
+    - make ci-fetch
   build_script:
-    - .ci/script.sh build
+    - make ci-build
   test_script:
-    - .ci/script.sh test
+    - make ci-test
 
 linux_task:
   depends_on: coverage
@@ -77,13 +77,13 @@ linux_task:
       B: "release"
       C: "gcc"
   fetch_script:
-    - .ci/script.sh fetch
+    - make ci-fetch
   build_script:
-    - .ci/script.sh build
+    - make ci-build
   test_script:
-    - .ci/script.sh test
+    - make ci-test
   benchmark_script:
-    - .ci/script.sh benchmark
+    - make ci-benchmark
 
 mac_task:
   depends_on: coverage
@@ -97,29 +97,29 @@ mac_task:
       B: "debug"
       C: "gcc"
   fetch_script:
-    - .ci/script.sh fetch
+    - make ci-fetch
   build_script:
-    - .ci/script.sh build
+    - make ci-build
   test_script:
-    - .ci/script.sh test
+    - make ci-test
   benchmark_script:
-    - .ci/script.sh benchmark
+    - make ci-benchmark
 
 win_task:
   depends_on: coverage
   windows_container:
     image: casmlang/container.windows
     os_version: 2016
-    cpu: 4
+    cpu: 1
   matrix:
     env:
       B: "debug"
       C: "clang"
   fetch_script:
-    - .ci/script.sh fetch
+    - make ci-fetch
   build_script:
-    - .ci/script.sh build
+    - make ci-build
   test_script:
-    - .ci/script.sh test
+    - make ci-test
   benchmark_script:
-    - .ci/script.sh benchmark
+    - make ci-benchmark

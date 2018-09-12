@@ -413,7 +413,7 @@ endif
 
 
 ifeq ("$(wildcard $(OBJ)/CMakeCache.txt)","")
-$(OBJ)/Makefile: $(OBJ) info
+$(OBJ)/Makefile: $(OBJ) info-build
 	@cd $(OBJ) && cmake $(ENV_CMAKE_FLAGS) ..
   ifeq ($(ENV_CC),msvc)
 	@printf "rebuild_cache:\n" > $@
@@ -602,6 +602,9 @@ info:
 	@echo "   O = $(ENV_OSYS)"
 	@echo "   A = $(ENV_ARCH)"
 	@echo "   S = $(shell ${WHICH} $(SHELL))"
+
+
+info-build: info
 	@echo "   C = $(shell ${WHICH} $(ENV_CC))"
 	@echo "   X = $(shell ${WHICH} $(ENV_CXX))"
 	@echo "   G = $(shell ${WHICH} cmake)"
@@ -663,3 +666,79 @@ info-generators:
 	@echo "   vs08       = 'Visual Studio 9 2008'"
 	@echo "   vs08w64    = 'Visual Studio 9 2008 Win64'"
 	@echo "   vs08ia64   = 'Visual Studio 9 2008 IA64'"
+
+
+#
+#
+# Continues Integration and Deployment
+#
+
+# https://cirrus-ci.org/guide/writing-tasks/#environment-variables
+ENV_CI_BRANCH         := $(CIRRUS_BRANCH)
+ENV_CI_BRANCH_BASE    := $(CIRRUS_BASE_BRANCH)
+ENV_CI_BRANCH_DEFAULT := $(CIRRUS_DEFAULT_BRANCH)
+ENV_CI_BUILD          := $(CIRRUS_BUILD_ID)
+ENV_CI_BUILD_PATH     := $(CIRRUS_WORKING_DIR)
+ENV_CI_BUILD_INDEX    := $(CI_NODE_INDEX)
+ENV_CI_BUILD_TOTAL    := $(CI_NODE_TOTAL)
+ENV_CI_COMMIT         := $(CIRRUS_CHANGE_IN_REPO)
+ENV_CI_COMMIT_BASE    := $(CIRRUS_BASE_SHA)
+ENV_CI_DEPTH          := $(CIRRUS_CLONE_DEPTH)
+ENV_CI_HTTP           := $(CIRRUS_HTTP_CACHE_HOST)
+ENV_CI_OS             := $(CIRRUS_OS)
+ENV_CI_PR             := $(CIRRUS_PR)
+ENV_CI_REPO           := $(CIRRUS_REPO_FULL_NAME)
+ENV_CI_REPO_NAME      := $(CIRRUS_REPO_NAME)
+ENV_CI_REPO_OWNER     := $(CIRRUS_REPO_OWNER)
+ENV_CI_REPO_URL       := $(CIRRUS_REPO_CLONE_URL)
+ENV_CI_SHELL          := $(CIRRUS_SHELL)
+ENV_CI_TAG            := $(CIRRUS_TAG)
+ENV_CI_TASK_NAME      := $(CIRRUS_TASK_NAME)
+ENV_CI_TASK_ID        := $(CIRRUS_TASK_ID)
+
+ci-check:
+ifeq ($(CI),true)
+  ifneq ($(CIRRUS_CI),true)
+    $(error unsupported CI environment)
+  endif
+  ifndef C
+    $(error no compiler selected)
+  endif
+  ifndef B
+    $(error no build type selected)
+  endif
+endif
+
+ci-info: ci-check info
+	@echo "   B = $(ENV_CI_BUILD)"
+
+ci-fetch: ci-info
+	@git submodule update --init --remote
+	@git submodule
+ifeq ($(CI),true)
+ ifneq ($(CIRRUS_CI),true)
+  ifeq ($(ENV_OSYS),Mac)
+	brew install cmake
+  endif
+ endif
+endif
+
+ci-build: ci-check
+	@make --no-print-directory C=$(C) $(B)
+
+ci-test: ci-check
+	@make --no-print-directory C=$(C) $(B)-test
+ifeq ($(CI),true)
+ ifneq ($(CIRRUS_CI),true)
+  ifeq ($(ENV_OSYS),Linux)
+   ifeq ($(B),coverage)
+    ifeq ($(C),gcc)
+	bash <(curl -s https://codecov.io/bash) 2> /dev/null
+    endif
+   endif
+  endif
+ endif
+endif
+
+ci-benchmark: ci-check
+	@make --no-print-directory C=$(C) $(B)-benchmark
