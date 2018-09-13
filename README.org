@@ -39,11 +39,17 @@
 #   not obliged to do so. If you do not wish to do so, delete this exception
 #   statement from your version.
 # 
+[[https://github.com/casm-lang/casm-lang.logo/raw/master/etc/headline.png]]
+
+#+options: toc:nil
+
 
 * libstdhl: General Purpose High-level Library
 
+[[https://ci.casm-lang.org/teams/main/pipelines/nightly/jobs/libstdhl-check][https://ci.casm-lang.org/api/v1/teams/main/pipelines/nightly/jobs/libstdhl-check/badge]]
 [[https://cirrus-ci.com/github/casm-lang/libstdhl][https://api.cirrus-ci.com/github/casm-lang/libstdhl.svg]]
 [[https://codecov.io/gh/casm-lang/libstdhl][https://codecov.io/gh/casm-lang/libstdhl/badge.svg]]
+
 
 This library includes some basic data-structures, classes, definitions etc.
 which are used in several projects for different languages.
