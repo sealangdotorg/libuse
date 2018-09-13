@@ -41,7 +41,6 @@
 #
 
 check_task:
-  only_if: $CIRRUS_BRANCH == 'master' || $CIRRUS_BRANCH =~ 'pull/*' || $CIRRUS_BRANCH =~ 'feature/*' || $CIRRUS_BRANCH =~ 'bug/*'
   container:
     image: casmlang/container.linux
     memory: 2
