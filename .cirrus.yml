@@ -40,7 +40,28 @@
 #   statement from your version.
 #
 
+check_task:
+  only_if: $CIRRUS_BRANCH == 'master' || $CIRRUS_BRANCH =~ 'pull/*' || $CIRRUS_BRANCH =~ 'feature/*' || $CIRRUS_BRANCH =~ 'bug/*'
+linux_task:
+  container:
+    image: casmlang/container.linux
+    memory: 2
+    cpu: 1
+  matrix:
+    env:
+      B: "debug"
+      C: "clang"
+  fetch_script:
+    - make ci-fetch
+  build_script:
+    - make ci-build
+  test_script:
+    - make ci-test
+  benchmark_script:
+    - make ci-benchmark
+
 coverage_task:
+  depends_on: check
   container:
     image: casmlang/container.linux
     memory: 2
@@ -56,21 +77,17 @@ coverage_task:
     - make ci-build
   test_script:
     - make ci-test
-    - bash <(curl -s https://codecov.io/bash) 2> /dev/null
+  coverage_script:
+    - wget https://codecov.io/bash
+    - sh bash -f "!*#usr#include*" 2> /dev/null
 
 linux_task:
-  depends_on: coverage
+  depends_on: check
   container:
     image: casmlang/container.linux
     memory: 2
     cpu: 1
   matrix:
-    env:
-      B: "debug"
-      C: "clang"
-    env:
-      B: "sanitize"
-      C: "clang"
     env:
       B: "release"
       C: "clang"
@@ -87,18 +104,19 @@ linux_task:
     - make ci-benchmark
 
 darwin_task:
-  depends_on: coverage
+  depends_on: check
   osx_instance:
     image: high-sierra-xcode-9.4.1
   matrix:
     env:
-      B: "debug"
+      B: "release"
       C: "clang"
     env:
-      B: "debug"
+      B: "release"
       C: "gcc"
-  install_script:
+  setup_script:
     - brew install cmake
+    - brew install gcc
   fetch_script:
     - make ci-fetch
   build_script:
@@ -109,14 +127,14 @@ darwin_task:
     - make ci-benchmark
 
 windows_task:
-  depends_on: coverage
+  depends_on: check
   windows_container:
     image: casmlang/container.windows
     os_version: 2016
     cpu: 1
   matrix:
     env:
-      B: "debug"
+      B: "release"
       C: "clang"
   fetch_script:
     - make ci-fetch
