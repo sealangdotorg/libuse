@@ -49,7 +49,7 @@
 [[https://ci.casm-lang.org/teams/main/pipelines/nightly/jobs/libstdhl-check][https://ci.casm-lang.org/api/v1/teams/main/pipelines/nightly/jobs/libstdhl-check/badge]]
 [[https://cirrus-ci.com/github/casm-lang/libstdhl][https://api.cirrus-ci.com/github/casm-lang/libstdhl.svg]]
 [[https://codecov.io/gh/casm-lang/libstdhl][https://codecov.io/gh/casm-lang/libstdhl/badge.svg]]
-
+[[https://gitter.im/casm-lang/libstdhl][https://badges.gitter.im/casm-lang/libstdhl.png]]
 
 This library includes some basic data-structures, classes, definitions etc.
 which are used in several projects for different languages.
