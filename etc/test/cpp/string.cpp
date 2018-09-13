@@ -177,6 +177,16 @@ TEST( libstdhl_cpp_String, endsWith_false )
     EXPECT_EQ( false, String::endsWith( "foobarbaz", "fffffffffffffffff" ) );
 }
 
+TEST( libstdhl_cpp_String, expansion )
+{
+    //                 0-------------1-----------2-
+    //                 0123456 7 8 9 0 1 2345678901
+    std::string str = "abcdef\n\r\t\t\r\n0123456789";
+    EXPECT_STREQ( String::expansion( str, 0, 3, 8, '.' ).c_str(), "..." );
+    EXPECT_STREQ( String::expansion( str, 5, 6, 8, '.' ).c_str(), "...................." );
+    EXPECT_STREQ( String::expansion( str, 7, 6, 4, '+' ).c_str(), "++++++++++++" );
+}
+
 //
 //  Local variables:
 //  mode: c++

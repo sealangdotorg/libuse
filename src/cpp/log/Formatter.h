@@ -116,6 +116,10 @@ namespace libstdhl
           public:
             ApplicationFormatter( const std::string& name );
 
+            void setTabSize( const u8 tabSize );
+
+            u8 tabSize( void ) const;
+
             void setRawOutput( const u1 enable );
 
             void setDetailedLocation( const u1 enable );
@@ -126,6 +130,7 @@ namespace libstdhl
 
           private:
             std::string m_name;
+            u8 m_tabSize;
             u1 m_rawOutput;
             u1 m_detailedLocation;
         };

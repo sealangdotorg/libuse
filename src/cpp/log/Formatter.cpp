@@ -41,6 +41,8 @@
 //
 
 #include "Formatter.h"
+
+#include <libstdhl/String>
 #include "../Ansi.h"
 #include "../File.h"
 #include "Data.h"
@@ -194,9 +196,20 @@ std::string ConsoleFormatter::visit( Data& item )
 
 ApplicationFormatter::ApplicationFormatter( const std::string& name )
 : m_name( name )
+, m_tabSize( 8 )
 , m_rawOutput( true )
 , m_detailedLocation( true )
 {
+}
+
+void ApplicationFormatter::setTabSize( const u8 tabSize )
+{
+    m_tabSize = tabSize;
+}
+
+u8 ApplicationFormatter::tabSize( void ) const
+{
+    return m_tabSize;
 }
 
 void ApplicationFormatter::setRawOutput( const u1 enable )
@@ -303,27 +316,40 @@ std::string ApplicationFormatter::visit( Data& item )
 
             const auto& location = static_cast< const LocationItem& >( *i );
 
-            std::string line =
+            const auto line =
                 File::readLine( location.filename().text(), location.range().begin().line() );
+            const auto lineStart = location.range().begin().column();
+            auto lineLength = location.range().end().column() - location.range().begin().column();
 
             tmp += "\n" + Ansi::format< 192, 192, 192 >( line ) + "\n";
-            tmp += std::string( location.range().begin().column() - 1, ' ' );
+            tmp +=
+                String::expansion( line, 0, location.range().begin().column() - 1, tabSize(), ' ' );
+            tmp += Ansi::format< Ansi::Color::GREEN >( Ansi::format< Ansi::Style::BOLD >( "^" ) );
+            tmp += Ansi::CSI( Ansi::SGR::RESET );
 
-            std::string underline;
             if( ( location.range().begin().line() == location.range().end().line() ) and
                 ( location.range().end().column() > location.range().begin().column() ) )
             {
-                underline = std::string(
-                    location.range().end().column() - location.range().begin().column() - 1, '-' );
+                if( lineLength > 2 )
+                {
+                    lineLength -= 2;
+                    tmp += Ansi::format< Ansi::Color::GREEN >(
+                        String::expansion( line, lineStart, lineLength, tabSize(), '-' ) );
+                    tmp += Ansi::format< Ansi::Color::GREEN >(
+                        Ansi::format< Ansi::Style::BOLD >( "^" ) );
+                }
+                else if( lineLength == 2 )
+                {
+                    tmp += Ansi::format< Ansi::Color::GREEN >(
+                        Ansi::format< Ansi::Style::BOLD >( "^" ) );
+                }
             }
             else
             {
-                underline = std::string( line.size(), '-' ) + "...";
+                tmp += Ansi::format< Ansi::Color::GREEN >(
+                    String::expansion( line, lineStart, lineLength, tabSize(), '-' ) + "..." );
             }
-
-            tmp += Ansi::format< Ansi::Color::GREEN >(
-                Ansi::format< Ansi::Style::BOLD >( "^" ) + Ansi::CSI( Ansi::SGR::RESET ) );
-            tmp += Ansi::format< Ansi::Color::GREEN >( underline );
+            tmp += Ansi::CSI( Ansi::SGR::RESET );
         }
     }
 
