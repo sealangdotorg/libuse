@@ -132,8 +132,15 @@ windows_task:
     cpu: 1
   matrix:
     env:
+      V: mingw64
       B: "release"
       C: "clang"
+    env:
+      V: mingw64
+      B: "release"
+      C: "gcc"
+  setup_script:
+    - set PATH=C:\msys2\%V%\bin;%PATH%
   fetch_script:
     - make ci-fetch
   build_script:
