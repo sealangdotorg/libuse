@@ -463,8 +463,8 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
 	return()
       endif()
 
-      string( CONCAT CMAKE_CXX_FLAGS_DEBUG   ${CMAKE_CXX_FLAGS} " " ${CMAKE_CXX_FLAGS_DEBUG}   ) 
-      string( CONCAT CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS} " " ${CMAKE_CXX_FLAGS_RELEASE} ) 
+      string( CONCAT CMAKE_CXX_FLAGS_DEBUG   ${CMAKE_CXX_FLAGS} " " ${CMAKE_CXX_FLAGS_DEBUG}   )
+      string( CONCAT CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS} " " ${CMAKE_CXX_FLAGS_RELEASE} )
 
       Externalproject_Add( ${PREFIX}
 	SOURCE_DIR      ${${PREFIX}_REPO_DIR}
