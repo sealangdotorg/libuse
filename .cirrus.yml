@@ -139,13 +139,15 @@ windows_task:
       V: mingw64
       B: "release"
       C: "gcc"
-  setup_script:
-    - set PATH=C:\msys2\%V%\bin;%PATH%
   fetch_script:
+    - set PATH=C:\msys2\%V%\bin;%PATH%
     - make ci-fetch
   build_script:
+    - set PATH=C:\msys2\%V%\bin;%PATH%
     - make ci-build
   test_script:
+    - set PATH=C:\msys2\%V%\bin;%PATH%
     - make ci-test
   benchmark_script:
+    - set PATH=C:\msys2\%V%\bin;%PATH%
     - make ci-benchmark
