@@ -83,8 +83,12 @@ static inline u64 umull_carry( u64 a, u64 b )
 
 static inline u1 uaddl_overflow( u64 a, u64 b, u64* res )
 {
-#if defined( __GNUG__ ) || defined( __clang__ )
-    return __builtin_uaddl_overflow( a, b, (long unsigned int*)res );
+#if defined( __GNUG__ ) or defined( __clang__ )
+#if defined( __MINGW32__ )
+    return __builtin_uaddll_overflow( a, b, res );
+#else
+    return __builtin_uaddl_overflow( a, b, res );
+#endif
 #else
     *res = a + b;
     return ( a + b ) < a;
@@ -93,8 +97,12 @@ static inline u1 uaddl_overflow( u64 a, u64 b, u64* res )
 
 static inline bool umull_overflow( u64 a, u64 b, u64* res )
 {
-#if defined( __GNUG__ ) || defined( __clang__ )
-    return __builtin_umull_overflow( a, b, (long unsigned int*)res );
+#if defined( __GNUG__ ) or defined( __clang__ )
+#if defined( __MINGW32__ )
+    return __builtin_umulll_overflow( a, b, res );
+#else
+    return __builtin_umull_overflow( a, b, res );
+#endif
 #else
     *res = a * b;
     return b > 0 && a > ( ULONG_MAX / b );
