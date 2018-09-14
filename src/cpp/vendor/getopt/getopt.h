@@ -13,7 +13,9 @@
 #define __GETOPT_H__
 
 /* All the headers include this file. */
+#if defined( WIN32 ) or defined( _WIN32 )
 #include <crtdefs.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -93,5 +95,3 @@ extern int getopt_long_only(int nargc, char * const *nargv, const char *options,
 #endif
 
 #endif /* !defined(__UNISTD_H_SOURCED__) && !defined(__GETOPT_LONG_H__) */
-
-#include "getopt.c"

@@ -86,6 +86,7 @@ add_library( ${PROJECT}-cpp OBJECT
   net/udp/Socket.cpp
   std/rfc3986.cpp
   vendor/pugixml/pugixml.cpp
+  vendor/getopt/getopt.cpp
   )
 
 
