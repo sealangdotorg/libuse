@@ -44,12 +44,20 @@
 
 #include <libstdhl/String>
 
+#if defined( __WIN32__ ) or defined( __WIN32 ) or defined( _WIN32 )
+#include <WS2tcpip.h>
+#include <winsock2.h>
+#define close closesocket
+using bufferType = char*;
+#else
 #include <net/if.h>
 #include <netinet/in.h>
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
+using bufferType = void*;
+#endif
 
 using namespace libstdhl;
 using namespace Network;
@@ -156,7 +164,7 @@ std::size_t IPv4Socket::send( const IPv4Packet& data ) const
         throw std::domain_error( "unable to send, not connected" );
     }
 
-    const auto result = ::send( id(), (void*)data.buffer(), data.size(), 0 );
+    const auto result = ::send( id(), (bufferType)data.buffer(), data.size(), 0 );
 
     if( result < 0 )
     {
@@ -173,7 +181,7 @@ std::size_t IPv4Socket::receive( IPv4Packet& data ) const
         throw std::domain_error( "unable to receive, not connected" );
     }
 
-    const auto result = ::recv( id(), (void*)data.buffer(), data.size(), 0 );
+    const auto result = ::recv( id(), (bufferType)data.buffer(), data.size(), 0 );
 
     if( result < 0 )
     {
