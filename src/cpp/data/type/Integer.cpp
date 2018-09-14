@@ -60,7 +60,7 @@ static inline u64 hi( u64 x )
 
 static inline u64 lo( u64 x )
 {
-    return ( ( 1L << 32 ) - 1 ) & x;
+    return ( ( ( (u64)1 ) << 32 ) - 1 ) & x;
 }
 
 static inline u64 umull_carry( u64 a, u64 b )
