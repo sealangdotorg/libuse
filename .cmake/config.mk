@@ -710,12 +710,16 @@ ifeq ($(CI),true)
 endif
 
 ci-info: ci-check info
-	@echo "   B = $(ENV_CI_BUILD)"
+	@echo "   I = $(ENV_CI_BUILD)"
+	@echo "   B = $(ENV_CI_BRANCH)"
+	@echo "   # = $(ENV_CI_COMMIT)"
+	@echo ""
 
 ci-fetch: ci-info
 	@git submodule update --init
+	@echo ""
 	@git submodule foreach \
-	'git branch --remotes | grep $(ENV_CI_BRANCH) && git checkout $(ENV_CI_BRANCH) || git checkout master'
+	'git branch --remotes | grep $(ENV_CI_BRANCH) && git checkout $(ENV_CI_BRANCH) || git checkout master; echo ""'
 	@git submodule
 
 ci-build: ci-check
