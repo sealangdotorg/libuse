@@ -713,7 +713,9 @@ ci-info: ci-check info
 	@echo "   B = $(ENV_CI_BUILD)"
 
 ci-fetch: ci-info
-	@git submodule update --init --remote
+	@git submodule update --init
+	@git submodule foreach \
+	'git branch --remotes | grep $(ENV_CI_BRANCH) && git checkout $(ENV_CI_BRANCH) || git checkout master'
 	@git submodule
 
 ci-build: ci-check
