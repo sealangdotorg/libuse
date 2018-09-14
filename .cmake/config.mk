@@ -385,6 +385,14 @@ ifeq (,$(findstring Visual,$(ENV_GEN)))
       -fprofile-arcs -ftest-coverage\
     "
   endif
+
+  ifeq ($(ENV_OSYS),Windows)
+    ifeq ($(ENV_CC),clang)
+      ENV_CMAKE_FLAGS += -DCMAKE_EXE_LINKER_FLAGS="\
+        -Wl,--allow-multiple-definition\
+      "
+    endif
+  endif
 else
   ENV_CMAKE_FLAGS += -DCMAKE_CXX_FLAGS="\
    /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING\
