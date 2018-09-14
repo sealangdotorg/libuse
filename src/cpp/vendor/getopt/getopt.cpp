@@ -449,7 +449,7 @@ start:
 
 	if ((optchar = (int)*place++) == (int)':' ||
 	    (optchar == (int)'-' && *place != '\0') ||
-	    (oli = strchr(options, optchar)) == NULL) {
+	    (oli = strchr((char*)options, optchar)) == NULL) {
 		/*
 		 * If the user specified "-" and  '-' isn't listed in
 		 * options, return -1 (non-option) as per POSIX.
