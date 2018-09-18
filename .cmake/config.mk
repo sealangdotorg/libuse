@@ -495,11 +495,8 @@ format: $(FORMAT:%=%-format-cpp)
 
 %-format-cpp:
 	@echo "-- Formatting Code C++: $(patsubst %-format-cpp,%,$@)"
-	@clang-format -i \
-	`ls $(patsubst %-format-cpp,%,$@)/*.h 2> /dev/null | grep -e .h` 2> /dev/null
-	@clang-format -i \
-	`ls $(patsubst %-format-cpp,%,$@)/*.cpp 2> /dev/null | grep -e .cpp` 2> /dev/null
-
+	@clang-format -i `ls $(patsubst %-format-cpp,%,$@)/*.h 2> /dev/null | grep -e "\.h"` 2> /dev/null
+	@clang-format -i `ls $(patsubst %-format-cpp,%,$@)/*.cpp 2> /dev/null | grep -e "\.cpp"` 2> /dev/null
 
 update: $(UPDATE_FILE:%=%-update)
 

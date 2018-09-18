@@ -44,9 +44,13 @@ TARGET = libstdhl
 
 FORMAT  = src/cpp
 FORMAT += src/cpp/data
+FORMAT += src/cpp/data/*
 FORMAT += src/cpp/net
+FORMAT += src/cpp/net/*
 FORMAT += src/cpp/std
+FORMAT += src/cpp/std/*
 FORMAT += etc/test/cpp
+FORMAT += etc/test/cpp/*
 
 UPDATE_ROOT = .
 
