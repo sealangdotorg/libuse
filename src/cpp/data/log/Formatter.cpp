@@ -42,9 +42,9 @@
 
 #include "Formatter.h"
 
-#include <libstdhl/String>
 #include <libstdhl/Ansi>
 #include <libstdhl/File>
+#include <libstdhl/String>
 
 #include "Data.h"
 
