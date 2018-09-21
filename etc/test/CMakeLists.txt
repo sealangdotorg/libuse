@@ -54,6 +54,7 @@ add_library( ${PROJECT}-test OBJECT
   cpp/data/type/data.cpp
   cpp/data/type/rational.cpp
   cpp/enum.cpp
+  cpp/environment.cpp
   cpp/exception.cpp
   cpp/file.cpp
   cpp/hash.cpp

@@ -41,8 +41,10 @@
 //
 
 #pragma once
-#ifndef _LIBSTDHL_H_
-#define _LIBSTDHL_H_
+#ifndef _LIBSTDHL_CPP_ENVIRONMENT_H_
+#define _LIBSTDHL_CPP_ENVIRONMENT_H_
+
+#include <libstdhl/Type>
 
 /**
    @brief    TODO
@@ -50,34 +52,30 @@
    TODO
 */
 
-#include <libstdhl/Allocator>
-#include <libstdhl/Ansi>
-#include <libstdhl/Args>
-#include <libstdhl/Binding>
-#include <libstdhl/Enum>
-#include <libstdhl/Environment>
-#include <libstdhl/Exception>
-#include <libstdhl/File>
-#include <libstdhl/Hash>
-#include <libstdhl/Json>
-#include <libstdhl/Labeling>
-#include <libstdhl/List>
-#include <libstdhl/Log>
-#include <libstdhl/Memory>
-#include <libstdhl/Network>
-#include <libstdhl/Random>
-#include <libstdhl/Standard>
-#include <libstdhl/String>
-#include <libstdhl/Type>
-#include <libstdhl/Variadic>
-#include <libstdhl/Version>
-#include <libstdhl/Xml>
-
 namespace libstdhl
 {
+    /**
+       @extends libstdhl
+     */
+    namespace Environment
+    {
+        /**
+           @extends Environment
+         */
+        namespace Variable
+        {
+            void set( const std::string& field, const std::string& value );
+
+            std::string get( const std::string& field );
+
+            u1 has( const std::string& field );
+
+            void del( const std::string& field );
+        }
+    }
 }
 
-#endif  // _LIBSTDHL_H_
+#endif  // _LIBSTDHL_CPP_ENVIRONMENT_H_
 
 //
 //  Local variables:

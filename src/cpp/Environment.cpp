@@ -40,44 +40,80 @@
 //  statement from your version.
 //
 
-#pragma once
-#ifndef _LIBSTDHL_H_
-#define _LIBSTDHL_H_
+#include "Environment.h"
 
-/**
-   @brief    TODO
-
-   TODO
-*/
-
-#include <libstdhl/Allocator>
-#include <libstdhl/Ansi>
-#include <libstdhl/Args>
-#include <libstdhl/Binding>
-#include <libstdhl/Enum>
-#include <libstdhl/Environment>
 #include <libstdhl/Exception>
-#include <libstdhl/File>
-#include <libstdhl/Hash>
-#include <libstdhl/Json>
-#include <libstdhl/Labeling>
-#include <libstdhl/List>
-#include <libstdhl/Log>
-#include <libstdhl/Memory>
-#include <libstdhl/Network>
-#include <libstdhl/Random>
-#include <libstdhl/Standard>
-#include <libstdhl/String>
-#include <libstdhl/Type>
-#include <libstdhl/Variadic>
-#include <libstdhl/Version>
-#include <libstdhl/Xml>
 
-namespace libstdhl
+using namespace libstdhl;
+
+void Environment::Variable::set( const std::string& field, const std::string& value )
 {
+    const char* key = field.c_str();
+    const char* val = value.c_str();
+
+#if defined( _WIN32 ) or defined( WIN32 )
+    _putenv_s( key, val );
+#else
+    // POSIX.1-2001, POSIX.1-2008, 4.3BSD.
+    const auto result = setenv( key, val, 1 );
+    if( result != 0 )
+    {
+        throw Exception(
+            "setting environment variable '" + field + "' to '" + value + "' failed(error " +
+            std::to_string( result ) + ")" );
+    }
+#endif
 }
 
-#endif  // _LIBSTDHL_H_
+std::string Environment::Variable::get( const std::string& field )
+{
+    const char* key = field.c_str();
+    const char* val = getenv( key );
+    if( val == nullptr )
+    {
+        throw Exception( "getting environment variable '" + field + "' failed" );
+    }
+
+    return std::string( val );
+}
+
+u1 Environment::Variable::has( const std::string& field )
+{
+    try
+    {
+        get( field );
+    }
+    catch( const Exception& e )
+    {
+        return false;
+    }
+
+    return true;
+}
+
+void Environment::Variable::del( const std::string& field )
+{
+    if( not has( field ) )
+    {
+        throw Exception( "environment variable '" + field + "' does not exist to remove" );
+    }
+
+    const char* key = field.c_str();
+
+#if defined( _WIN32 ) or defined( WIN32 )
+    std::string value = field + "=";
+    _putenv( value.c_str() );
+#else
+    // POSIX.1-2001, POSIX.1-2008, 4.3BSD.
+    const auto result = unsetenv( key );
+    if( result != 0 )
+    {
+        throw Exception(
+            "removing environment variable '" + field + "' failed(error " +
+            std::to_string( result ) + ")" );
+    }
+#endif
+}
 
 //
 //  Local variables:

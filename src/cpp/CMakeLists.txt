@@ -47,6 +47,7 @@ include_directories(
 add_library( ${PROJECT}-cpp OBJECT
   Ansi.cpp
   Args.cpp
+  Environment.cpp
   Exception.cpp
   data/file/TextDocument.cpp
   data/log/Category.cpp
@@ -118,6 +119,7 @@ ecm_generate_headers( ${PROJECT}_HEADERS_CPP
     Array
     Binding
     Enum
+    Environment
     Exception
     File
     Hash

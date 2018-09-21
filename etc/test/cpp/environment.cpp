@@ -40,44 +40,71 @@
 //  statement from your version.
 //
 
-#pragma once
-#ifndef _LIBSTDHL_H_
-#define _LIBSTDHL_H_
+#include <libstdhl/Test>
 
-/**
-   @brief    TODO
+using namespace libstdhl;
 
-   TODO
-*/
-
-#include <libstdhl/Allocator>
-#include <libstdhl/Ansi>
-#include <libstdhl/Args>
-#include <libstdhl/Binding>
-#include <libstdhl/Enum>
-#include <libstdhl/Environment>
-#include <libstdhl/Exception>
-#include <libstdhl/File>
-#include <libstdhl/Hash>
-#include <libstdhl/Json>
-#include <libstdhl/Labeling>
-#include <libstdhl/List>
-#include <libstdhl/Log>
-#include <libstdhl/Memory>
-#include <libstdhl/Network>
-#include <libstdhl/Random>
-#include <libstdhl/Standard>
-#include <libstdhl/String>
-#include <libstdhl/Type>
-#include <libstdhl/Variadic>
-#include <libstdhl/Version>
-#include <libstdhl/Xml>
-
-namespace libstdhl
+TEST( libstdhl_cpp_Environment_Variable, get_positive )
 {
+    // get variable 'PATH' exists on all major platforms
+    // --> compare it with zero length string, because they definitely have some paths in it ;-)
+    EXPECT_STRNE( Environment::Variable::get( "PATH" ).c_str(), "" );
 }
 
-#endif  // _LIBSTDHL_H_
+TEST( libstdhl_cpp_Environment_Variable, get_negative )
+{
+    // get variable TEST_NAME does not exist
+    // --> shall throw an Exception
+    EXPECT_THROW( Environment::Variable::get( TEST_NAME ), Exception );
+}
+
+TEST( libstdhl_cpp_Environment_Variable, set_positive )
+{
+    // set variable field with the same key and value of '701af7499ddf0b416a4693977ade282a'
+    const auto field = "701af7499ddf0b416a4693977ade282a";
+    Environment::Variable::set( field, field );
+
+    // check if the variable is set and its key equals the value
+    EXPECT_STREQ( Environment::Variable::get( field ).c_str(), field );
+
+    // clean-up, by deleting (del) the variable field
+    Environment::Variable::del( field );
+}
+
+TEST( libstdhl_cpp_Environment_Variable, set_negative )
+{
+    // set variable "" with value TEST_NAME
+    // --> shall throw an Exception, because "" is an invalid variable name
+    EXPECT_THROW( Environment::Variable::set( "", TEST_NAME ), Exception );
+}
+
+TEST( libstdhl_cpp_Environment_Variable, has_positive )
+{
+    EXPECT_TRUE( Environment::Variable::has( "PATH" ) );
+}
+
+TEST( libstdhl_cpp_Environment_Variable, has_negative )
+{
+    EXPECT_FALSE( Environment::Variable::has( "701af7499ddf0b416a4693977ade282a" ) );
+}
+
+TEST( libstdhl_cpp_Environment_Variable, del_positive )
+{
+    // set variable field with the same key and value of '701af7499ddf0b416a4693977ade282a'
+    const auto field = "701af7499ddf0b416a4693977ade282a";
+    Environment::Variable::set( field, field );
+
+    // clean-up, by deleting (del) the variable field
+    Environment::Variable::del( field );
+}
+
+TEST( libstdhl_cpp_Environment_Variable, del_negative )
+{
+    // del variable field
+    // --> shall throw an Exception, because field does not exist!
+    const auto field = "701af7499ddf0b416a4693977ade282a";
+    EXPECT_THROW( Environment::Variable::del( field ), Exception );
+}
 
 //
 //  Local variables:
