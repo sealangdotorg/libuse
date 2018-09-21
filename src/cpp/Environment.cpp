@@ -52,6 +52,11 @@ void Environment::Variable::set( const std::string& field, const std::string& va
     const char* val = value.c_str();
 
 #if defined( _WIN32 ) or defined( WIN32 )
+    // MSVC allows setting of const char* key = "", therefore we need an additional check
+    if( field.length() == 0 )
+    {
+        throw Exception( "setting environment variable '" + field + "' to '" + value + "' failed" );
+    }
     _putenv_s( key, val );
 #else
     // POSIX.1-2001, POSIX.1-2008, 4.3BSD.
