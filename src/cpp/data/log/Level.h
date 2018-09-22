@@ -46,6 +46,12 @@
 
 #include <libstdhl/data/log/Item>
 
+#if defined( _WIN32 ) or defined( WIN32 )
+#undef ERROR
+#undef ALTERNATE
+#undef OPTIONAL
+#endif
+
 /**
    @brief    TODO
 
