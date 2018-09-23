@@ -213,6 +213,7 @@ def searcher( dirpath, rootdir = True ) :
         , "Dockerfile"        # Docker Configuration
         , "CMakeLists.txt"    # CMake Script
         , ".clang-format"     # Clang Format Configuration
+        , ".gitattributes"    # Git Attributes Configuration
         , ".gitignore"        # Git Ignore Configuration
         , ".gitmodules"       # Git Modules Configuration
         , "PKGBUILD"          # Archlinux Package Manager Configuration
