@@ -63,7 +63,7 @@ linux_task:
     - make ci-benchmark
   coverage_script:
     - |
-      if [ "$C" == "gcc" ];
+      if [ "$C" == "gcc" ]; then
         wget https://codecov.io/bash;
         sh bash -f "!*#usr#include*" 2> /dev/null;
       fi
