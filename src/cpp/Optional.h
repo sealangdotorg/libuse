@@ -62,13 +62,9 @@ namespace libstdhl
     class Optional : public std::experimental::optional< T >
     {
       public:
-        Optional( const T& value )
-        : std::experimental::optional< T >{ value }
-        {
-        }
-
-        Optional( void )
-        : std::experimental::optional< T >{ std::experimental::nullopt }
+        template < typename... Args >
+        Optional( Args&&... args )
+        : std::experimental::optional< T >{ std::forward< Args >( args )... }
         {
         }
 
