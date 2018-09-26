@@ -44,6 +44,7 @@
 #ifndef _LIBSTDHL_CPP_OPTIONAL_H_
 #define _LIBSTDHL_CPP_OPTIONAL_H_
 
+#include <exception>
 #include <experimental/optional>
 
 /**
@@ -72,7 +73,7 @@ namespace libstdhl
         {
             if( not( *this ) )
             {
-                throw std::experimental::bad_optional_access();
+                throw std::logic_error( "bad optional access" );
             }
             return *( *this );
         }
@@ -81,7 +82,7 @@ namespace libstdhl
         {
             if( not( *this ) )
             {
-                throw std::experimental::bad_optional_access();
+                throw std::logic_error( "bad optional access" );
             }
             return *( *this );
         }
