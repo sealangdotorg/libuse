@@ -131,6 +131,7 @@ ecm_generate_headers( ${PROJECT}_HEADERS_CPP
     Math
     Memory
     Network
+    Optional
     Random
     Standard
     String
