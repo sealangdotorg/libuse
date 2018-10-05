@@ -68,18 +68,10 @@ add_subdirectory( etc
   EXCLUDE_FROM_ALL
   )
 
-add_custom_target( ${PROJECT}-sync
-  COMMAND
-    make sync > ${PROJECT_BINARY_DIR}/CMakeSync.txt 2>&1
+add_custom_target( ${PROJECT}-deps
   DEPENDS
     libgtest
     libhayai
-  WORKING_DIRECTORY
-    ${PROJECT_SOURCE_DIR}
-  )
-
-add_dependencies( ${PROJECT}-cpp
-  ${PROJECT}-sync
   )
 
 
