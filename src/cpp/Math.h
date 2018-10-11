@@ -40,6 +40,7 @@
 //  statement from your version.
 //
 
+#pragma once
 #ifndef _LIBSTDHL_CPP_MATH_H_
 #define _LIBSTDHL_CPP_MATH_H_
 
@@ -67,6 +68,18 @@ namespace libstdhl
         static inline constexpr T gcd( T const& u, T const& v )
         {
             return ( v != 0 ) ? gcd( v, u % v ) : u;
+        }
+
+        template < typename T >
+        static inline const T& min( const T& a, const T& b )
+        {
+            return ( a < b ) ? a : b;
+        }
+
+        template < typename T >
+        static inline const T& max( const T& a, const T& b )
+        {
+            return ( a < b ) ? b : a;
         }
     };
 }

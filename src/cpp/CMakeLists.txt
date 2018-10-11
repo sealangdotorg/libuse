@@ -40,49 +40,54 @@
 #   statement from your version.
 #
 
+include_directories(
+  ${PROJECT_BINARY_DIR}/src/cpp
+  )
+
 add_library( ${PROJECT}-cpp OBJECT
   Ansi.cpp
   Args.cpp
+  Environment.cpp
   Exception.cpp
-  file/TextDocument.cpp
-  log/Category.cpp
-  log/Chronograph.cpp
-  log/Data.cpp
-  log/Filter.cpp
-  log/Formatter.cpp
-  log/Item.cpp
-  log/Level.cpp
-  log/Logger.cpp
-  log/Router.cpp
-  log/Sink.cpp
-  log/Source.cpp
-  log/Stream.cpp
-  log/Switch.cpp
-  log/Timestamp.cpp
-  network/ethernet/Frame.cpp
-  network/ethernet/Link.cpp
-  network/ethernet/Protocol.cpp
-  network/ethernet/Socket.cpp
-  network/Interface.cpp
-  network/lsp/Content.cpp
-  network/lsp/Interface.cpp
-  network/lsp/Message.cpp
-  network/lsp/Packet.cpp
-  network/lsp/Protocol.cpp
-  network/Packet.cpp
-  network/tcp/IPv4.cpp
-  network/tcp/Socket.cpp
-  network/udp/IPv4.cpp
-  network/udp/Socket.cpp
-  standard/rfc3986.cpp
-  type/Boolean.cpp
-  type/Data.cpp
-  type/Decimal.cpp
-  type/Integer.cpp
-  type/Natural.cpp
-  type/Rational.cpp
-  type/String.cpp
-  xml/pugixml.cpp
+  data/file/TextDocument.cpp
+  data/log/Category.cpp
+  data/log/Chronograph.cpp
+  data/log/Data.cpp
+  data/log/Filter.cpp
+  data/log/Formatter.cpp
+  data/log/Item.cpp
+  data/log/Level.cpp
+  data/log/Logger.cpp
+  data/log/Router.cpp
+  data/log/Sink.cpp
+  data/log/Source.cpp
+  data/log/Stream.cpp
+  data/log/Switch.cpp
+  data/log/Timestamp.cpp
+  data/type/Boolean.cpp
+  data/type/Data.cpp
+  data/type/Decimal.cpp
+  data/type/Integer.cpp
+  data/type/Natural.cpp
+  data/type/Rational.cpp
+  data/type/String.cpp
+  net/Packet.cpp
+  net/eth/Frame.cpp
+  net/eth/Link.cpp
+  net/eth/Protocol.cpp
+  net/eth/Socket.cpp
+  net/lsp/Content.cpp
+  net/lsp/Interface.cpp
+  net/lsp/Message.cpp
+  net/lsp/Packet.cpp
+  net/lsp/Protocol.cpp
+  net/tcp/IPv4.cpp
+  net/tcp/Socket.cpp
+  net/udp/IPv4.cpp
+  net/udp/Socket.cpp
+  std/rfc3986.cpp
+  vendor/pugixml/pugixml.cpp
+  vendor/getopt/getopt.cpp
   )
 
 
@@ -107,12 +112,14 @@ ecm_generate_headers( ${PROJECT}_HEADERS_CPP
   ORIGINAL
     CAMELCASE
   HEADER_NAMES
+    libstdhl
     Allocator
     Ansi
     Args
     Array
     Binding
     Enum
+    Environment
     Exception
     File
     Hash
@@ -124,6 +131,7 @@ ecm_generate_headers( ${PROJECT}_HEADERS_CPP
     Math
     Memory
     Network
+    Optional
     Random
     Standard
     String
@@ -131,8 +139,6 @@ ecm_generate_headers( ${PROJECT}_HEADERS_CPP
     Type
     Variadic
     Xml
-    libstdhl
-    file/TextDocument
   PREFIX
     ${PROJECT}
   REQUIRED_HEADERS
@@ -147,49 +153,28 @@ install(
   )
 
 
-ecm_generate_headers( ${PROJECT}_FILE_HEADERS_CPP
+ecm_generate_headers( ${PROJECT}_DATA_FILE_HEADERS_CPP
   ORIGINAL
     CAMELCASE
   HEADER_NAMES
     TextDocument
   PREFIX
-    ${PROJECT}/file
+    ${PROJECT}/data/file
   RELATIVE
-    file
+    data/file
   REQUIRED_HEADERS
-    ${PROJECT}_FILE_HEADERS
+    ${PROJECT}_DATA_FILE_HEADERS
   )
 install(
   FILES
-    ${${PROJECT}_FILE_HEADERS}
-    ${${PROJECT}_FILE_HEADERS_CPP}
+    ${${PROJECT}_DATA_FILE_HEADERS}
+    ${${PROJECT}_DATA_FILE_HEADERS_CPP}
   DESTINATION
-    "include/${PROJECT}/file"
+    "include/${PROJECT}/data/file"
   )
 
 
-ecm_generate_headers( ${PROJECT}_JSON_HEADERS_CPP
-  ORIGINAL
-    CAMELCASE
-  HEADER_NAMES
-    json
-  PREFIX
-    ${PROJECT}/json
-  RELATIVE
-    json
-  REQUIRED_HEADERS
-    ${PROJECT}_JSON_HEADERS
-  )
-install(
-  FILES
-    ${${PROJECT}_JSON_HEADERS}
-    ${${PROJECT}_JSON_HEADERS_CPP}
-  DESTINATION
-    "include/${PROJECT}/json"
-  )
-
-
-ecm_generate_headers( ${PROJECT}_LOG_HEADERS_CPP
+ecm_generate_headers( ${PROJECT}_DATA_LOG_HEADERS_CPP
   ORIGINAL
     CAMELCASE
   HEADER_NAMES
@@ -209,190 +194,22 @@ ecm_generate_headers( ${PROJECT}_LOG_HEADERS_CPP
     Switch
     Timestamp
   PREFIX
-    ${PROJECT}/log
+    ${PROJECT}/data/log
   RELATIVE
-    log
+    data/log
   REQUIRED_HEADERS
-    ${PROJECT}_LOG_HEADERS
+    ${PROJECT}_DATA_LOG_HEADERS
   )
 install(
   FILES
-    ${${PROJECT}_LOG_HEADERS}
-    ${${PROJECT}_LOG_HEADERS_CPP}
+    ${${PROJECT}_DATA_LOG_HEADERS}
+    ${${PROJECT}_DATA_LOG_HEADERS_CPP}
   DESTINATION
-    "include/${PROJECT}/log"
+    "include/${PROJECT}/data/log"
   )
 
 
-ecm_generate_headers( ${PROJECT}_NETWORK_HEADERS_CPP
-  ORIGINAL
-    CAMELCASE
-  HEADER_NAMES
-    Interface
-    Lsp
-    Packet
-    Protocol
-    Socket
-  PREFIX
-    ${PROJECT}/network
-  RELATIVE
-    network
-  REQUIRED_HEADERS
-    ${PROJECT}_NETWORK_HEADERS
-  )
-install(
-  FILES
-    ${${PROJECT}_NETWORK_HEADERS}
-    ${${PROJECT}_NETWORK_HEADERS_CPP}
-  DESTINATION
-    "include/${PROJECT}/network"
-  )
-
-
-ecm_generate_headers( ${PROJECT}_NETWORK_ETHERNET_HEADERS_CPP
-  ORIGINAL
-    CAMELCASE
-  HEADER_NAMES
-    Frame
-    Link
-    Protocol
-    Socket
-  PREFIX
-    ${PROJECT}/network/ethernet
-  RELATIVE
-    network/ethernet
-  REQUIRED_HEADERS
-    ${PROJECT}_NETWORK_ETHERNET_HEADERS
-  )
-install(
-  FILES
-    ${${PROJECT}_NETWORK_ETHERNET_HEADERS}
-    ${${PROJECT}_NETWORK_ETHERNET_HEADERS_CPP}
-  DESTINATION
-    "include/${PROJECT}/network/ethernet"
-  )
-
-
-ecm_generate_headers( ${PROJECT}_NETWORK_IPV4_HEADERS_CPP
-  ORIGINAL
-    CAMELCASE
-  HEADER_NAMES
-    Protocol
-  PREFIX
-    ${PROJECT}/network/ipv4
-  RELATIVE
-    network/ipv4
-  REQUIRED_HEADERS
-    ${PROJECT}_NETWORK_IPV4_HEADERS
-  )
-install(
-  FILES
-    ${${PROJECT}_NETWORK_IPV4_HEADERS}
-    ${${PROJECT}_NETWORK_IPV4_HEADERS_CPP}
-  DESTINATION
-    "include/${PROJECT}/network/ipv4"
-  )
-
-
-ecm_generate_headers( ${PROJECT}_NETWORK_LSP_HEADERS_CPP
-  ORIGINAL
-    CAMELCASE
-  HEADER_NAMES
-    Content
-    Exception
-    Identifier
-    Interface
-    Message
-    Packet
-    Protocol
-  PREFIX
-    ${PROJECT}/network/lsp
-  RELATIVE
-    network/lsp
-  REQUIRED_HEADERS
-    ${PROJECT}_NETWORK_LSP_HEADERS
-  )
-install(
-  FILES
-    ${${PROJECT}_NETWORK_LSP_HEADERS}
-    ${${PROJECT}_NETWORK_LSP_HEADERS_CPP}
-  DESTINATION
-    "include/${PROJECT}/network/lsp"
-  )
-  
-
-ecm_generate_headers( ${PROJECT}_NETWORK_TCP_HEADERS_CPP
-  ORIGINAL
-    CAMELCASE
-  HEADER_NAMES
-    IPv4
-    Packet
-    Protocol
-    Session
-    Socket
-  PREFIX
-    ${PROJECT}/network/tcp
-  RELATIVE
-    network/tcp
-  REQUIRED_HEADERS
-    ${PROJECT}_NETWORK_TCP_HEADERS
-  )
-install(
-  FILES
-    ${${PROJECT}_NETWORK_TCP_HEADERS}
-    ${${PROJECT}_NETWORK_TCP_HEADERS_CPP}
-  DESTINATION
-    "include/${PROJECT}/network/tcp"
-  )
-
-
-ecm_generate_headers( ${PROJECT}_NETWORK_UDP_HEADERS_CPP
-  ORIGINAL
-    CAMELCASE
-  HEADER_NAMES
-    IPv4
-    Packet
-    Protocol
-    Socket
-  PREFIX
-    ${PROJECT}/network/udp
-  RELATIVE
-    network/udp
-  REQUIRED_HEADERS
-    ${PROJECT}_NETWORK_UDP_HEADERS
-  )
-install(
-  FILES
-    ${${PROJECT}_NETWORK_UDP_HEADERS}
-    ${${PROJECT}_NETWORK_UDP_HEADERS_CPP}
-  DESTINATION
-    "include/${PROJECT}/network/udp"
-  )
-
-
-ecm_generate_headers( ${PROJECT}_STANDARD_HEADERS_CPP
-  ORIGINAL
-    CAMELCASE
-  HEADER_NAMES
-    ieee802
-    rfc3986
-  PREFIX
-    ${PROJECT}/standard
-  RELATIVE
-    standard
-  REQUIRED_HEADERS
-    ${PROJECT}_STANDARD_HEADERS
-  )
-install(
-  FILES
-    ${${PROJECT}_STANDARD_HEADERS}
-    ${${PROJECT}_STANDARD_HEADERS_CPP}
-  DESTINATION
-    "include/${PROJECT}/standard"
-  )
-
-
-ecm_generate_headers( ${PROJECT}_TYPE_HEADERS_CPP
+ecm_generate_headers( ${PROJECT}_DATA_TYPE_HEADERS_CPP
   ORIGINAL
     CAMELCASE
   HEADER_NAMES
@@ -405,38 +222,248 @@ ecm_generate_headers( ${PROJECT}_TYPE_HEADERS_CPP
     Rational
     String
   PREFIX
-    ${PROJECT}/type
+    ${PROJECT}/data/type
   RELATIVE
-    type
+    data/type
   REQUIRED_HEADERS
-    ${PROJECT}_TYPE_HEADERS
+    ${PROJECT}_DATA_TYPE_HEADERS
   )
 install(
   FILES
-    ${${PROJECT}_TYPE_HEADERS}
-    ${${PROJECT}_TYPE_HEADERS_CPP}
+    ${${PROJECT}_DATA_TYPE_HEADERS}
+    ${${PROJECT}_DATA_TYPE_HEADERS_CPP}
   DESTINATION
-    "include/${PROJECT}/type"
+    "include/${PROJECT}/data/type"
   )
 
 
-ecm_generate_headers( ${PROJECT}_XML_HEADERS_CPP
+ecm_generate_headers( ${PROJECT}_NET_HEADERS_CPP
+  ORIGINAL
+    CAMELCASE
+  HEADER_NAMES
+    Interface
+    Packet
+    Protocol
+    Socket
+  PREFIX
+    ${PROJECT}/net
+  RELATIVE
+    net
+  REQUIRED_HEADERS
+    ${PROJECT}_NET_HEADERS
+  )
+install(
+  FILES
+    ${${PROJECT}_NET_HEADERS}
+    ${${PROJECT}_NET_HEADERS_CPP}
+  DESTINATION
+    "include/${PROJECT}/net"
+  )
+
+
+ecm_generate_headers( ${PROJECT}_NET_ETH_HEADERS_CPP
+  ORIGINAL
+    CAMELCASE
+  HEADER_NAMES
+    Frame
+    Link
+    Protocol
+    Socket
+  PREFIX
+    ${PROJECT}/net/eth
+  RELATIVE
+    net/eth
+  REQUIRED_HEADERS
+    ${PROJECT}_NET_ETH_HEADERS
+  )
+install(
+  FILES
+    ${${PROJECT}_NET_ETH_HEADERS}
+    ${${PROJECT}_NET_ETH_HEADERS_CPP}
+  DESTINATION
+    "include/${PROJECT}/net/eth"
+  )
+
+
+ecm_generate_headers( ${PROJECT}_NET_IP4_HEADERS_CPP
+  ORIGINAL
+    CAMELCASE
+  HEADER_NAMES
+    Protocol
+  PREFIX
+    ${PROJECT}/net/ip4
+  RELATIVE
+    net/ip4
+  REQUIRED_HEADERS
+    ${PROJECT}_NET_IP4_HEADERS
+  )
+install(
+  FILES
+    ${${PROJECT}_NET_IP4_HEADERS}
+    ${${PROJECT}_NET_IP4_HEADERS_CPP}
+  DESTINATION
+    "include/${PROJECT}/net/ip4"
+  )
+
+
+ecm_generate_headers( ${PROJECT}_NET_LSP_HEADERS_CPP
+  ORIGINAL
+    CAMELCASE
+  HEADER_NAMES
+    LSP
+    Content
+    Exception
+    Identifier
+    Interface
+    Message
+    Packet
+    Protocol
+  PREFIX
+    ${PROJECT}/net/lsp
+  RELATIVE
+    net/lsp
+  REQUIRED_HEADERS
+    ${PROJECT}_NET_LSP_HEADERS
+  )
+install(
+  FILES
+    ${${PROJECT}_NET_LSP_HEADERS}
+    ${${PROJECT}_NET_LSP_HEADERS_CPP}
+  DESTINATION
+    "include/${PROJECT}/net/lsp"
+  )
+
+
+ecm_generate_headers( ${PROJECT}_NET_TCP_HEADERS_CPP
+  ORIGINAL
+    CAMELCASE
+  HEADER_NAMES
+    IPv4
+    Packet
+    Protocol
+    Session
+    Socket
+  PREFIX
+    ${PROJECT}/net/tcp
+  RELATIVE
+    net/tcp
+  REQUIRED_HEADERS
+    ${PROJECT}_NET_TCP_HEADERS
+  )
+install(
+  FILES
+    ${${PROJECT}_NET_TCP_HEADERS}
+    ${${PROJECT}_NET_TCP_HEADERS_CPP}
+  DESTINATION
+    "include/${PROJECT}/net/tcp"
+  )
+
+
+ecm_generate_headers( ${PROJECT}_NET_UDP_HEADERS_CPP
+  ORIGINAL
+    CAMELCASE
+  HEADER_NAMES
+    IPv4
+    Packet
+    Protocol
+    Socket
+  PREFIX
+    ${PROJECT}/net/udp
+  RELATIVE
+    net/udp
+  REQUIRED_HEADERS
+    ${PROJECT}_NET_UDP_HEADERS
+  )
+install(
+  FILES
+    ${${PROJECT}_NET_UDP_HEADERS}
+    ${${PROJECT}_NET_UDP_HEADERS_CPP}
+  DESTINATION
+    "include/${PROJECT}/net/udp"
+  )
+
+
+ecm_generate_headers( ${PROJECT}_STD_HEADERS_CPP
+  ORIGINAL
+    CAMELCASE
+  HEADER_NAMES
+    ieee802
+    rfc3986
+  PREFIX
+    ${PROJECT}/std
+  RELATIVE
+    std
+  REQUIRED_HEADERS
+    ${PROJECT}_STD_HEADERS
+  )
+install(
+  FILES
+    ${${PROJECT}_STD_HEADERS}
+    ${${PROJECT}_STD_HEADERS_CPP}
+  DESTINATION
+    "include/${PROJECT}/std"
+  )
+
+
+ecm_generate_headers( ${PROJECT}_VENDOR_GETOPT_HEADERS_CPP
+  ORIGINAL
+    CAMELCASE
+  HEADER_NAMES
+    getopt
+  PREFIX
+    ${PROJECT}/vendor/getopt
+  RELATIVE
+    vendor/getopt
+  REQUIRED_HEADERS
+    ${PROJECT}_VENDOR_GETOPT_HEADERS
+  )
+install(
+  FILES
+    ${${PROJECT}_VENDOR_GETOPT_HEADERS}
+    ${${PROJECT}_VENDOR_GETOPT_HEADERS_CPP}
+  DESTINATION
+    "include/${PROJECT}/vendor/getopt"
+  )
+
+
+ecm_generate_headers( ${PROJECT}_VENDOR_JSON_HEADERS_CPP
+  ORIGINAL
+    CAMELCASE
+  HEADER_NAMES
+    json
+  PREFIX
+    ${PROJECT}/vendor/json
+  RELATIVE
+    vendor/json
+  REQUIRED_HEADERS
+    ${PROJECT}_VENDOR_JSON_HEADERS
+  )
+install(
+  FILES
+    ${${PROJECT}_VENDOR_JSON_HEADERS}
+    ${${PROJECT}_VENDOR_JSON_HEADERS_CPP}
+  DESTINATION
+    "include/${PROJECT}/vendor/json"
+  )
+
+
+ecm_generate_headers( ${PROJECT}_VENDOR_PUGIXML_HEADERS_CPP
   ORIGINAL
     CAMELCASE
   HEADER_NAMES
     pugiconfig
     pugixml
   PREFIX
-    ${PROJECT}/xml
+    ${PROJECT}/vendor/pugixml
   RELATIVE
-    xml
+    vendor/pugixml
   REQUIRED_HEADERS
-    ${PROJECT}_XML_HEADERS
+    ${PROJECT}_VENDOR_PUGIXML_HEADERS
   )
 install(
   FILES
-    ${${PROJECT}_XML_HEADERS}
-    ${${PROJECT}_XML_HEADERS_CPP}
+    ${${PROJECT}_VENDOR_PUGIXML_HEADERS}
+    ${${PROJECT}_VENDOR_PUGIXML_HEADERS_CPP}
   DESTINATION
-    "include/${PROJECT}/xml"
+    "include/${PROJECT}/vendor/pugixml"
   )

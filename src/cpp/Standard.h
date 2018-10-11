@@ -40,11 +40,12 @@
 //  statement from your version.
 //
 
+#pragma once
 #ifndef _LIBSTDHL_CPP_STANDARD_H_
 #define _LIBSTDHL_CPP_STANDARD_H_
 
-#include <libstdhl/standard/ieee802>
-#include <libstdhl/standard/rfc3986>
+#include <libstdhl/std/ieee802>
+#include <libstdhl/std/rfc3986>
 
 /**
    @brief    TBD

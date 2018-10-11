@@ -40,6 +40,7 @@
 //  statement from your version.
 //
 
+#pragma once
 #ifndef _LIBSTDHL_H_
 #define _LIBSTDHL_H_
 
@@ -54,6 +55,7 @@
 #include <libstdhl/Args>
 #include <libstdhl/Binding>
 #include <libstdhl/Enum>
+#include <libstdhl/Environment>
 #include <libstdhl/Exception>
 #include <libstdhl/File>
 #include <libstdhl/Hash>

@@ -48,26 +48,27 @@ include_directories(
 
 add_library( ${PROJECT}-test OBJECT
   main.cpp
-  cpp/exception.cpp
-  cpp/hash.cpp
-  cpp/variadic.cpp
-  cpp/type.cpp
   cpp/args.cpp
-  cpp/list.cpp
-  cpp/random.cpp
-  cpp/standard/rfc3986.cpp
+  cpp/data/type/integer.cpp
+  cpp/data/type/TODO.cpp
+  cpp/data/type/data.cpp
+  cpp/data/type/rational.cpp
+  cpp/enum.cpp
+  cpp/environment.cpp
+  cpp/exception.cpp
   cpp/file.cpp
-  cpp/log.cpp
-  cpp/string.cpp
-  cpp/logger.cpp
+  cpp/hash.cpp
   cpp/json.cpp
+  cpp/list.cpp
+  cpp/log.cpp
+  cpp/logger.cpp
   cpp/math.cpp
   cpp/memory.cpp
-  cpp/type/integer.cpp
-  cpp/type/TODO.cpp
-  cpp/type/data.cpp
-  cpp/type/rational.cpp
-  cpp/enum.cpp
+  cpp/net/lsp.cpp
+  cpp/random.cpp
+  cpp/std/rfc3986.cpp
+  cpp/string.cpp
+  cpp/type.cpp
+  cpp/variadic.cpp
   cpp/xml.cpp
-  cpp/network/lsp.cpp
   )

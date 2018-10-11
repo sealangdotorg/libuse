@@ -40,8 +40,9 @@
 //  statement from your version.
 //
 
-#ifndef _LIBSTDHL_LIST_H_
-#define _LIBSTDHL_LIST_H_
+#pragma once
+#ifndef _LIBSTDHL_CPP_LIST_H_
+#define _LIBSTDHL_CPP_LIST_H_
 
 #include <libstdhl/Type>
 
@@ -235,7 +236,7 @@ namespace libstdhl
     };
 }
 
-#endif  // _LIBSTDHL_LIST_H_
+#endif  // _LIBSTDHL_CPP_LIST_H_
 
 //
 //  Local variables:

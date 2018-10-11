@@ -40,10 +40,11 @@
 //  statement from your version.
 //
 
+#pragma once
 #ifndef _LIBSTDHL_CPP_JSON_H_
 #define _LIBSTDHL_CPP_JSON_H_
 
-#include <libstdhl/json/json>
+#include <libstdhl/vendor/json/json>
 
 /**
    @brief    C++ JSON Wrapper

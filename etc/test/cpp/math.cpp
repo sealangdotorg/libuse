@@ -85,6 +85,32 @@ LIBSTDHL_CPP_MATH_POW_TEST( f_f_7, float, 2, 63 );
 LIBSTDHL_CPP_MATH_POW_TEST( f_f_8, float, 2, 64 );
 LIBSTDHL_CPP_MATH_POW_TEST( f_f_9, float, 2, 65 );
 
+#define LIBSTDHL_CPP_MATH_MIN_TEST( NAME, TYPE, A, B )         \
+    TEST( libstdhl_cpp_math, min_##NAME##_##TYPE )             \
+    {                                                          \
+        EXPECT_EQ( Math::min< TYPE >( A, B ), A < B ? A : B ); \
+    }
+
+LIBSTDHL_CPP_MATH_MIN_TEST( 0, i32, 0, 0 );
+LIBSTDHL_CPP_MATH_MIN_TEST( 1, i32, 0, 1 );
+LIBSTDHL_CPP_MATH_MIN_TEST( 2, i32, 1, 0 );
+LIBSTDHL_CPP_MATH_MIN_TEST( 3, i32, -1, 0 );
+LIBSTDHL_CPP_MATH_MIN_TEST( 4, i32, -123456789, 123456789 );
+LIBSTDHL_CPP_MATH_MIN_TEST( 5, i32, 123456789, -123456789 );
+
+#define LIBSTDHL_CPP_MATH_MAX_TEST( NAME, TYPE, A, B )         \
+    TEST( libstdhl_cpp_math, max_##NAME##_##TYPE )             \
+    {                                                          \
+        EXPECT_EQ( Math::max< TYPE >( A, B ), A < B ? B : A ); \
+    }
+
+LIBSTDHL_CPP_MATH_MAX_TEST( 0, i32, 0, 0 );
+LIBSTDHL_CPP_MATH_MAX_TEST( 1, i32, 0, 1 );
+LIBSTDHL_CPP_MATH_MAX_TEST( 2, i32, 1, 0 );
+LIBSTDHL_CPP_MATH_MAX_TEST( 3, i32, -1, 0 );
+LIBSTDHL_CPP_MATH_MAX_TEST( 4, i32, -123456789, 123456789 );
+LIBSTDHL_CPP_MATH_MAX_TEST( 5, i32, 123456789, -123456789 );
+
 //
 //  Local variables:
 //  mode: c++

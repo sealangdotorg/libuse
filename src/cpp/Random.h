@@ -40,14 +40,15 @@
 //  statement from your version.
 //
 
+#pragma once
 #ifndef _LIBSTDHL_CPP_RANDOM_H_
 #define _LIBSTDHL_CPP_RANDOM_H_
-
-#include <random>
 
 #include <libstdhl/Limits>
 #include <libstdhl/Math>
 #include <libstdhl/Type>
+
+#include <random>
 
 /**
    @brief    TODO

@@ -40,10 +40,20 @@
 //  statement from your version.
 //
 
+#pragma once
 #ifndef _LIBSTDHL_CPP_ANSI_H_
 #define _LIBSTDHL_CPP_ANSI_H_
 
 #include <libstdhl/Type>
+
+#if defined( _WIN32 ) or defined( WIN32 )
+#undef FOREGROUND_RED
+#undef FOREGROUND_GREEN
+#undef FOREGROUND_BLUE
+#undef BACKGROUND_RED
+#undef BACKGROUND_GREEN
+#undef BACKGROUND_BLUE
+#endif
 
 /**
    @brief    TODO

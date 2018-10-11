@@ -40,31 +40,32 @@
 //  statement from your version.
 //
 
+#pragma once
 #ifndef _LIBSTDHL_CPP_LOG_H_
 #define _LIBSTDHL_CPP_LOG_H_
 
 #include <libstdhl/Type>
+
+#include <libstdhl/data/log/Category>
+#include <libstdhl/data/log/Channel>
+#include <libstdhl/data/log/Data>
+#include <libstdhl/data/log/Filter>
+#include <libstdhl/data/log/Formatter>
+#include <libstdhl/data/log/Item>
+#include <libstdhl/data/log/Level>
+#include <libstdhl/data/log/Logger>
+#include <libstdhl/data/log/Router>
+#include <libstdhl/data/log/Sink>
+#include <libstdhl/data/log/Source>
+#include <libstdhl/data/log/Stream>
+#include <libstdhl/data/log/Switch>
+#include <libstdhl/data/log/Timestamp>
 
 /**
    @brief    TODO
 
    TODO
 */
-
-#include <libstdhl/log/Category>
-#include <libstdhl/log/Channel>
-#include <libstdhl/log/Data>
-#include <libstdhl/log/Filter>
-#include <libstdhl/log/Formatter>
-#include <libstdhl/log/Item>
-#include <libstdhl/log/Level>
-#include <libstdhl/log/Logger>
-#include <libstdhl/log/Router>
-#include <libstdhl/log/Sink>
-#include <libstdhl/log/Source>
-#include <libstdhl/log/Stream>
-#include <libstdhl/log/Switch>
-#include <libstdhl/log/Timestamp>
 
 namespace libstdhl
 {

@@ -40,12 +40,13 @@
 //  statement from your version.
 //
 
+#pragma once
 #ifndef _LIBSTDHL_CPP_LIMITS_H_
 #define _LIBSTDHL_CPP_LIMITS_H_
 
 #include <libstdhl/Type>
-#include <libstdhl/type/Decimal>
-#include <libstdhl/type/Integer>
+#include <libstdhl/data/type/Decimal>
+#include <libstdhl/data/type/Integer>
 
 /**
    @brief    TODO

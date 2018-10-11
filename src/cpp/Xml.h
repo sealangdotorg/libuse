@@ -40,10 +40,11 @@
 //  statement from your version.
 //
 
+#pragma once
 #ifndef _LIBSTDHL_CPP_XML_H_
 #define _LIBSTDHL_CPP_XML_H_
 
-#include <libstdhl/xml/pugixml>
+#include <libstdhl/vendor/pugixml/pugixml>
 
 /**
    @brief    C++ XML Wrapper

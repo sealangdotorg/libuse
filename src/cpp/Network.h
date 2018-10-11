@@ -40,13 +40,14 @@
 //  statement from your version.
 //
 
+#pragma once
 #ifndef _LIBSTDHL_CPP_NETWORK_H_
 #define _LIBSTDHL_CPP_NETWORK_H_
 
-#include <libstdhl/network/Interface>
-#include <libstdhl/network/Packet>
-#include <libstdhl/network/Protocol>
-#include <libstdhl/network/Socket>
+#include <libstdhl/net/Interface>
+#include <libstdhl/net/Packet>
+#include <libstdhl/net/Protocol>
+#include <libstdhl/net/Socket>
 
 /**
    @brief    TBD

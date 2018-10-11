@@ -43,12 +43,12 @@
 TARGET = libstdhl
 
 FORMAT  = src/cpp
-FORMAT += src/cpp/file
-FORMAT += src/cpp/log
-FORMAT += src/cpp/network
-FORMAT += src/cpp/network/*
-FORMAT += src/cpp/standard
-FORMAT += src/cpp/type
+FORMAT += src/cpp/data
+FORMAT += src/cpp/data/*
+FORMAT += src/cpp/net
+FORMAT += src/cpp/net/*
+FORMAT += src/cpp/std
+FORMAT += src/cpp/std/*
 FORMAT += etc/test/cpp
 FORMAT += etc/test/cpp/*
 

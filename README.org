@@ -39,14 +39,23 @@
 #   not obliged to do so. If you do not wish to do so, delete this exception
 #   statement from your version.
 # 
+[[https://github.com/casm-lang/casm-lang.logo/raw/master/etc/headline.png]]
+
+#+options: toc:nil
+
 
 * libstdhl: General Purpose High-level Library
 
+[[https://gitter.im/casm-lang/libstdhl][https://badges.gitter.im/casm-lang/libstdhl.png]]
+[[https://ci.casm-lang.org/teams/main/pipelines/development/jobs/libstdhl-master][ @@html:<img src="https://ci.casm-lang.org/api/v1/teams/main/pipelines/development/jobs/libstdhl-master/badge">@@ ]]
+[[https://cirrus-ci.com/github/casm-lang/libstdhl][https://api.cirrus-ci.com/github/casm-lang/libstdhl.svg]]
+[[https://codecov.io/gh/casm-lang/libstdhl][https://codecov.io/gh/casm-lang/libstdhl/badge.svg]]
+[[https://github.com/casm-lang/libstdhl/tags][https://img.shields.io/github/tag/casm-lang/libstdhl.svg]]
+[[https://github.com/casm-lang/libstdhl/blob/master/LICENSE.txt][https://img.shields.io/badge/license-GPLv3%2BLE-blue.svg]]
+
+
 This library includes some basic data-structures, classes, definitions etc.
 which are used in several projects for different languages.
-
-
-** Status [[https://travis-ci.org/casm-lang/libstdhl][https://api.travis-ci.org/casm-lang/libstdhl.svg?branch=master]]
 
 Currently the repository covers some Python and C/C++ libraries.
 
