@@ -41,7 +41,7 @@
 #
 
 # LIBSTDHL_FOUND        - system has found the package
-# LIBSTDHL_INCLUDE_DIRS - the package include directories
+# LIBSTDHL_INCLUDE_DIR  - the package include directory
 # LIBSTDHL_LIBRARY      - the package library
 
 include( LibPackage )
@@ -63,11 +63,7 @@ set( LIBSTDHL_PROCESS_LIBS     LIBSTDHL_LIBRARY )
 
 libfind_process( LIBSTDHL )
 
-if( EXISTS "${LIBSTDHL_INCLUDE_DIR}" AND
-    EXISTS "${LIBSTDHL_LIBRARY}" AND
-    ${LIBSTDHL_INCLUDE_DIR} AND
-    ${LIBSTDHL_LIBRARY}
-    )
+if( EXISTS "${LIBSTDHL_LIBRARY}" AND ${LIBSTDHL_LIBRARY} )
   set( LIBSTDHL_FOUND TRUE PARENT_SCOPE )
 else()
   set( LIBSTDHL_FOUND FALSE PARENT_SCOPE )

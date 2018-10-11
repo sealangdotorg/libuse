@@ -41,7 +41,7 @@
 #
 
 # LIBHAYAI_FOUND        - system has found the package
-# LIBHAYAI_INCLUDE_DIRS - the package include directories
+# LIBHAYAI_INCLUDE_DIR  - the package include directory
 # LIBHAYAI_LIBRARY      - the package library
 
 include( LibPackage )
@@ -63,11 +63,7 @@ set( LIBHAYAI_PROCESS_LIBS     LIBHAYAI_LIBRARY )
 
 libfind_process( LIBHAYAI )
 
-if( EXISTS "${LIBHAYAI_INCLUDE_DIR}" AND
-    EXISTS "${LIBHAYAI_LIBRARY}" AND
-    ${LIBHAYAI_INCLUDE_DIR} AND
-    ${LIBHAYAI_LIBRARY}
-    )
+if( EXISTS "${LIBHAYAI_LIBRARY}" AND ${LIBHAYAI_LIBRARY} )
   set( LIBHAYAI_FOUND TRUE PARENT_SCOPE )
 else()
   set( LIBHAYAI_FOUND FALSE PARENT_SCOPE )
