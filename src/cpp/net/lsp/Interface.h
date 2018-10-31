@@ -102,6 +102,9 @@ namespace libstdhl
                 // :arrow_left: window/showMessage
                 // :arrow_right_hook: window/showMessageRequest
                 // :arrow_left: window/logMessage
+                /**
+                 * telemetry
+                */ 
                 // :arrow_left: telemetry/event
 
                 /**
@@ -114,8 +117,10 @@ namespace libstdhl
                 /**
                    workspace
                 */
-
+                // :arrow_right_hook: workspace/workspaceFolders
+                // :arrow_right: workspace/didChangeWorkspaceFolders
                 // :arrow_right: workspace/didChangeConfiguration
+                // :arrow_right_hook: workspace/configuration
                 // :arrow_right: workspace/didChangeWatchedFiles
                 // :leftwards_arrow_with_hook: workspace/symbol
 
@@ -128,10 +133,6 @@ namespace libstdhl
                 /**
                     document
                  */
-
-                // :arrow_left: textDocument/publishDiagnostics
-                virtual void textDocument_publishDiagnostics(
-                    const PublishDiagnosticsParams& params ) noexcept final;
 
                 // :arrow_right: textDocument/didOpen
                 virtual void textDocument_didOpen(
@@ -146,6 +147,18 @@ namespace libstdhl
                 // textDocument/willSaveWaitUntil
                 // New :arrow_right: textDocument/didSave
                 // :arrow_right: textDocument/didClose
+               
+                /**
+                    diagnostics
+                */
+                // :arrow_left:  textDocument/publishDiagnostics
+                virtual void textDocument_publishDiagnostics(
+                    const PublishDiagnosticsParams& params ) noexcept final;
+
+                /**
+                 *  Language Features 
+                 */
+                
                 // :leftwards_arrow_with_hook: textDocument/completion
                 // :leftwards_arrow_with_hook: completionItem/resolve
 
@@ -154,13 +167,14 @@ namespace libstdhl
 
                 // :leftwards_arrow_with_hook: textDocument/signatureHelp
                 // :leftwards_arrow_with_hook: textDocument/references
-                // :leftwards_arrow_with_hook:
-                // textDocument/documentHighlight
+                // :leftwards_arrow_with_hook: textDocument/documentHighlight
                 // :leftwards_arrow_with_hook: textDocument/documentSymbol
                 // :leftwards_arrow_with_hook: textDocument/formatting
                 // :leftwards_arrow_with_hook: textDocument/rangeFormatting
                 // :leftwards_arrow_with_hook: textDocument/onTypeFormatting
                 // :leftwards_arrow_with_hook: textDocument/definition
+                // :leftwards_arrow_with_hook: textDocument/typedefinition
+                // :leftwards_arrow_with_hook: textDocument/implementation
 
                 // :leftwards_arrow_with_hook: textDocument/codeAction
                 virtual CodeActionResult textDocument_codeAction(
@@ -173,7 +187,10 @@ namespace libstdhl
                 // :leftwards_arrow_with_hook: textDocument/documentLink
                 // :leftwards_arrow_with_hook: documentLink/resolve
                 // :leftwards_arrow_with_hook: textDocument/rename
-
+                // :leftwards_arrow_with_hook: textDocument/prepareRename
+                // :leftwards_arrow_with_hook: textDocument/documentColor
+                // :leftwards_arrow_with_hook: textDocument/colorPresentation
+                // :leftwards_arrow_with_hook: textDocument/foldingRange
               private:
                 std::vector< Message > m_responseBuffer[ 2 ];
                 std::size_t m_responseBufferSlot;
