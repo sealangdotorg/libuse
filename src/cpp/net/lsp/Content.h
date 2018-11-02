@@ -1079,6 +1079,76 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            enum class MessageType
+            {
+              /**
+               * An error message.
+               */
+              Error = 1,
+              /**
+               * A warning message.
+               */
+              Warning = 2,
+              /**
+               * An information message.
+               */
+              Info = 3,
+              /**
+               * A log message.
+               */
+              Log = 4
+            };
+
+            class ShowMessageParams : public Data
+            {
+              public:
+              ShowMessageParams(const Data& data);
+
+              ShowMessageParams(const MessageType type, const std::string message);
+
+              MessageType messageType( void ) const;
+
+              Message message( void ) const;
+
+              static u1 isValid(const Data& data);
+
+            };
+
+            class MessageActionItem {
+
+              MessageActionItem(std::string title);
+              
+              };
+
+
+            class ShowMessageRequestParams : public Data {
+
+              public: 
+              ShowMessageRequestParams( const Data& data );
+             
+              ShowMessageRequestParams( const MessageType type, const std::string message, const MessageActionItem* actions );
+
+              ShowMessageRequestParams( const MessageType type,const std::string message );
+
+              MessageType messageType( void ) const;
+
+              Message message( void ) const;
+
+              static u1 isValid(const Data& data);
+
+            };
+
+            class LogMessageParams {
+
+              LogMessageParams(const MessageType type,const std::string message);
+
+              LogMessageParams(const Data& data);
+
+              MessageType messageType( void ) const;
+
+              static u1 isValid(const Data& data);
+            };
+
             class DidOpenTextDocumentParams : public Data
             {
               public:

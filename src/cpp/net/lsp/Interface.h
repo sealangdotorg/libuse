@@ -93,15 +93,21 @@ namespace libstdhl
 
                 virtual void exit( void ) noexcept = 0;
 
-                // virtual void dollar_cancelRequest( void ) noexcept = 0;
+                //virtual void dollar_cancelRequest( void ) noexcept = 0;
 
                 /**
                    window
                 */
 
                 // :arrow_left: window/showMessage
+                virtual void window_showMessage(ShowMessageParams& params ) = 0;
+
                 // :arrow_right_hook: window/showMessageRequest
+                virtual MessageActionItem window_showMessageRequest(ShowMessageRequestParams& params) = 0;
+                
                 // :arrow_left: window/logMessage
+                virtual void window_logMessage(LogMessageParams& params) = 0;
+
                 /**
                  * telemetry
                 */ 
