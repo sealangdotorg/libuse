@@ -1104,11 +1104,11 @@ namespace libstdhl
               public:
               ShowMessageParams(const Data& data);
 
-              ShowMessageParams(const MessageType& type, const std::string& message);
+              ShowMessageParams(const MessageType type, const std::string message);
 
               MessageType messageType( void ) const;
 
-              std::string message( void ) const;
+              Message message( void ) const;
 
               static u1 isValid(const Data& data);
 

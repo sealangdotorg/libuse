@@ -100,13 +100,13 @@ namespace libstdhl
                 */
 
                 // :arrow_left: window/showMessage
-                virtual void window_showMessage( const ShowMessageParams& params ) = 0;
+                virtual void window_showMessage(ShowMessageParams& params ) = 0;
 
                 // :arrow_right_hook: window/showMessageRequest
-                virtual MessageActionItem window_showMessageRequest( 
-                    const ShowMessageRequestParams& params ) = 0;
+                virtual MessageActionItem window_showMessageRequest(ShowMessageRequestParams& params) = 0;
                 
                 // :arrow_left: window/logMessage
+                virtual void window_logMessage(LogMessageParams& params) = 0;
 
                 /**
                  * telemetry
