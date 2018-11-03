@@ -1108,7 +1108,7 @@ namespace libstdhl
 
               MessageType messageType( void ) const;
 
-              Message message( void ) const;
+              std::string message( void ) const;
 
               static u1 isValid(const Data& data);
 
@@ -1134,9 +1134,9 @@ namespace libstdhl
 
               u1 hasActions(void);
 
-              std::vector<MessageActionItem> actions( void ) const;
+              Data actions( void ) const;
 
-              void addAction( const MessageActionItem& action );
+              void addAction( const Data& action );
 
               std::string message( void ) const;
 
@@ -1165,10 +1165,10 @@ namespace libstdhl
               public:
             
               Registration(const Data& data);
-              
-              Registration(const std::string& id,const std::string& method);
 
-              Registration(const std::string& id,const std::string& method, const Data& registerOptions);
+               Registration(const std::string id,const std::string method);
+
+              Registration(const std::string id,const std::string method, const Data& registerOptions);
 
               std::string id(void) const;
               
@@ -1474,6 +1474,130 @@ namespace libstdhl
 
               u1 isValid( const Data& data );
             };
+
+            class ConfigurationItem : public Data
+            {
+              
+              public: 
+
+              ConfigurationItem( const Data& data );
+
+              ConfigurationItem( const std::string scopeUri, const std::string section );
+
+              u1 hasScopeUri( void ) const;
+
+              u1 hasSection( void ) const;
+
+              std::string scopeUri( void ) const;
+              
+              std::string section( void ) const;
+
+              void setSection (const std::string section);
+
+              void setScopeUri(const std::string uri);
+
+              u1 isValid(const Data& data);
+
+            };
+
+            class DidChangeWatchedFilesParams 
+            {
+
+              DidChangeWatchedFilesParams( const std::vector<FileEvent> changes);
+
+              DidChangeWatchedFilesParams( const Data& data);
+
+            };
+
+            /**
+             * An event describing a file change.
+             */
+            class FileEvent : public Data
+            {
+
+              FileEvent( const Data& data);
+
+              FileEvent( const DocumentUri& uri, const FileChangeType type);
+
+              u1 isValid( const Data& data );
+
+              DocumentUri documentUri( void ) const;
+
+              FileChangeType type( void ) const;
+
+            };
+
+            /**
+             * The file event type.
+             */
+            enum class FileChangeType 
+            {
+              /**
+               * The file got created.
+               */
+              Created = 1,
+              /**
+               * The file got changed.
+               */
+              Changed = 2,
+              /**
+               * The file got deleted.
+               */
+              Deleted = 3
+            };
+
+
+            /**
+             * Describe options to be used when registering for text document change events.
+             */
+            class DidChangeWatchedFilesRegistrationOptions 
+            {
+              
+              public:
+
+              DidChangeWatchedFilesRegistrationOptions ( const FileSystemWatcher watchers);
+            };
+
+            class FileSystemWatcher : public Data
+            {
+              
+              public:
+
+              FileSystemWatcher ( const Data& data);
+
+              FileSystemWatcher ( const std::string globPattern);
+
+              FileSystemWatcher ( const std::string globPattern, const WatchKind kind);
+
+              std::string pattern( void );
+
+              u1 hasKind( void ) const;
+
+              WatchKind kind( void ) const;
+
+              u1 isValid ( const Data& data);
+
+              void setKind ( const WatchKind kind);
+            };
+
+            enum class WatchKind 
+            {
+              /**
+               * Interested in create events.
+               */
+             Create = 1,
+
+              /**
+               * Interested in change events
+               */
+             Change = 2,
+
+              /**
+               * Interested in delete events
+               */
+              Delete = 4
+            };
+
 
             class DidOpenTextDocumentParams : public Data
             {

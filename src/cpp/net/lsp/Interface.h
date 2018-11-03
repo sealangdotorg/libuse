@@ -125,8 +125,14 @@ namespace libstdhl
                    workspace
                 */
                 // :arrow_right_hook: workspace/workspaceFolders
+                virtual std::vector<WorkspaceFolder>  workspace_workspaceFolders( void ) = 0;
+                
                 // :arrow_right: workspace/didChangeWorkspaceFolders
+                virtual void  workspace_didChangeWorkspaceFolders( DidChangeWorkspaceFoldersParams& params ) noexcept = 0;
+
                 // :arrow_right: workspace/didChangeConfiguration
+                virtual void  workspace_didChangeConfiguration( DidChangeConfigurationParams& params) noexcept = 0;
+
                 // :arrow_right_hook: workspace/configuration
 
                 // :arrow_right: workspace/didChangeWatchedFiles
