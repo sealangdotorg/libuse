@@ -112,22 +112,33 @@ namespace libstdhl
                  * telemetry
                 */ 
                 // :arrow_left: telemetry/event
-
+                virtual void telemetry_event(const Data& data) noexcept = 0;
                 /**
                    new client
                 */
 
                 // :arrow_right_hook: client/registerCapability
+                virtual void client_registerCapability( RegistrationParams& params ) = 0;
                 // :arrow_right_hook: client/unregisterCapability
-
+                virtual void client_unregisterCapability( UnregistrationParams& params ) = 0;
                 /**
                    workspace
                 */
                 // :arrow_right_hook: workspace/workspaceFolders
+                virtual std::vector<WorkspaceFolder>  workspace_workspaceFolders( void ) = 0;
+                
                 // :arrow_right: workspace/didChangeWorkspaceFolders
+                virtual void  workspace_didChangeWorkspaceFolders( DidChangeWorkspaceFoldersParams& params ) noexcept = 0;
+
                 // :arrow_right: workspace/didChangeConfiguration
+                virtual void  workspace_didChangeConfiguration( DidChangeConfigurationParams& params) noexcept = 0;
+
                 // :arrow_right_hook: workspace/configuration
+                virtual Data workspace_configuration( ConfigurationParams& params ) = 0;
+                
                 // :arrow_right: workspace/didChangeWatchedFiles
+                virtual void workspace_didChangeWatchedFiles( DidChangeWatchedFilesParams& params ) noexcept = 0;
+                
                 // :leftwards_arrow_with_hook: workspace/symbol
 
                 // New :leftwards_arrow_with_hook: workspace/executeCommand
