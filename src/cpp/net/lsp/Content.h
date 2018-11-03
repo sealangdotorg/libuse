@@ -1104,7 +1104,7 @@ namespace libstdhl
               public:
               ShowMessageParams(const Data& data);
 
-              ShowMessageParams(const MessageType type, const std::string message);
+              ShowMessageParams(const MessageType& type, const std::string& message);
 
               MessageType messageType( void ) const;
 
@@ -1116,7 +1116,7 @@ namespace libstdhl
 
             class MessageActionItem {
 
-              MessageActionItem(std::string title);
+              MessageActionItem(std::string& title);
               
               };
 
@@ -1128,7 +1128,7 @@ namespace libstdhl
 
               ShowMessageRequestParams( const Data& data );
 
-              ShowMessageRequestParams( const MessageType type,const std::string message );
+              ShowMessageRequestParams( const MessageType type,const std::string& message );
 
               MessageType messageType( void ) const;
 
@@ -1149,7 +1149,7 @@ namespace libstdhl
 
               public:
 
-              LogMessageParams(const MessageType type,const std::string message);
+              LogMessageParams(const MessageType type,const std::string& message);
 
               LogMessageParams(const Data& data);
 
@@ -1166,9 +1166,9 @@ namespace libstdhl
             
               Registration(const Data& data);
               
-              Registration(const std::string id,const std::string method);
+              Registration(const std::string& id,const std::string& method);
 
-              Registration(const std::string id,const std::string method, const Data& registerOptions);
+              Registration(const std::string& id,const std::string& method, const Data& registerOptions);
 
               std::string id(void) const;
               
@@ -1187,14 +1187,14 @@ namespace libstdhl
             class RegistrationParams 
             {
 
-              RegistrationParams( const std::vector<Registration> registrations );
+              RegistrationParams( const std::vector<Registration>& registrations );
             
             };
 
             class TextDocumentRegistrationOptions
             {
 
-              TextDocumentRegistrationOptions( const DocumentSelector documentSelector );
+              TextDocumentRegistrationOptions( const DocumentSelector& documentSelector );
             
             };
 
@@ -1205,7 +1205,7 @@ namespace libstdhl
 
               Unregistration(const Data& data);
 
-              Unregistration(const std::string id, const std::string method);
+              Unregistration(const std::string& id, const std::string& method);
 
               u1 isValid(const Data& data);
 
@@ -1217,7 +1217,7 @@ namespace libstdhl
 
             class UnregistrationParams {
               public: 
-              UnregistrationParams( const std::vector<Unregistration> unregistrations );
+              UnregistrationParams( const std::vector<Unregistration>& unregistrations );
               
             };
 
@@ -1226,7 +1226,7 @@ namespace libstdhl
               
               public:
               
-              WorkspaceFolder( const std::string uri, const std::string name );
+              WorkspaceFolder( const std::string& uri, const std::string& name );
 
               WorkspaceFolder( const Data& data );
 
@@ -1243,7 +1243,7 @@ namespace libstdhl
 
               public: 
 
-              WorkspaceFoldersChangeEvent( const std::vector<WorkspaceFolder> added, const std::vector<WorkspaceFolder> removed );
+              WorkspaceFoldersChangeEvent( const std::vector<WorkspaceFolder>& added, const std::vector<WorkspaceFolder>& removed );
 
               WorkspaceFoldersChangeEvent( const Data& data );
 
@@ -1258,7 +1258,7 @@ namespace libstdhl
 
               public:
 
-              DidChangeWorkspaceFoldersParams( const WorkspaceFoldersChangeEvent event);
+              DidChangeWorkspaceFoldersParams( const WorkspaceFoldersChangeEvent& event);
             
             };
 
@@ -1275,13 +1275,6 @@ namespace libstdhl
 
             };
 
-            class ConfigurationParams 
-            {
-
-              ConfigurationParams( const std::vector<ConfigurationItem> items );
-              
-              ConfigurationParams( const Data& data);
-            };
 
             class ConfigurationItem : public Data
             {
@@ -1290,7 +1283,7 @@ namespace libstdhl
 
               ConfigurationItem( const Data& data );
 
-              ConfigurationItem( const std::string scopeUri, const std::string section );
+              ConfigurationItem( const std::string& scopeUri, const std::string& section );
 
               u1 hasScopeUri( void ) const;
 
@@ -1300,39 +1293,20 @@ namespace libstdhl
               
               std::string section( void ) const;
 
-              void setSection (const std::string section);
+              void setSection (const std::string& section);
 
-              void setScopeUri(const std::string uri);
+              void setScopeUri(const std::string& uri);
 
               u1 isValid(const Data& data);
 
             };
 
-            class DidChangeWatchedFilesParams 
+              class ConfigurationParams 
             {
 
-              DidChangeWatchedFilesParams( const std::vector<FileEvent> changes);
-
-              DidChangeWatchedFilesParams( const Data& data);
-
-            };
-
-            /**
-             * An event describing a file change.
-             */
-            class FileEvent : public Data
-            {
-
-              FileEvent( const Data& data);
-
-              FileEvent( const DocumentUri& uri, const FileChangeType type);
-
-              u1 isValid( const Data& data );
-
-              DocumentUri documentUri( void ) const;
-
-              FileChangeType type( void ) const;
-
+              ConfigurationParams( const std::vector<ConfigurationItem>& items );
+              
+              ConfigurationParams( const Data& data);
             };
 
             /**
@@ -1354,41 +1328,35 @@ namespace libstdhl
               Deleted = 3
             };
 
-
             /**
-             * Describe options to be used when registering for text document change events.
+             * An event describing a file change.
              */
-            class DidChangeWatchedFilesRegistrationOptions 
+            class FileEvent : public Data
             {
-              
-              public:
 
-              DidChangeWatchedFilesRegistrationOptions ( const FileSystemWatcher watchers);
+              FileEvent( const Data& data);
+
+              FileEvent( const DocumentUri& uri, const FileChangeType type);
+
+              u1 isValid( const Data& data );
+
+              DocumentUri documentUri( void ) const;
+
+              FileChangeType type( void ) const;
+
             };
 
-            class FileSystemWatcher : public Data
+            class DidChangeWatchedFilesParams 
             {
-              
-              public:
 
-              FileSystemWatcher ( const Data& data);
+              DidChangeWatchedFilesParams( const std::vector<FileEvent>& changes);
 
-              FileSystemWatcher ( const std::string globPattern);
+              DidChangeWatchedFilesParams( const Data& data);
 
-              FileSystemWatcher ( const std::string globPattern, const WatchKind kind);
-
-              std::string pattern( void );
-
-              u1 hasKind( void ) const;
-
-              WatchKind kind( void ) const;
-
-              u1 isValid ( const Data& data);
-
-              void setKind ( const WatchKind kind);
             };
 
-            enum class WatchKind 
+
+             enum class WatchKind 
             {
               /**
                * Interested in create events.
@@ -1406,6 +1374,39 @@ namespace libstdhl
               Delete = 4
             };
 
+
+            class FileSystemWatcher : public Data
+            {
+              
+              public:
+
+              FileSystemWatcher ( const Data& data);
+
+              FileSystemWatcher ( const std::string& globPattern);
+
+              FileSystemWatcher ( const std::string& globPattern, const WatchKind kind);
+
+              std::string pattern( void );
+
+              u1 hasKind( void ) const;
+
+              WatchKind kind( void ) const;
+
+              u1 isValid ( const Data& data);
+
+              void setKind ( const WatchKind kind);
+            };
+
+            /**
+             * Describe options to be used when registering for text document change events.
+             */
+            class DidChangeWatchedFilesRegistrationOptions 
+            {
+              
+              public:
+
+              DidChangeWatchedFilesRegistrationOptions ( const FileSystemWatcher watchers);
+            };
 
             class DidOpenTextDocumentParams : public Data
             {
