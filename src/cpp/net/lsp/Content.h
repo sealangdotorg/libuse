@@ -1108,7 +1108,7 @@ namespace libstdhl
 
               MessageType messageType( void ) const;
 
-              Message message( void ) const;
+              std::string message( void ) const;
 
               static u1 isValid(const Data& data);
 
@@ -1121,24 +1121,33 @@ namespace libstdhl
               };
 
 
-            class ShowMessageRequestParams : public Data {
+            class ShowMessageRequestParams : public Data 
+            {
 
               public: 
+
               ShowMessageRequestParams( const Data& data );
-             
-              ShowMessageRequestParams( const MessageType type, const std::string message, const MessageActionItem* actions );
 
               ShowMessageRequestParams( const MessageType type,const std::string message );
 
               MessageType messageType( void ) const;
 
-              Message message( void ) const;
+              u1 hasActions(void);
+
+              Data actions( void ) const;
+
+              void addAction( const Data& action );
+
+              std::string message( void ) const;
 
               static u1 isValid(const Data& data);
 
             };
 
-            class LogMessageParams {
+            class LogMessageParams : public Data
+            {
+
+              public:
 
               LogMessageParams(const MessageType type,const std::string message);
 
@@ -1147,7 +1156,256 @@ namespace libstdhl
               MessageType messageType( void ) const;
 
               static u1 isValid(const Data& data);
+
             };
+            
+            class Registration : public Data
+            {
+
+              public:
+            
+              Registration(const Data& data);
+              
+              Registration(const std::string id,const std::string method);
+
+              Registration(const std::string id,const std::string method, const Data& registerOptions);
+
+              std::string id(void) const;
+              
+              std::string method(void) const;
+
+              Data registerOptions(void) const;
+
+              u1 hasRegisterOptions(void);
+
+              void addRegisterOption( const Data& action );
+
+              u1 isValid(const Data& data);
+
+              };
+
+            class RegistrationParams 
+            {
+
+              RegistrationParams( const std::vector<Registration> registrations );
+            
+            };
+
+            class TextDocumentRegistrationOptions
+            {
+
+              TextDocumentRegistrationOptions( const DocumentSelector documentSelector );
+            
+            };
+
+            class Unregistration : public Data
+            {
+              
+              public: 
+
+              Unregistration(const Data& data);
+
+              Unregistration(const std::string id, const std::string method);
+
+              u1 isValid(const Data& data);
+
+              std::string id(void) const;
+            
+              std::string method(void) const;
+          
+            };
+
+            class UnregistrationParams {
+              public: 
+              UnregistrationParams( const std::vector<Unregistration> unregistrations );
+              
+            };
+
+            class WorkspaceFolder: public Data 
+            {
+              
+              public:
+              
+              WorkspaceFolder( const std::string uri, const std::string name );
+
+              WorkspaceFolder( const Data& data );
+
+              std::string uri(void) const;
+
+              std::string name(void) const;
+
+              u1 isValid( const Data& data );
+              
+            };
+
+            class WorkspaceFoldersChangeEvent
+            {
+
+              public: 
+
+              WorkspaceFoldersChangeEvent( const std::vector<WorkspaceFolder> added, const std::vector<WorkspaceFolder> removed );
+
+              WorkspaceFoldersChangeEvent( const Data& data );
+
+              std::vector<WorkspaceFolder> added( void ) const;
+
+              std::vector<WorkspaceFolder> removed( void ) const;
+            
+            };
+
+            class DidChangeWorkspaceFoldersParams
+            {
+
+              public:
+
+              DidChangeWorkspaceFoldersParams( const WorkspaceFoldersChangeEvent event);
+            
+            };
+
+            class DidChangeConfigurationParams : public Data
+            {
+              
+              public:
+              
+              DidChangeConfigurationParams( const Data& settings);
+
+              Data settings( void ) const;
+
+              u1 isValid( const Data& data);
+
+            };
+
+            class ConfigurationParams 
+            {
+
+              ConfigurationParams( const std::vector<ConfigurationItem> items );
+              
+              ConfigurationParams( const Data& data);
+            };
+
+            class ConfigurationItem : public Data
+            {
+              
+              public: 
+
+              ConfigurationItem( const Data& data );
+
+              ConfigurationItem( const std::string scopeUri, const std::string section );
+
+              u1 hasScopeUri( void ) const;
+
+              u1 hasSection( void ) const;
+
+              std::string scopeUri( void ) const;
+              
+              std::string section( void ) const;
+
+              void setSection (const std::string section);
+
+              void setScopeUri(const std::string uri);
+
+              u1 isValid(const Data& data);
+
+            };
+
+            class DidChangeWatchedFilesParams 
+            {
+
+              DidChangeWatchedFilesParams( const std::vector<FileEvent> changes);
+
+              DidChangeWatchedFilesParams( const Data& data);
+
+            };
+
+            /**
+             * An event describing a file change.
+             */
+            class FileEvent : public Data
+            {
+
+              FileEvent( const Data& data);
+
+              FileEvent( const DocumentUri& uri, const FileChangeType type);
+
+              u1 isValid( const Data& data );
+
+              DocumentUri documentUri( void ) const;
+
+              FileChangeType type( void ) const;
+
+            };
+
+            /**
+             * The file event type.
+             */
+            enum class FileChangeType 
+            {
+              /**
+               * The file got created.
+               */
+              Created = 1,
+              /**
+               * The file got changed.
+               */
+              Changed = 2,
+              /**
+               * The file got deleted.
+               */
+              Deleted = 3
+            };
+
+
+            /**
+             * Describe options to be used when registering for text document change events.
+             */
+            class DidChangeWatchedFilesRegistrationOptions 
+            {
+              
+              public:
+
+              DidChangeWatchedFilesRegistrationOptions ( const FileSystemWatcher watchers);
+            };
+
+            class FileSystemWatcher : public Data
+            {
+              
+              public:
+
+              FileSystemWatcher ( const Data& data);
+
+              FileSystemWatcher ( const std::string globPattern);
+
+              FileSystemWatcher ( const std::string globPattern, const WatchKind kind);
+
+              std::string pattern( void );
+
+              u1 hasKind( void ) const;
+
+              WatchKind kind( void ) const;
+
+              u1 isValid ( const Data& data);
+
+              void setKind ( const WatchKind kind);
+            };
+
+            enum class WatchKind 
+            {
+              /**
+               * Interested in create events.
+               */
+             Create = 1,
+
+              /**
+               * Interested in change events
+               */
+             Change = 2,
+
+              /**
+               * Interested in delete events
+               */
+              Delete = 4
+            };
+
 
             class DidOpenTextDocumentParams : public Data
             {
