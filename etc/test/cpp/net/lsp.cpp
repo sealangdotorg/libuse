@@ -128,7 +128,7 @@ TEST( libstdhl_cpp_network_lsp, parse_packet_request_initialize )
         "true},\"documentLink\":{\"dynamicRegistration\":true},\"rename\":{"
         "\"dynamicRegistration\":true}}},\"trace\":\"off\"}}";
 
-    const auto request = libstdhl::Network::LSP::Packet( req );
+    const auto request = libstdhl::Network::LSP::Packet::parse( req );
 
     TestInterface server;
 

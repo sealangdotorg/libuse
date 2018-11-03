@@ -48,48 +48,20 @@ using namespace libstdhl;
 using namespace Network;
 using namespace LSP;
 
-LSP::Packet::Packet( const std::string& data )
-: m_header{ 0 }
-, m_payload{}
-, m_data( data )
-{
-    std::vector< std::string > parts;
-    String::split( data, "\r\n", parts );
+//
+//
+// Packet
+//
 
-    u64 length = 0;
-    for( auto p : parts )
-    {
-        // check for content length field
-        if( strncmp( p.c_str(), CL.c_str(), CL.size() ) == 0 )
-        {
-            length = std::stoull( p.substr( CL.size() + 1 ) );
-            m_header = Protocol( length );
-        }
-        // check for content type field
-        else if( strncmp( p.c_str(), CT.c_str(), CT.size() ) == 0 )
-        {
-            const auto type = String::trim( p.substr( CL.size() + 1 ) );
-            if( type.compare( TYPE ) != 0 )
-            {
-                throw std::domain_error( "LSP: invalid content type '" + type + "'" );
-            }
-        }
-        // check for json rpc content data
-        else if( strncmp( p.c_str(), "{", 1 ) == 0 )
-        {
-            m_payload = Message( Json::Object::parse( p ) );
-        }
-        else
-        {
-            throw std::domain_error( "LSP: invalid packet content '" + p + "'" );
-        }
-    }
+LSP::Packet::Packet( const Protocol& header, const Message& payload )
+: m_header( header )
+, m_payload( payload )
+, m_data( m_header.data() + NL + payload.dump() )
+{
 }
 
 LSP::Packet::Packet( const Message& payload )
-: m_header( payload.dump().size() )
-, m_payload( payload )
-, m_data( m_header.data() + NL + payload.dump() )
+: Packet( Protocol( payload.dump().length() ), payload )
 {
 }
 
@@ -115,7 +87,7 @@ std::size_t LSP::Packet::size( void ) const
 
 void LSP::Packet::resize( const std::size_t size )
 {
-    throw std::domain_error( "LSP message cannot be resized!" );
+    throw std::domain_error( "LSP: message cannot be resized!" );
 }
 
 std::string LSP::Packet::dump( const u1 formatted ) const
@@ -135,30 +107,28 @@ void LSP::Packet::process( ServerInterface& interface ) const
     payload().process( interface );
 }
 
-std::vector< LSP::Packet > LSP::Packet::fromString(
-    const std::string& data, std::vector< LSP::Packet >& packages )
+LSP::Packet LSP::Packet::parse( const std::string& data )
 {
     std::vector< std::string > lines;
-    String::split( data, "\r\n", lines );
+    String::split( data, "\r\n\r\n", lines );
 
-    std::string message = "";
-    for( const auto& line : lines )
+    if( lines.size() != 2 )
     {
-        if( String::startsWith( line, "Content-Length:" ) )
-        {
-            if( message.size() > 0 )
-            {
-                packages.emplace_back( LSP::Packet( message ) );
-            }
-            message = line + "\r\n";
-        }
-        else
-        {
-            message += line + "\r\n";
-        }
+        throw std::domain_error( "LSP: invalid package data" );
     }
-    packages.emplace_back( LSP::Packet( message ) );
-    return packages;
+
+    Protocol header = Protocol::parse( lines.front() );
+
+    if( lines.back().size() != header.length() )
+    {
+        throw std::domain_error(
+            "LSP: invalid payload length: " + std::to_string( lines.back().size() ) +
+            " != " + std::to_string( header.length() ) );
+    }
+
+    Message payload = Message::parse( lines.back() );
+
+    return Packet( header, payload );
 }
 
 //

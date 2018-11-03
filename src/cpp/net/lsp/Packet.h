@@ -71,10 +71,8 @@ namespace libstdhl
               public:
                 using Ptr = std::shared_ptr< Packet >;
 
-                // create LSP packet from string
-                Packet( const std::string& data );
+                Packet( const Protocol& header, const Message& payload );
 
-                // create LSP packet to string
                 Packet( const Message& payload );
 
                 const Protocol& header( void ) const;
@@ -91,8 +89,7 @@ namespace libstdhl
 
                 void process( ServerInterface& interface ) const;
 
-                static std::vector< Packet > fromString(
-                    const std::string& data, std::vector< LSP::Packet >& packages );
+                static Packet parse( const std::string& data );
 
               private:
                 Protocol m_header;
