@@ -42,7 +42,9 @@
 
 #include "Protocol.h"
 
-#include "../../Array.h"
+#include <libstdhl/String>
+
+#include <vector>
 
 using namespace libstdhl;
 using namespace Network;
@@ -76,6 +78,37 @@ u64 LSP::Protocol::length( void ) const
 std::string LSP::Protocol::type( void ) const
 {
     return m_type;
+}
+
+LSP::Protocol LSP::Protocol::parse( const std::string& data )
+{
+    std::vector< std::string > parts;
+    String::split( data, "\r\n", parts );
+
+    u64 length = 0;
+    for( auto p : parts )
+    {
+        // check for content length field
+        if( strncmp( p.c_str(), CL.c_str(), CL.size() ) == 0 )
+        {
+            length = std::stoull( p.substr( CL.size() + 1 ) );
+            if( length == 0 )
+            {
+                throw std::domain_error( "LSP: invalid content length '" + p + "'" );
+            }
+        }
+        // check for content type field
+        else if( strncmp( p.c_str(), CT.c_str(), CT.size() ) == 0 )
+        {
+            const auto type = String::trim( p.substr( CL.size() ) );
+            if( type.compare( TYPE ) != 0 )
+            {
+                throw std::domain_error( "LSP: invalid content type '" + type + "'" );
+            }
+        }
+    }
+
+    return Protocol( length );
 }
 
 //

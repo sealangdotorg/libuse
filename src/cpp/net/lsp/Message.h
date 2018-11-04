@@ -79,12 +79,8 @@ namespace libstdhl
                     _SIZE_,
                 };
 
-                Message( const Data& data );
+                Message( const ID id, const Data& data = Data::object() );
 
-              protected:
-                Message( const ID id );
-
-              public:
                 Message( void ) = default;
 
                 virtual ~Message( void ) = default;
@@ -95,7 +91,9 @@ namespace libstdhl
 
                 virtual void process( ServerInterface& interface ) const;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
+
+                static Message parse( const std::string& data );
 
               protected:
                 ID m_id;
@@ -130,7 +128,7 @@ namespace libstdhl
 
                 virtual void process( ServerInterface& interface ) const override;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             /**
@@ -176,7 +174,7 @@ namespace libstdhl
 
                 virtual void process( ServerInterface& interface ) const override;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             /**
@@ -219,7 +217,7 @@ namespace libstdhl
 
                 virtual void process( ServerInterface& interface ) const override;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
         }
     }

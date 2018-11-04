@@ -119,7 +119,7 @@ void IPv4Socket::connect( void )
 
     configuration.sin_port = ( (u16)m_port[ 1 ] << 8 ) | (u16)m_port[ 0 ];
 
-    if(::bind( id(), (struct sockaddr*)&configuration, sizeof( configuration ) ) < 0 )
+    if( ::bind( id(), (struct sockaddr*)&configuration, sizeof( configuration ) ) < 0 )
     {
         throw std::domain_error( "unable to bind to UDP address '" + name() + "'" );
     }

@@ -66,6 +66,125 @@ namespace libstdhl
 
             using DocumentUri = libstdhl::Standard::RFC3986::URI;
 
+            namespace Content
+            {
+                u1 hasProperty( const Data& data, const std::string& field );
+
+                void validateTypeIsObject( const std::string& context, const Data& data );
+
+                void validateTypeIsString( const std::string& context, const Data& data );
+
+                void validateTypeIsArray( const std::string& context, const Data& data );
+
+                void validatePropertyIs(
+                    const std::string& context,
+                    const Data& data,
+                    const std::string& field,
+                    const u1 required,
+                    const std::function< u1( const Data& property ) >& condition );
+
+                void validatePropertyIsObject(
+                    const std::string& context,
+                    const Data& data,
+                    const std::string& field,
+                    const u1 required );
+
+                void validatePropertyIsArray(
+                    const std::string& context,
+                    const Data& data,
+                    const std::string& field,
+                    const u1 required );
+
+                void validatePropertyIsString(
+                    const std::string& context,
+                    const Data& data,
+                    const std::string& field,
+                    const u1 required );
+
+                void validatePropertyIsNumber(
+                    const std::string& context,
+                    const Data& data,
+                    const std::string& field,
+                    const u1 required );
+
+                void validatePropertyIsNumberOrNull(
+                    const std::string& context,
+                    const Data& data,
+                    const std::string& field,
+                    const u1 required );
+
+                void validatePropertyIsBoolean(
+                    const std::string& context,
+                    const Data& data,
+                    const std::string& field,
+                    const u1 required );
+
+                void validatePropertyIsUuid(
+                    const std::string& context,
+                    const Data& data,
+                    const std::string& field,
+                    const u1 required );
+
+                void validatePropertyIsUri(
+                    const std::string& context,
+                    const Data& data,
+                    const std::string& field,
+                    const u1 required );
+
+                void validatePropertyIsUriOrNull(
+                    const std::string& context,
+                    const Data& data,
+                    const std::string& field,
+                    const u1 required );
+
+                template < class T >
+                void validatePropertyIs(
+                    const std::string& context,
+                    const Data& data,
+                    const std::string& field,
+                    const u1 required )
+                {
+                    validatePropertyIs(
+                        context, data, field, required, []( const Data& property ) -> u1 {
+                            T::validate( property );
+                            return true;
+                        } );
+                };
+
+                template < class T >
+                void validatePropertyIsArrayOf(
+                    const std::string& context,
+                    const Data& data,
+                    const std::string& field,
+                    const u1 required )
+                {
+                    validatePropertyIsArray( context, data, field, required );
+                    if( hasProperty( data, field ) )
+                    {
+                        for( auto element : data[ field ] )
+                        {
+                            T::validate( element );
+                        }
+                    }
+                };
+
+                void validatePropertyIsArrayOfString(
+                    const std::string& context,
+                    const Data& data,
+                    const std::string& field,
+                    const u1 required );
+
+                template < class T >
+                void validateTypeIsArrayOf( const std::string& context, const Data& data )
+                {
+                    validateTypeIsArray( context, data );
+                    for( auto element : data )
+                    {
+                        T::validate( element );
+                    }
+                };
+            }
+
             enum class ErrorCode : i32
             {
                 // defined by JSON RPC
@@ -101,7 +220,7 @@ namespace libstdhl
 
                 void setData( const Data& data );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             namespace TextDocument
@@ -120,7 +239,7 @@ namespace libstdhl
 
                 std::size_t character( void ) const;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class Range : public Data
@@ -134,7 +253,7 @@ namespace libstdhl
 
                 Position end( void ) const;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class Location : public Data
@@ -148,7 +267,7 @@ namespace libstdhl
 
                 Range range( void ) const;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             enum class DiagnosticSeverity : std::size_t
@@ -190,7 +309,7 @@ namespace libstdhl
 
                 void setSource( const std::string& source );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class Command : public Data
@@ -210,7 +329,7 @@ namespace libstdhl
 
                 void addArgument( const Data& argument );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class TextEdit : public Data
@@ -224,7 +343,7 @@ namespace libstdhl
 
                 std::string newText( void ) const;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class TextDocumentIdentifier : public Data
@@ -236,7 +355,7 @@ namespace libstdhl
 
                 DocumentUri uri( void ) const;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class VersionedTextDocumentIdentifier : public TextDocumentIdentifier
@@ -249,7 +368,7 @@ namespace libstdhl
 
                 std::size_t version( void ) const;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class TextDocumentEdit : public Data
@@ -265,7 +384,7 @@ namespace libstdhl
 
                 Data edits( void ) const;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class WorkspaceEdit : public Data
@@ -283,7 +402,7 @@ namespace libstdhl
 
                 void addDocumentChange( const TextDocumentEdit& documentChange );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class TextDocumentItem : public Data
@@ -305,7 +424,7 @@ namespace libstdhl
 
                 std::string text( void ) const;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class TextDocumentPositionParams : public Data
@@ -320,7 +439,7 @@ namespace libstdhl
 
                 Position position( void ) const;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class DocumentFilter : public Data
@@ -348,7 +467,7 @@ namespace libstdhl
 
                 void setPattern( const std::string& pattern );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class DocumentSelector : public Data
@@ -358,7 +477,7 @@ namespace libstdhl
 
                 DocumentSelector( const std::vector< DocumentFilter >& documentFilters );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             //
@@ -379,7 +498,7 @@ namespace libstdhl
 
                 void setDynamicRegistration( const u1 dynamicRegistration );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class WorkspaceClientCapabilities : public Data
@@ -425,7 +544,7 @@ namespace libstdhl
 
                 void executeCommand( const DynamicRegistration& executeCommand );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class Synchronization : public Data
@@ -459,7 +578,7 @@ namespace libstdhl
 
                 void setDidSave( const u1 didSave );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class CompletionItem : public Data
@@ -475,7 +594,7 @@ namespace libstdhl
 
                 void setSnippetSupport( const u1 snippetSupport );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class Completion : public Data
@@ -497,7 +616,7 @@ namespace libstdhl
 
                 void completionItem( const CompletionItem& completionItem );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class TextDocumentClientCapabilities : public Data
@@ -597,7 +716,7 @@ namespace libstdhl
 
                 void setRename( const DynamicRegistration& rename );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class ClientCapabilities : public Data
@@ -625,7 +744,7 @@ namespace libstdhl
 
                 void setExperimental( const Data& experimental );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class SaveOptions : public Data
@@ -641,7 +760,7 @@ namespace libstdhl
 
                 void setIncludeText( const u1 includeText );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             enum class TextDocumentSyncKind
@@ -688,7 +807,7 @@ namespace libstdhl
 
                 void setSave( const SaveOptions& save );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class CompletionOptions : public Data
@@ -710,7 +829,7 @@ namespace libstdhl
 
                 void addTriggerCharacters( const std::string& triggerCharacter );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class SignatureHelpOptions : public Data
@@ -726,7 +845,7 @@ namespace libstdhl
 
                 void addTriggerCharacters( const std::string& triggerCharacter );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class CodeLensOptions : public Data
@@ -742,7 +861,7 @@ namespace libstdhl
 
                 void setResolveProvider( const u1 resolveProvider );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class DocumentOnTypeFormattingOptions : public Data
@@ -760,7 +879,7 @@ namespace libstdhl
 
                 void addMoreTriggerCharacter( const Data& moreTriggerCharacter );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             using DocumentLinkOptions = CodeLensOptions;
@@ -778,7 +897,7 @@ namespace libstdhl
 
                 void addCommand( const std::string& command );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class ServerCapabilities : public Data
@@ -900,7 +1019,7 @@ namespace libstdhl
 
                 void setExperimental( const Data& experimental );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class InitializeParams : public Data
@@ -933,7 +1052,7 @@ namespace libstdhl
 
                 void setTrace( const std::string& trace );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class InitializeResult : public Data
@@ -945,7 +1064,7 @@ namespace libstdhl
 
                 ServerCapabilities capabilities( void ) const;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class InitializeError : public Data
@@ -957,7 +1076,7 @@ namespace libstdhl
 
                 u1 retry( void ) const;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class DidOpenTextDocumentParams : public Data
@@ -969,7 +1088,7 @@ namespace libstdhl
 
                 TextDocumentItem textDocument( void ) const;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class TextDocumentContentChangeEvent : public Data
@@ -993,7 +1112,7 @@ namespace libstdhl
 
                 std::string text( void ) const;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class DidChangeTextDocumentParams : public Data
@@ -1009,7 +1128,7 @@ namespace libstdhl
 
                 Data contentChanges( void ) const;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class CodeActionContext : public Data
@@ -1021,7 +1140,7 @@ namespace libstdhl
 
                 Data diagnostics( void ) const;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class CodeActionParams : public Data
@@ -1040,7 +1159,7 @@ namespace libstdhl
 
                 CodeActionContext context( void ) const;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class CodeActionResult : public Data
@@ -1054,7 +1173,7 @@ namespace libstdhl
 
                 void addCommand( const Command& command );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class PublishDiagnosticsParams : public Data
@@ -1069,7 +1188,7 @@ namespace libstdhl
 
                 Data diagnostics( void ) const;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             using HoverParams = TextDocumentPositionParams;
@@ -1085,7 +1204,7 @@ namespace libstdhl
 
                 std::string value( void ) const;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class HoverResult : public Data
@@ -1105,7 +1224,7 @@ namespace libstdhl
 
                 void setRange( const Range& range );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class CodeLensParams : public Data
@@ -1117,7 +1236,7 @@ namespace libstdhl
 
                 TextDocumentIdentifier textDocument( void ) const;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class CodeLens : public Data
@@ -1141,7 +1260,7 @@ namespace libstdhl
 
                 void setData( const Data& data );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class CodeLensResult : public Data
@@ -1153,7 +1272,7 @@ namespace libstdhl
 
                 void addCodeLens( const CodeLens& codeLens );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class ExecuteCommandParams : public Data
@@ -1171,7 +1290,7 @@ namespace libstdhl
 
                 void addArgument( const Data& argument );
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             using ExecuteCommandResult = Data;  // TODO: PPA: FIXME:

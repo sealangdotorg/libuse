@@ -102,7 +102,7 @@ class TestInterface final : public ServerInterface
     }
 };
 
-TEST( libstdhl_cpp_network_lsp, parse_packet_request_initialize )
+TEST( libstdhl_cpp_network_lsp, parse_packet_request_initialize_monaco )
 {
     std::string req = "Content-Length: 1035\r\n";
     req += "\r\n";
@@ -128,7 +128,66 @@ TEST( libstdhl_cpp_network_lsp, parse_packet_request_initialize )
         "true},\"documentLink\":{\"dynamicRegistration\":true},\"rename\":{"
         "\"dynamicRegistration\":true}}},\"trace\":\"off\"}}";
 
-    const auto request = libstdhl::Network::LSP::Packet( req );
+    const auto request = libstdhl::Network::LSP::Packet::parse( req );
+
+    TestInterface server;
+
+    request.process( server );
+
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+
+        std::string ack = "Content-Length: 55\r\n";
+        ack += "Content-Type: application/vscode-jsonrpc; charset=utf-8\r\n";
+        ack += "\r\n";
+        ack += "{\"id\":\"0\"";
+        ack += ",\"jsonrpc\":\"2.0\"";
+        ack += ",\"result\":{\"capabilities\":{}}";
+        ack += "}";
+
+        EXPECT_STREQ( packet.dump().c_str(), ack.c_str() );
+    } );
+}
+
+TEST( libstdhl_cpp_network_lsp, parse_packet_request_initialize_vscode )
+{
+    std::string req = "Content-Length: 2280\r\n";
+    req += "Content-Type: application/vscode-jsonrpc; charset=utf-8\r\n";
+    req += "\r\n";
+    req +=
+        "{\"id\":0,\"jsonrpc\":\"2.0\",\"method\":\"initialize\",\"params\":{\"capabilities\":{"
+        "\"textDocument\":{\"codeAction\":{\"codeActionLiteralSupport\":{\"codeActionKind\":{"
+        "\"valueSet\":[\"\",\"quickfix\",\"refactor\",\"refactor.extract\",\"refactor.inline\","
+        "\"refactor.rewrite\",\"source\",\"source.organizeImports\"]}},\"dynamicRegistration\":"
+        "true},\"codeLens\":{\"dynamicRegistration\":true},\"colorProvider\":{"
+        "\"dynamicRegistration\":true},\"completion\":{\"completionItem\":{"
+        "\"commitCharactersSupport\":true,\"deprecatedSupport\":true,\"documentationFormat\":["
+        "\"markdown\",\"plaintext\"],\"preselectSupport\":true,\"snippetSupport\":true},"
+        "\"completionItemKind\":{\"valueSet\":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,"
+        "21,22,23,24,25]},\"contextSupport\":true,\"dynamicRegistration\":true},\"definition\":{"
+        "\"dynamicRegistration\":true},\"documentHighlight\":{\"dynamicRegistration\":true},"
+        "\"documentLink\":{\"dynamicRegistration\":true},\"documentSymbol\":{"
+        "\"dynamicRegistration\":true,\"hierarchicalDocumentSymbolSupport\":true,\"symbolKind\":{"
+        "\"valueSet\":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26]}},"
+        "\"foldingRange\":{\"dynamicRegistration\":true,\"lineFoldingOnly\":true,\"rangeLimit\":"
+        "5000},\"formatting\":{\"dynamicRegistration\":true},\"hover\":{\"contentFormat\":["
+        "\"markdown\",\"plaintext\"],\"dynamicRegistration\":true},\"implementation\":{"
+        "\"dynamicRegistration\":true},\"onTypeFormatting\":{\"dynamicRegistration\":true},"
+        "\"publishDiagnostics\":{\"relatedInformation\":true},\"rangeFormatting\":{"
+        "\"dynamicRegistration\":true},\"references\":{\"dynamicRegistration\":true},\"rename\":{"
+        "\"dynamicRegistration\":true},\"signatureHelp\":{\"dynamicRegistration\":true,"
+        "\"signatureInformation\":{\"documentationFormat\":[\"markdown\",\"plaintext\"]}},"
+        "\"synchronization\":{\"didSave\":true,\"dynamicRegistration\":true,\"willSave\":true,"
+        "\"willSaveWaitUntil\":true},\"typeDefinition\":{\"dynamicRegistration\":true}},"
+        "\"workspace\":{\"applyEdit\":true,\"configuration\":true,\"didChangeConfiguration\":{"
+        "\"dynamicRegistration\":true},\"didChangeWatchedFiles\":{\"dynamicRegistration\":true},"
+        "\"executeCommand\":{\"dynamicRegistration\":true},\"symbol\":{\"dynamicRegistration\":"
+        "true,\"symbolKind\":{\"valueSet\":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,"
+        "22,23,24,25,26]}},\"workspaceEdit\":{\"documentChanges\":true},\"workspaceFolders\":true}}"
+        ",\"processId\":14607,\"rootPath\":null,\"rootUri\":null,\"trace\":\"off\","
+        "\"workspaceFolders\":null}}";
+
+    const auto request = libstdhl::Network::LSP::Packet::parse( req );
 
     TestInterface server;
 

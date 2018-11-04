@@ -129,14 +129,14 @@ void IPv4Socket::connect( void )
 
     if( not server() )
     {
-        if(::connect( id(), (struct sockaddr*)&configuration, sizeof( configuration ) ) < 0 )
+        if( ::connect( id(), (struct sockaddr*)&configuration, sizeof( configuration ) ) < 0 )
         {
             throw std::domain_error( "unable to connect to TCP address '" + name() + "'" );
         }
     }
     else
     {
-        if(::bind( id(), (struct sockaddr*)&configuration, sizeof( configuration ) ) < 0 )
+        if( ::bind( id(), (struct sockaddr*)&configuration, sizeof( configuration ) ) < 0 )
         {
             throw std::domain_error( "unable to bind to TCP address '" + name() + "'" );
         }

@@ -82,6 +82,8 @@ namespace libstdhl
 
                 std::string data( void ) const;
 
+                static Protocol parse( const std::string& data );
+
               private:
                 u64 m_length;
                 std::string m_type;
