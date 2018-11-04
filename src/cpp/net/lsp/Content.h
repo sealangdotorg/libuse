@@ -1663,7 +1663,6 @@ namespace libstdhl
               u1 isValid( const Data& data );
             };
 
-            /*---------------------------------------------------------------------------------*/
             class DidOpenTextDocumentParams : public Data
             {
               public:
