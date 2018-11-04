@@ -49,6 +49,7 @@
 #include <cstring>
 #include <memory>
 #include <sstream>
+#include <string>
 #include <vector>
 
 /**
@@ -69,16 +70,14 @@ namespace libstdhl
             const std::string& delimiter,
             std::vector< std::string >& result )
         {
-            std::string input( str );
-
-            char* token = std::strtok( &input[ 0 ], delimiter.c_str() );
-
-            while( token != NULL )
+            std::size_t start = 0;
+            std::size_t end = std::string::npos;
+            while( ( end = str.find( delimiter, start ) ) != std::string::npos )
             {
-                result.emplace_back( token );
-
-                token = std::strtok( NULL, delimiter.c_str() );
+                result.emplace_back( str.substr( start, end - start ) );
+                start = end + delimiter.length();
             }
+            result.emplace_back( str.substr( start, end ) );
         }
 
         inline std::vector< std::string > split(

@@ -102,6 +102,33 @@ TEST( libstdhl_cpp_String, split3 )
     EXPECT_EQ( splitted.size(), 3 );
 }
 
+TEST( libstdhl_cpp_String, split_double_delimitor )
+{
+    std::string str = "foo\r\nbar\r\n\r\nbaz";
+
+    const auto splitted = libstdhl::String::split( str, "\r\n\r\n" );
+
+    u32 cnt = 0;
+
+    for( auto s : splitted )
+    {
+        std::cerr << s << "\n";
+
+        if( cnt == 0 )
+        {
+            EXPECT_STREQ( s.c_str(), "foo\r\nbar" );
+        }
+        else
+        {
+            EXPECT_STREQ( s.c_str(), "baz" );
+        }
+
+        cnt++;
+    }
+
+    EXPECT_EQ( splitted.size(), 2 );
+}
+
 TEST( libstdhl_cpp_String, join2 )
 {
     std::vector< std::string > parts = { "foo", "bar" };
