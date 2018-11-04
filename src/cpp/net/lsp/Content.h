@@ -1198,6 +1198,14 @@ namespace libstdhl
             
             };
 
+            class TextDocumentChangeRegistrationOptions : public TextDocumentRegistrationOptions
+            {
+              public:
+
+              TextDocumentChangeRegistrationOptions ( const TextDocumentSyncKind kind);
+
+            };
+
             class Unregistration : public Data
             {
               
@@ -1467,7 +1475,6 @@ namespace libstdhl
               u1 isValid( const Data& data );
             };
 
-            /*---------------------------------------------------------------------------------*/
             class DidOpenTextDocumentParams : public Data
             {
               public:
@@ -1518,6 +1525,45 @@ namespace libstdhl
                 Data contentChanges( void ) const;
 
                 static void validate( const Data& data );
+            };
+
+
+            enum class TextDocumentSaveReason 
+            {
+
+              /**
+               * Manually triggered, e.g. by the user pressing save, by starting debugging,
+               * or by an API call.
+               */
+              Manual = 1,
+
+              /**
+               * Automatic after a delay.
+               */
+              AfterDelay = 2,
+
+              /**
+               * When the editor lost focus.
+               */
+              FocusOut = 3
+            };
+
+
+            class WillSaveTextDocumentParams : public Data
+            {
+              
+              public:
+
+              WillSaveTextDocumentParams( const Data& data);
+
+              WillSaveTextDocumentParams( const TextDocumentIdentifier& textdocument, TextDocumentSaveReason reason );
+
+              TextDocumentSaveReason reason( void ) const;
+
+              TextDocumentIdentifier textdocument( void ) const;
+
+              u1 isValid( const Data& data ) const ;
+
             };
 
             class CodeActionContext : public Data

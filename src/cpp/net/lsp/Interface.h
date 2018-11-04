@@ -152,7 +152,7 @@ namespace libstdhl
                     const ExecuteCommandParams& params ) = 0;
 
                 // New :arrow_right_hook: workspace/applyEdit
-
+                virtual ApplyWorkspaceEditResponse workspace_applyEdit( const ApplyWorkspaceEditParams& params ) = 0;
                 /**
                     document
                  */
