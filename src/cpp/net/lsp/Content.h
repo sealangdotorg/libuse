@@ -884,12 +884,12 @@ namespace libstdhl
 
             using DocumentLinkOptions = CodeLensOptions;
 
-            class ExecuteCommandRegistrationOptions : public Data
+            class ExecuteCommandOptions : public Data
             {
               public:
-                ExecuteCommandRegistrationOptions( const Data& data );
+                ExecuteCommandOptions( const Data& data );
 
-                ExecuteCommandRegistrationOptions( void );
+                ExecuteCommandOptions( void );
 
                 u1 hasCommands( void ) const;
 
@@ -1008,10 +1008,10 @@ namespace libstdhl
 
                 u1 hasExecuteCommandProvider( void ) const;
 
-                ExecuteCommandRegistrationOptions executeCommandProvider( void ) const;
+                ExecuteCommandOptions executeCommandProvider( void ) const;
 
                 void setExecuteCommandProvider(
-                    const ExecuteCommandRegistrationOptions& executeCommandProvider );
+                    const ExecuteCommandOptions& executeCommandProvider );
 
                 u1 hasExperimental( void ) const;
 
