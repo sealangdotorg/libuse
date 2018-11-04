@@ -48,9 +48,9 @@
 #include <libstdhl/libstdhl>
 
 #define TEST_CASE \
-    std::string(::testing::UnitTest::GetInstance()->current_test_info()->test_case_name() )
+    std::string( ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name() )
 
-#define TEST_UNIT std::string(::testing::UnitTest::GetInstance()->current_test_info()->name() )
+#define TEST_UNIT std::string( ::testing::UnitTest::GetInstance()->current_test_info()->name() )
 
 #define TEST_NAME ( TEST_CASE + "." + TEST_UNIT )
 
