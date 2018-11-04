@@ -100,13 +100,14 @@ namespace libstdhl
                 */
 
                 // :arrow_left: window/showMessage
-                virtual void window_showMessage(ShowMessageParams& params ) = 0;
+                virtual void window_showMessage( const ShowMessageParams& params ) = 0;
 
                 // :arrow_right_hook: window/showMessageRequest
-                virtual MessageActionItem window_showMessageRequest(ShowMessageRequestParams& params) = 0;
+                virtual MessageActionItem window_showMessageRequest( 
+                    const ShowMessageRequestParams& params ) = 0;
                 
                 // :arrow_left: window/logMessage
-                virtual void window_logMessage(LogMessageParams& params) = 0;
+                virtual void window_logMessage( const LogMessageParams& params) = 0;
 
                 /**
                  * telemetry
@@ -118,9 +119,9 @@ namespace libstdhl
                 */
 
                 // :arrow_right_hook: client/registerCapability
-                virtual void client_registerCapability( RegistrationParams& params ) = 0;
+                virtual void client_registerCapability( const RegistrationParams& params ) = 0;
                 // :arrow_right_hook: client/unregisterCapability
-                virtual void client_unregisterCapability( UnregistrationParams& params ) = 0;
+                virtual void client_unregisterCapability( const UnregistrationParams& params ) = 0;
                 /**
                    workspace
                 */
@@ -128,18 +129,23 @@ namespace libstdhl
                 virtual std::vector<WorkspaceFolder>  workspace_workspaceFolders( void ) = 0;
                 
                 // :arrow_right: workspace/didChangeWorkspaceFolders
-                virtual void  workspace_didChangeWorkspaceFolders( DidChangeWorkspaceFoldersParams& params ) noexcept = 0;
+                virtual void  workspace_didChangeWorkspaceFolders( 
+                    const DidChangeWorkspaceFoldersParams& params ) noexcept = 0;
 
                 // :arrow_right: workspace/didChangeConfiguration
-                virtual void  workspace_didChangeConfiguration( DidChangeConfigurationParams& params) noexcept = 0;
+                virtual void  workspace_didChangeConfiguration( 
+                    const DidChangeConfigurationParams& params) noexcept = 0;
 
                 // :arrow_right_hook: workspace/configuration
-                virtual Data workspace_configuration( ConfigurationParams& params ) = 0;
+                virtual Data workspace_configuration( const ConfigurationParams& params ) = 0;
                 
                 // :arrow_right: workspace/didChangeWatchedFiles
-                virtual void workspace_didChangeWatchedFiles( DidChangeWatchedFilesParams& params ) noexcept = 0;
+                virtual void workspace_didChangeWatchedFiles(
+                    const DidChangeWatchedFilesParams& params ) noexcept = 0;
                 
                 // :leftwards_arrow_with_hook: workspace/symbol
+                //TODO : replace "void" with "SymbolInformation" when ready
+                virtual void workspace_symbol( const WorkspaceSymbolParams& params ) = 0;
 
                 // New :leftwards_arrow_with_hook: workspace/executeCommand
                 virtual ExecuteCommandResult workspace_executeCommand(
