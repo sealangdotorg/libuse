@@ -884,12 +884,12 @@ namespace libstdhl
 
             using DocumentLinkOptions = CodeLensOptions;
 
-            class ExecuteCommandOptions : public Data
+            class ExecuteCommandRegistrationOptions : public Data
             {
               public:
-                ExecuteCommandOptions( const Data& data );
+                ExecuteCommandRegistrationOptions( const Data& data );
 
-                ExecuteCommandOptions( void );
+                ExecuteCommandRegistrationOptions( void );
 
                 u1 hasCommands( void ) const;
 
@@ -1008,10 +1008,10 @@ namespace libstdhl
 
                 u1 hasExecuteCommandProvider( void ) const;
 
-                ExecuteCommandOptions executeCommandProvider( void ) const;
+                ExecuteCommandRegistrationOptions executeCommandProvider( void ) const;
 
                 void setExecuteCommandProvider(
-                    const ExecuteCommandOptions& executeCommandProvider );
+                    const ExecuteCommandRegistrationOptions& executeCommandProvider );
 
                 u1 hasExperimental( void ) const;
 
@@ -1603,9 +1603,67 @@ namespace libstdhl
               
               public:
 
-              DidChangeWatchedFilesRegistrationOptions ( const FileSystemWatcher watchers);
+              DidChangeWatchedFilesRegistrationOptions ( const std::vector<FileSystemWatcher>& watchers);
+
+              DidChangeWatchedFilesRegistrationOptions( const Data& data );
+
+              std::vector<FileSystemWatcher> watchers( void ) const;
+              
             };
 
+            class WorkspaceSymbolParams : public Data{
+
+              public:
+
+              WorkspaceSymbolParams( const Data& data);
+
+              WorkspaceSymbolParams( const std::string query);
+
+              std::string query( void ) const;
+
+              u1 isValid(const Data& data);
+             
+            };
+         
+            class ApplyWorkspaceEditParams : public Data
+            {
+              
+              public:
+              ApplyWorkspaceEditParams( const Data& data );
+
+              ApplyWorkspaceEditParams( const WorkspaceEdit& edit );
+              
+              WorkspaceEdit edit( void ) const;
+
+              u1 hasLabel( void ) const;
+
+              std::string label( void ) const;
+              
+              void setLabel( const std::string& label );
+
+              void setLabel( const Data& data);
+
+              u1 isValid ( const Data& data ) const;
+
+            };
+
+            class ApplyWorkspaceEditResponse
+            {
+              /**
+               * Indicates whether the edit was applied or not.
+               */
+              ApplyWorkspaceEditResponse(const Data& data );
+
+              ApplyWorkspaceEditResponse( const u1& applied );
+
+              u1 isApplied( void ) const;
+
+              void applied ( u1 applied );
+
+              u1 isValid( const Data& data );
+            };
+
+            /*---------------------------------------------------------------------------------*/
             class DidOpenTextDocumentParams : public Data
             {
               public:

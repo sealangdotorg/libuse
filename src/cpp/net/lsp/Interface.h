@@ -100,13 +100,14 @@ namespace libstdhl
                 */
 
                 // :arrow_left: window/showMessage
-                virtual void window_showMessage(ShowMessageParams& params ) = 0;
+                virtual void window_showMessage( const ShowMessageParams& params ) = 0;
 
                 // :arrow_right_hook: window/showMessageRequest
-                virtual MessageActionItem window_showMessageRequest(ShowMessageRequestParams& params) = 0;
+                virtual MessageActionItem window_showMessageRequest( 
+                    const ShowMessageRequestParams& params ) = 0;
                 
                 // :arrow_left: window/logMessage
-                virtual void window_logMessage(LogMessageParams& params) = 0;
+                virtual void window_logMessage( const LogMessageParams& params) = 0;
 
                 /**
                  * telemetry
@@ -128,12 +129,15 @@ namespace libstdhl
                 virtual std::vector<WorkspaceFolder>  workspace_workspaceFolders( void ) = 0;
                 
                 // :arrow_right: workspace/didChangeWorkspaceFolders
-                virtual void  workspace_didChangeWorkspaceFolders( DidChangeWorkspaceFoldersParams& params ) noexcept = 0;
+                virtual void  workspace_didChangeWorkspaceFolders( 
+                    const DidChangeWorkspaceFoldersParams& params ) noexcept = 0;
 
                 // :arrow_right: workspace/didChangeConfiguration
-                virtual void  workspace_didChangeConfiguration( DidChangeConfigurationParams& params) noexcept = 0;
+                virtual void  workspace_didChangeConfiguration( 
+                    const DidChangeConfigurationParams& params) noexcept = 0;
 
                 // :arrow_right_hook: workspace/configuration
+                virtual Data workspace_configuration( const ConfigurationParams& params ) = 0;
 
                 // :arrow_right: workspace/didChangeWatchedFiles
                 virtual void workspace_didChangeWatchedFiles(
