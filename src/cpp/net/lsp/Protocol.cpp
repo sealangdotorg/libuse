@@ -100,7 +100,7 @@ LSP::Protocol LSP::Protocol::parse( const std::string& data )
         // check for content type field
         else if( strncmp( p.c_str(), CT.c_str(), CT.size() ) == 0 )
         {
-            const auto type = String::trim( p.substr( CL.size() + 1 ) );
+            const auto type = String::trim( p.substr( CL.size() ) );
             if( type.compare( TYPE ) != 0 )
             {
                 throw std::domain_error( "LSP: invalid content type '" + type + "'" );
