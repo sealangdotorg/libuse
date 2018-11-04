@@ -53,7 +53,7 @@
    @brief    TBD
 
    TBD
-*/
+x*/
 
 using namespace libstdhl;
 using namespace Network;
@@ -115,17 +115,11 @@ void Message::process( ServerInterface& interface ) const
     };
 }
 
-u1 Message::isValid( const Data& data )
+void Message::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::jsonrpc ) != data.end() and
-        data[ Identifier::jsonrpc ].is_string() )
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = "LSP: Message:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::jsonrpc, true );
 }
 
 Message Message::parse( const std::string& data )
@@ -135,12 +129,7 @@ Message Message::parse( const std::string& data )
 
     // parse JSON data from string
     payload = Json::Object::parse( data );
-
-    if( not Message::isValid( payload ) )
-    {
-        throw std::invalid_argument(
-            "LSP: payload does not contain 'json-rpc' field of type 'string'" );
-    }
+    Message::validate( payload );
 
     const auto& jsonrpc = payload.at( Identifier::jsonrpc ).get< std::string >();
     if( jsonrpc.compare( Identifier::jsonrpc_version ) != 0 )
@@ -185,33 +174,23 @@ Message Message::parse( const std::string& data )
     {
         case ID::REQUEST_MESSAGE:
         {
-            if( not RequestMessage::isValid( payload ) )
-            {
-                throw std::invalid_argument( "LSP: invalid data provided for 'RequestMessage'" );
-            }
+            RequestMessage::validate( payload );
             return RequestMessage( payload );
         }
         case ID::RESPONSE_MESSAGE:
         {
-            if( not ResponseMessage::isValid( payload ) )
-            {
-                throw std::invalid_argument( "LSP: invalid data provided for 'ResponseMessage'" );
-            }
+            ResponseMessage::validate( payload );
             return ResponseMessage( data );
         }
         case ID::NOTIFICATION_MESSAGE:
         {
-            if( not NotificationMessage::isValid( payload ) )
-            {
-                throw std::invalid_argument(
-                    "LSP: invalid data provided for 'NotificationMessage'" );
-            }
+            NotificationMessage::validate( payload );
             return NotificationMessage( payload );
         }
         case ID::UNKNOWN:  // [[fallthrough]]
         case ID::_SIZE_:
         {
-            throw std::invalid_argument( "LSP: invalid JSON-RPC message payload" );
+            throw std::invalid_argument( "LSP: unknown JSON-RPC message payload" );
             return Message();
         }
     }
@@ -353,24 +332,13 @@ void RequestMessage::process( ServerInterface& interface ) const
     interface.respond( response );
 }
 
-u1 RequestMessage::isValid( const Data& data )
+void RequestMessage::validate( const Data& data )
 {
-    if( data.find( Identifier::id ) != data.end() and
-        ( data[ Identifier::id ].is_string() or data[ Identifier::id ].is_number() ) and
-        data.find( Identifier::method ) != data.end() and data[ Identifier::method ].is_string() )
-    {
-        if( data.find( Identifier::params ) != data.end() and
-            not data[ Identifier::params ].is_object() )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = "LSP: RequestMessage:";
+    Message::validate( data );
+    Content::validatePropertyIsUuid( context, data, Identifier::jsonrpc, true );
+    Content::validatePropertyIsString( context, data, Identifier::method, true );
+    Content::validatePropertyIsObject( context, data, Identifier::params, false );
 }
 
 //
@@ -467,22 +435,12 @@ void NotificationMessage::process( ServerInterface& interface ) const
     }
 }
 
-u1 NotificationMessage::isValid( const Data& data )
+void NotificationMessage::validate( const Data& data )
 {
-    if( data.find( Identifier::method ) != data.end() and data[ Identifier::method ].is_string() )
-    {
-        if( data.find( Identifier::params ) != data.end() and
-            not data[ Identifier::params ].is_object() )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = "LSP: NotificationMessage:";
+    Message::validate( data );
+    Content::validatePropertyIsString( context, data, Identifier::method, true );
+    Content::validatePropertyIsObject( context, data, Identifier::params, false );
 }
 
 //
@@ -560,29 +518,13 @@ void ResponseMessage::process( ServerInterface& interface ) const
     assert( !" TODO! " );
 }
 
-u1 ResponseMessage::isValid( const Data& data )
+void ResponseMessage::validate( const Data& data )
 {
-    if( data.find( Identifier::id ) != data.end() and
-        ( data[ Identifier::id ].is_string() or data[ Identifier::id ].is_number() ) )
-    {
-        if( data.find( Identifier::result ) != data.end() and
-            not data[ Identifier::result ].is_object() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::error ) != data.end() and
-            not ResponseError::isValid( data[ Identifier::error ] ) )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = "LSP: ResponseMessage:";
+    Message::validate( data );
+    Content::validatePropertyIsUuid( context, data, Identifier::id, true );
+    Content::validatePropertyIsObject( context, data, Identifier::result, false );
+    Content::validatePropertyIsObject( context, data, Identifier::error, false );
 }
 
 //

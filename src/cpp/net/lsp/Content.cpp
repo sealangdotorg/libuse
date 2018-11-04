@@ -56,16 +56,167 @@ using namespace LSP;
 
 //
 //
+// Content
+//
+
+static const std::string CONTENT = "LSP: Content:";
+
+u1 Content::hasProperty( const Data& data, const std::string& field )
+{
+    return data.find( field ) != data.end();
+}
+
+void Content::validateTypeIsObject( const std::string& context, const Data& data )
+{
+    if( not data.is_object() )
+    {
+        throw std::invalid_argument( context + " invalid data type, shall be 'object'" );
+    }
+}
+
+void Content::validateTypeIsString( const std::string& context, const Data& data )
+{
+    if( not data.is_string() )
+    {
+        throw std::invalid_argument( context + " invalid data type, shall be 'string'" );
+    }
+}
+
+void Content::validateTypeIsArray( const std::string& context, const Data& data )
+{
+    if( not data.is_array() )
+    {
+        throw std::invalid_argument( context + " invalid data type, shall be 'array'" );
+    }
+}
+
+void Content::validatePropertyIs(
+    const std::string& context,
+    const Data& data,
+    const std::string& field,
+    const u1 required,
+    const std::function< u1( const Data& property ) >& condition )
+{
+    if( hasProperty( data, field ) )
+    {
+        if( not condition( data[ field ] ) )
+        {
+            throw std::invalid_argument( context + " invalid property '" + field + "'" );
+        }
+    }
+    else
+    {
+        if( required )
+        {
+            throw std::invalid_argument( context + " missing property '" + field + "'" );
+        }
+    }
+}
+
+void Content::validatePropertyIsObject(
+    const std::string& context, const Data& data, const std::string& field, const u1 required )
+{
+    validatePropertyIs( context, data, field, required, []( const Data& property ) -> u1 {
+        return property.is_object();
+    } );
+}
+
+void Content::validatePropertyIsArray(
+    const std::string& context, const Data& data, const std::string& field, const u1 required )
+{
+    validatePropertyIs( context, data, field, required, []( const Data& property ) -> u1 {
+        return property.is_array();
+    } );
+}
+
+void Content::validatePropertyIsString(
+    const std::string& context, const Data& data, const std::string& field, const u1 required )
+{
+    validatePropertyIs( context, data, field, required, []( const Data& property ) -> u1 {
+        return property.is_string();
+    } );
+}
+
+void Content::validatePropertyIsNumber(
+    const std::string& context, const Data& data, const std::string& field, const u1 required )
+{
+    validatePropertyIs( context, data, field, required, []( const Data& property ) -> u1 {
+        return property.is_number();
+    } );
+}
+
+void Content::validatePropertyIsNumberOrNull(
+    const std::string& context, const Data& data, const std::string& field, const u1 required )
+{
+    validatePropertyIs( context, data, field, required, []( const Data& property ) -> u1 {
+        return property.is_number() or property.is_null();
+    } );
+}
+
+void Content::validatePropertyIsBoolean(
+    const std::string& context, const Data& data, const std::string& field, const u1 required )
+{
+    validatePropertyIs( context, data, field, required, []( const Data& property ) -> u1 {
+        return property.is_boolean();
+    } );
+}
+
+void Content::validatePropertyIsUuid(
+    const std::string& context, const Data& data, const std::string& field, const u1 required )
+{
+    validatePropertyIs( context, data, field, required, []( const Data& property ) -> u1 {
+        return property.is_string() or property.is_number();
+    } );
+}
+
+void Content::validatePropertyIsUri(
+    const std::string& context, const Data& data, const std::string& field, const u1 required )
+{
+    validatePropertyIsString( context, data, field, required );
+    try
+    {
+        DocumentUri::fromString( data[ field ].get< std::string >() );
+    }
+    catch( const std::exception& e )
+    {
+        throw std::invalid_argument( context + " DocumentUri: " + e.what() );
+    }
+}
+
+void Content::validatePropertyIsUriOrNull(
+    const std::string& context, const Data& data, const std::string& field, const u1 required )
+{
+    validatePropertyIs( context, data, field, required, []( const Data& property ) -> u1 {
+        return property.is_string() or property.is_null();
+    } );
+    if( hasProperty( data, field ) and data[ field ].is_string() )
+    {
+        validatePropertyIsUri( context, data, field, required );
+    }
+}
+
+void Content::validatePropertyIsArrayOfString(
+    const std::string& context, const Data& data, const std::string& field, const u1 required )
+{
+    validatePropertyIsArray( context, data, field, required );
+    if( hasProperty( data, field ) )
+    {
+        for( auto element : data[ field ] )
+        {
+            validateTypeIsString( context, element );
+        }
+    }
+}
+
+//
+//
 // Response Error
 //
 
 ResponseError::ResponseError( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'ResponseError'" );
-    }
+    validate( data );
 }
 
 ResponseError::ResponseError( const ErrorCode code, const std::string& message )
@@ -101,24 +252,13 @@ void ResponseError::setData( const Data& data )
     operator[]( Identifier::data ) = Data::from_cbor( Data::to_cbor( data ) );
 }
 
-u1 ResponseError::isValid( const Data& data )
+void ResponseError::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::code ) != data.end() and
-        data[ Identifier::code ].is_number() and data.find( Identifier::message ) != data.end() and
-        data[ Identifier::message ].is_string() )
-    {
-        if( data.find( Identifier::data ) != data.end() and
-            not data[ Identifier::data ].is_object() )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " ResponseError:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsNumber( context, data, Identifier::code, true );
+    Content::validatePropertyIsString( context, data, Identifier::message, true );
+    Content::validatePropertyIsObject( context, data, Identifier::data, false );
 }
 
 //
@@ -129,10 +269,7 @@ u1 ResponseError::isValid( const Data& data )
 Position::Position( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'Position'" );
-    }
+    validate( data );
 }
 
 Position::Position( const std::size_t line, const std::size_t character )
@@ -152,12 +289,12 @@ std::size_t Position::character( void ) const
     return at( Identifier::character ).get< std::size_t >();
 }
 
-u1 Position::isValid( const Data& data )
+void Position::validate( const Data& data )
 {
-    return data.is_object() and data.find( Identifier::line ) != data.end() and
-           data[ Identifier::line ].is_number() and
-           data.find( Identifier::character ) != data.end() and
-           data[ Identifier::character ].is_number();
+    static const auto context = CONTENT + " Position:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsNumber( context, data, Identifier::line, true );
+    Content::validatePropertyIsNumber( context, data, Identifier::character, true );
 }
 
 //
@@ -168,10 +305,7 @@ u1 Position::isValid( const Data& data )
 Range::Range( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'Range'" );
-    }
+    validate( data );
 }
 
 Range::Range( const Position& start, const Position& end )
@@ -191,12 +325,12 @@ Position Range::end( void ) const
     return at( Identifier::end );
 }
 
-u1 Range::isValid( const Data& data )
+void Range::validate( const Data& data )
 {
-    return data.is_object() and data.find( Identifier::start ) != data.end() and
-           Position::isValid( data[ Identifier::start ] ) and
-           data.find( Identifier::end ) != data.end() and
-           Position::isValid( data[ Identifier::end ] );
+    static const auto context = CONTENT + " Range:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< Range >( context, data, Identifier::start, true );
+    Content::validatePropertyIs< Range >( context, data, Identifier::end, true );
 }
 
 //
@@ -207,10 +341,7 @@ u1 Range::isValid( const Data& data )
 Location::Location( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'Location'" );
-    }
+    validate( data );
 }
 
 Location::Location( const DocumentUri& uri, const Range& range )
@@ -230,32 +361,12 @@ Range Location::range( void ) const
     return at( Identifier::range );
 }
 
-u1 Location::isValid( const Data& data )
+void Location::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::uri ) != data.end() and
-        data[ Identifier::uri ].is_string() and data.find( Identifier::range ) != data.end() and
-        data[ Identifier::range ].is_object() )
-    {
-        if( not Position::isValid( data[ Identifier::range ] ) )
-        {
-            return false;
-        }
-
-        try
-        {
-            DocumentUri::fromString( data[ Identifier::uri ].get< std::string >() );
-        }
-        catch( const std::exception& e )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " Location:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsUri( context, data, Identifier::uri, true );
+    Content::validatePropertyIs< Range >( context, data, Identifier::range, false );
 }
 
 //
@@ -266,10 +377,7 @@ u1 Location::isValid( const Data& data )
 Diagnostic::Diagnostic( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'Diagnostic'" );
-    }
+    validate( data );
 }
 
 Diagnostic::Diagnostic( const Range& range, const std::string& message )
@@ -339,41 +447,15 @@ void Diagnostic::setSource( const std::string& source )
     operator[]( Identifier::source ) = source;
 }
 
-u1 Diagnostic::isValid( const Data& data )
+void Diagnostic::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::range ) != data.end() and
-        data[ Identifier::range ].is_object() and data.find( Identifier::message ) != data.end() and
-        data[ Identifier::message ].is_string() )
-    {
-        if( not Range::isValid( data[ Identifier::range ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::severity ) != data.end() and
-            not data[ Identifier::severity ].is_number() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::code ) != data.end() and
-            not( data[ Identifier::code ].is_string() or data[ Identifier::code ].is_number() ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::source ) != data.end() and
-            not data[ Identifier::source ].is_string() )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " Diagnostic:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::message, true );
+    Content::validatePropertyIs< Range >( context, data, Identifier::range, true );
+    Content::validatePropertyIsUuid( context, data, Identifier::code, false );
+    Content::validatePropertyIsNumber( context, data, Identifier::severity, false );
+    Content::validatePropertyIsString( context, data, Identifier::source, false );
 }
 
 //
@@ -384,10 +466,7 @@ u1 Diagnostic::isValid( const Data& data )
 Command::Command( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'Command'" );
-    }
+    validate( data );
 }
 
 Command::Command( const std::string& title, const std::string& command )
@@ -423,24 +502,13 @@ void Command::addArgument( const Data& argument )
     operator[]( Identifier::arguments ).push_back( argument );
 }
 
-u1 Command::isValid( const Data& data )
+void Command::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::title ) != data.end() and
-        data[ Identifier::title ].is_string() and data.find( Identifier::command ) != data.end() and
-        data[ Identifier::command ].is_string() )
-    {
-        if( data.find( Identifier::arguments ) != data.end() and
-            not data[ Identifier::arguments ].is_array() )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " Command:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::title, true );
+    Content::validatePropertyIsString( context, data, Identifier::command, true );
+    Content::validatePropertyIsArray( context, data, Identifier::arguments, false );
 }
 
 //
@@ -451,10 +519,7 @@ u1 Command::isValid( const Data& data )
 TextEdit::TextEdit( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'TextEdit'" );
-    }
+    validate( data );
 }
 
 TextEdit::TextEdit( const Range& range, const std::string newText )
@@ -474,23 +539,12 @@ std::string TextEdit::newText( void ) const
     return at( Identifier::newText ).get< std::string >();
 }
 
-u1 TextEdit::isValid( const Data& data )
+void TextEdit::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::range ) != data.end() and
-        data[ Identifier::range ].is_object() and data.find( Identifier::newText ) != data.end() and
-        data[ Identifier::newText ].is_string() )
-    {
-        if( not Range::isValid( data[ Identifier::range ] ) )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " TextEdit:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::newText, true );
+    Content::validatePropertyIs< Range >( context, data, Identifier::range, true );
 }
 
 //
@@ -501,10 +555,7 @@ u1 TextEdit::isValid( const Data& data )
 TextDocumentIdentifier::TextDocumentIdentifier( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'TextDocumentIdentifier'" );
-    }
+    validate( data );
 }
 
 TextDocumentIdentifier::TextDocumentIdentifier( const DocumentUri& uri )
@@ -518,26 +569,11 @@ DocumentUri TextDocumentIdentifier::uri( void ) const
     return DocumentUri::fromString( at( Identifier::uri ).get< std::string >() );
 }
 
-u1 TextDocumentIdentifier::isValid( const Data& data )
+void TextDocumentIdentifier::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::uri ) != data.end() and
-        data[ Identifier::uri ].is_string() )
-    {
-        try
-        {
-            DocumentUri::fromString( data[ Identifier::uri ].get< std::string >() );
-        }
-        catch( const std::exception& e )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " TextDocumentIdentifier:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsUri( context, data, Identifier::uri, true );
 }
 
 //
@@ -548,11 +584,7 @@ u1 TextDocumentIdentifier::isValid( const Data& data )
 VersionedTextDocumentIdentifier::VersionedTextDocumentIdentifier( const Data& data )
 : TextDocumentIdentifier( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument(
-            "invalid data for interface 'VersionedTextDocumentIdentifier'" );
-    }
+    validate( data );
 }
 
 VersionedTextDocumentIdentifier::VersionedTextDocumentIdentifier(
@@ -567,22 +599,11 @@ std::size_t VersionedTextDocumentIdentifier::version( void ) const
     return at( Identifier::version ).get< std::size_t >();
 }
 
-u1 VersionedTextDocumentIdentifier::isValid( const Data& data )
+void VersionedTextDocumentIdentifier::validate( const Data& data )
 {
-    // if( TextDocumentIdentifier::isValid( data ) )
-    // {
-    if( data.find( Identifier::version ) != data.end() and
-        not data[ Identifier::version ].is_number() )
-    {
-        return false;
-    }
-
-    return true;
-    // }
-    // else
-    // {
-    //     return false;
-    // }
+    static const auto context = CONTENT + " VersionedTextDocumentIdentifier:";
+    TextDocumentIdentifier::validate( data );
+    Content::validatePropertyIsNumber( context, data, Identifier::version, true );
 }
 
 //
@@ -593,10 +614,7 @@ u1 VersionedTextDocumentIdentifier::isValid( const Data& data )
 TextDocumentEdit::TextDocumentEdit( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'TextDocumentEdit'" );
-    }
+    validate( data );
 }
 
 TextDocumentEdit::TextDocumentEdit(
@@ -622,31 +640,13 @@ Data TextDocumentEdit::edits( void ) const
     return at( Identifier::edits );
 }
 
-u1 TextDocumentEdit::isValid( const Data& data )
+void TextDocumentEdit::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::textDocument ) != data.end() and
-        data[ Identifier::textDocument ].is_object() and
-        data.find( Identifier::edits ) != data.end() and data[ Identifier::edits ].is_array() )
-    {
-        if( not VersionedTextDocumentIdentifier::isValid( data[ Identifier::textDocument ] ) )
-        {
-            return false;
-        }
-
-        for( auto edit : data[ Identifier::edits ] )
-        {
-            if( not TextEdit::isValid( edit ) )
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " TextDocumentEdit:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< VersionedTextDocumentIdentifier >(
+        context, data, Identifier::textDocument, true );
+    Content::validatePropertyIsArrayOf< TextEdit >( context, data, Identifier::edits, true );
 }
 
 //
@@ -657,10 +657,7 @@ u1 TextDocumentEdit::isValid( const Data& data )
 WorkspaceEdit::WorkspaceEdit( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'WorkspaceEdit'" );
-    }
+    validate( data );
 }
 
 WorkspaceEdit::WorkspaceEdit( void )
@@ -684,25 +681,12 @@ void WorkspaceEdit::addDocumentChange( const TextDocumentEdit& documentChange )
     operator[]( Identifier::documentChanges ).push_back( documentChange );
 }
 
-u1 WorkspaceEdit::isValid( const Data& data )
+void WorkspaceEdit::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::documentChanges ) != data.end() and
-        data[ Identifier::documentChanges ].is_array() )
-    {
-        for( auto documentChange : data[ Identifier::documentChanges ] )
-        {
-            if( not TextDocumentEdit::isValid( documentChange ) )
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " WorkspaceEdit:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsArrayOf< TextDocumentEdit >(
+        context, data, Identifier::documentChanges, false );
 }
 
 //
@@ -713,10 +697,7 @@ u1 WorkspaceEdit::isValid( const Data& data )
 TextDocumentItem::TextDocumentItem( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'TextDocumentItem'" );
-    }
+    validate( data );
 }
 
 TextDocumentItem::TextDocumentItem(
@@ -752,31 +733,14 @@ std::string TextDocumentItem::text( void ) const
     return at( Identifier::text ).get< std::string >();
 }
 
-u1 TextDocumentItem::isValid( const Data& data )
+void TextDocumentItem::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::uri ) != data.end() and
-        data[ Identifier::uri ].is_string() and
-        data.find( Identifier::languageId ) != data.end() and
-        data[ Identifier::languageId ].is_string() and
-        data.find( Identifier::version ) != data.end() and
-        data[ Identifier::version ].is_number() and data.find( Identifier::text ) != data.end() and
-        data[ Identifier::text ].is_string() )
-    {
-        try
-        {
-            DocumentUri::fromString( data[ Identifier::uri ].get< std::string >() );
-        }
-        catch( const std::exception& e )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " TextDocumentItem:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsUri( context, data, Identifier::uri, true );
+    Content::validatePropertyIsString( context, data, Identifier::languageId, true );
+    Content::validatePropertyIsNumber( context, data, Identifier::version, true );
+    Content::validatePropertyIsString( context, data, Identifier::text, true );
 }
 
 //
@@ -787,10 +751,7 @@ u1 TextDocumentItem::isValid( const Data& data )
 TextDocumentPositionParams::TextDocumentPositionParams( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'TextDocumentPositionParams'" );
-    }
+    validate( data );
 }
 
 TextDocumentPositionParams::TextDocumentPositionParams(
@@ -811,29 +772,13 @@ Position TextDocumentPositionParams::position( void ) const
     return at( Identifier::position );
 }
 
-u1 TextDocumentPositionParams::isValid( const Data& data )
+void TextDocumentPositionParams::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::textDocument ) != data.end() and
-        data[ Identifier::textDocument ].is_object() and
-        data.find( Identifier::position ) != data.end() and
-        data[ Identifier::position ].is_object() )
-    {
-        if( not TextDocumentIdentifier::isValid( data[ Identifier::textDocument ] ) )
-        {
-            return false;
-        }
-
-        if( not Position::isValid( data[ Identifier::position ] ) )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " TextDocumentPositionParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< TextDocumentIdentifier >(
+        context, data, Identifier::textDocument, true );
+    Content::validatePropertyIs< Position >( context, data, Identifier::position, true );
 }
 
 //
@@ -844,10 +789,7 @@ u1 TextDocumentPositionParams::isValid( const Data& data )
 DocumentFilter::DocumentFilter( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'DocumentFilter'" );
-    }
+    validate( data );
 }
 
 DocumentFilter::DocumentFilter( void )
@@ -900,34 +842,13 @@ void DocumentFilter::setPattern( const std::string& pattern )
     operator[]( Identifier::pattern ) = pattern;
 }
 
-u1 DocumentFilter::isValid( const Data& data )
+void DocumentFilter::validate( const Data& data )
 {
-    if( data.is_object() )
-    {
-        if( data.find( Identifier::language ) != data.end() and
-            not data[ Identifier::language ].is_string() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::scheme ) != data.end() and
-            not data[ Identifier::scheme ].is_string() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::pattern ) != data.end() and
-            not data[ Identifier::pattern ].is_string() )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " DocumentFilter:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::language, false );
+    Content::validatePropertyIsString( context, data, Identifier::scheme, false );
+    Content::validatePropertyIsString( context, data, Identifier::pattern, false );
 }
 
 //
@@ -938,10 +859,7 @@ u1 DocumentFilter::isValid( const Data& data )
 DocumentSelector::DocumentSelector( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'DocumentSelector'" );
-    }
+    validate( data );
 }
 
 DocumentSelector::DocumentSelector( const std::vector< DocumentFilter >& documentFilters )
@@ -953,24 +871,10 @@ DocumentSelector::DocumentSelector( const std::vector< DocumentFilter >& documen
     }
 }
 
-u1 DocumentSelector::isValid( const Data& data )
+void DocumentSelector::validate( const Data& data )
 {
-    if( data.is_array() )
-    {
-        for( auto documentFilter : data )
-        {
-            if( not DocumentFilter::isValid( documentFilter ) )
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " DocumentSelector:";
+    Content::validateTypeIsArrayOf< DocumentFilter >( context, data );
 }
 
 //
@@ -981,10 +885,7 @@ u1 DocumentSelector::isValid( const Data& data )
 DynamicRegistration::DynamicRegistration( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'DynamicRegistration'" );
-    }
+    validate( data );
 }
 
 DynamicRegistration::DynamicRegistration( void )
@@ -1007,22 +908,11 @@ void DynamicRegistration::setDynamicRegistration( const u1 dynamicRegistration )
     operator[]( Identifier::dynamicRegistration ) = dynamicRegistration;
 }
 
-u1 DynamicRegistration::isValid( const Data& data )
+void DynamicRegistration::validate( const Data& data )
 {
-    if( data.is_object() )
-    {
-        if( data.find( Identifier::dynamicRegistration ) != data.end() and
-            not data[ Identifier::dynamicRegistration ].is_boolean() )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " DynamicRegistration:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsBoolean( context, data, Identifier::dynamicRegistration, false );
 }
 
 //
@@ -1033,10 +923,7 @@ u1 DynamicRegistration::isValid( const Data& data )
 WorkspaceClientCapabilities::WorkspaceClientCapabilities( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'WorkspaceClientCapabilities'" );
-    }
+    validate( data );
 }
 
 WorkspaceClientCapabilities::WorkspaceClientCapabilities( void )
@@ -1138,52 +1025,20 @@ void WorkspaceClientCapabilities::executeCommand( const DynamicRegistration& exe
     operator[]( Identifier::executeCommand ) = Data::from_cbor( Data::to_cbor( executeCommand ) );
 }
 
-u1 WorkspaceClientCapabilities::isValid( const Data& data )
+void WorkspaceClientCapabilities::validate( const Data& data )
 {
-    if( data.is_object() )
-    {
-        if( data.find( Identifier::applyEdit ) != data.end() and
-            not data[ Identifier::applyEdit ].is_boolean() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::workspaceEdit ) != data.end() and
-            not WorkspaceEdit::isValid( data[ Identifier::workspaceEdit ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::didChangeConfiguration ) != data.end() and
-            not DynamicRegistration::isValid( data[ Identifier::didChangeConfiguration ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::didChangeWatchedFiles ) != data.end() and
-            not DynamicRegistration::isValid( data[ Identifier::didChangeWatchedFiles ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::symbol ) != data.end() and
-            not DynamicRegistration::isValid( data[ Identifier::symbol ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::executeCommand ) != data.end() and
-            not DynamicRegistration::isValid( data[ Identifier::executeCommand ] ) )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " WorkspaceClientCapabilities:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsBoolean( context, data, Identifier::applyEdit, false );
+    Content::validatePropertyIs< DynamicRegistration >(
+        context, data, Identifier::workspaceEdit, false );
+    Content::validatePropertyIs< DynamicRegistration >(
+        context, data, Identifier::didChangeConfiguration, false );
+    Content::validatePropertyIs< DynamicRegistration >(
+        context, data, Identifier::didChangeWatchedFiles, false );
+    Content::validatePropertyIs< DynamicRegistration >( context, data, Identifier::symbol, false );
+    Content::validatePropertyIs< DynamicRegistration >(
+        context, data, Identifier::executeCommand, false );
 }
 
 //
@@ -1194,10 +1049,7 @@ u1 WorkspaceClientCapabilities::isValid( const Data& data )
 Synchronization::Synchronization( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'Synchronization'" );
-    }
+    validate( data );
 }
 
 Synchronization::Synchronization( void )
@@ -1265,40 +1117,14 @@ void Synchronization::setDidSave( const u1 didSave )
     operator[]( Identifier::didSave ) = didSave;
 }
 
-u1 Synchronization::isValid( const Data& data )
+void Synchronization::validate( const Data& data )
 {
-    if( data.is_object() )
-    {
-        if( data.find( Identifier::dynamicRegistration ) != data.end() and
-            not data[ Identifier::dynamicRegistration ].is_boolean() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::willSave ) != data.end() and
-            not data[ Identifier::willSave ].is_boolean() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::willSaveWaitUntil ) != data.end() and
-            not data[ Identifier::willSaveWaitUntil ].is_boolean() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::didSave ) != data.end() and
-            not data[ Identifier::didSave ].is_boolean() )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " Synchronization:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsBoolean( context, data, Identifier::dynamicRegistration, false );
+    Content::validatePropertyIsBoolean( context, data, Identifier::willSave, false );
+    Content::validatePropertyIsBoolean( context, data, Identifier::willSaveWaitUntil, false );
+    Content::validatePropertyIsBoolean( context, data, Identifier::didSave, false );
 }
 
 //
@@ -1309,10 +1135,7 @@ u1 Synchronization::isValid( const Data& data )
 CompletionItem::CompletionItem( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'CompletionItem'" );
-    }
+    validate( data );
 }
 
 CompletionItem::CompletionItem( void )
@@ -1335,22 +1158,11 @@ void CompletionItem::setSnippetSupport( const u1 snippetSupport )
     operator[]( Identifier::snippetSupport ) = snippetSupport;
 }
 
-u1 CompletionItem::isValid( const Data& data )
+void CompletionItem::validate( const Data& data )
 {
-    if( data.is_object() )
-    {
-        if( data.find( Identifier::snippetSupport ) != data.end() and
-            not data[ Identifier::snippetSupport ].is_boolean() )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " CompletionItem:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsBoolean( context, data, Identifier::snippetSupport, false );
 }
 
 //
@@ -1361,10 +1173,7 @@ u1 CompletionItem::isValid( const Data& data )
 Completion::Completion( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'Completion'" );
-    }
+    validate( data );
 }
 
 Completion::Completion( void )
@@ -1402,28 +1211,13 @@ void Completion::completionItem( const CompletionItem& completionItem )
     operator[]( Identifier::completionItem ) = Data::from_cbor( Data::to_cbor( completionItem ) );
 }
 
-u1 Completion::isValid( const Data& data )
+void Completion::validate( const Data& data )
 {
-    if( data.is_object() )
-    {
-        if( data.find( Identifier::dynamicRegistration ) != data.end() and
-            not data[ Identifier::dynamicRegistration ].is_boolean() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::completionItem ) != data.end() and
-            not CompletionItem::isValid( data[ Identifier::completionItem ] ) )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " Completion:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsBoolean( context, data, Identifier::dynamicRegistration, false );
+    Content::validatePropertyIs< CompletionItem >(
+        context, data, Identifier::completionItem, false );
 }
 
 //
@@ -1434,11 +1228,7 @@ u1 Completion::isValid( const Data& data )
 TextDocumentClientCapabilities::TextDocumentClientCapabilities( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument(
-            "invalid data for interface 'TextDocumentClientCapabilities'" );
-    }
+    validate( data );
 }
 
 TextDocumentClientCapabilities::TextDocumentClientCapabilities( void )
@@ -1676,106 +1466,37 @@ void TextDocumentClientCapabilities::setRename( const DynamicRegistration& renam
     operator[]( Identifier::rename ) = Data::from_cbor( Data::to_cbor( rename ) );
 }
 
-u1 TextDocumentClientCapabilities::isValid( const Data& data )
+void TextDocumentClientCapabilities::validate( const Data& data )
 {
-    if( data.is_object() )
-    {
-        if( data.find( Identifier::synchronization ) != data.end() and
-            not Synchronization::isValid( data[ Identifier::synchronization ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::completion ) != data.end() and
-            not Completion::isValid( data[ Identifier::completion ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::hover ) != data.end() and
-            not DynamicRegistration::isValid( data[ Identifier::hover ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::signatureHelp ) != data.end() and
-            not DynamicRegistration::isValid( data[ Identifier::signatureHelp ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::references ) != data.end() and
-            not DynamicRegistration::isValid( data[ Identifier::references ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::documentHighlight ) != data.end() and
-            not DynamicRegistration::isValid( data[ Identifier::documentHighlight ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::documentSymbol ) != data.end() and
-            not DynamicRegistration::isValid( data[ Identifier::documentSymbol ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::formatting ) != data.end() and
-            not DynamicRegistration::isValid( data[ Identifier::formatting ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::rangeFormatting ) != data.end() and
-            not DynamicRegistration::isValid( data[ Identifier::rangeFormatting ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::onTypeFormatting ) != data.end() and
-            not DynamicRegistration::isValid( data[ Identifier::onTypeFormatting ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::definition ) != data.end() and
-            not DynamicRegistration::isValid( data[ Identifier::definition ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::codeAction ) != data.end() and
-            not DynamicRegistration::isValid( data[ Identifier::codeAction ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::codeLens ) != data.end() and
-            not DynamicRegistration::isValid( data[ Identifier::codeLens ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::documentLink ) != data.end() and
-            not DynamicRegistration::isValid( data[ Identifier::documentLink ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::rename ) != data.end() and
-            not DynamicRegistration::isValid( data[ Identifier::rename ] ) )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " TextDocumentClientCapabilities:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< Synchronization >(
+        context, data, Identifier::synchronization, false );
+    Content::validatePropertyIs< Completion >( context, data, Identifier::completion, false );
+    Content::validatePropertyIs< DynamicRegistration >( context, data, Identifier::hover, false );
+    Content::validatePropertyIs< DynamicRegistration >(
+        context, data, Identifier::signatureHelp, false );
+    Content::validatePropertyIs< DynamicRegistration >(
+        context, data, Identifier::references, false );
+    Content::validatePropertyIs< DynamicRegistration >(
+        context, data, Identifier::documentHighlight, false );
+    Content::validatePropertyIs< DynamicRegistration >(
+        context, data, Identifier::documentSymbol, false );
+    Content::validatePropertyIs< DynamicRegistration >(
+        context, data, Identifier::formatting, false );
+    Content::validatePropertyIs< DynamicRegistration >(
+        context, data, Identifier::rangeFormatting, false );
+    Content::validatePropertyIs< DynamicRegistration >(
+        context, data, Identifier::onTypeFormatting, false );
+    Content::validatePropertyIs< DynamicRegistration >(
+        context, data, Identifier::definition, false );
+    Content::validatePropertyIs< DynamicRegistration >(
+        context, data, Identifier::codeAction, false );
+    Content::validatePropertyIs< DynamicRegistration >(
+        context, data, Identifier::codeLens, false );
+    Content::validatePropertyIs< DynamicRegistration >(
+        context, data, Identifier::documentLink, false );
+    Content::validatePropertyIs< DynamicRegistration >( context, data, Identifier::rename, false );
 }
 
 //
@@ -1786,10 +1507,7 @@ u1 TextDocumentClientCapabilities::isValid( const Data& data )
 ClientCapabilities::ClientCapabilities( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'ClientCapabilities'" );
-    }
+    validate( data );
 }
 
 ClientCapabilities::ClientCapabilities( void )
@@ -1842,34 +1560,15 @@ void ClientCapabilities::setExperimental( const Data& experimental )
     operator[]( Identifier::experimental ) = Data::from_cbor( Data::to_cbor( experimental ) );
 }
 
-u1 ClientCapabilities::isValid( const Data& data )
+void ClientCapabilities::validate( const Data& data )
 {
-    if( data.is_object() )
-    {
-        if( data.find( Identifier::workspace ) != data.end() and
-            not WorkspaceClientCapabilities::isValid( data[ Identifier::workspace ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::textDocument ) != data.end() and
-            not TextDocumentClientCapabilities::isValid( data[ Identifier::textDocument ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::experimental ) != data.end() and
-            not data[ Identifier::experimental ].is_object() )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " ClientCapabilities:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< WorkspaceClientCapabilities >(
+        context, data, Identifier::workspace, false );
+    Content::validatePropertyIs< TextDocumentClientCapabilities >(
+        context, data, Identifier::textDocument, false );
+    Content::validatePropertyIsObject( context, data, Identifier::experimental, false );
 }
 
 //
@@ -1880,10 +1579,7 @@ u1 ClientCapabilities::isValid( const Data& data )
 SaveOptions::SaveOptions( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'SaveOptions'" );
-    }
+    validate( data );
 }
 
 SaveOptions::SaveOptions( void )
@@ -1906,22 +1602,11 @@ void SaveOptions::setIncludeText( const u1 includeText )
     operator[]( Identifier::includeText ) = includeText;
 }
 
-u1 SaveOptions::isValid( const Data& data )
+void SaveOptions::validate( const Data& data )
 {
-    if( data.is_object() )
-    {
-        if( data.find( Identifier::includeText ) != data.end() and
-            not data[ Identifier::includeText ].is_boolean() )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " SaveOptions:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsBoolean( context, data, Identifier::includeText, false );
 }
 
 //
@@ -1932,10 +1617,7 @@ u1 SaveOptions::isValid( const Data& data )
 TextDocumentSyncOptions::TextDocumentSyncOptions( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'TextDocumentSyncOptions'" );
-    }
+    validate( data );
 }
 
 TextDocumentSyncOptions::TextDocumentSyncOptions( void )
@@ -2019,46 +1701,15 @@ void TextDocumentSyncOptions::setSave( const SaveOptions& save )
     operator[]( Identifier::save ) = Data::from_cbor( Data::to_cbor( save ) );
 }
 
-u1 TextDocumentSyncOptions::isValid( const Data& data )
+void TextDocumentSyncOptions::validate( const Data& data )
 {
-    if( data.is_object() )
-    {
-        if( data.find( Identifier::openClose ) != data.end() and
-            not data[ Identifier::openClose ].is_boolean() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::change ) != data.end() and
-            not data[ Identifier::change ].is_number() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::willSave ) != data.end() and
-            not data[ Identifier::willSave ].is_boolean() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::willSaveWaitUntil ) != data.end() and
-            not data[ Identifier::willSaveWaitUntil ].is_boolean() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::save ) != data.end() and
-            not SaveOptions::isValid( data[ Identifier::save ] ) )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " TextDocumentSyncOptions:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsBoolean( context, data, Identifier::openClose, false );
+    Content::validatePropertyIsNumber( context, data, Identifier::change, false );
+    Content::validatePropertyIsBoolean( context, data, Identifier::willSave, false );
+    Content::validatePropertyIsBoolean( context, data, Identifier::willSaveWaitUntil, false );
+    Content::validatePropertyIs< SaveOptions >( context, data, Identifier::save, false );
 }
 
 //
@@ -2069,10 +1720,7 @@ u1 TextDocumentSyncOptions::isValid( const Data& data )
 CompletionOptions::CompletionOptions( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'CompletionOptions'" );
-    }
+    validate( data );
 }
 
 CompletionOptions::CompletionOptions( void )
@@ -2111,34 +1759,12 @@ void CompletionOptions::addTriggerCharacters( const std::string& triggerCharacte
     operator[]( Identifier::triggerCharacters ).push_back( triggerCharacter );
 }
 
-u1 CompletionOptions::isValid( const Data& data )
+void CompletionOptions::validate( const Data& data )
 {
-    if( data.is_object() )
-    {
-        if( data.find( Identifier::resolveProvider ) != data.end() and
-            not data[ Identifier::resolveProvider ].is_boolean() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::triggerCharacters ) != data.end() and
-            data[ Identifier::triggerCharacters ].is_array() )
-        {
-            for( auto triggerCharacter : data[ Identifier::triggerCharacters ] )
-            {
-                if( not triggerCharacter.is_string() )
-                {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " CompletionOptions:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsBoolean( context, data, Identifier::resolveProvider, false );
+    Content::validatePropertyIsArrayOfString( context, data, Identifier::triggerCharacters, false );
 }
 
 //
@@ -2149,10 +1775,7 @@ u1 CompletionOptions::isValid( const Data& data )
 SignatureHelpOptions::SignatureHelpOptions( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'SignatureHelpOptions'" );
-    }
+    validate( data );
 }
 
 SignatureHelpOptions::SignatureHelpOptions( void )
@@ -2176,28 +1799,11 @@ void SignatureHelpOptions::addTriggerCharacters( const std::string& triggerChara
     operator[]( Identifier::triggerCharacters ).push_back( triggerCharacter );
 }
 
-u1 SignatureHelpOptions::isValid( const Data& data )
+void SignatureHelpOptions::validate( const Data& data )
 {
-    if( data.is_object() )
-    {
-        if( data.find( Identifier::triggerCharacters ) != data.end() and
-            data[ Identifier::triggerCharacters ].is_array() )
-        {
-            for( auto triggerCharacter : data[ Identifier::triggerCharacters ] )
-            {
-                if( not triggerCharacter.is_string() )
-                {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " SignatureHelpOptions:";
+    Content::validateTypeIsObject( context, data );
+    // TODO: FIXME: @ppaulweber
 }
 
 //
@@ -2208,10 +1814,7 @@ u1 SignatureHelpOptions::isValid( const Data& data )
 CodeLensOptions::CodeLensOptions( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'CodeLensOptions'" );
-    }
+    validate( data );
 }
 
 CodeLensOptions::CodeLensOptions( void )
@@ -2234,22 +1837,11 @@ void CodeLensOptions::setResolveProvider( const u1 resolveProvider )
     operator[]( Identifier::resolveProvider ) = resolveProvider;
 }
 
-u1 CodeLensOptions::isValid( const Data& data )
+void CodeLensOptions::validate( const Data& data )
 {
-    if( data.is_object() )
-    {
-        if( data.find( Identifier::resolveProvider ) != data.end() and
-            not data[ Identifier::resolveProvider ].is_boolean() )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " SignatureHelpOptions:";
+    Content::validateTypeIsObject( context, data );
+    // TODO: FIXME: @ppaulweber
 }
 
 //
@@ -2260,11 +1852,7 @@ u1 CodeLensOptions::isValid( const Data& data )
 DocumentOnTypeFormattingOptions::DocumentOnTypeFormattingOptions( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument(
-            "invalid data for interface 'DocumentOnTypeFormattingOptions'" );
-    }
+    validate( data );
 }
 
 DocumentOnTypeFormattingOptions::DocumentOnTypeFormattingOptions(
@@ -2295,29 +1883,11 @@ void DocumentOnTypeFormattingOptions::addMoreTriggerCharacter( const Data& moreT
     operator[]( Identifier::moreTriggerCharacter ).push_back( moreTriggerCharacter );
 }
 
-u1 DocumentOnTypeFormattingOptions::isValid( const Data& data )
+void DocumentOnTypeFormattingOptions::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::firstTriggerCharacter ) != data.end() and
-        data[ Identifier::firstTriggerCharacter ].is_string() )
-    {
-        if( data.find( Identifier::moreTriggerCharacter ) != data.end() and
-            not data[ Identifier::moreTriggerCharacter ].is_array() )
-        {
-            for( auto moreTriggerCharacter : data[ Identifier::moreTriggerCharacter ] )
-            {
-                if( not moreTriggerCharacter.is_string() )
-                {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " SignatureHelpOptions:";
+    Content::validateTypeIsObject( context, data );
+    // TODO: FIXME: @ppaulweber
 }
 
 //
@@ -2328,10 +1898,7 @@ u1 DocumentOnTypeFormattingOptions::isValid( const Data& data )
 ExecuteCommandOptions::ExecuteCommandOptions( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'ExecuteCommandOptions'" );
-    }
+    validate( data );
 }
 
 ExecuteCommandOptions::ExecuteCommandOptions( void )
@@ -2355,25 +1922,11 @@ void ExecuteCommandOptions::addCommand( const std::string& command )
     operator[]( Identifier::commands ).push_back( command );
 }
 
-u1 ExecuteCommandOptions::isValid( const Data& data )
+void ExecuteCommandOptions::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::commands ) != data.end() and
-        data[ Identifier::commands ].is_array() )
-    {
-        for( auto command : data[ Identifier::commands ] )
-        {
-            if( not command.is_string() )
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " SignatureHelpOptions:";
+    Content::validateTypeIsObject( context, data );
+    // TODO: FIXME: @ppaulweber
 }
 
 //
@@ -2384,10 +1937,7 @@ u1 ExecuteCommandOptions::isValid( const Data& data )
 ServerCapabilities::ServerCapabilities( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'ServerCapabilities'" );
-    }
+    validate( data );
 }
 
 ServerCapabilities::ServerCapabilities( void )
@@ -2678,146 +2228,39 @@ void ServerCapabilities::setExperimental( const Data& experimental )
     operator[]( Identifier::experimental ) = Data::from_cbor( Data::to_cbor( experimental ) );
 }
 
-u1 ServerCapabilities::isValid( const Data& data )
+void ServerCapabilities::validate( const Data& data )
 {
-    if( data.is_object() )
-    {
-        if( data.find( Identifier::textDocumentSync ) != data.end() and
-            not TextDocumentSyncOptions::isValid( data[ Identifier::textDocumentSync ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::hoverProvider ) != data.end() and
-            not data[ Identifier::hoverProvider ].is_boolean() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::completionProvider ) != data.end() and
-            not CompletionOptions::isValid( data[ Identifier::completionProvider ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::signatureHelpProvider ) != data.end() and
-            not SignatureHelpOptions::isValid( data[ Identifier::signatureHelpProvider ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::definitionProvider ) != data.end() and
-            not data[ Identifier::definitionProvider ].is_boolean() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::referencesProvider ) != data.end() and
-            not data[ Identifier::referencesProvider ].is_boolean() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::documentHighlightProvider ) != data.end() and
-            not data[ Identifier::documentHighlightProvider ].is_boolean() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::documentSymbolProvider ) != data.end() and
-            not data[ Identifier::documentSymbolProvider ].is_boolean() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::workspaceSymbolProvider ) != data.end() and
-            not data[ Identifier::workspaceSymbolProvider ].is_boolean() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::codeActionProvider ) != data.end() and
-            not data[ Identifier::codeActionProvider ].is_boolean() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::codeLensProvider ) != data.end() and
-            not CodeLensOptions::isValid( data[ Identifier::codeLensProvider ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::documentFormattingProvider ) != data.end() and
-            not data[ Identifier::documentFormattingProvider ].is_boolean() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::documentRangeFormattingProvider ) != data.end() and
-            not data[ Identifier::documentRangeFormattingProvider ].is_boolean() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::documentOnTypeFormattingProvider ) != data.end() and
-            not DocumentOnTypeFormattingOptions::isValid(
-                data[ Identifier::documentOnTypeFormattingProvider ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::renameProvider ) != data.end() and
-            not data[ Identifier::renameProvider ].is_boolean() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::documentLinkProvider ) != data.end() and
-            not DocumentLinkOptions::isValid( data[ Identifier::documentLinkProvider ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::executeCommandProvider ) != data.end() and
-            not ExecuteCommandOptions::isValid( data[ Identifier::executeCommandProvider ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::experimental ) != data.end() and
-            not data[ Identifier::experimental ].is_object() )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " SignatureHelpOptions:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< TextDocumentSyncOptions >(
+        context, data, Identifier::textDocumentSync, false );
+    Content::validatePropertyIsBoolean( context, data, Identifier::hoverProvider, false );
+    Content::validatePropertyIs< CompletionOptions >(
+        context, data, Identifier::completionProvider, false );
+    Content::validatePropertyIs< SignatureHelpOptions >(
+        context, data, Identifier::signatureHelpProvider, false );
+    Content::validatePropertyIsBoolean( context, data, Identifier::definitionProvider, false );
+    Content::validatePropertyIsBoolean( context, data, Identifier::referencesProvider, false );
+    Content::validatePropertyIsBoolean(
+        context, data, Identifier::documentHighlightProvider, false );
+    Content::validatePropertyIsBoolean( context, data, Identifier::documentSymbolProvider, false );
+    Content::validatePropertyIsBoolean( context, data, Identifier::workspaceSymbolProvider, false );
+    Content::validatePropertyIsBoolean( context, data, Identifier::codeActionProvider, false );
+    Content::validatePropertyIs< CodeLensOptions >(
+        context, data, Identifier::codeLensProvider, false );
+    Content::validatePropertyIsBoolean(
+        context, data, Identifier::documentFormattingProvider, false );
+    Content::validatePropertyIsBoolean(
+        context, data, Identifier::documentRangeFormattingProvider, false );
+    Content::validatePropertyIs< DocumentOnTypeFormattingOptions >(
+        context, data, Identifier::documentOnTypeFormattingProvider, false );
+    Content::validatePropertyIsBoolean( context, data, Identifier::renameProvider, false );
+    Content::validatePropertyIs< DocumentLinkOptions >(
+        context, data, Identifier::documentLinkProvider, false );
+    Content::validatePropertyIs< ExecuteCommandOptions >(
+        context, data, Identifier::executeCommandProvider, false );
+    Content::validatePropertyIsObject( context, data, Identifier::experimental, false );
 }
-
-//
-//
-//
-//
-
-//
-//
-//
-//
-
-//
-//
-//
-//
-
-//
-//
-//
-//
 
 // -----------------------------------------------------------------------------
 
@@ -2829,10 +2272,7 @@ u1 ServerCapabilities::isValid( const Data& data )
 InitializeParams::InitializeParams( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'InitializeParams'" );
-    }
+    validate( data );
 }
 
 InitializeParams::InitializeParams(
@@ -2891,50 +2331,17 @@ void InitializeParams::setTrace( const std::string& trace )
     operator[]( Identifier::trace ) = trace;
 }
 
-u1 InitializeParams::isValid( const Data& data )
+void InitializeParams::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::rootUri ) != data.end() and
-        ( data[ Identifier::rootUri ].is_string() or data[ Identifier::rootUri ].is_null() ) and
-        data.find( Identifier::capabilities ) != data.end() and
-        ClientCapabilities::isValid( data[ Identifier::capabilities ] ) )
-    {
-        if( data.find( Identifier::processId ) != data.end() and
-            not( data[ Identifier::processId ].is_number() or
-                 data[ Identifier::processId ].is_null() ) )
-        {
-            return false;
-        }
+    static const auto context = CONTENT + " InitializeParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsUriOrNull( context, data, Identifier::rootUri, true );
+    Content::validatePropertyIs< ClientCapabilities >(
+        context, data, Identifier::capabilities, true );
 
-        if( not data[ Identifier::rootUri ].is_null() )
-        {
-            try
-            {
-                DocumentUri::fromString( data[ Identifier::uri ].get< std::string >() );
-            }
-            catch( const std::exception& e )
-            {
-                return false;
-            }
-        }
-
-        if( data.find( Identifier::initializationOptions ) != data.end() and
-            not data[ Identifier::initializationOptions ].is_object() )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::trace ) != data.end() and
-            not data[ Identifier::trace ].is_string() )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    Content::validatePropertyIsNumberOrNull( context, data, Identifier::processId, false );
+    Content::validatePropertyIsObject( context, data, Identifier::initializationOptions, false );
+    Content::validatePropertyIsString( context, data, Identifier::trace, false );
 }
 
 //
@@ -2945,10 +2352,7 @@ u1 InitializeParams::isValid( const Data& data )
 InitializeResult::InitializeResult( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'InitializeResult'" );
-    }
+    validate( data );
 }
 
 InitializeResult::InitializeResult( const ServerCapabilities& capabilities )
@@ -2962,22 +2366,12 @@ ServerCapabilities InitializeResult::capabilities( void ) const
     return at( Identifier::capabilities );
 }
 
-u1 InitializeResult::isValid( const Data& data )
+void InitializeResult::validate( const Data& data )
 {
-    if( data.is_object() )
-    {
-        if( data.find( Identifier::capabilities ) != data.end() and
-            not ServerCapabilities::isValid( data[ Identifier::capabilities ] ) )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " InitializeResult:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< ServerCapabilities >(
+        context, data, Identifier::capabilities, false );
 }
 
 //
@@ -2988,10 +2382,7 @@ u1 InitializeResult::isValid( const Data& data )
 InitializeError::InitializeError( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'InitializeError'" );
-    }
+    validate( data );
 }
 
 InitializeError::InitializeError( const u1 retry )
@@ -3005,17 +2396,11 @@ u1 InitializeError::retry( void ) const
     return at( Identifier::retry ).get< u1 >();
 }
 
-u1 InitializeError::isValid( const Data& data )
+void InitializeError::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::retry ) != data.end() and
-        data[ Identifier::retry ].is_boolean() )
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " InitializeError:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsBoolean( context, data, Identifier::retry, false );
 }
 
 //
@@ -3026,10 +2411,7 @@ u1 InitializeError::isValid( const Data& data )
 DidOpenTextDocumentParams::DidOpenTextDocumentParams( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'DidOpenTextDocumentParams'" );
-    }
+    validate( data );
 }
 
 DidOpenTextDocumentParams::DidOpenTextDocumentParams( const TextDocumentItem& textDocument )
@@ -3043,17 +2425,12 @@ TextDocumentItem DidOpenTextDocumentParams::textDocument( void ) const
     return at( Identifier::textDocument );
 }
 
-u1 DidOpenTextDocumentParams::isValid( const Data& data )
+void DidOpenTextDocumentParams::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::textDocument ) != data.end() and
-        TextDocumentItem::isValid( data[ Identifier::textDocument ] ) )
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " DidOpenTextDocumentParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< TextDocumentItem >(
+        context, data, Identifier::textDocument, false );
 }
 
 //
@@ -3064,11 +2441,7 @@ u1 DidOpenTextDocumentParams::isValid( const Data& data )
 TextDocumentContentChangeEvent::TextDocumentContentChangeEvent( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument(
-            "invalid data for interface 'TextDocumentContentChangeEvent'" );
-    }
+    validate( data );
 }
 
 TextDocumentContentChangeEvent::TextDocumentContentChangeEvent( const std::string& text )
@@ -3112,29 +2485,13 @@ std::string TextDocumentContentChangeEvent::text( void ) const
     return at( Identifier::text ).get< std::string >();
 }
 
-u1 TextDocumentContentChangeEvent::isValid( const Data& data )
+void TextDocumentContentChangeEvent::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::text ) != data.end() and
-        data[ Identifier::text ].is_string() )
-    {
-        if( data.find( Identifier::range ) != data.end() and
-            not Range::isValid( data[ Identifier::range ] ) )
-        {
-            return false;
-        }
-
-        if( data.find( Identifier::rangeLength ) != data.end() and
-            not data[ Identifier::rangeLength ].is_number() )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " TextDocumentContentChangeEvent:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::text, true );
+    Content::validatePropertyIs< Range >( context, data, Identifier::range, false );
+    Content::validatePropertyIsNumber( context, data, Identifier::rangeLength, false );
 }
 
 //
@@ -3145,10 +2502,7 @@ u1 TextDocumentContentChangeEvent::isValid( const Data& data )
 DidChangeTextDocumentParams::DidChangeTextDocumentParams( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'DidChangeTextDocumentParams'" );
-    }
+    validate( data );
 }
 
 DidChangeTextDocumentParams::DidChangeTextDocumentParams(
@@ -3176,32 +2530,14 @@ Data DidChangeTextDocumentParams::contentChanges( void ) const
     return at( Identifier::contentChanges );
 }
 
-u1 DidChangeTextDocumentParams::isValid( const Data& data )
+void DidChangeTextDocumentParams::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::textDocument ) != data.end() and
-        data[ Identifier::textDocument ].is_object() and
-        data.find( Identifier::contentChanges ) != data.end() and
-        data[ Identifier::contentChanges ].is_array() )
-    {
-        if( not VersionedTextDocumentIdentifier::isValid( data[ Identifier::textDocument ] ) )
-        {
-            return false;
-        }
-
-        for( auto contentChange : data[ Identifier::contentChanges ] )
-        {
-            if( not TextDocumentContentChangeEvent::isValid( contentChange ) )
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " DidChangeTextDocumentParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< VersionedTextDocumentIdentifier >(
+        context, data, Identifier::textDocument, true );
+    Content::validatePropertyIsArrayOf< TextDocumentContentChangeEvent >(
+        context, data, Identifier::contentChanges, true );
 }
 
 //
@@ -3212,10 +2548,7 @@ u1 DidChangeTextDocumentParams::isValid( const Data& data )
 CodeActionContext::CodeActionContext( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'CodeActionContext'" );
-    }
+    validate( data );
 }
 
 CodeActionContext::CodeActionContext( const std::vector< Diagnostic >& diagnostics )
@@ -3234,25 +2567,12 @@ Data CodeActionContext::diagnostics( void ) const
     return at( Identifier::diagnostics );
 }
 
-u1 CodeActionContext::isValid( const Data& data )
+void CodeActionContext::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::diagnostics ) != data.end() and
-        data[ Identifier::diagnostics ].is_array() )
-    {
-        for( auto diagnostic : data[ Identifier::diagnostics ] )
-        {
-            if( not TextDocumentContentChangeEvent::isValid( diagnostic ) )
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " CodeActionContext:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsArrayOf< TextDocumentContentChangeEvent >(
+        context, data, Identifier::diagnostics, true );
 }
 
 //
@@ -3263,10 +2583,7 @@ u1 CodeActionContext::isValid( const Data& data )
 CodeActionParams::CodeActionParams( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'CodeActionParams'" );
-    }
+    validate( data );
 }
 
 CodeActionParams::CodeActionParams(
@@ -3296,19 +2613,14 @@ CodeActionContext CodeActionParams::context( void ) const
     return at( Identifier::context );
 }
 
-u1 CodeActionParams::isValid( const Data& data )
+void CodeActionParams::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::textDocument ) != data.end() and
-        data[ Identifier::textDocument ].is_object() and
-        data.find( Identifier::range ) != data.end() and data[ Identifier::range ].is_object() and
-        data.find( Identifier::context ) != data.end() and data[ Identifier::context ].is_object() )
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " CodeActionParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< TextDocumentIdentifier >(
+        context, data, Identifier::textDocument, true );
+    Content::validatePropertyIs< Range >( context, data, Identifier::range, true );
+    Content::validatePropertyIs< CodeActionContext >( context, data, Identifier::context, true );
 }
 
 //
@@ -3319,10 +2631,7 @@ u1 CodeActionParams::isValid( const Data& data )
 CodeActionResult::CodeActionResult( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'CodeActionResult'" );
-    }
+    validate( data );
 }
 
 CodeActionResult::CodeActionResult( const std::vector< Command >& commands )
@@ -3344,24 +2653,10 @@ void CodeActionResult::addCommand( const Command& command )
     this->push_back( command );
 }
 
-u1 CodeActionResult::isValid( const Data& data )
+void CodeActionResult::validate( const Data& data )
 {
-    if( data.is_array() )
-    {
-        for( auto command : data )
-        {
-            if( not Command::isValid( command ) )
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " CodeActionResult:";
+    Content::validateTypeIsArrayOf< Command >( context, data );
 }
 
 //
@@ -3372,10 +2667,7 @@ u1 CodeActionResult::isValid( const Data& data )
 PublishDiagnosticsParams::PublishDiagnosticsParams( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'PublishDiagnosticsParams'" );
-    }
+    validate( data );
 }
 
 PublishDiagnosticsParams::PublishDiagnosticsParams(
@@ -3401,36 +2693,13 @@ Data PublishDiagnosticsParams::diagnostics( void ) const
     return at( Identifier::diagnostics );
 }
 
-u1 PublishDiagnosticsParams::isValid( const Data& data )
+void PublishDiagnosticsParams::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::uri ) != data.end() and
-        data[ Identifier::uri ].is_string() and
-        data.find( Identifier::diagnostics ) != data.end() and
-        data[ Identifier::diagnostics ].is_array() )
-    {
-        try
-        {
-            DocumentUri::fromString( data[ Identifier::uri ].get< std::string >() );
-        }
-        catch( const std::exception& e )
-        {
-            return false;
-        }
-
-        for( auto diagnostic : data[ Identifier::diagnostics ] )
-        {
-            if( not Diagnostic::isValid( diagnostic ) )
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " PublishDiagnosticsParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsUri( context, data, Identifier::uri, true );
+    Content::validatePropertyIsArrayOf< Diagnostic >(
+        context, data, Identifier::diagnostics, true );
 }
 
 //
@@ -3441,10 +2710,7 @@ u1 PublishDiagnosticsParams::isValid( const Data& data )
 MarkedString::MarkedString( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'MarkedString'" );
-    }
+    validate( data );
 }
 
 MarkedString::MarkedString( const std::string& language, const std::string& value )
@@ -3464,23 +2730,17 @@ std::string MarkedString::value( void ) const
     return at( Identifier::value ).get< std::string >();
 }
 
-u1 MarkedString::isValid( const Data& data )
+void MarkedString::validate( const Data& data )
 {
     if( data.is_string() )
     {
-        return true;
+        return;
     }
-    else if(
-        data.is_object() and data.find( Identifier::language ) != data.end() and
-        data[ Identifier::language ].is_string() and
-        data.find( Identifier::value ) != data.end() and data[ Identifier::value ].is_string() )
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+
+    static const auto context = CONTENT + " MarkedString:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::language, true );
+    Content::validatePropertyIsString( context, data, Identifier::value, true );
 }
 
 //
@@ -3491,10 +2751,7 @@ u1 MarkedString::isValid( const Data& data )
 HoverResult::HoverResult( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'HoverResult'" );
-    }
+    validate( data );
 }
 
 HoverResult::HoverResult( const std::vector< MarkedString >& contents )
@@ -3533,34 +2790,12 @@ void HoverResult::setRange( const Range& range )
     operator[]( Identifier::range ) = Data::from_cbor( Data::to_cbor( range ) );
 }
 
-u1 HoverResult::isValid( const Data& data )
+void HoverResult::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::contents ) != data.end() and
-        ( data[ Identifier::contents ].is_object() or data[ Identifier::contents ].is_array() ) )
-    {
-        if( data[ Identifier::contents ].is_object() and
-            not MarkedString::isValid( data[ Identifier::contents ] ) )
-        {
-            return false;
-        }
-
-        if( data[ Identifier::contents ].is_array() )
-        {
-            for( auto content : data[ Identifier::contents ] )
-            {
-                if( not MarkedString::isValid( content ) )
-                {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " HoverResult:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsArrayOf< MarkedString >( context, data, Identifier::contents, true );
+    Content::validatePropertyIsString( context, data, Identifier::value, true );
 }
 
 //
@@ -3571,10 +2806,7 @@ u1 HoverResult::isValid( const Data& data )
 CodeLensParams::CodeLensParams( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'CodeLensParams'" );
-    }
+    validate( data );
 }
 
 CodeLensParams::CodeLensParams( const TextDocumentIdentifier& textDocument )
@@ -3588,17 +2820,12 @@ TextDocumentIdentifier CodeLensParams::textDocument( void ) const
     return at( Identifier::textDocument );
 }
 
-u1 CodeLensParams::isValid( const Data& data )
+void CodeLensParams::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::textDocument ) != data.end() and
-        TextDocumentIdentifier::isValid( data[ Identifier::textDocument ] ) )
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " CodeLensParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< TextDocumentIdentifier >(
+        context, data, Identifier::textDocument, true );
 }
 
 //
@@ -3609,10 +2836,7 @@ u1 CodeLensParams::isValid( const Data& data )
 CodeLens::CodeLens( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'CodeLens'" );
-    }
+    validate( data );
 }
 
 CodeLens::CodeLens( const Range& range )
@@ -3656,23 +2880,12 @@ void CodeLens::setData( const Data& data )
     operator[]( Identifier::data ) = Data::from_cbor( Data::to_cbor( data ) );
 }
 
-u1 CodeLens::isValid( const Data& data )
+void CodeLens::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::range ) != data.end() and
-        Range::isValid( data[ Identifier::range ] ) )
-    {
-        if( data.find( Identifier::command ) != data.end() and
-            not Command::isValid( data[ Identifier::command ] ) )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " CodeLens:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< Range >( context, data, Identifier::range, true );
+    Content::validatePropertyIs< Command >( context, data, Identifier::command, false );
 }
 
 //
@@ -3683,10 +2896,7 @@ u1 CodeLens::isValid( const Data& data )
 CodeLensResult::CodeLensResult( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'CodeLensResult'" );
-    }
+    validate( data );
 }
 
 CodeLensResult::CodeLensResult( const std::vector< CodeLens >& codeLens )
@@ -3703,24 +2913,10 @@ void CodeLensResult::addCodeLens( const CodeLens& codeLens )
     this->push_back( codeLens );
 }
 
-u1 CodeLensResult::isValid( const Data& data )
+void CodeLensResult::validate( const Data& data )
 {
-    if( data.is_array() )
-    {
-        for( auto codeLens : data )
-        {
-            if( not CodeLens::isValid( codeLens ) )
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " CodeLensResult:";
+    Content::validateTypeIsArrayOf< CodeLens >( context, data );
 }
 
 //
@@ -3731,10 +2927,7 @@ u1 CodeLensResult::isValid( const Data& data )
 ExecuteCommandParams::ExecuteCommandParams( const Data& data )
 : Data( data )
 {
-    if( not isValid( data ) )
-    {
-        throw std::invalid_argument( "invalid data for interface 'ExecuteCommandParams'" );
-    }
+    validate( data );
 }
 
 ExecuteCommandParams::ExecuteCommandParams( const std::string& command )
@@ -3764,23 +2957,12 @@ void ExecuteCommandParams::addArgument( const Data& argument )
     operator[]( Identifier::arguments ).push_back( argument );
 }
 
-u1 ExecuteCommandParams::isValid( const Data& data )
+void ExecuteCommandParams::validate( const Data& data )
 {
-    if( data.is_object() and data.find( Identifier::command ) != data.end() and
-        data[ Identifier::command ].is_string() )
-    {
-        if( data.find( Identifier::arguments ) != data.end() and
-            not data[ Identifier::arguments ].is_array() )
-        {
-            return false;
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    static const auto context = CONTENT + " ExecuteCommandParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::command, true );
+    Content::validatePropertyIsArray( context, data, Identifier::arguments, false );
 }
 
 //

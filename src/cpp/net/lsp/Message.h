@@ -91,7 +91,7 @@ namespace libstdhl
 
                 virtual void process( ServerInterface& interface ) const;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
 
                 static Message parse( const std::string& data );
 
@@ -128,7 +128,7 @@ namespace libstdhl
 
                 virtual void process( ServerInterface& interface ) const override;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             /**
@@ -174,7 +174,7 @@ namespace libstdhl
 
                 virtual void process( ServerInterface& interface ) const override;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             /**
@@ -217,7 +217,7 @@ namespace libstdhl
 
                 virtual void process( ServerInterface& interface ) const override;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
         }
     }
