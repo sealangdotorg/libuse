@@ -78,6 +78,10 @@ add_library( ${PROJECT} STATIC
   $<TARGET_OBJECTS:${PROJECT}-cpp>
   )
 
+if( WIN32 )
+  target_link_libraries( ${PROJECT} ws2_32 )
+endif()
+
 set( ${PROJECT}_VERSION ${GIT_REVTAG} )
 set_property( TARGET ${PROJECT} PROPERTY VERSION ${${PROJECT}_VERSION} )
 set_property( TARGET ${PROJECT} PROPERTY PREFIX  "" )
