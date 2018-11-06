@@ -1106,10 +1106,9 @@ namespace libstdhl
 
             class MessageActionItem
             {
-                public:
-
+              public:
                 MessageActionItem( void );
-                
+
                 MessageActionItem( std::string& title );
             };
 
@@ -1389,8 +1388,7 @@ namespace libstdhl
 
             class ApplyWorkspaceEditResponse
             {
-                public:
-
+              public:
                 ApplyWorkspaceEditResponse( const Data& data );
 
                 ApplyWorkspaceEditResponse( const u1& applied );
