@@ -85,72 +85,93 @@ namespace libstdhl
                    general
                 */
 
+                // https://microsoft.github.io/language-server-protocol/specification#initialize
                 virtual InitializeResult initialize( const InitializeParams& params ) = 0;
 
+                // https://microsoft.github.io/language-server-protocol/specification#initialized
                 virtual void initialized( void ) noexcept = 0;
 
+                // https://microsoft.github.io/language-server-protocol/specification#shutdown
                 virtual void shutdown( void ) = 0;
 
+                // https://microsoft.github.io/language-server-protocol/specification#exit
                 virtual void exit( void ) noexcept = 0;
 
+                // https://microsoft.github.io/language-server-protocol/specification#cancelRequest
                 // virtual void dollar_cancelRequest( void ) noexcept = 0;
 
                 /**
                    window
                 */
-
+                // https://microsoft.github.io/language-server-protocol/specification#window_showMessage
                 // :arrow_left: window/showMessage
                 virtual void window_showMessage( const ShowMessageParams& params ) = 0;
 
+                // https://microsoft.github.io/language-server-protocol/specification#window_showMessageRequest
                 // :arrow_right_hook: window/showMessageRequest
                 virtual MessageActionItem window_showMessageRequest(
                     const ShowMessageRequestParams& params ) = 0;
 
+                // https://microsoft.github.io/language-server-protocol/specification#window_logMessage
                 // :arrow_left: window/logMessage
                 virtual void window_logMessage( const LogMessageParams& params ) = 0;
 
                 /**
-                 * telemetry
+                  telemetry
                  */
+
+                // https://microsoft.github.io/language-server-protocol/specification#telemetry_event
                 // :arrow_left: telemetry/event
                 virtual void telemetry_event( const Data& data ) noexcept = 0;
+
                 /**
                    new client
                 */
-
+                // https://microsoft.github.io/language-server-protocol/specification#client_registerCapability
                 // :arrow_right_hook: client/registerCapability
                 virtual void client_registerCapability( const RegistrationParams& params ) = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#client_unregisterCapability
                 // :arrow_right_hook: client/unregisterCapability
                 virtual void client_unregisterCapability( const UnregistrationParams& params ) = 0;
+
                 /**
                    workspace
                 */
+                // https://microsoft.github.io/language-server-protocol/specification#workspace_workspaceFolders
                 // :arrow_right_hook: workspace/workspaceFolders
                 virtual std::vector< WorkspaceFolder > workspace_workspaceFolders( void ) = 0;
 
+                // https://microsoft.github.io/language-server-protocol/specification#workspace_didChangeWorkspaceFolders
                 // :arrow_right: workspace/didChangeWorkspaceFolders
                 virtual void workspace_didChangeWorkspaceFolders(
                     const DidChangeWorkspaceFoldersParams& params ) noexcept = 0;
 
+                // https://microsoft.github.io/language-server-protocol/specification#workspace_didChangeConfiguration
                 // :arrow_right: workspace/didChangeConfiguration
                 virtual void workspace_didChangeConfiguration(
                     const DidChangeConfigurationParams& params ) noexcept = 0;
 
+                // https://microsoft.github.io/language-server-protocol/specification#workspace_configuration
                 // :arrow_right_hook: workspace/configuration
                 virtual Data workspace_configuration( const ConfigurationParams& params ) = 0;
 
+                // https://microsoft.github.io/language-server-protocol/specification#workspace_didChangeWatchedFiles
                 // :arrow_right: workspace/didChangeWatchedFiles
                 virtual void workspace_didChangeWatchedFiles(
                     const DidChangeWatchedFilesParams& params ) noexcept = 0;
 
+                // https://microsoft.github.io/language-server-protocol/specification#workspace_symbol
                 // :leftwards_arrow_with_hook: workspace/symbol
                 // TODO : replace "void" with "SymbolInformation" when ready
                 virtual void workspace_symbol( const WorkspaceSymbolParams& params ) = 0;
 
+                // https://microsoft.github.io/language-server-protocol/specification#workspace_executeCommand
                 // New :leftwards_arrow_with_hook: workspace/executeCommand
                 virtual ExecuteCommandResult workspace_executeCommand(
                     const ExecuteCommandParams& params ) = 0;
 
+                // https://microsoft.github.io/language-server-protocol/specification#workspace_applyEdit
                 // New :arrow_right_hook: workspace/applyEdit
                 virtual ApplyWorkspaceEditResponse workspace_applyEdit(
                     const ApplyWorkspaceEditParams& params ) = 0;
@@ -158,63 +179,114 @@ namespace libstdhl
                     document
                  */
 
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_didOpen
                 // :arrow_right: textDocument/didOpen
                 virtual void textDocument_didOpen(
                     const DidOpenTextDocumentParams& params ) noexcept = 0;
 
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_didChange
                 // :arrow_right: textDocument/didChange
                 virtual void textDocument_didChange(
                     const DidChangeTextDocumentParams& params ) noexcept = 0;
 
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_willSave
                 // :arrow_right: textDocument/willSave
-                // New :leftwards_arrow_with_hook:
-                // textDocument/willSaveWaitUntil
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_willSaveWaitUntil
+                // New :leftwards_arrow_with_hook: textDocument/willSaveWaitUntil
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_didSave
                 // New :arrow_right: textDocument/didSave
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_didClose
                 // :arrow_right: textDocument/didClose
 
                 /**
                     diagnostics
                 */
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_publishDiagnostics
                 // :arrow_left:  textDocument/publishDiagnostics
                 virtual void textDocument_publishDiagnostics(
                     const PublishDiagnosticsParams& params ) noexcept final;
 
                 /**
-                 *  Language Features
+                    Language Features
                  */
 
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_completion
                 // :leftwards_arrow_with_hook: textDocument/completion
+
+                // https://microsoft.github.io/language-server-protocol/specification#completionItem_resolve
                 // :leftwards_arrow_with_hook: completionItem/resolve
 
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_hover
                 // :leftwards_arrow_with_hook: textDocument/hover
                 virtual HoverResult textDocument_hover( const HoverParams& params ) = 0;
 
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_signatureHelp
                 // :leftwards_arrow_with_hook: textDocument/signatureHelp
-                // :leftwards_arrow_with_hook: textDocument/references
-                // :leftwards_arrow_with_hook: textDocument/documentHighlight
-                // :leftwards_arrow_with_hook: textDocument/documentSymbol
-                // :leftwards_arrow_with_hook: textDocument/formatting
-                // :leftwards_arrow_with_hook: textDocument/rangeFormatting
-                // :leftwards_arrow_with_hook: textDocument/onTypeFormatting
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_definition
                 // :leftwards_arrow_with_hook: textDocument/definition
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_typeDefinition
                 // :leftwards_arrow_with_hook: textDocument/typedefinition
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_implementation
                 // :leftwards_arrow_with_hook: textDocument/implementation
 
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_references
+                // :leftwards_arrow_with_hook: textDocument/references
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_documentHighlight
+                // :leftwards_arrow_with_hook: textDocument/documentHighlight
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_documentSymbol
+                // :leftwards_arrow_with_hook: textDocument/documentSymbol
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_codeAction
                 // :leftwards_arrow_with_hook: textDocument/codeAction
                 virtual CodeActionResult textDocument_codeAction(
                     const CodeActionParams& params ) = 0;
 
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_codeLens
                 // :leftwards_arrow_with_hook: textDocument/codeLens
                 virtual CodeLensResult textDocument_codeLens( const CodeLensParams& params ) = 0;
 
+                // https://microsoft.github.io/language-server-protocol/specification#codeLens_resolve
                 // :leftwards_arrow_with_hook: codeLens/resolve
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_documentLink
                 // :leftwards_arrow_with_hook: textDocument/documentLink
+
+                // https://microsoft.github.io/language-server-protocol/specification#documentLink_resolve
                 // :leftwards_arrow_with_hook: documentLink/resolve
-                // :leftwards_arrow_with_hook: textDocument/rename
-                // :leftwards_arrow_with_hook: textDocument/prepareRename
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_documentColor
                 // :leftwards_arrow_with_hook: textDocument/documentColor
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_colorPresentation
                 // :leftwards_arrow_with_hook: textDocument/colorPresentation
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_formatting
+                // :leftwards_arrow_with_hook: textDocument/formatting
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_rangeFormatting
+                // :leftwards_arrow_with_hook: textDocument/rangeFormatting
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_onTypeFormatting
+                // :leftwards_arrow_with_hook: textDocument/onTypeFormatting
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_rename
+                // :leftwards_arrow_with_hook: textDocument/rename
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_rename
+                // :leftwards_arrow_with_hook: textDocument/prepareRename
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_foldingRange
                 // :leftwards_arrow_with_hook: textDocument/foldingRange
+
               private:
                 std::vector< Message > m_responseBuffer[ 2 ];
                 std::size_t m_responseBufferSlot;
