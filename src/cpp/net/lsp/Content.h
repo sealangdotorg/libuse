@@ -1101,7 +1101,7 @@ namespace libstdhl
 
                 std::string message( void ) const;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class MessageActionItem
@@ -1126,7 +1126,7 @@ namespace libstdhl
 
                 std::string message( void ) const;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class LogMessageParams : public Data
@@ -1138,7 +1138,7 @@ namespace libstdhl
 
                 MessageType messageType( void ) const;
 
-                static u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class Registration : public Data
@@ -1161,7 +1161,7 @@ namespace libstdhl
 
                 void addRegisterOption( const Data& action );
 
-                u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class RegistrationParams
@@ -1187,7 +1187,7 @@ namespace libstdhl
 
                 Unregistration( const std::string& id, const std::string& method );
 
-                u1 isValid( const Data& data );
+                static void validate( const Data& data );
 
                 std::string id( void ) const;
 
@@ -1213,7 +1213,7 @@ namespace libstdhl
 
                 std::string name( void ) const;
 
-                u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class WorkspaceFoldersChangeEvent
@@ -1243,7 +1243,7 @@ namespace libstdhl
 
                 Data settings( void ) const;
 
-                u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class ConfigurationItem : public Data
@@ -1265,7 +1265,7 @@ namespace libstdhl
 
                 void setScopeUri( const std::string& uri );
 
-                u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class ConfigurationParams
@@ -1293,7 +1293,7 @@ namespace libstdhl
 
                 FileEvent( const DocumentUri& uri, const FileChangeType type );
 
-                u1 isValid( const Data& data );
+                static void validate( const Data& data );
 
                 DocumentUri documentUri( void ) const;
 
@@ -1332,7 +1332,7 @@ namespace libstdhl
 
                 WatchKind kind( void ) const;
 
-                u1 isValid( const Data& data );
+                static void validate( const Data& data );
 
                 void setKind( const WatchKind kind );
             };
@@ -1360,7 +1360,7 @@ namespace libstdhl
 
                 std::string query( void ) const;
 
-                u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class ApplyWorkspaceEditParams : public Data
@@ -1380,7 +1380,7 @@ namespace libstdhl
 
                 void setLabel( const Data& data );
 
-                u1 isValid( const Data& data ) const;
+                static void validate( const Data& data ) const;
             };
 
             class ApplyWorkspaceEditResponse
@@ -1396,7 +1396,7 @@ namespace libstdhl
 
                 void applied( u1 applied );
 
-                u1 isValid( const Data& data );
+                static void validate( const Data& data );
             };
 
             class ConfigurationItem : public Data
@@ -1672,7 +1672,7 @@ namespace libstdhl
 
                 TextDocumentIdentifier textdocument( void ) const;
 
-                u1 isValid( const Data& data ) const;
+                static void validate( const Data& data ) const;
             };
 
             class CodeActionContext : public Data
