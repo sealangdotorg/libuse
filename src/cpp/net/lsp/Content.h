@@ -1380,7 +1380,7 @@ namespace libstdhl
 
                 void setLabel( const Data& data );
 
-                static void validate( const Data& data ) const;
+                static void validate( const Data& data );
             };
 
             class ApplyWorkspaceEditResponse
@@ -1483,7 +1483,7 @@ namespace libstdhl
 
                 TextDocumentIdentifier textdocument( void ) const;
 
-                static void validate( const Data& data ) const;
+                static void validate( const Data& data );
             };
 
             class CodeActionContext : public Data
