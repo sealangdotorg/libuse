@@ -93,7 +93,7 @@ namespace libstdhl
 
                 virtual void exit( void ) noexcept = 0;
 
-                //virtual void dollar_cancelRequest( void ) noexcept = 0;
+                // virtual void dollar_cancelRequest( void ) noexcept = 0;
 
                 /**
                    window
@@ -103,17 +103,17 @@ namespace libstdhl
                 virtual void window_showMessage( const ShowMessageParams& params ) = 0;
 
                 // :arrow_right_hook: window/showMessageRequest
-                virtual MessageActionItem window_showMessageRequest( 
+                virtual MessageActionItem window_showMessageRequest(
                     const ShowMessageRequestParams& params ) = 0;
-                
+
                 // :arrow_left: window/logMessage
-                virtual void window_logMessage( const LogMessageParams& params) = 0;
+                virtual void window_logMessage( const LogMessageParams& params ) = 0;
 
                 /**
                  * telemetry
-                */ 
+                 */
                 // :arrow_left: telemetry/event
-                virtual void telemetry_event(const Data& data) noexcept = 0;
+                virtual void telemetry_event( const Data& data ) noexcept = 0;
                 /**
                    new client
                 */
@@ -126,25 +126,25 @@ namespace libstdhl
                    workspace
                 */
                 // :arrow_right_hook: workspace/workspaceFolders
-                virtual std::vector<WorkspaceFolder>  workspace_workspaceFolders( void ) = 0;
-                
+                virtual std::vector< WorkspaceFolder > workspace_workspaceFolders( void ) = 0;
+
                 // :arrow_right: workspace/didChangeWorkspaceFolders
-                virtual void  workspace_didChangeWorkspaceFolders( 
+                virtual void workspace_didChangeWorkspaceFolders(
                     const DidChangeWorkspaceFoldersParams& params ) noexcept = 0;
 
                 // :arrow_right: workspace/didChangeConfiguration
-                virtual void  workspace_didChangeConfiguration( 
-                    const DidChangeConfigurationParams& params) noexcept = 0;
+                virtual void workspace_didChangeConfiguration(
+                    const DidChangeConfigurationParams& params ) noexcept = 0;
 
                 // :arrow_right_hook: workspace/configuration
                 virtual Data workspace_configuration( const ConfigurationParams& params ) = 0;
-                
+
                 // :arrow_right: workspace/didChangeWatchedFiles
                 virtual void workspace_didChangeWatchedFiles(
                     const DidChangeWatchedFilesParams& params ) noexcept = 0;
-                
+
                 // :leftwards_arrow_with_hook: workspace/symbol
-                //TODO : replace "void" with "SymbolInformation" when ready
+                // TODO : replace "void" with "SymbolInformation" when ready
                 virtual void workspace_symbol( const WorkspaceSymbolParams& params ) = 0;
 
                 // New :leftwards_arrow_with_hook: workspace/executeCommand
@@ -152,7 +152,8 @@ namespace libstdhl
                     const ExecuteCommandParams& params ) = 0;
 
                 // New :arrow_right_hook: workspace/applyEdit
-                virtual ApplyWorkspaceEditResponse workspace_applyEdit( const ApplyWorkspaceEditParams& params ) = 0;
+                virtual ApplyWorkspaceEditResponse workspace_applyEdit(
+                    const ApplyWorkspaceEditParams& params ) = 0;
                 /**
                     document
                  */
@@ -170,7 +171,7 @@ namespace libstdhl
                 // textDocument/willSaveWaitUntil
                 // New :arrow_right: textDocument/didSave
                 // :arrow_right: textDocument/didClose
-               
+
                 /**
                     diagnostics
                 */
@@ -179,9 +180,9 @@ namespace libstdhl
                     const PublishDiagnosticsParams& params ) noexcept final;
 
                 /**
-                 *  Language Features 
+                 *  Language Features
                  */
-                
+
                 // :leftwards_arrow_with_hook: textDocument/completion
                 // :leftwards_arrow_with_hook: completionItem/resolve
 
