@@ -1081,21 +1081,12 @@ namespace libstdhl
 
             enum class MessageType
             {
-              /**
-               * An error message.
-               */
               Error = 1,
-              /**
-               * A warning message.
-               */
+             
               Warning = 2,
-              /**
-               * An information message.
-               */
+             
               Info = 3,
-              /**
-               * A log message.
-               */
+             
               Log = 4
             };
 
@@ -1319,27 +1310,18 @@ namespace libstdhl
               ConfigurationParams( const Data& data);
             };
 
-            /**
-             * The file event type.
-             */
+           
             enum class FileChangeType 
             {
-              /**
-               * The file got created.
-               */
               Created = 1,
-              /**
-               * The file got changed.
-               */
+              
               Changed = 2,
-              /**
-               * The file got deleted.
-               */
+             
               Deleted = 3
             };
 
             /**
-             * An event describing a file change.
+              An event describing a file change.
              */
             class FileEvent : public Data
             {
@@ -1368,19 +1350,11 @@ namespace libstdhl
 
              enum class WatchKind 
             {
-              /**
-               * Interested in create events.
-               */
-             Create = 1,
+              
+              Create = 1,
+             
+              Change = 2,
 
-              /**
-               * Interested in change events
-               */
-             Change = 2,
-
-              /**
-               * Interested in delete events
-               */
               Delete = 4
             };
 
@@ -1408,7 +1382,7 @@ namespace libstdhl
             };
 
             /**
-             * Describe options to be used when registering for text document change events.
+              Describe options to be used when registering for text document change events.
              */
             class DidChangeWatchedFilesRegistrationOptions 
             {
@@ -1462,7 +1436,7 @@ namespace libstdhl
             class ApplyWorkspaceEditResponse
             {
               /**
-               * Indicates whether the edit was applied or not.
+                Indicates whether the edit was applied or not.
                */
               ApplyWorkspaceEditResponse(const Data& data );
 
@@ -1532,18 +1506,18 @@ namespace libstdhl
             {
 
               /**
-               * Manually triggered, e.g. by the user pressing save, by starting debugging,
-               * or by an API call.
+                Manually triggered, e.g. by the user pressing save, by starting debugging,
+                or by an API call.
                */
               Manual = 1,
 
               /**
-               * Automatic after a delay.
+                Automatic after a delay.
                */
               AfterDelay = 2,
 
               /**
-               * When the editor lost focus.
+                When the editor lost focus.
                */
               FocusOut = 3
             };
