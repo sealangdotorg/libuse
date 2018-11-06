@@ -80,47 +80,42 @@ class TestInterface final : public ServerInterface
 
     void window_showMessage( const ShowMessageParams& params ) override
     {
-
     }
 
-    MessageActionItem window_showMessageRequest( const ShowMessageRequestParams& params ) override 
+    MessageActionItem window_showMessageRequest( const ShowMessageRequestParams& params ) override
     {
         return MessageActionItem();
     }
 
     void window_logMessage( const LogMessageParams& params ) override
     {
-        
     }
 
     void telemetry_event( const Data& data ) noexcept override
     {
-
     }
 
     void client_registerCapability( const RegistrationParams& params ) override
     {
-
     }
 
     void client_unregisterCapability( const UnregistrationParams& params ) override
     {
-
     }
 
-    std::vector< WorkspaceFolder > workspace_workspaceFolders( void ) override 
+    std::vector< WorkspaceFolder > workspace_workspaceFolders( void ) override
     {
         return std::vector< WorkspaceFolder >();
     }
 
-    void workspace_didChangeWorkspaceFolders( const DidChangeWorkspaceFoldersParams& params ) noexcept override
+    void workspace_didChangeWorkspaceFolders(
+        const DidChangeWorkspaceFoldersParams& params ) noexcept override
     {
-
     }
 
-    void workspace_didChangeConfiguration( const DidChangeConfigurationParams& params ) noexcept override
+    void workspace_didChangeConfiguration(
+        const DidChangeConfigurationParams& params ) noexcept override
     {
-
     }
 
     Data workspace_configuration( const ConfigurationParams& params ) override
@@ -128,21 +123,20 @@ class TestInterface final : public ServerInterface
         return Data();
     }
 
-    void workspace_didChangeWatchedFiles( const DidChangeWatchedFilesParams& params ) noexcept override
+    void workspace_didChangeWatchedFiles(
+        const DidChangeWatchedFilesParams& params ) noexcept override
     {
-
     }
 
     void workspace_symbol( const WorkspaceSymbolParams& params ) override
     {
-
     }
 
-    ApplyWorkspaceEditResponse workspace_applyEdit( const ApplyWorkspaceEditParams& params ) override 
+    ApplyWorkspaceEditResponse workspace_applyEdit(
+        const ApplyWorkspaceEditParams& params ) override
     {
-        return ApplyWorkspaceEditResponse( true );  
+        return ApplyWorkspaceEditResponse( true );
     }
-    
 
     void textDocument_didOpen( const DidOpenTextDocumentParams& params ) noexcept override
     {
