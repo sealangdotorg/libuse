@@ -1104,7 +1104,7 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
-            class MessageActionItem
+            class MessageActionItem : public Data
             {
               public:
                 MessageActionItem( void );
@@ -1167,12 +1167,12 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
-            class RegistrationParams
+            class RegistrationParams : public Data
             {
                 RegistrationParams( const std::vector< Registration >& registrations );
             };
 
-            class TextDocumentRegistrationOptions
+            class TextDocumentRegistrationOptions : public Data
             {
                 TextDocumentRegistrationOptions( const DocumentSelector& documentSelector );
             };
@@ -1197,7 +1197,7 @@ namespace libstdhl
                 std::string method( void ) const;
             };
 
-            class UnregistrationParams
+            class UnregistrationParams : public Data
             {
               public:
                 UnregistrationParams( const std::vector< Unregistration >& unregistrations );
@@ -1219,7 +1219,7 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
-            class WorkspaceFoldersChangeEvent
+            class WorkspaceFoldersChangeEvent : public Data
             {
               public:
                 WorkspaceFoldersChangeEvent(
@@ -1233,7 +1233,7 @@ namespace libstdhl
                 std::vector< WorkspaceFolder > removed( void ) const;
             };
 
-            class DidChangeWorkspaceFoldersParams
+            class DidChangeWorkspaceFoldersParams : public Data
             {
               public:
                 DidChangeWorkspaceFoldersParams( const WorkspaceFoldersChangeEvent& event );
@@ -1343,7 +1343,7 @@ namespace libstdhl
             /**
               Describe options to be used when registering for text document change events.
              */
-            class DidChangeWatchedFilesRegistrationOptions
+            class DidChangeWatchedFilesRegistrationOptions : public Data
             {
               public:
                 DidChangeWatchedFilesRegistrationOptions(
@@ -1386,7 +1386,7 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
-            class ApplyWorkspaceEditResponse
+            class ApplyWorkspaceEditResponse : public Data
             {
               public:
                 ApplyWorkspaceEditResponse( const Data& data );
