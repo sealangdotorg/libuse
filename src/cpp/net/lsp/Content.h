@@ -1279,6 +1279,8 @@ namespace libstdhl
             {
               public:
                 DidChangeWorkspaceFoldersParams( const WorkspaceFoldersChangeEvent& event );
+
+                static void validate( const Data& data );
             };
 
             class DidChangeConfigurationParams : public Data
