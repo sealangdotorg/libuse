@@ -1173,21 +1173,19 @@ namespace libstdhl
 
             class RegistrationParams : public Data
             {
-                public:
-
-                RegistrationParams ( const Data& data );
+              public:
+                RegistrationParams( const Data& data );
 
                 RegistrationParams( const std::vector< Registration >& registrations );
 
-                std::vector<Registration> registrations( void );
+                std::vector< Registration > registrations( void );
 
                 static void validate( const Data& data );
             };
 
             class TextDocumentRegistrationOptions : public Data
             {
-                public:
-
+              public:
                 TextDocumentRegistrationOptions( const Data& data );
 
                 TextDocumentRegistrationOptions( const DocumentSelector& documentSelector );
