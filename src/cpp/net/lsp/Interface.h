@@ -110,7 +110,7 @@ namespace libstdhl
                 // https://microsoft.github.io/language-server-protocol/specification#window_showMessageRequest
                 // :arrow_right_hook: window/showMessageRequest
                 // return : MessageActionItem
-                virtual MessageActionItem window_showMessageRequest(
+                virtual ShowMessageRequestResult window_showMessageRequest(
                     const ShowMessageRequestParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#window_logMessage
