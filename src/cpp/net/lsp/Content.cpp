@@ -2405,6 +2405,16 @@ void InitializeError::validate( const Data& data )
 
 //
 //
+// WorkspaceFoldersResponse
+//
+
+WorkspaceFoldersResponse::WorkspaceFoldersResponse(
+    const std::vector< WorkspaceFolder >& workspaceFolder )
+{
+}
+
+//
+//
 // MessageActionItem
 //
 
