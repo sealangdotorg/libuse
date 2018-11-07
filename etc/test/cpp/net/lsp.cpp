@@ -103,9 +103,9 @@ class TestInterface final : public ServerInterface
     {
     }
 
-    std::vector< WorkspaceFolder > workspace_workspaceFolders( void ) override
+    WorkspaceFoldersResponse workspace_workspaceFolders( void ) override
     {
-        return std::vector< WorkspaceFolder >();
+        return WorkspaceFoldersResponse( std::vector< WorkspaceFolder >() );
     }
 
     void workspace_didChangeWorkspaceFolders(

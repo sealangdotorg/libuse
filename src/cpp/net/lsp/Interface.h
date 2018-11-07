@@ -141,7 +141,7 @@ namespace libstdhl
                 */
                 // https://microsoft.github.io/language-server-protocol/specification#workspace_workspaceFolders
                 // :arrow_right_hook: workspace/workspaceFolders
-                virtual std::vector< WorkspaceFolder > workspace_workspaceFolders( void ) = 0;
+                virtual WorkspaceFoldersResponse workspace_workspaceFolders( void ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#workspace_didChangeWorkspaceFolders
                 // :arrow_right: workspace/didChangeWorkspaceFolders
