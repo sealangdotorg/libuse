@@ -82,9 +82,10 @@ class TestInterface final : public ServerInterface
     {
     }
 
-    MessageActionItem window_showMessageRequest( const ShowMessageRequestParams& params ) override
+    ShowMessageRequestResult window_showMessageRequest(
+        const ShowMessageRequestParams& params ) override
     {
-        return MessageActionItem();
+        return ShowMessageRequestResult();
     }
 
     void window_logMessage( const LogMessageParams& params ) override
