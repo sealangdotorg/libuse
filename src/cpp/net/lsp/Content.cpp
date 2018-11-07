@@ -2403,6 +2403,17 @@ void InitializeError::validate( const Data& data )
     Content::validatePropertyIsBoolean( context, data, Identifier::retry, false );
 }
 
+
+//
+//
+// ApplyWorkspaceEdit
+//
+
+ApplyWorkspaceEditResponse::ApplyWorkspaceEditResponse (u1 applied){
+
+}
+
+
 //
 //
 // DidOpenTextDocumentParams
