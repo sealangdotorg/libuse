@@ -2403,16 +2403,23 @@ void InitializeError::validate( const Data& data )
     Content::validatePropertyIsBoolean( context, data, Identifier::retry, false );
 }
 
+//
+//
+// MessageActionItem
+//
+
+MessageActionItem::MessageActionItem( void )
+{
+}
 
 //
 //
 // ApplyWorkspaceEdit
 //
 
-ApplyWorkspaceEditResponse::ApplyWorkspaceEditResponse (u1 applied){
-
+ApplyWorkspaceEditResponse::ApplyWorkspaceEditResponse( u1 applied )
+{
 }
-
 
 //
 //
