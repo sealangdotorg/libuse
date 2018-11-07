@@ -1245,6 +1245,20 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            class WorkspaceFoldersResponse : public Data
+            {
+              public:
+                WorkspaceFoldersResponse( const Data& data );
+
+                WorkspaceFoldersResponse( const std::vector< WorkspaceFolder >& workspaceFolders );
+
+                std::vector< WorkspaceFolder > workspaceFolders( void ) const;
+
+                void addWorkspaceFolder( const WorkspaceFolder& workspaceFolder );
+
+                static void validate( const Data& data );
+            };
+
             class WorkspaceFoldersChangeEvent : public Data
             {
               public:
