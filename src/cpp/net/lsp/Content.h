@@ -1116,6 +1116,18 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            class ShowMessageRequestResult : public Data
+            {
+              public:
+                ShowMessageRequestResult( const Data& data );
+
+                ShowMessageRequestResult( const MessageActionItem& messageActionItem );
+
+                MessageActionItem messageActionItem( void ) const;
+
+                static void validate( const Data& data );
+            };
+
             class ShowMessageRequestParams : public Data
             {
               public:
