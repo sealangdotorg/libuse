@@ -1095,7 +1095,7 @@ namespace libstdhl
               public:
                 ShowMessageParams( const Data& data );
 
-                ShowMessageParams( const MessageType& type, const std::string& message );
+                ShowMessageParams( const MessageType type, const std::string& message );
 
                 MessageType messageType( void ) const;
 
@@ -1391,7 +1391,7 @@ namespace libstdhl
               public:
                 ApplyWorkspaceEditResponse( const Data& data );
 
-                ApplyWorkspaceEditResponse( const u1& applied );
+                ApplyWorkspaceEditResponse( const u1 applied );
 
                 u1 isApplied( void ) const;
 
