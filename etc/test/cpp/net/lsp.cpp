@@ -82,9 +82,9 @@ class TestInterface final : public ServerInterface
     {
     }
 
-    MessageActionItem window_showMessageRequest( const ShowMessageRequestParams& params ) override
+    void window_showMessageRequest( const ShowMessageRequestParams& params ) override
     {
-        return MessageActionItem();
+        return;
     }
 
     void window_logMessage( const LogMessageParams& params ) override
@@ -108,13 +108,11 @@ class TestInterface final : public ServerInterface
         return std::vector< WorkspaceFolder >();
     }
 
-    void workspace_didChangeWorkspaceFolders(
-        const DidChangeWorkspaceFoldersParams& params ) noexcept override
+    void workspace_didChangeWorkspaceFolders( const DidChangeWorkspaceFoldersParams& params ) noexcept override
     {
     }
 
-    void workspace_didChangeConfiguration(
-        const DidChangeConfigurationParams& params ) noexcept override
+    void workspace_didChangeConfiguration( const DidChangeConfigurationParams& params ) noexcept override
     {
     }
 
@@ -132,10 +130,9 @@ class TestInterface final : public ServerInterface
     {
     }
 
-    ApplyWorkspaceEditResponse workspace_applyEdit(
-        const ApplyWorkspaceEditParams& params ) override
+    void workspace_applyEdit( const ApplyWorkspaceEditParams& params ) override
     {
-        return ApplyWorkspaceEditResponse( true );
+        return;
     }
 
     void textDocument_didOpen( const DidOpenTextDocumentParams& params ) noexcept override
