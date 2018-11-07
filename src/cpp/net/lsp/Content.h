@@ -1123,6 +1123,8 @@ namespace libstdhl
 
                 ShowMessageRequestResult( const MessageActionItem& messageActionItem );
 
+                ShowMessageRequestResult( void );
+
                 MessageActionItem messageActionItem( void ) const;
 
                 static void validate( const Data& data );
