@@ -1110,6 +1110,10 @@ namespace libstdhl
                 MessageActionItem( void );
 
                 MessageActionItem( std::string& title );
+
+                std::string title( void ) const;
+
+                static void validate( const Data& data );
             };
 
             class ShowMessageRequestParams : public Data
@@ -1169,18 +1173,38 @@ namespace libstdhl
 
             class RegistrationParams : public Data
             {
+                public:
+
+                RegistrationParams ( const Data& data );
+
                 RegistrationParams( const std::vector< Registration >& registrations );
+
+                std::vector<Registration> registrations( void );
+
+                static void validate( const Data& data );
             };
 
             class TextDocumentRegistrationOptions : public Data
             {
+                public:
+
+                TextDocumentRegistrationOptions( const Data& data );
+
                 TextDocumentRegistrationOptions( const DocumentSelector& documentSelector );
+
+                DocumentSelector documentSelector( void );
+
+                static void validate( const Data& data );
             };
 
             class TextDocumentChangeRegistrationOptions : public TextDocumentRegistrationOptions
             {
               public:
                 TextDocumentChangeRegistrationOptions( const TextDocumentSyncKind kind );
+
+                TextDocumentSyncKind kind( void ) const;
+
+                static void validate( const Data& data );
             };
 
             class Unregistration : public Data
@@ -1203,6 +1227,10 @@ namespace libstdhl
                 UnregistrationParams( const std::vector< Unregistration >& unregistrations );
 
                 UnregistrationParams( const Data& data );
+
+                std::vector< Unregistration > unregistrations( void );
+
+                static void validate( const Data& data );
             };
 
             class WorkspaceFolder : public Data
@@ -1231,6 +1259,8 @@ namespace libstdhl
                 std::vector< WorkspaceFolder > added( void ) const;
 
                 std::vector< WorkspaceFolder > removed( void ) const;
+
+                static void validate( const Data& data );
             };
 
             class DidChangeWorkspaceFoldersParams : public Data
@@ -1271,11 +1301,13 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
-            class ConfigurationParams
+            class ConfigurationParams : public Data
             {
                 ConfigurationParams( const std::vector< ConfigurationItem >& items );
 
                 ConfigurationParams( const Data& data );
+
+                static void validate( const Data& data );
             };
 
             enum class FileChangeType
@@ -1303,11 +1335,13 @@ namespace libstdhl
                 FileChangeType type( void ) const;
             };
 
-            class DidChangeWatchedFilesParams
+            class DidChangeWatchedFilesParams : public Data
             {
                 DidChangeWatchedFilesParams( const std::vector< FileEvent >& changes );
 
                 DidChangeWatchedFilesParams( const Data& data );
+
+                static void validate( const Data& data );
             };
 
             enum class WatchKind
@@ -1352,6 +1386,8 @@ namespace libstdhl
                 DidChangeWatchedFilesRegistrationOptions( const Data& data );
 
                 std::vector< FileSystemWatcher > watchers( void ) const;
+
+                static void validate( const Data& data );
             };
 
             class WorkspaceSymbolParams : public Data
