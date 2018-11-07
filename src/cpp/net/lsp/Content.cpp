@@ -2415,6 +2415,19 @@ WorkspaceFoldersResponse::WorkspaceFoldersResponse(
 
 //
 //
+// ShowMessageRequestResult
+//
+
+ShowMessageRequestResult::ShowMessageRequestResult( const MessageActionItem& messageActionItem )
+{
+}
+
+ShowMessageRequestResult::ShowMessageRequestResult( void )
+{
+}
+
+//
+//
 // MessageActionItem
 //
 
