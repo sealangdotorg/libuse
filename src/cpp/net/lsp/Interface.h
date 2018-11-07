@@ -109,7 +109,8 @@ namespace libstdhl
 
                 // https://microsoft.github.io/language-server-protocol/specification#window_showMessageRequest
                 // :arrow_right_hook: window/showMessageRequest
-                virtual MessageActionItem window_showMessageRequest(
+                // return : MessageActionItem
+                virtual void window_showMessageRequest(
                     const ShowMessageRequestParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#window_logMessage
@@ -173,7 +174,8 @@ namespace libstdhl
 
                 // https://microsoft.github.io/language-server-protocol/specification#workspace_applyEdit
                 // New :arrow_right_hook: workspace/applyEdit
-                virtual ApplyWorkspaceEditResponse workspace_applyEdit(
+                // return : ApplyWorkspaceEditResponse
+                virtual void workspace_applyEdit(
                     const ApplyWorkspaceEditParams& params ) = 0;
                 /**
                     document
