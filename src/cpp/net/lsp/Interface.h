@@ -192,9 +192,13 @@ namespace libstdhl
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_willSave
                 // :arrow_right: textDocument/willSave
+                virtual void textDocument_willSave(
+                    const WillSaveTextDocumentParams& params ) noexcept = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_willSaveWaitUntil
                 // New :leftwards_arrow_with_hook: textDocument/willSaveWaitUntil
+                virtual WillSaveWaitUntilResponse textDocument_willSaveWaitUntil(
+                    const WillSaveTextDocumentParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_didSave
                 // New :arrow_right: textDocument/didSave

@@ -1551,6 +1551,20 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            class WillSaveWaitUntilResponse : public Data
+            {
+              public:
+                WillSaveWaitUntilResponse( void );
+
+                WillSaveWaitUntilResponse( const Data& data );
+
+                WillSaveWaitUntilResponse( const std::vector< TextEdit >& textEdit );
+
+                std::vector< TextEdit > textEdit( void ) const;
+
+                static void validate( const Data& data );
+            };
+
             class CodeActionContext : public Data
             {
               public:
