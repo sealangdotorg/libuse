@@ -1594,6 +1594,16 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
+            class DidCloseTextDocumentParams : public Data
+            {
+                DidCloseTextDocumentParams( const TextDocumentIdentifier& textDocument );
+
+                DidCloseTextDocumentParams( const Data& data );
+
+                TextDocumentIdentifier textDocument( void ) const;
+
+                static void validate( const Data& data );
+            };
 
             class CodeActionContext : public Data
             {

@@ -207,7 +207,8 @@ namespace libstdhl
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_didClose
                 // :arrow_right: textDocument/didClose
-
+                virtual void textDocument_didClose(
+                    const DidCloseTextDocumentParams& params ) noexcept = 0;
                 /**
                     diagnostics
                 */
