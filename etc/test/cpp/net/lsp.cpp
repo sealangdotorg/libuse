@@ -161,6 +161,10 @@ class TestInterface final : public ServerInterface
     {
     }
 
+    void textDocument_didClose( const DidCloseTextDocumentParams& params ) noexcept override
+    {
+    }
+
     HoverResult textDocument_hover( const HoverParams& params ) override
     {
         return HoverResult();
