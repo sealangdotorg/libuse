@@ -142,7 +142,7 @@ class TestInterface final : public ServerInterface
     }
 
     WillSaveWaitUntilResponse textDocument_willSaveWaitUntil(
-        const WillSaveTextDocumentParams& params )
+        const WillSaveTextDocumentParams& params ) override
     {
         return WillSaveWaitUntilResponse();
     }
