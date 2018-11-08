@@ -2583,6 +2583,14 @@ void DidChangeTextDocumentParams::validate( const Data& data )
 
 //
 //
+// WillSaveWaitUntilResponse
+//
+WillSaveWaitUntilResponse::WillSaveWaitUntilResponse( void )
+{
+}
+
+//
+//
 // CodeActionContext
 //
 
