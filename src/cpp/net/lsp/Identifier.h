@@ -323,6 +323,8 @@ namespace libstdhl
 
                 constexpr const char* window_showMessage = "window/showMessage";
 
+                constexpr const char* window_showMessageRequest = "window/showMessageRequest";
+
                 constexpr const char* workspace = "workspace";
 
                 constexpr const char* workspaceEdit = "workspaceEdit";

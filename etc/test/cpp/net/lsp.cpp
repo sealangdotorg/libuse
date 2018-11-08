@@ -78,12 +78,6 @@ class TestInterface final : public ServerInterface
         return ExecuteCommandResult();
     }
 
-    ShowMessageRequestResult window_showMessageRequest(
-        const ShowMessageRequestParams& params ) override
-    {
-        return ShowMessageRequestResult();
-    }
-
     void window_logMessage( const LogMessageParams& params ) override
     {
     }

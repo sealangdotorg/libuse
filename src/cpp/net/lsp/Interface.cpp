@@ -111,6 +111,16 @@ void ServerInterface::window_showMessage( const ShowMessageParams& params ) noex
     notify( msg );
 }
 
+ShowMessageRequestResult ServerInterface::window_showMessageRequest(
+    const ShowMessageRequestParams& params )
+{
+    RequestMessage msg( std::string{ Identifier::window_showMessageRequest } );
+    msg.setParams( params );
+    // request( msg );   // TODO: FIXME: @Clasc
+    // TODO: FIXME: @Clasc: handle response
+    return ShowMessageRequestResult();
+}
+
 void ServerInterface::textDocument_publishDiagnostics(
     const PublishDiagnosticsParams& params ) noexcept
 {
