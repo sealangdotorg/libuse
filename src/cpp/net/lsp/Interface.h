@@ -53,7 +53,7 @@
 
    TBD
 
-   https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md
+   https://microsoft.github.io/language-server-protocol/specification#version_3_13_0
 */
 
 namespace libstdhl
@@ -81,219 +81,257 @@ namespace libstdhl
 
                 void flush( const std::function< void( const Message& ) >& callback );
 
-                /**
-                   general
-                */
+                //
+                //
+                //  Base Protocol
+                //
 
                 // https://microsoft.github.io/language-server-protocol/specification#initialize
+                // client to server request
                 virtual InitializeResult initialize( const InitializeParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#initialized
+                // client to server notification
                 virtual void initialized( void ) noexcept = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#shutdown
+                // client to server request
                 virtual void shutdown( void ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#exit
+                // client to server notification
                 virtual void exit( void ) noexcept = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#cancelRequest
-                // virtual void dollar_cancelRequest( void ) noexcept = 0;
+                // client to server notification
+                // server to client notification
+                // TODO: FIXME: @ppaulweber: provide interface @Clasc
 
-                /**
-                   window
-                */
+                //
+                //
+                //  Window
+                //
+
                 // https://microsoft.github.io/language-server-protocol/specification#window_showMessage
-                // :arrow_left: window/showMessage
+                // server to client notification
                 virtual void window_showMessage( const ShowMessageParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#window_showMessageRequest
-                // :arrow_right_hook: window/showMessageRequest
-                // return : MessageActionItem
+                // server to client request
                 virtual ShowMessageRequestResult window_showMessageRequest(
                     const ShowMessageRequestParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#window_logMessage
-                // :arrow_left: window/logMessage
+                // server to client notification
                 virtual void window_logMessage( const LogMessageParams& params ) = 0;
 
-                /**
-                  telemetry
-                 */
+                //
+                //
+                //  Telemetry
+                //
 
                 // https://microsoft.github.io/language-server-protocol/specification#telemetry_event
-                // :arrow_left: telemetry/event
+                // server to client notification
                 virtual void telemetry_event( const Data& data ) noexcept = 0;
 
-                /**
-                   new client
-                */
+                //
+                //
+                //  Client
+                //
+
                 // https://microsoft.github.io/language-server-protocol/specification#client_registerCapability
-                // :arrow_right_hook: client/registerCapability
+                // server to client request
                 virtual void client_registerCapability( const RegistrationParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#client_unregisterCapability
-                // :arrow_right_hook: client/unregisterCapability
+                // server to client request
                 virtual void client_unregisterCapability( const UnregistrationParams& params ) = 0;
 
-                /**
-                   workspace
-                */
+                //
+                //
+                //  Workspace
+                //
+
                 // https://microsoft.github.io/language-server-protocol/specification#workspace_workspaceFolders
-                // :arrow_right_hook: workspace/workspaceFolders
+                // server to client request
                 virtual WorkspaceFoldersResponse workspace_workspaceFolders( void ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#workspace_didChangeWorkspaceFolders
-                // :arrow_right: workspace/didChangeWorkspaceFolders
+                // client to server notification
                 virtual void workspace_didChangeWorkspaceFolders(
                     const DidChangeWorkspaceFoldersParams& params ) noexcept = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#workspace_didChangeConfiguration
-                // :arrow_right: workspace/didChangeConfiguration
+                // client to server notification
                 virtual void workspace_didChangeConfiguration(
                     const DidChangeConfigurationParams& params ) noexcept = 0;
 
+                // https://microsoft.github.io/language-server-protocol/specification#workspace_didChangeConfiguration
+                // workspace_didChangeConfiguration
+                // client to server notification
+
                 // https://microsoft.github.io/language-server-protocol/specification#workspace_configuration
-                // :arrow_right_hook: workspace/configuration
+                // server to client request
                 virtual Data workspace_configuration( const ConfigurationParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#workspace_didChangeWatchedFiles
-                // :arrow_right: workspace/didChangeWatchedFiles
+                // client to server notification
                 virtual void workspace_didChangeWatchedFiles(
                     const DidChangeWatchedFilesParams& params ) noexcept = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#workspace_symbol
-                // :leftwards_arrow_with_hook: workspace/symbol
-                // TODO : replace "void" with "SymbolInformation" when ready
+                // client to server request
+                // TODO: FIXME: @ppaulweber: replace 'void' with 'SymbolInformation|null' @Clasc
                 virtual void workspace_symbol( const WorkspaceSymbolParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#workspace_executeCommand
-                // New :leftwards_arrow_with_hook: workspace/executeCommand
+                // client to server request
                 virtual ExecuteCommandResult workspace_executeCommand(
                     const ExecuteCommandParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#workspace_applyEdit
-                // New :arrow_right_hook: workspace/applyEdit
+                // server to client request
                 virtual ApplyWorkspaceEditResponse workspace_applyEdit(
                     const ApplyWorkspaceEditParams& params ) = 0;
-                /**
-                    document
-                 */
+
+                //
+                //
+                //  Text Document
+                //
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_didOpen
-                // :arrow_right: textDocument/didOpen
+                // client to server notification
                 virtual void textDocument_didOpen(
                     const DidOpenTextDocumentParams& params ) noexcept = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_didChange
-                // :arrow_right: textDocument/didChange
+                // client to server notification
                 virtual void textDocument_didChange(
                     const DidChangeTextDocumentParams& params ) noexcept = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_willSave
-                // :arrow_right: textDocument/willSave
+                // client to server notification
                 virtual void textDocument_willSave(
                     const WillSaveTextDocumentParams& params ) noexcept = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_willSaveWaitUntil
                 // New :leftwards_arrow_with_hook: textDocument/willSaveWaitUntil
+                // client to server request
                 virtual WillSaveWaitUntilResponse textDocument_willSaveWaitUntil(
                     const WillSaveTextDocumentParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_didSave
-                // New :arrow_right: textDocument/didSave
+                // client to server notification
                 virtual void textDocument_didSave(
                     const DidSaveTextDocumentParams& params ) noexcept = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_didClose
-                // :arrow_right: textDocument/didClose
+                // client to server notification
                 virtual void textDocument_didClose(
                     const DidCloseTextDocumentParams& params ) noexcept = 0;
-                /**
-                    diagnostics
-                */
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_publishDiagnostics
-                // :arrow_left:  textDocument/publishDiagnostics
+                // server to client notification
                 virtual void textDocument_publishDiagnostics(
                     const PublishDiagnosticsParams& params ) noexcept final;
 
-                /**
-                    Language Features
-                 */
+                //
+                //
+                //  Language Features
+                //
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_completion
-                // :leftwards_arrow_with_hook: textDocument/completion
+                // client to server request
+                // TODO: FIXME: @ppaulweber: provide interface @Clasc
 
                 // https://microsoft.github.io/language-server-protocol/specification#completionItem_resolve
-                // :leftwards_arrow_with_hook: completionItem/resolve
+                // client to server request
+                // TODO: FIXME: @ppaulweber: provide interface @Clasc
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_hover
-                // :leftwards_arrow_with_hook: textDocument/hover
+                // client to server request
                 virtual HoverResult textDocument_hover( const HoverParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_signatureHelp
-                // :leftwards_arrow_with_hook: textDocument/signatureHelp
+                // client to server request
+                // TODO: FIXME: @ppaulweber: provide interface @Clasc
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_definition
-                // :leftwards_arrow_with_hook: textDocument/definition
+                // client to server request
+                // TODO: FIXME: @ppaulweber: provide interface @Clasc
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_typeDefinition
-                // :leftwards_arrow_with_hook: textDocument/typedefinition
+                // client to server request
+                // TODO: FIXME: @ppaulweber: provide interface @Clasc
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_implementation
-                // :leftwards_arrow_with_hook: textDocument/implementation
+                // client to server request
+                // TODO: FIXME: @ppaulweber: provide interface @Clasc
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_references
-                // :leftwards_arrow_with_hook: textDocument/references
+                // client to server request
+                // TODO: FIXME: @ppaulweber: provide interface @Clasc
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_documentHighlight
-                // :leftwards_arrow_with_hook: textDocument/documentHighlight
+                // client to server request
+                // TODO: FIXME: @ppaulweber: provide interface @Clasc
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_documentSymbol
-                // :leftwards_arrow_with_hook: textDocument/documentSymbol
+                // client to server request
+                // TODO: FIXME: @ppaulweber: provide interface @Clasc
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_codeAction
-                // :leftwards_arrow_with_hook: textDocument/codeAction
+                // client to server request
                 virtual CodeActionResult textDocument_codeAction(
                     const CodeActionParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_codeLens
-                // :leftwards_arrow_with_hook: textDocument/codeLens
+                // client to server request
                 virtual CodeLensResult textDocument_codeLens( const CodeLensParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#codeLens_resolve
-                // :leftwards_arrow_with_hook: codeLens/resolve
+                // client to server request
+                // TODO: FIXME: @ppaulweber: provide interface @Clasc
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_documentLink
-                // :leftwards_arrow_with_hook: textDocument/documentLink
+                // client to server request
+                // TODO: FIXME: @ppaulweber: provide interface @Clasc
 
                 // https://microsoft.github.io/language-server-protocol/specification#documentLink_resolve
-                // :leftwards_arrow_with_hook: documentLink/resolve
+                // client to server request
+                // TODO: FIXME: @ppaulweber: provide interface @Clasc
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_documentColor
-                // :leftwards_arrow_with_hook: textDocument/documentColor
+                // client to server request
+                // TODO: FIXME: @ppaulweber: provide interface @Clasc
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_colorPresentation
-                // :leftwards_arrow_with_hook: textDocument/colorPresentation
+                // client to server request
+                // TODO: FIXME: @ppaulweber: provide interface @Clasc
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_formatting
-                // :leftwards_arrow_with_hook: textDocument/formatting
+                // client to server request
+                // TODO: FIXME: @ppaulweber: provide interface @Clasc
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_rangeFormatting
-                // :leftwards_arrow_with_hook: textDocument/rangeFormatting
+                // client to server request
+                // TODO: FIXME: @ppaulweber: provide interface @Clasc
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_onTypeFormatting
-                // :leftwards_arrow_with_hook: textDocument/onTypeFormatting
+                // client to server request
+                // TODO: FIXME: @ppaulweber: provide interface @Clasc
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_rename
-                // :leftwards_arrow_with_hook: textDocument/rename
+                // client to server request
+                // TODO: FIXME: @ppaulweber: provide interface @Clasc
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_rename
-                // :leftwards_arrow_with_hook: textDocument/prepareRename
+                // client to server request
+                // TODO: FIXME: @ppaulweber: provide interface @Clasc
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_foldingRange
-                // :leftwards_arrow_with_hook: textDocument/foldingRange
+                // client to server request
+                // TODO: FIXME: @ppaulweber: provide interface @Clasc
 
               private:
                 std::vector< Message > m_responseBuffer[ 2 ];
