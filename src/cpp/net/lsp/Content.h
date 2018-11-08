@@ -1219,6 +1219,16 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            class TextDocumentSaveRegistrationOptions : public TextDocumentRegistrationOptions
+            {
+              public:
+                TextDocumentSaveRegistrationOptions( const u1 includeText );
+
+                u1 includeText( void ) const;
+
+                static void validate( const Data& data );
+            };
+
             class Unregistration : public Data
             {
               public:
@@ -1561,6 +1571,26 @@ namespace libstdhl
                 WillSaveWaitUntilResponse( const std::vector< TextEdit >& textEdit );
 
                 std::vector< TextEdit > textEdit( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class DidSaveTextDocumentParams : public Data
+            {
+                DidSaveTextDocumentParams( const Data& data );
+
+                DidSaveTextDocumentParams(
+                    const TextDocumentIdentifier& textDocumentID, const std::string& text );
+
+                DidSaveTextDocumentParams( const TextDocumentIdentifier& textDocumentID );
+
+                u1 hasText( void ) const;
+
+                void setText( const std::string& text );
+
+                TextDocumentIdentifier textDocumentID( void ) const;
+
+                std::string text( void ) const;
 
                 static void validate( const Data& data );
             };

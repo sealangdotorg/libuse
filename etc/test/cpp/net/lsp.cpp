@@ -157,6 +157,10 @@ class TestInterface final : public ServerInterface
         return WillSaveWaitUntilResponse();
     }
 
+    void textDocument_didSave( const DidSaveTextDocumentParams& params ) noexcept override
+    {
+    }
+
     HoverResult textDocument_hover( const HoverParams& params ) override
     {
         return HoverResult();
