@@ -1766,6 +1766,7 @@ namespace libstdhl
 
             class DidSaveTextDocumentParams : public Data
             {
+              public:
                 DidSaveTextDocumentParams( const Data& data );
 
                 DidSaveTextDocumentParams(
@@ -1785,6 +1786,7 @@ namespace libstdhl
             };
             class DidCloseTextDocumentParams : public Data
             {
+              public:
                 DidCloseTextDocumentParams( const TextDocumentIdentifier& textDocument );
 
                 DidCloseTextDocumentParams( const Data& data );
