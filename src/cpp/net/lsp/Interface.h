@@ -202,6 +202,8 @@ namespace libstdhl
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_didSave
                 // New :arrow_right: textDocument/didSave
+                virtual void textDocument_didSave(
+                    const DidSaveTextDocumentParams& params ) noexcept = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_didClose
                 // :arrow_right: textDocument/didClose
