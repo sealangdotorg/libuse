@@ -104,6 +104,13 @@ void ServerInterface::flush( const std::function< void( const Message& ) >& call
     m_notificationBuffer[ pos ].clear();
 }
 
+void ServerInterface::window_showMessage( const ShowMessageParams& params ) noexcept
+{
+    NotificationMessage msg( std::string{ Identifier::window_showMessage } );
+    msg.setParams( params );
+    notify( msg );
+}
+
 void ServerInterface::textDocument_publishDiagnostics(
     const PublishDiagnosticsParams& params ) noexcept
 {

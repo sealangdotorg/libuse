@@ -114,7 +114,7 @@ namespace libstdhl
 
                 // https://microsoft.github.io/language-server-protocol/specification#window_showMessage
                 // server to client notification
-                virtual void window_showMessage( const ShowMessageParams& params ) = 0;
+                virtual void window_showMessage( const ShowMessageParams& params ) noexcept final;
 
                 // https://microsoft.github.io/language-server-protocol/specification#window_showMessageRequest
                 // server to client request
