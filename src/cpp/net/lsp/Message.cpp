@@ -118,8 +118,8 @@ void Message::process( ServerInterface& interface ) const
 void Message::validate( const Data& data )
 {
     static const auto context = "LSP: Message:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::jsonrpc, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::jsonrpc, true );
 }
 
 Message Message::parse( const std::string& data )
@@ -337,9 +337,9 @@ void RequestMessage::validate( const Data& data )
 {
     static const auto context = "LSP: RequestMessage:";
     Message::validate( data );
-    Content::validatePropertyIsUuid( context, data, Identifier::jsonrpc, true );
-    Content::validatePropertyIsString( context, data, Identifier::method, true );
-    Content::validatePropertyIsObject( context, data, Identifier::params, false );
+    Json::validatePropertyIsUuid( context, data, Identifier::jsonrpc, true );
+    Json::validatePropertyIsString( context, data, Identifier::method, true );
+    Json::validatePropertyIsObject( context, data, Identifier::params, false );
 }
 
 //
@@ -440,8 +440,8 @@ void NotificationMessage::validate( const Data& data )
 {
     static const auto context = "LSP: NotificationMessage:";
     Message::validate( data );
-    Content::validatePropertyIsString( context, data, Identifier::method, true );
-    Content::validatePropertyIsObject( context, data, Identifier::params, false );
+    Json::validatePropertyIsString( context, data, Identifier::method, true );
+    Json::validatePropertyIsObject( context, data, Identifier::params, false );
 }
 
 //
@@ -528,9 +528,9 @@ void ResponseMessage::validate( const Data& data )
 {
     static const auto context = "LSP: ResponseMessage:";
     Message::validate( data );
-    Content::validatePropertyIsUuid( context, data, Identifier::id, true );
-    Content::validatePropertyIsObject( context, data, Identifier::result, false );
-    Content::validatePropertyIsObject( context, data, Identifier::error, false );
+    Json::validatePropertyIsUuid( context, data, Identifier::id, true );
+    Json::validatePropertyIsObject( context, data, Identifier::result, false );
+    Json::validatePropertyIsObject( context, data, Identifier::error, false );
 }
 
 //

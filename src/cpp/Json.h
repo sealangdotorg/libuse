@@ -44,6 +44,8 @@
 #ifndef _LIBSTDHL_CPP_JSON_H_
 #define _LIBSTDHL_CPP_JSON_H_
 
+#include <libstdhl/Type>
+#include <libstdhl/std/rfc3986>
 #include <libstdhl/vendor/json/json>
 
 /**
@@ -60,6 +62,152 @@ namespace libstdhl
     namespace Json
     {
         using Object = nlohmann::json;
+
+        u1 hasProperty( const Object& object, const std::string& field );
+
+        void validateTypeIsObject( const std::string& context, const Object& object );
+
+        void validateTypeIsString( const std::string& context, const Object& object );
+
+        void validateTypeIsArray( const std::string& context, const Object& object );
+
+        void validatePropertyIs(
+            const std::string& context,
+            const Object& object,
+            const std::string& field,
+            const u1 required,
+            const std::function< u1( const Object& property ) >& condition );
+
+        void validatePropertyIsObject(
+            const std::string& context,
+            const Object& object,
+            const std::string& field,
+            const u1 required );
+
+        void validatePropertyIsArray(
+            const std::string& context,
+            const Object& object,
+            const std::string& field,
+            const u1 required );
+
+        void validatePropertyIsString(
+            const std::string& context,
+            const Object& object,
+            const std::string& field,
+            const u1 required );
+
+        void validatePropertyIsNumber(
+            const std::string& context,
+            const Object& object,
+            const std::string& field,
+            const u1 required );
+
+        void validatePropertyIsNumberOrNull(
+            const std::string& context,
+            const Object& object,
+            const std::string& field,
+            const u1 required );
+
+        void validatePropertyIsBoolean(
+            const std::string& context,
+            const Object& object,
+            const std::string& field,
+            const u1 required );
+
+        void validatePropertyIsUuid(
+            const std::string& context,
+            const Object& object,
+            const std::string& field,
+            const u1 required );
+
+        void validatePropertyIsUri(
+            const std::string& context,
+            const Object& object,
+            const std::string& field,
+            const u1 required );
+
+        void validatePropertyIsUriOrNull(
+            const std::string& context,
+            const Object& object,
+            const std::string& field,
+            const u1 required );
+
+        template < class T >
+        void validatePropertyIs(
+            const std::string& context,
+            const Object& object,
+            const std::string& field,
+            const u1 required )
+        {
+            validatePropertyIs(
+                context, object, field, required, []( const Object& property ) -> u1 {
+                    T::validate( property );
+                    return true;
+                } );
+        };
+
+        template < class T >
+        void validatePropertyIsArrayOf(
+            const std::string& context,
+            const Object& object,
+            const std::string& field,
+            const u1 required )
+        {
+            validatePropertyIsArray( context, object, field, required );
+            if( hasProperty( object, field ) )
+            {
+                for( auto element : object[ field ] )
+                {
+                    T::validate( element );
+                }
+            }
+        };
+
+        void validatePropertyIsArrayOfString(
+            const std::string& context,
+            const Object& object,
+            const std::string& field,
+            const u1 required );
+
+        template < class T >
+        void validateTypeIsArrayOf( const std::string& context, const Object& object )
+        {
+            validateTypeIsArray( context, object );
+            for( auto element : object )
+            {
+                T::validate( element );
+            }
+        };
+
+        template < class T, class U >
+        void validateTypeIsMixedArrayOf( const std::string& context, const Data& data )
+        {
+            Content::validateTypeIsArray( context, data );
+            for( auto element : data )
+            {
+                try
+                {
+                    T::validate( element );
+                }
+                catch( std::invalid_argument a )
+                {
+                    U::validate( element );
+                }
+            }
+        };
+
+        template < class T, class U >
+        void validateTypeIsArrayOf( const std::string& context, const Data& data )
+        {
+            try
+            {
+                validateTypeIsArrayOf< T >( context, data );
+            }
+            catch( std::invalid_argument a )
+            {
+                validateTypeIsArrayOf< U >( context, data );
+            }
+        };
     };
 }
 

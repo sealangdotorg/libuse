@@ -49,6 +49,7 @@ add_library( ${PROJECT}-cpp OBJECT
   Args.cpp
   Environment.cpp
   Exception.cpp
+  Json.cpp
   data/file/TextDocument.cpp
   data/log/Category.cpp
   data/log/Chronograph.cpp
