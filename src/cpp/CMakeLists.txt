@@ -50,6 +50,7 @@ add_library( ${PROJECT}-cpp OBJECT
   Environment.cpp
   Exception.cpp
   File.cpp
+  Json.cpp
   SourceLocation.cpp
   data/file/TextDocument.cpp
   data/log/Category.cpp
