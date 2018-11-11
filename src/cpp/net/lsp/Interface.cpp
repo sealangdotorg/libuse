@@ -135,6 +135,13 @@ void ServerInterface::telemetry_event( const TelemetryEventParams& params ) noex
     notify( msg );
 }
 
+void ServerInterface::client_registerCapability( const RegistrationParams& params )
+{
+    NotificationMessage msg( std::string{ Identifier::client_registerCapability } );
+    msg.setParams( params );
+    notify( msg );
+}
+
 void ServerInterface::textDocument_publishDiagnostics(
     const PublishDiagnosticsParams& params ) noexcept
 {
