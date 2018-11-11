@@ -142,6 +142,14 @@ void ServerInterface::client_registerCapability( const RegistrationParams& param
     notify( msg );
 }
 
+void ServerInterface::client_unregisterCapability( const UnregistrationParams& params )
+{
+    RequestMessage msg( std::string{ Identifier::client_unregisterCapability } );
+    msg.setParams( params );
+    // request( msg );   // TODO: FIXME: @Clasc
+    // TODO: FIXME: @Clasc: handle response
+}
+
 void ServerInterface::textDocument_publishDiagnostics(
     const PublishDiagnosticsParams& params ) noexcept
 {
