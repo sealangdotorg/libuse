@@ -123,7 +123,7 @@ namespace libstdhl
 
                 // https://microsoft.github.io/language-server-protocol/specification#window_logMessage
                 // server to client notification
-                virtual void window_logMessage( const LogMessageParams& params ) = 0;
+                virtual void window_logMessage( const LogMessageParams& params ) noexcept final;
 
                 //
                 //

@@ -121,6 +121,13 @@ ShowMessageRequestResult ServerInterface::window_showMessageRequest(
     return ShowMessageRequestResult();
 }
 
+void ServerInterface::window_logMessage( const LogMessageParams& params ) noexcept
+{
+    NotificationMessage msg( std::string{ Identifier::window_logMessage } );
+    msg.setParams( params );
+    notify( msg );
+}
+
 void ServerInterface::textDocument_publishDiagnostics(
     const PublishDiagnosticsParams& params ) noexcept
 {

@@ -321,6 +321,8 @@ namespace libstdhl
 
                 constexpr const char* willSaveWaitUntil = "willSaveWaitUntil";
 
+                constexpr const char* window_logMessage = "window/logMessage";
+
                 constexpr const char* window_showMessage = "window/showMessage";
 
                 constexpr const char* window_showMessageRequest = "window/showMessageRequest";
