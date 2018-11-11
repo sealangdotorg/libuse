@@ -78,10 +78,6 @@ class TestInterface final : public ServerInterface
         return ExecuteCommandResult();
     }
 
-    void window_logMessage( const LogMessageParams& params ) override
-    {
-    }
-
     void telemetry_event( const Data& data ) noexcept override
     {
     }
