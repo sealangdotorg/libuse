@@ -2405,6 +2405,41 @@ void InitializeError::validate( const Data& data )
 
 //
 //
+// ShowMessageParams
+//
+
+ShowMessageParams::ShowMessageParams( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+ShowMessageParams::ShowMessageParams( const MessageType type, const std::string& message )
+: Data( Data::object() )
+{
+    operator[]( Identifier::type ) = static_cast< std::size_t >( type );
+    operator[]( Identifier::message ) = message;
+}
+
+MessageType ShowMessageParams::messageType( void ) const
+{
+    return static_cast< MessageType >( at( Identifier::type ).get< std::size_t >() );
+}
+
+std::string ShowMessageParams::message( void ) const
+{
+    return at( Identifier::message ).get< std::string >();
+}
+
+void ShowMessageParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " ShowMessageParams:";
+    Content::validatePropertyIsString( context, data, Identifier::message, true );
+    Content::validatePropertyIsNumber( context, data, Identifier::type, true );
+}
+
+//
+//
 // WorkspaceFoldersResponse
 //
 
