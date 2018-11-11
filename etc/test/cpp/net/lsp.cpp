@@ -78,10 +78,6 @@ class TestInterface final : public ServerInterface
         return ExecuteCommandResult();
     }
 
-    void telemetry_event( const Data& data ) noexcept override
-    {
-    }
-
     void client_registerCapability( const RegistrationParams& params ) override
     {
     }

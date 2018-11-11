@@ -1162,6 +1162,14 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            class TelemetryEventParams : public Data
+            {
+              public:
+                TelemetryEventParams( const Data& data );
+
+                static void validate( const Data& data );
+            };
+
             class Registration : public Data
             {
               public:

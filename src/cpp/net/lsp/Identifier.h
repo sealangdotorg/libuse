@@ -279,6 +279,7 @@ namespace libstdhl
                 constexpr const char* synchronization = "synchronization";
 
                 // T
+                constexpr const char* telemetry_event = "telemetry/event";
 
                 constexpr const char* text = "text";
 
