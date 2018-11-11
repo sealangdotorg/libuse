@@ -78,11 +78,6 @@ class TestInterface final : public ServerInterface
         return ExecuteCommandResult();
     }
 
-    WorkspaceFoldersResponse workspace_workspaceFolders( void ) override
-    {
-        return WorkspaceFoldersResponse( std::vector< WorkspaceFolder >() );
-    }
-
     void workspace_didChangeWorkspaceFolders(
         const DidChangeWorkspaceFoldersParams& params ) noexcept override
     {
