@@ -141,7 +141,7 @@ namespace libstdhl
 
                 // https://microsoft.github.io/language-server-protocol/specification#client_registerCapability
                 // server to client request
-                virtual void client_registerCapability( const RegistrationParams& params ) = 0;
+                virtual void client_registerCapability( const RegistrationParams& params ) final;
 
                 // https://microsoft.github.io/language-server-protocol/specification#client_unregisterCapability
                 // server to client request

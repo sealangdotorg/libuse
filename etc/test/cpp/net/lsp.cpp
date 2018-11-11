@@ -78,10 +78,6 @@ class TestInterface final : public ServerInterface
         return ExecuteCommandResult();
     }
 
-    void client_registerCapability( const RegistrationParams& params ) override
-    {
-    }
-
     void client_unregisterCapability( const UnregistrationParams& params ) override
     {
     }
