@@ -78,10 +78,6 @@ class TestInterface final : public ServerInterface
         return ExecuteCommandResult();
     }
 
-    void client_unregisterCapability( const UnregistrationParams& params ) override
-    {
-    }
-
     WorkspaceFoldersResponse workspace_workspaceFolders( void ) override
     {
         return WorkspaceFoldersResponse( std::vector< WorkspaceFolder >() );
