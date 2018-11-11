@@ -128,6 +128,13 @@ void ServerInterface::window_logMessage( const LogMessageParams& params ) noexce
     notify( msg );
 }
 
+void ServerInterface::telemetry_event( const TelemetryEventParams& params ) noexcept
+{
+    NotificationMessage msg( std::string{ Identifier::window_logMessage } );
+    msg.setParams( params );
+    notify( msg );
+}
+
 void ServerInterface::textDocument_publishDiagnostics(
     const PublishDiagnosticsParams& params ) noexcept
 {

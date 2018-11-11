@@ -132,7 +132,7 @@ namespace libstdhl
 
                 // https://microsoft.github.io/language-server-protocol/specification#telemetry_event
                 // server to client notification
-                virtual void telemetry_event( const Data& data ) noexcept = 0;
+                virtual void telemetry_event( const TelemetryEventParams& params ) noexcept final;
 
                 //
                 //
