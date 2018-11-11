@@ -334,6 +334,8 @@ namespace libstdhl
 
                 constexpr const char* workspace = "workspace";
 
+                constexpr const char* workspace_workspaceFolders = "workspace/workspaceFolders";
+
                 constexpr const char* workspaceEdit = "workspaceEdit";
 
                 constexpr const char* workspaceSymbolProvider = "workspaceSymbolProvider";

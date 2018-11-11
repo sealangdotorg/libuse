@@ -151,6 +151,14 @@ void ServerInterface::client_unregisterCapability( const UnregistrationParams& p
     // TODO: FIXME: @Clasc: handle response
 }
 
+WorkspaceFoldersResponse ServerInterface::workspace_workspaceFolders( void )
+{
+    RequestMessage msg( std::string{ Identifier::workspace_workspaceFolders } );
+    // request( msg );   // TODO: FIXME: @Clasc
+    // TODO: FIXME: @Clasc: handle response
+    return WorkspaceFoldersResponse( std::vector< WorkspaceFolder >() );
+}
+
 void ServerInterface::textDocument_publishDiagnostics(
     const PublishDiagnosticsParams& params ) noexcept
 {
