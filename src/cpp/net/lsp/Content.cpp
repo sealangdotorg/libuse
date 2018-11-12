@@ -2434,6 +2434,7 @@ std::string ShowMessageParams::message( void ) const
 void ShowMessageParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " ShowMessageParams:";
+    Content::validateTypeIsObject( context, data );
     Content::validatePropertyIsString( context, data, Identifier::message, true );
     Content::validatePropertyIsNumber( context, data, Identifier::type, true );
 }
