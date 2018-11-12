@@ -83,6 +83,11 @@ add_library( ${PROJECT}-cpp OBJECT
   net/eth/Link.cpp
   net/eth/Protocol.cpp
   net/eth/Socket.cpp
+  net/dap/Content.cpp
+  net/dap/Interface.cpp
+  net/dap/Message.cpp
+  net/dap/Packet.cpp
+  net/dap/Protocol.cpp
   net/lsp/Content.cpp
   net/lsp/Interface.cpp
   net/lsp/Message.cpp
@@ -272,6 +277,34 @@ install(
     ${${PROJECT}_NET_HEADERS_CPP}
   DESTINATION
     "include/${PROJECT}/net"
+  )
+
+
+ecm_generate_headers( ${PROJECT}_NET_DAP_HEADERS_CPP
+  ORIGINAL
+    CAMELCASE
+  HEADER_NAMES
+    DAP
+    Content
+    Exception
+    Identifier
+    Interface
+    Message
+    Packet
+    Protocol
+  PREFIX
+    ${PROJECT}/net/dap
+  RELATIVE
+    net/dap
+  REQUIRED_HEADERS
+    ${PROJECT}_NET_DAP_HEADERS
+  )
+install(
+  FILES
+    ${${PROJECT}_NET_DAP_HEADERS}
+    ${${PROJECT}_NET_DAP_HEADERS_CPP}
+  DESTINATION
+    "include/${PROJECT}/net/dap"
   )
 
 
