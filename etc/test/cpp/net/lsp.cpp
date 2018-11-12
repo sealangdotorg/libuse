@@ -256,6 +256,19 @@ TEST( libstdhl_cpp_network_lsp, parse_packet_request_initialize_vscode )
     } );
 }
 
+TEST( libstdhl_cpp_network_lsp, window_showMessage )
+{
+    TestInterface server;
+    server.window_showMessage( ShowMessageParams( MessageType::Error, "Error Message" ) );
+    server.window_showMessage( ShowMessageParams( MessageType::Info, "Info Message" ) );
+    server.window_showMessage( ShowMessageParams( MessageType::Log, "Log Message" ) );
+    server.window_showMessage( ShowMessageParams( MessageType::Warning, "Warning Message" ) );
+
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
+
 //
 //  Local variables:
 //  mode: c++
