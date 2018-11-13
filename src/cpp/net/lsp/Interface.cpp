@@ -167,6 +167,15 @@ Data ServerInterface::workspace_configuration( const ConfigurationParams& params
     return Data( Data::object() );
 }
 
+ApplyWorkspaceEditResponse ServerInterface::workspace_applyEdit(
+    const ApplyWorkspaceEditParams& params )
+{
+    RequestMessage msg( std::string{ Identifier::workspace_applyEdit } );
+    // request( msg );   // TODO: FIXME: @Clasc
+    // TODO: FIXME: @Clasc: handle response
+    return ApplyWorkspaceEditResponse( true );
+}
+
 void ServerInterface::textDocument_publishDiagnostics(
     const PublishDiagnosticsParams& params ) noexcept
 {

@@ -97,12 +97,6 @@ class TestInterface final : public ServerInterface
     {
     }
 
-    ApplyWorkspaceEditResponse workspace_applyEdit(
-        const ApplyWorkspaceEditParams& params ) override
-    {
-        return ApplyWorkspaceEditResponse( true );
-    }
-
     void textDocument_didOpen( const DidOpenTextDocumentParams& params ) noexcept override
     {
     }
