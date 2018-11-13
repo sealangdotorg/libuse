@@ -204,6 +204,11 @@ TEST( libstdhl_cpp_String, endsWith_false )
     EXPECT_EQ( false, String::endsWith( "foobarbaz", "fffffffffffffffff" ) );
 }
 
+TEST( libstdhl_cpp_String, replaceAll )
+{
+    EXPECT_STREQ( "fbazbarfbazbaz", String::replaceAll( "foobarfoobaz", "oo", "baz" ).c_str() );
+}
+
 TEST( libstdhl_cpp_String, expansion )
 {
     //                 0-------------1-----------2-

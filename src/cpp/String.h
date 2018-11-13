@@ -136,6 +136,24 @@ namespace libstdhl
             }
         }
 
+        /**
+           adopted from:
+           https://stackoverflow.com/questions/2896600/how-to-replace-all-occurrences-of-a-character-in-string#answer-24315631
+        */
+
+        inline std::string replaceAll(
+            const std::string& str, const std::string& from, const std::string& to )
+        {
+            auto tmp = str;
+            size_t start_pos = 0;
+            while( ( start_pos = tmp.find( from, start_pos ) ) != std::string::npos )
+            {
+                tmp.replace( start_pos, from.length(), to );
+                start_pos += to.length();
+            }
+            return tmp;
+        }
+
         inline std::string expansion(
             const std::string& str,
             const std::size_t start,
