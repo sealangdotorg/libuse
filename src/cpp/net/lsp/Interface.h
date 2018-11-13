@@ -193,7 +193,7 @@ namespace libstdhl
                 // https://microsoft.github.io/language-server-protocol/specification#workspace_applyEdit
                 // server to client request
                 virtual ApplyWorkspaceEditResponse workspace_applyEdit(
-                    const ApplyWorkspaceEditParams& params ) = 0;
+                    const ApplyWorkspaceEditParams& params ) final;
 
                 //
                 //
