@@ -167,10 +167,6 @@ namespace libstdhl
                 virtual void workspace_didChangeConfiguration(
                     const DidChangeConfigurationParams& params ) noexcept = 0;
 
-                // https://microsoft.github.io/language-server-protocol/specification#workspace_didChangeConfiguration
-                // workspace_didChangeConfiguration
-                // client to server notification
-
                 // https://microsoft.github.io/language-server-protocol/specification#workspace_configuration
                 // server to client request
                 virtual Data workspace_configuration( const ConfigurationParams& params ) final;
