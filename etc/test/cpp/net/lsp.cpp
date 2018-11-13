@@ -88,11 +88,6 @@ class TestInterface final : public ServerInterface
     {
     }
 
-    Data workspace_configuration( const ConfigurationParams& params ) override
-    {
-        return Data();
-    }
-
     void workspace_didChangeWatchedFiles(
         const DidChangeWatchedFilesParams& params ) noexcept override
     {

@@ -159,6 +159,14 @@ WorkspaceFoldersResponse ServerInterface::workspace_workspaceFolders( void )
     return WorkspaceFoldersResponse( std::vector< WorkspaceFolder >() );
 }
 
+Data ServerInterface::workspace_configuration( const ConfigurationParams& params )
+{
+    RequestMessage msg( std::string{ Identifier::workspace_configuration } );
+    // request( msg );   // TODO: FIXME: @Clasc
+    // TODO: FIXME: @Clasc: handle response
+    return Data( Data::object() );
+}
+
 void ServerInterface::textDocument_publishDiagnostics(
     const PublishDiagnosticsParams& params ) noexcept
 {
