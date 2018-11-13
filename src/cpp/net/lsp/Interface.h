@@ -173,7 +173,7 @@ namespace libstdhl
 
                 // https://microsoft.github.io/language-server-protocol/specification#workspace_configuration
                 // server to client request
-                virtual Data workspace_configuration( const ConfigurationParams& params ) = 0;
+                virtual Data workspace_configuration( const ConfigurationParams& params ) final;
 
                 // https://microsoft.github.io/language-server-protocol/specification#workspace_didChangeWatchedFiles
                 // client to server notification
