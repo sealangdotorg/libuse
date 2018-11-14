@@ -139,7 +139,7 @@ void ServerInterface::telemetry_event( const TelemetryEventParams& params ) noex
 
 void ServerInterface::client_registerCapability( const RegistrationParams& params )
 {
-    RequestMessage msg( std::string{ Identifier::client_registerCapability } );
+    RequestMessage msg( 0 /* TODO */, std::string{ Identifier::client_registerCapability } );
     msg.setParams( params );
     // request( msg );   // TODO: FIXME: @Clasc
     // TODO: FIXME: @Clasc: handle response

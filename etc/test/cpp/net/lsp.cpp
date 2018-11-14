@@ -307,6 +307,25 @@ TEST( libstdhl_cpp_network_lsp, telemetry_event )
     } );
 }
 
+TEST( libstdhl_cpp_network_lsp, client_registerCapability )
+{
+    TestInterface server;
+    Registration reg( "1", "test/method" );
+    Registration reg2( "2", "test/method" );
+    std::vector< Registration > registrations { reg, reg2 };
+
+    server.client_registerCapability( RegistrationParams( registrations ) );
+
+    Data registrationsData( Data::object() );
+    registrationsData[ "registrations" ].push_back( reg );
+
+    server.client_registerCapability( RegistrationParams( registrationsData ) );
+
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
+
 //
 //  Local variables:
 //  mode: c++
