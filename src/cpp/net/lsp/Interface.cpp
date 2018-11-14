@@ -114,11 +114,13 @@ void ServerInterface::window_showMessage( const ShowMessageParams& params ) noex
 ShowMessageRequestResult ServerInterface::window_showMessageRequest(
     const ShowMessageRequestParams& params )
 {
-    RequestMessage msg( std::string{ Identifier::window_showMessageRequest } );
+    RequestMessage msg( 0 /* TODO */, std::string{ Identifier::window_showMessageRequest } );
+
     msg.setParams( params );
     // request( msg );   // TODO: FIXME: @Clasc
     // TODO: FIXME: @Clasc: handle response
-    return ShowMessageRequestResult();
+
+    return ShowMessageRequestResult( std::string{ "TODO" } );
 }
 
 void ServerInterface::window_logMessage( const LogMessageParams& params ) noexcept

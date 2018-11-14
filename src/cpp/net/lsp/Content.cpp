@@ -2441,33 +2441,92 @@ void ShowMessageParams::validate( const Data& data )
 
 //
 //
+// MessageActionItem
+//
+
+MessageActionItem::MessageActionItem( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+MessageActionItem::MessageActionItem( const std::string& title )
+: Data( Data::object() )
+{
+    operator[]( Identifier::title ) = title;
+}
+
+std::string MessageActionItem::title( void ) const
+{
+    return operator[]( Identifier::title ).get< std::string >();
+}
+
+void MessageActionItem::validate( const Data& data )
+{
+    static const auto context = CONTENT + " MessageActionItem:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::title, true );
+}
+
+//
+//
+// ShowMessageRequestParams
+//
+
+ShowMessageRequestParams::ShowMessageRequestParams( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+ShowMessageRequestParams::ShowMessageRequestParams(
+    const MessageType type, const std::string& message )
+: Data( Data::object() )
+{
+    operator[]( Identifier::type ) = static_cast< std::size_t >( type );
+    operator[]( Identifier::message ) = message;
+}
+
+MessageType ShowMessageRequestParams::messageType( void ) const
+{
+    return static_cast< MessageType >( at( Identifier::type ).get< std::size_t >() );
+}
+
+u1 ShowMessageRequestParams::hasActions( void )
+{
+    return find( Identifier::actions ) != end();
+}
+
+Data ShowMessageRequestParams::actions( void ) const
+{
+    return at( Identifier::actions );
+}
+
+void ShowMessageRequestParams::addAction( const MessageActionItem& action )
+{
+    operator[]( Identifier::actions ).push_back( action );
+}
+
+std::string ShowMessageRequestParams::message( void ) const
+{
+    return at( Identifier::message ).get< std::string >();
+}
+
+void ShowMessageRequestParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " ShowMessageRequestParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::title, true );
+    Content::validatePropertyIsArray( context, data, Identifier::actions, false );
+}
+
+//
+//
 // WorkspaceFoldersResponse
 //
 
 WorkspaceFoldersResponse::WorkspaceFoldersResponse(
     const std::vector< WorkspaceFolder >& workspaceFolder )
-{
-}
-
-//
-//
-// ShowMessageRequestResult
-//
-
-ShowMessageRequestResult::ShowMessageRequestResult( const MessageActionItem& messageActionItem )
-{
-}
-
-ShowMessageRequestResult::ShowMessageRequestResult( void )
-{
-}
-
-//
-//
-// MessageActionItem
-//
-
-MessageActionItem::MessageActionItem( void )
 {
 }
 
