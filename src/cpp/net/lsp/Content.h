@@ -1321,6 +1321,7 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
+            using ConfigurationResult = Data;
 
             class ConfigurationParams : public Data
             {
@@ -1443,12 +1444,12 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
-            class ApplyWorkspaceEditResponse : public Data
+            class ApplyWorkspaceEditResult : public Data
             {
               public:
-                ApplyWorkspaceEditResponse( const Data& data );
+                ApplyWorkspaceEditResult( const Data& data );
 
-                ApplyWorkspaceEditResponse( const u1 applied );
+                ApplyWorkspaceEditResult( const u1 applied );
 
                 u1 isApplied( void ) const;
 

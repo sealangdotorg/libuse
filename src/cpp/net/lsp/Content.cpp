@@ -2669,7 +2669,7 @@ WorkspaceFoldersResponse::WorkspaceFoldersResponse(
 // ApplyWorkspaceEdit
 //
 
-ApplyWorkspaceEditResponse::ApplyWorkspaceEditResponse( u1 applied )
+ApplyWorkspaceEditResult::ApplyWorkspaceEditResult( u1 applied )
 {
 }
 
