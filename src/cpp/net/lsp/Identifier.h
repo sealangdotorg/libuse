@@ -61,6 +61,7 @@ namespace libstdhl
             namespace Identifier
             {
                 // A
+                constexpr const char* actions = "actions";
 
                 constexpr const char* arguments = "arguments";
 

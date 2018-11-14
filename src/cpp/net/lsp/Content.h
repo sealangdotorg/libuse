@@ -1107,28 +1107,16 @@ namespace libstdhl
             class MessageActionItem : public Data
             {
               public:
-                MessageActionItem( void );
+                MessageActionItem( const Data& data );
 
-                MessageActionItem( std::string& title );
+                MessageActionItem( const std::string& title );
 
                 std::string title( void ) const;
 
                 static void validate( const Data& data );
             };
 
-            class ShowMessageRequestResult : public Data
-            {
-              public:
-                ShowMessageRequestResult( const Data& data );
-
-                ShowMessageRequestResult( const MessageActionItem& messageActionItem );
-
-                ShowMessageRequestResult( void );
-
-                MessageActionItem messageActionItem( void ) const;
-
-                static void validate( const Data& data );
-            };
+            using ShowMessageRequestResult = MessageActionItem;
 
             class ShowMessageRequestParams : public Data
             {
@@ -1141,7 +1129,7 @@ namespace libstdhl
 
                 u1 hasActions( void );
 
-                std::vector< MessageActionItem > actions( void ) const;
+                Data actions( void ) const;
 
                 void addAction( const MessageActionItem& action );
 
