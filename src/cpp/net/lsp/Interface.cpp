@@ -132,7 +132,7 @@ void ServerInterface::window_logMessage( const LogMessageParams& params ) noexce
 
 void ServerInterface::telemetry_event( const TelemetryEventParams& params ) noexcept
 {
-    NotificationMessage msg( std::string{ Identifier::window_logMessage } );
+    NotificationMessage msg( std::string{ Identifier::telemetry_event } );
     msg.setParams( params );
     notify( msg );
 }
