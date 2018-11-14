@@ -1161,7 +1161,7 @@ namespace libstdhl
 
                 Data registerOptions( void ) const;
 
-                u1 hasRegisterOptions( void );
+                u1 hasRegisterOptions( void ) const;
 
                 void addRegisterOption( const Data& option );
 
@@ -1175,7 +1175,7 @@ namespace libstdhl
 
                 RegistrationParams( const std::vector< Registration >& registrations );
 
-                Data registrations( void );
+                Data registrations( void ) const;
 
                 static void validate( const Data& data );
             };
@@ -1187,7 +1187,7 @@ namespace libstdhl
 
                 TextDocumentRegistrationOptions( const DocumentSelector& documentSelector );
 
-                DocumentSelector documentSelector( void );
+                DocumentSelector documentSelector( void ) const;
 
                 static void validate( const Data& data );
             };
