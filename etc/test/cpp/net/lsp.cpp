@@ -284,6 +284,19 @@ TEST( libstdhl_cpp_network_lsp, window_showMessageRequest )
     } );
 }
 
+TEST( libstdhl_cpp_network_lsp, window_logMessage )
+{
+    TestInterface server;
+    server.window_logMessage( LogMessageParams( MessageType::Error, "Error Message" ) );
+    server.window_logMessage( LogMessageParams( MessageType::Info, "Info Message" ) );
+    server.window_logMessage( LogMessageParams( MessageType::Log, "Log Message" ) );
+    server.window_logMessage( LogMessageParams( MessageType::Warning, "Warning Message" ) );
+
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
+
 //
 //  Local variables:
 //  mode: c++
