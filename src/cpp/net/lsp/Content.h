@@ -1155,9 +1155,6 @@ namespace libstdhl
 
                 Registration( const std::string& id, const std::string& method );
 
-                Registration(
-                    const std::string& id, const std::string& method, const Data& registerOptions );
-
                 std::string id( void ) const;
 
                 std::string method( void ) const;
@@ -1166,7 +1163,7 @@ namespace libstdhl
 
                 u1 hasRegisterOptions( void );
 
-                void addRegisterOption( const Data& action );
+                void addRegisterOption( const Data& option );
 
                 static void validate( const Data& data );
             };
@@ -1178,7 +1175,7 @@ namespace libstdhl
 
                 RegistrationParams( const std::vector< Registration >& registrations );
 
-                std::vector< Registration > registrations( void );
+                Data registrations( void );
 
                 static void validate( const Data& data );
             };

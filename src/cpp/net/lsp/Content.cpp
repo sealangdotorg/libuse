@@ -2534,6 +2534,128 @@ void TelemetryEventParams::validate( const Data& data )
 
 //
 //
+// Registration
+//
+
+Registration::Registration( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+Registration::Registration( const std::string& id, const std::string& method )
+: Data( Data::object() )
+{
+    operator[]( Identifier::id ) = id;
+    operator[]( Identifier::method ) = method;
+}
+
+std::string Registration::id( void ) const
+{
+    return operator[]( Identifier::id ).get< std::string >();
+}
+
+std::string Registration::method( void ) const
+{
+    return operator[]( Identifier::method ).get< std::string >();
+}
+
+Data Registration::registerOptions( void ) const
+{
+    return operator[]( Identifier::registerOptions );
+}
+
+u1 Registration::hasRegisterOptions( void )
+{
+    return find( Identifier::actions ) != end();
+}
+
+void Registration::addRegisterOption( const Data& option )
+{
+    operator[]( Identifier::registerOptions ).push_back( option );
+}
+
+void Registration::validate( const Data& data )
+{
+    static const auto context = CONTENT + " Registration:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::id, true );
+    Content::validatePropertyIsString( context, data, Identifier::method, true );
+    Content::validatePropertyIsArray( context, data, Identifier::registerOptions, false );
+}
+
+//
+//
+// RegistrationParams
+//
+RegistrationParams::RegistrationParams( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+RegistrationParams::RegistrationParams( const std::vector< Registration >& registrations )
+: Data( Data::object() )
+{
+    for( auto registration : registrations )
+    {
+        operator[]( Identifier::registrations ) = registration;
+    }
+}
+
+Data RegistrationParams::registrations( void )
+{
+    return operator[]( Identifier::registrations );
+}
+
+void RegistrationParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " RegistrationParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsArray( context, data, Identifier::registrations, true );
+}
+
+//
+//
+// TextDocumentRegistrationOptions
+//
+
+TextDocumentRegistrationOptions::TextDocumentRegistrationOptions( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+TextDocumentRegistrationOptions::TextDocumentRegistrationOptions(
+    const DocumentSelector& documentSelector )
+: Data( Data::object() )
+{
+    operator[]( Identifier::documentSelector ) = documentSelector;
+}
+
+DocumentSelector TextDocumentRegistrationOptions::documentSelector( void )
+{
+    return operator[]( Identifier::documentSelector );
+}
+
+void TextDocumentRegistrationOptions::validate( const Data& data )
+{
+    static const auto context = CONTENT + " TextDocumentRegistrationOptions:";
+    Content::validateTypeIsObject( context, data );
+    if( data.find( Identifier::documentSelector ) != data.end() and
+        data[ Identifier::documentSelector ].is_null() )
+    {
+        // ok, due to the possibility that the property can be null
+    }
+    else
+    {
+        Content::validatePropertyIs< DocumentSelector >(
+            context, data, Identifier::documentSelector, true );
+    }
+}
+
+//
+//
 // WorkspaceFoldersResponse
 //
 

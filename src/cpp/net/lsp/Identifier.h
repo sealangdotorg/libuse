@@ -141,6 +141,8 @@ namespace libstdhl
                 constexpr const char* documentRangeFormattingProvider =
                     "documentRangeFormattingProvider";
 
+                constexpr const char* documentSelector = "documentSelector";
+
                 constexpr const char* documentSymbol = "documentSymbol";
 
                 constexpr const char* documentSymbolProvider = "documentSymbolProvider";
@@ -244,6 +246,10 @@ namespace libstdhl
                 constexpr const char* rangeLength = "rangeLength";
 
                 constexpr const char* references = "references";
+
+                constexpr const char* registerOptions = "registerOptions";
+
+                constexpr const char* registrations = "registrations";
 
                 constexpr const char* referencesProvider = "referencesProvider";
 
