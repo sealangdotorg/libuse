@@ -297,6 +297,16 @@ TEST( libstdhl_cpp_network_lsp, window_logMessage )
     } );
 }
 
+TEST( libstdhl_cpp_network_lsp, telemetry_event )
+{
+    TestInterface server;
+    server.telemetry_event( TelemetryEventParams( Data::object() ) );
+
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
+
 //
 //  Local variables:
 //  mode: c++

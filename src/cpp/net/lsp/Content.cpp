@@ -2520,6 +2520,18 @@ void ShowMessageRequestParams::validate( const Data& data )
     Content::validatePropertyIsArray( context, data, Identifier::actions, false );
 }
 
+TelemetryEventParams::TelemetryEventParams( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+void TelemetryEventParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " TelemetryEventParams:";
+    Content::validateTypeIsObject( context, data );
+}
+
 //
 //
 // WorkspaceFoldersResponse
