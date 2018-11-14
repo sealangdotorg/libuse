@@ -312,7 +312,7 @@ TEST( libstdhl_cpp_network_lsp, client_registerCapability )
     TestInterface server;
     Registration reg( "1", "test/method" );
     Registration reg2( "2", "test/method" );
-    std::vector< Registration > registrations { reg, reg2 };
+    auto registrations = std::vector< Registration >( { reg, reg2 } );
 
     server.client_registerCapability( RegistrationParams( registrations ) );
 
