@@ -2565,7 +2565,7 @@ Data Registration::registerOptions( void ) const
     return operator[]( Identifier::registerOptions );
 }
 
-u1 Registration::hasRegisterOptions( void )
+u1 Registration::hasRegisterOptions( void ) const
 {
     return find( Identifier::actions ) != end();
 }
@@ -2597,13 +2597,14 @@ RegistrationParams::RegistrationParams( const Data& data )
 RegistrationParams::RegistrationParams( const std::vector< Registration >& registrations )
 : Data( Data::object() )
 {
+    operator[]( Identifier::registrations ) = Data::array();
     for( auto registration : registrations )
     {
-        operator[]( Identifier::registrations ) = registration;
+        operator[]( Identifier::registrations ).push_back( registration );
     }
 }
 
-Data RegistrationParams::registrations( void )
+Data RegistrationParams::registrations( void ) const
 {
     return operator[]( Identifier::registrations );
 }
@@ -2633,7 +2634,7 @@ TextDocumentRegistrationOptions::TextDocumentRegistrationOptions(
     operator[]( Identifier::documentSelector ) = documentSelector;
 }
 
-DocumentSelector TextDocumentRegistrationOptions::documentSelector( void )
+DocumentSelector TextDocumentRegistrationOptions::documentSelector( void ) const
 {
     return operator[]( Identifier::documentSelector );
 }
