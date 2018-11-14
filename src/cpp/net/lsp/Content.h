@@ -1138,17 +1138,7 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
-            class LogMessageParams : public Data
-            {
-              public:
-                LogMessageParams( const MessageType type, const std::string& message );
-
-                LogMessageParams( const Data& data );
-
-                MessageType messageType( void ) const;
-
-                static void validate( const Data& data );
-            };
+            using LogMessageParams = ShowMessageParams;
 
             class TelemetryEventParams : public Data
             {
