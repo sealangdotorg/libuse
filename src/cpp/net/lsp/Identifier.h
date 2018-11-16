@@ -323,6 +323,8 @@ namespace libstdhl
 
                 constexpr const char* uri = "uri";
 
+                constexpr const char* unregistrations = "unregistrations";
+
                 // V
 
                 constexpr const char* value = "value";

@@ -1219,11 +1219,11 @@ namespace libstdhl
 
                 Unregistration( const std::string& id, const std::string& method );
 
-                static void validate( const Data& data );
-
                 std::string id( void ) const;
 
                 std::string method( void ) const;
+
+                static void validate( const Data& data );
             };
 
             class UnregistrationParams : public Data
@@ -1233,7 +1233,7 @@ namespace libstdhl
 
                 UnregistrationParams( const Data& data );
 
-                std::vector< Unregistration > unregistrations( void );
+                Data unregistrations( void ) const;
 
                 static void validate( const Data& data );
             };

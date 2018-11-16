@@ -2657,6 +2657,75 @@ void TextDocumentRegistrationOptions::validate( const Data& data )
 
 //
 //
+// Unregistration
+//
+
+Unregistration::Unregistration( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+Unregistration::Unregistration( const std::string& id, const std::string& method )
+: Data( Data::object() )
+{
+    operator[]( Identifier::id ) = id;
+    operator[]( Identifier::method ) = method;
+}
+
+std::string Unregistration::id( void ) const
+{
+    return operator[]( Identifier::id ).get< std::string >();
+}
+
+std::string Unregistration::method( void ) const
+{
+    return operator[]( Identifier::method ).get< std::string >();
+}
+
+void Unregistration::validate( const Data& data )
+{
+    static const auto context = CONTENT + " Unregistration:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::id, true );
+    Content::validatePropertyIsString( context, data, Identifier::method, true );
+}
+
+//
+//
+// UnregistrationParams
+//
+
+UnregistrationParams::UnregistrationParams( const std::vector< Unregistration >& unregistrations )
+: Data( Data::object() )
+{
+    operator[]( Identifier::unregistrations ) = Data::array();
+    for( auto unregistration : unregistrations )
+    {
+        operator[]( Identifier::unregistrations ).push_back( unregistration );
+    }
+}
+
+UnregistrationParams::UnregistrationParams( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+Data UnregistrationParams::unregistrations( void ) const
+{
+    return operator[]( Identifier::unregistrations );
+}
+
+void UnregistrationParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " UnregistrationParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsArray( context, data, Identifier::unregistrations, true );
+}
+
+//
+//
 // WorkspaceFoldersResponse
 //
 

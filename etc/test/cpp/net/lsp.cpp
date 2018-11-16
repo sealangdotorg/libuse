@@ -326,6 +326,25 @@ TEST( libstdhl_cpp_network_lsp, client_registerCapability )
     } );
 }
 
+TEST( libstdhl_cpp_network_lsp, client_unregisterCapability )
+{
+    TestInterface server;
+    Unregistration reg( "1", "test/method" );
+    Unregistration reg2( "2", "test/method" );
+    auto unregistrations = std::vector< Unregistration >( { reg, reg2 } );
+
+    server.client_unregisterCapability( UnregistrationParams( unregistrations ) );
+
+    Data unregistrationsData( Data::object() );
+    unregistrationsData[ "unregistrations" ].push_back( reg );
+
+    server.client_unregisterCapability( UnregistrationParams( unregistrationsData ) );
+
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
+
 //
 //  Local variables:
 //  mode: c++
