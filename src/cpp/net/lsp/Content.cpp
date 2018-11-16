@@ -2726,12 +2726,92 @@ void UnregistrationParams::validate( const Data& data )
 
 //
 //
+// WorkspaceFolder
+//
+
+WorkspaceFolder::WorkspaceFolder( const std::string& uri, const std::string& name )
+: Data( Data::object() )
+{
+    operator[]( Identifier::uri ) = uri;
+    operator[]( Identifier::name ) = name;
+}
+
+WorkspaceFolder::WorkspaceFolder( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+std::string WorkspaceFolder::uri( void ) const
+{
+    return operator[]( Identifier::uri ).get< std::string >();
+}
+
+std::string WorkspaceFolder::name( void ) const
+{
+    return operator[]( Identifier::name ).get< std::string >();
+}
+
+void WorkspaceFolder::validate( const Data& data )
+{
+    static const auto context = CONTENT + " WorkspaceFolder:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::uri, true );
+    Content::validatePropertyIsString( context, data, Identifier::name, true );
+}
+
+//
+//
 // WorkspaceFoldersResponse
 //
 
-WorkspaceFoldersResponse::WorkspaceFoldersResponse(
-    const std::vector< WorkspaceFolder >& workspaceFolder )
+WorkspaceFoldersResponse::WorkspaceFoldersResponse( const Data& data )
 {
+    validate( data );
+}
+
+WorkspaceFoldersResponse::WorkspaceFoldersResponse(
+    const std::vector< WorkspaceFolder >& workspaceFolders )
+{
+    operator[]( Identifier::workspaceFolders ) = Data::array();
+    for( auto folder : workspaceFolders )
+    {
+        operator[]( Identifier::workspaceFolders ).push_back( folder );
+    }
+}
+
+Data WorkspaceFoldersResponse::workspaceFolders( void ) const
+{
+    return operator[]( Identifier::workspaceFolders );
+}
+
+void WorkspaceFoldersResponse::addWorkspaceFolder( const WorkspaceFolder& workspaceFolder )
+{
+    operator[]( Identifier::workspaceFolders ).push_back( workspaceFolder );
+}
+
+WorkspaceFolder WorkspaceFoldersResponse::at( std::size_t index ) const
+{
+    auto folder = operator[]( Identifier::workspaceFolders );
+    WorkspaceFolder result( folder[ index ] );
+    return result;
+}
+
+void WorkspaceFoldersResponse::validate( const Data& data )
+{
+    static const auto context = CONTENT + " WorkSpaceFolderResponse:";
+    Content::validateTypeIsObject( context, data );
+
+    if( data.find( Identifier::workspaceFolders ) != data.end() and
+        data[ Identifier::workspaceFolders ].is_null() )
+    {
+        // ok, due to the possibility that the property can be null
+    }
+    else
+    {
+        Content::validatePropertyIsArrayOf< WorkspaceFolder >(
+            context, data, Identifier::workspaceFolders, true );
+    }
 }
 
 //

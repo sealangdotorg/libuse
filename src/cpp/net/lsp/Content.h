@@ -1259,7 +1259,9 @@ namespace libstdhl
 
                 WorkspaceFoldersResponse( const std::vector< WorkspaceFolder >& workspaceFolders );
 
-                std::vector< WorkspaceFolder > workspaceFolders( void ) const;
+                Data workspaceFolders( void ) const;
+
+                WorkspaceFolder at( std::size_t ) const;
 
                 void addWorkspaceFolder( const WorkspaceFolder& workspaceFolder );
 
