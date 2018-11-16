@@ -217,6 +217,8 @@ namespace libstdhl
 
                 // N
 
+                constexpr const char* name = "name";
+
                 constexpr const char* newText = "newText";
 
                 // O
@@ -352,6 +354,8 @@ namespace libstdhl
                 constexpr const char* workspace_workspaceFolders = "workspace/workspaceFolders";
 
                 constexpr const char* workspaceEdit = "workspaceEdit";
+
+                constexpr const char* workspaceFolders = "workspaceFolders";
 
                 constexpr const char* workspaceSymbolProvider = "workspaceSymbolProvider";
 

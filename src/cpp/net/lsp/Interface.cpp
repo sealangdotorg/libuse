@@ -155,10 +155,12 @@ void ServerInterface::client_unregisterCapability( const UnregistrationParams& p
 
 WorkspaceFoldersResponse ServerInterface::workspace_workspaceFolders( void )
 {
-    RequestMessage msg( std::string{ Identifier::workspace_workspaceFolders } );
+    RequestMessage msg( 0 /* TODO */, std::string{ Identifier::workspace_workspaceFolders } );
     // request( msg );   // TODO: FIXME: @Clasc
     // TODO: FIXME: @Clasc: handle response
-    return WorkspaceFoldersResponse( std::vector< WorkspaceFolder >() );
+    std::vector< WorkspaceFolder > folders = std::vector< WorkspaceFolder >();
+    folders.emplace_back( WorkspaceFolder( "test://uri", "name" ) );
+    return WorkspaceFoldersResponse( folders );
 }
 
 Data ServerInterface::workspace_configuration( const ConfigurationParams& params )
