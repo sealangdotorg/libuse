@@ -147,7 +147,7 @@ void ServerInterface::client_registerCapability( const RegistrationParams& param
 
 void ServerInterface::client_unregisterCapability( const UnregistrationParams& params )
 {
-    RequestMessage msg( std::string{ Identifier::client_unregisterCapability } );
+    RequestMessage msg( 0 /* TODO */, std::string{ Identifier::client_unregisterCapability } );
     msg.setParams( params );
     // request( msg );   // TODO: FIXME: @Clasc
     // TODO: FIXME: @Clasc: handle response
