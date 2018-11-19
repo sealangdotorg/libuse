@@ -366,6 +366,19 @@ TEST( libstdhl_cpp_network_lsp, workspace_didChangeConfiguration )
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
+
+TEST( libstdhl_cpp_network_lsp, workspace_configuration )
+{
+    TestInterface server;
+    auto items = std::vector< ConfigurationItem >();
+    items.emplace_back( ConfigurationItem( "scope://Uri", "section" ) );
+    auto empty = std::vector< ConfigurationItem >();
+    server.workspace_configuration( ConfigurationParams( items ) );
+    server.workspace_configuration( ConfigurationParams( empty ) );
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
 //
 //  Local variables:
 //  mode: c++

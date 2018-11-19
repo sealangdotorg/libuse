@@ -195,6 +195,8 @@ namespace libstdhl
 
                 constexpr const char* initialized = "initialized";
 
+                constexpr const char* items = "items";
+
                 // J
 
                 constexpr const char* jsonrpc = "jsonrpc";
@@ -278,6 +280,10 @@ namespace libstdhl
                 constexpr const char* save = "save";
 
                 constexpr const char* scheme = "scheme";
+
+                constexpr const char* scopeUri = "scopeUri";
+
+                constexpr const char* section = "section";
 
                 constexpr const char* settings = "settings";
 

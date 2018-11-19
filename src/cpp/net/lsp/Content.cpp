@@ -2912,6 +2912,91 @@ void DidChangeConfigurationParams::validate( const Data& data )
 
 //
 //
+// ConfigurationItem
+//
+
+ConfigurationItem::ConfigurationItem( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+ConfigurationItem::ConfigurationItem( const std::string& scopeUri, const std::string& section )
+: Data( Data::object() )
+{
+    operator[]( Identifier::scopeUri ) = scopeUri;
+    operator[]( Identifier::section ) = section;
+}
+
+u1 ConfigurationItem::hasScopeUri( void ) const
+{
+    return find( Identifier::scopeUri ) != end();
+}
+
+u1 ConfigurationItem::hasSection( void ) const
+{
+    return find( Identifier::section ) != end();
+}
+
+std::string ConfigurationItem::scopeUri( void ) const
+{
+    return at( Identifier::scopeUri ).get< std::string >();
+}
+
+std::string ConfigurationItem::section( void ) const
+{
+    return at( Identifier::section ).get< std::string >();
+}
+
+void ConfigurationItem::setSection( const std::string& section )
+{
+    operator[]( Identifier::section ) = section;
+}
+
+void ConfigurationItem::setScopeUri( const std::string& uri )
+{
+    operator[]( Identifier::scopeUri ) = uri;
+}
+
+void ConfigurationItem::validate( const Data& data )
+{
+    static const auto context = CONTENT + " ConfigurationItem:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::section, false );
+    Content::validatePropertyIsString( context, data, Identifier::scopeUri, false );
+}
+
+//
+//
+// ConfigurationParams
+//
+
+ConfigurationParams::ConfigurationParams( const std::vector< ConfigurationItem >& items )
+: Data( Data::object() )
+{
+    operator[]( Identifier::items ) = Data::array();
+    for( auto item : items )
+    {
+        operator[]( Identifier::items ).push_back( item );
+    }
+}
+
+ConfigurationParams::ConfigurationParams( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+void ConfigurationParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " ConfigurationParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsArrayOf< ConfigurationItem >(
+        context, data, Identifier::items, true );
+}
+
+//
+//
 // ApplyWorkspaceEdit
 //
 
