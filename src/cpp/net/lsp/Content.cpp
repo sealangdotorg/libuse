@@ -2818,6 +2818,7 @@ void WorkspaceFoldersResponse::validate( const Data& data )
 //
 // WorkspaceFoldersChangeEvent
 //
+
 WorkspaceFoldersChangeEvent::WorkspaceFoldersChangeEvent(
     const std::vector< WorkspaceFolder >& added, const std::vector< WorkspaceFolder >& removed )
 : Data( Data::object() )
@@ -2860,6 +2861,10 @@ void WorkspaceFoldersChangeEvent::validate( const Data& data )
     Content::validatePropertyIsArrayOf< WorkspaceFolder >(
         context, data, Identifier::removed, true );
 }
+//
+//
+// DidChangeWorkspaceFoldersParams
+//
 
 DidChangeWorkspaceFoldersParams::DidChangeWorkspaceFoldersParams( const Data& data )
 : Data( Data::object() )
