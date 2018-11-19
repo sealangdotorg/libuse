@@ -2880,6 +2880,31 @@ void DidChangeWorkspaceFoldersParams::validate( const Data& data )
     Content::validatePropertyIs< WorkspaceFoldersChangeEvent >(
         context, data, Identifier::event, true );
 }
+
+//
+//
+// DidChangeConfigurationParams
+//
+
+DidChangeConfigurationParams::DidChangeConfigurationParams(
+    const DidChangeConfigurationSettings& settings )
+: Data( Data::object() )
+{
+    operator[]( Identifier::settings ) = settings;
+    validate( settings );
+}
+
+DidChangeConfigurationSettings DidChangeConfigurationParams::settings( void ) const
+{
+    return operator[]( Identifier::settings );
+}
+
+void DidChangeConfigurationParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " DidChangeConfigurationParams:";
+    Content::validateTypeIsObject( context, data );
+}
+
 //
 //
 // ApplyWorkspaceEdit

@@ -279,6 +279,8 @@ namespace libstdhl
 
                 constexpr const char* scheme = "scheme";
 
+                constexpr const char* settings = "settings";
+
                 constexpr const char* severity = "severity";
 
                 constexpr const char* shutdown = "shutdown";

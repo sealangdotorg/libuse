@@ -1294,12 +1294,13 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            using DidChangeConfigurationSettings = Data;
             class DidChangeConfigurationParams : public Data
             {
               public:
-                DidChangeConfigurationParams( const Data& settings );
+                DidChangeConfigurationParams( const DidChangeConfigurationSettings& settings );
 
-                Data settings( void ) const;
+                DidChangeConfigurationSettings settings( void ) const;
 
                 static void validate( const Data& data );
             };
