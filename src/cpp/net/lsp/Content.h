@@ -1330,6 +1330,7 @@ namespace libstdhl
 
             class ConfigurationParams : public Data
             {
+              public:
                 ConfigurationParams( const std::vector< ConfigurationItem >& items );
 
                 ConfigurationParams( const Data& data );

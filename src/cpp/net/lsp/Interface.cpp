@@ -164,7 +164,7 @@ WorkspaceFoldersResponse ServerInterface::workspace_workspaceFolders( void )
 
 Data ServerInterface::workspace_configuration( const ConfigurationParams& params )
 {
-    RequestMessage msg( std::string{ Identifier::workspace_configuration } );
+    RequestMessage msg( 0 /* TODO */, std::string{ Identifier::workspace_configuration } );
     // request( msg );   // TODO: FIXME: @Clasc
     // TODO: FIXME: @Clasc: handle response
     return Data( Data::object() );
