@@ -355,6 +355,19 @@ TEST( libstdhl_cpp_network_lsp, workspace_workspaceFolder )
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
+
+TEST( libstdhl_cpp_network_lsp, workspace_didChangeWorkspaceFolders )
+{
+    TestInterface server;
+    auto added = std::vector< WorkspaceFolder >();
+    added.emplace_back( WorkspaceFolder( "test://uri", "name" ) );
+    auto removed = std::vector< WorkspaceFolder >();
+    server.workspace_didChangeWorkspaceFolders(
+        DidChangeWorkspaceFoldersParams( WorkspaceFoldersChangeEvent( added, removed ) ) );
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
 //
 //  Local variables:
 //  mode: c++

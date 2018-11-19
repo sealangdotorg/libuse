@@ -1277,9 +1277,9 @@ namespace libstdhl
 
                 WorkspaceFoldersChangeEvent( const Data& data );
 
-                std::vector< WorkspaceFolder > added( void ) const;
+                Data added( void ) const;
 
-                std::vector< WorkspaceFolder > removed( void ) const;
+                Data removed( void ) const;
 
                 static void validate( const Data& data );
             };
@@ -1287,6 +1287,8 @@ namespace libstdhl
             class DidChangeWorkspaceFoldersParams : public Data
             {
               public:
+                DidChangeWorkspaceFoldersParams( const Data& data );
+
                 DidChangeWorkspaceFoldersParams( const WorkspaceFoldersChangeEvent& event );
 
                 static void validate( const Data& data );

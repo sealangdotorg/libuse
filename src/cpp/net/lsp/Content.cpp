@@ -2816,6 +2816,72 @@ void WorkspaceFoldersResponse::validate( const Data& data )
 
 //
 //
+// WorkspaceFoldersChangeEvent
+//
+WorkspaceFoldersChangeEvent::WorkspaceFoldersChangeEvent(
+    const std::vector< WorkspaceFolder >& added, const std::vector< WorkspaceFolder >& removed )
+: Data( Data::object() )
+{
+    operator[]( Identifier::added ) = Data::array();
+    operator[]( Identifier::removed ) = Data::array();
+
+    for( auto element : added )
+    {
+        operator[]( Identifier::added ).push_back( element );
+    }
+    for( auto element : removed )
+    {
+        operator[]( Identifier::removed ).push_back( element );
+    }
+}
+
+WorkspaceFoldersChangeEvent::WorkspaceFoldersChangeEvent( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+Data WorkspaceFoldersChangeEvent::added( void ) const
+{
+    return operator[]( Identifier::added );
+}
+
+Data WorkspaceFoldersChangeEvent::removed( void ) const
+{
+    return operator[]( Identifier::removed );
+}
+
+void WorkspaceFoldersChangeEvent::validate( const Data& data )
+{
+    static const auto context = CONTENT + " WorkspaceFoldersChangeEvent:";
+    Content::validateTypeIsObject( context, data );
+
+    Content::validatePropertyIsArrayOf< WorkspaceFolder >( context, data, Identifier::added, true );
+    Content::validatePropertyIsArrayOf< WorkspaceFolder >(
+        context, data, Identifier::removed, true );
+}
+
+DidChangeWorkspaceFoldersParams::DidChangeWorkspaceFoldersParams( const Data& data )
+: Data( Data::object() )
+{
+    validate( data );
+}
+
+DidChangeWorkspaceFoldersParams::DidChangeWorkspaceFoldersParams(
+    const WorkspaceFoldersChangeEvent& event )
+{
+    operator[]( Identifier::event ) = event;
+}
+
+void DidChangeWorkspaceFoldersParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " DidChangeWorkspaceFoldersParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< WorkspaceFoldersChangeEvent >(
+        context, data, Identifier::event, true );
+}
+//
+//
 // ApplyWorkspaceEdit
 //
 
