@@ -158,8 +158,7 @@ WorkspaceFoldersResponse ServerInterface::workspace_workspaceFolders( void )
     RequestMessage msg( 0 /* TODO */, std::string{ Identifier::workspace_workspaceFolders } );
     // request( msg );   // TODO: FIXME: @Clasc
     // TODO: FIXME: @Clasc: handle response
-    std::vector< WorkspaceFolder > folders = std::vector< WorkspaceFolder >();
-    folders.emplace_back( WorkspaceFolder( "test://uri", "name" ) );
+    auto folders = std::vector< WorkspaceFolder >();
     return WorkspaceFoldersResponse( folders );
 }
 

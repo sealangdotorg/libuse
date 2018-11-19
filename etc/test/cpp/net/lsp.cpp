@@ -345,17 +345,6 @@ TEST( libstdhl_cpp_network_lsp, client_unregisterCapability )
     } );
 }
 
-TEST( libstdhl_cpp_network_lsp, workspace_workspaceFolder )
-{
-    TestInterface server;
-    auto result = server.workspace_workspaceFolders();
-    EXPECT_STREQ( result.at( 0 ).uri().c_str(), "test://uri" );
-    EXPECT_STREQ( result.at( 0 ).name().c_str(), "name" );
-    server.flush( [&]( const Message& response ) {
-        const auto packet = libstdhl::Network::LSP::Packet( response );
-    } );
-}
-
 TEST( libstdhl_cpp_network_lsp, workspace_didChangeWorkspaceFolders )
 {
     TestInterface server;
