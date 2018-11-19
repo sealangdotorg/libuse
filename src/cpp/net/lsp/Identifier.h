@@ -63,6 +63,8 @@ namespace libstdhl
                 // A
                 constexpr const char* actions = "actions";
 
+                constexpr const char* added = "added";
+
                 constexpr const char* arguments = "arguments";
 
                 constexpr const char* applyEdit = "applyEdit";
@@ -156,6 +158,8 @@ namespace libstdhl
                 constexpr const char* end = "end";
 
                 constexpr const char* error = "error";
+
+                constexpr const char* event = "event";
 
                 constexpr const char* executeCommand = "executeCommand";
 
@@ -254,6 +258,8 @@ namespace libstdhl
                 constexpr const char* registrations = "registrations";
 
                 constexpr const char* referencesProvider = "referencesProvider";
+
+                constexpr const char* removed = "removed";
 
                 constexpr const char* rename = "rename";
 
