@@ -2997,6 +2997,75 @@ void ConfigurationParams::validate( const Data& data )
 
 //
 //
+// FileEvent
+//
+
+FileEvent::FileEvent( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+FileEvent::FileEvent( const DocumentUri& uri, const FileChangeType type )
+: Data( Data::object() )
+{
+    operator[]( Identifier::uri ) = uri.toString();
+    operator[]( Identifier::type ) = static_cast< std::size_t >( type );
+}
+
+DocumentUri FileEvent::documentUri( void ) const
+{
+    return DocumentUri::fromString( operator[]( Identifier::uri ).get< std::string >() );
+}
+
+FileChangeType FileEvent::type( void ) const
+{
+    return static_cast< FileChangeType >( operator[]( Identifier::type ).get< std::size_t >() );
+}
+
+void FileEvent::validate( const Data& data )
+{
+    static const auto context = CONTENT + " FileEvent:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsUri( context, data, Identifier::uri, true );
+    Content::validatePropertyIsNumber( context, data, Identifier::type, true );
+}
+
+//
+//
+// DidChangeWatchedFilesParams
+//
+
+DidChangeWatchedFilesParams::DidChangeWatchedFilesParams( const std::vector< FileEvent >& changes )
+: Data( Data::object() )
+{
+    operator[]( Identifier::changes ) = Data::array();
+    for( auto change : changes )
+    {
+        operator[]( Identifier::changes ).push_back( change );
+    }
+}
+
+DidChangeWatchedFilesParams::DidChangeWatchedFilesParams( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+Data DidChangeWatchedFilesParams::changes( void ) const
+{
+    return operator[]( Identifier::changes );
+}
+
+void DidChangeWatchedFilesParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " DidChangeWatchedFilesParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsArray( context, data, Identifier::changes, true );
+}
+
+//
+//
 // ApplyWorkspaceEdit
 //
 

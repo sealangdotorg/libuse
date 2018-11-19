@@ -1352,6 +1352,7 @@ namespace libstdhl
              */
             class FileEvent : public Data
             {
+              public:
                 FileEvent( const Data& data );
 
                 FileEvent( const DocumentUri& uri, const FileChangeType type );
@@ -1365,9 +1366,12 @@ namespace libstdhl
 
             class DidChangeWatchedFilesParams : public Data
             {
+              public:
                 DidChangeWatchedFilesParams( const std::vector< FileEvent >& changes );
 
                 DidChangeWatchedFilesParams( const Data& data );
+
+                Data changes( void ) const;
 
                 static void validate( const Data& data );
             };
