@@ -357,6 +357,15 @@ TEST( libstdhl_cpp_network_lsp, workspace_didChangeWorkspaceFolders )
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
+
+TEST( libstdhl_cpp_network_lsp, workspace_didChangeConfiguration )
+{
+    TestInterface server;
+    server.workspace_didChangeConfiguration( DidChangeConfigurationParams( Data::object() ) );
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
 //
 //  Local variables:
 //  mode: c++
