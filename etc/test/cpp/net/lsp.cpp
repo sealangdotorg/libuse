@@ -379,6 +379,20 @@ TEST( libstdhl_cpp_network_lsp, workspace_configuration )
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
+
+TEST( libstdhl_cpp_network_lsp, workspace_didChangeWatchedFiles )
+{
+    TestInterface server;
+    auto events = std::vector< FileEvent >();
+    auto empty = std::vector< FileEvent >();
+    auto uri = DocumentUri::fromString( "file:///users/me/c-projects/" );
+    events.emplace_back( FileEvent( uri, FileChangeType::Changed ) );
+    server.workspace_didChangeWatchedFiles( DidChangeWatchedFilesParams( events ) );
+    // server.workspace_didChangeWatchedFiles( DidChangeWatchedFilesParams( empty ) );
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
 //
 //  Local variables:
 //  mode: c++

@@ -77,6 +77,8 @@ namespace libstdhl
 
                 constexpr const char* change = "change";
 
+                constexpr const char* changes = "changes";
+
                 constexpr const char* character = "character";
 
                 constexpr const char* client_registerCapability = "client/registerCapability";
