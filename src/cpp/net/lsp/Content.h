@@ -1434,6 +1434,72 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            enum class SymbolKind
+            {
+                File = 1,
+                Module = 2,
+                Namespace = 3,
+                Package = 4,
+                Class = 5,
+                Method = 6,
+                Property = 7,
+                Field = 8,
+                Constructor = 9,
+                Enum = 10,
+                Interface = 11,
+                Function = 12,
+                Variable = 13,
+                Constant = 14,
+                String = 15,
+                Number = 16,
+                Boolean = 17,
+                Array = 18,
+                Object = 19,
+                Key = 20,
+                Null = 21,
+                EnumMember = 22,
+                Struct = 23,
+                Event = 24,
+                Operator = 25,
+                TypeParameter = 26
+            };
+
+            class SymbolInformation : public Data
+            {
+              public:
+                SymbolInformation( const std::string& name, SymbolKind kind, Location location );
+
+                SymbolInformation( const Data& data );
+
+                u1 isDeprecated( void ) const;
+
+                u1 hasDeprecated( void ) const;
+
+                void setDeprecated( const u1 deprecated );
+
+                std::string containerName( void ) const;
+
+                u1 hasContainerName( void ) const;
+
+                void setContainerName( const std::string& containerName );
+
+                static void validate( const Data& data );
+            };
+
+            class WorkspaceSymbolResult : public Data
+            {
+              public:
+                WorkspaceSymbolResult( const Data& data );
+
+                WorkspaceSymbolResult( const std::vector< SymbolInformation >& symbolInformation );
+
+                void addSymbolInformation( const SymbolInformation& information );
+
+                Data symbolInformation( void ) const;
+
+                static void validate( const Data& data );
+            };
+
             class ApplyWorkspaceEditParams : public Data
             {
               public:

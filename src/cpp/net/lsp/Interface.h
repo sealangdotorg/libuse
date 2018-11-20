@@ -180,7 +180,8 @@ namespace libstdhl
                 // https://microsoft.github.io/language-server-protocol/specification#workspace_symbol
                 // client to server request
                 // TODO: FIXME: @ppaulweber: replace 'void' with 'SymbolInformation|null' @Clasc
-                virtual void workspace_symbol( const WorkspaceSymbolParams& params ) = 0;
+                virtual WorkspaceSymbolResult workspace_symbol(
+                    const WorkspaceSymbolParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#workspace_executeCommand
                 // client to server request
