@@ -3066,6 +3066,134 @@ void DidChangeWatchedFilesParams::validate( const Data& data )
 
 //
 //
+// WorkspaceSymbolParams
+//
+
+WorkspaceSymbolParams::WorkspaceSymbolParams( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+WorkspaceSymbolParams::WorkspaceSymbolParams( const std::string query )
+: Data( Data::object() )
+{
+    operator[]( Identifier::query ) = query;
+}
+
+std::string WorkspaceSymbolParams::query( void ) const
+{
+    return operator[]( Identifier::query ).get< std::string >();
+}
+
+void WorkspaceSymbolParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " WorkspaceSymbolParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::query, true );
+}
+
+//
+//
+// SymbolInformation
+//
+SymbolInformation::SymbolInformation( const std::string& name, SymbolKind kind, Location location )
+: Data( Data::object() )
+{
+    operator[]( Identifier::name ) = name;
+    operator[]( Identifier::kind ) = static_cast< std::size_t >( kind );
+    operator[]( Identifier::location ) = location;
+}
+
+SymbolInformation::SymbolInformation( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+u1 SymbolInformation::isDeprecated( void ) const
+{
+    return at( Identifier::deprecated ).get< bool >();
+}
+
+u1 SymbolInformation::hasDeprecated( void ) const
+{
+    return find( Identifier::deprecated ) != end();
+}
+
+void SymbolInformation::setDeprecated( const u1 deprecated )
+{
+    operator[]( Identifier::deprecated ) = deprecated;
+}
+
+std::string SymbolInformation::containerName( void ) const
+{
+    return at( Identifier::containerName ).get< std::string >();
+}
+
+u1 SymbolInformation::hasContainerName( void ) const
+{
+    return find( Identifier::containerName ) != end();
+}
+
+void SymbolInformation::setContainerName( const std::string& containerName )
+{
+    operator[]( Identifier::containerName ) = containerName;
+}
+
+void SymbolInformation::validate( const Data& data )
+{
+    static const auto context = CONTENT + " SymbolInformation:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::name, true );
+    Content::validatePropertyIsNumber( context, data, Identifier::kind, true );
+    Content::validatePropertyIs< Location >( context, data, Identifier::location, true );
+    Content::validatePropertyIsString( context, data, Identifier::containerName, false );
+    Content::validatePropertyIsBoolean( context, data, Identifier::deprecated, false );
+}
+
+//
+//
+// workspaceSymbolResult
+//
+WorkspaceSymbolResult::WorkspaceSymbolResult( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+WorkspaceSymbolResult::WorkspaceSymbolResult(
+    const std::vector< SymbolInformation >& symbolInformation )
+: Data( Data::object() )
+{
+    operator[]( Identifier::symbolInformation ) = Data::array();
+
+    for( auto information : symbolInformation )
+    {
+        operator[]( Identifier::symbolInformation ).push_back( information );
+    }
+}
+
+void WorkspaceSymbolResult::addSymbolInformation( const SymbolInformation& information )
+{
+    operator[]( Identifier::symbolInformation ).push_back( information );
+}
+
+Data WorkspaceSymbolResult::symbolInformation( void ) const
+{
+    return operator[]( Identifier::symbolInformation );
+}
+
+void WorkspaceSymbolResult::validate( const Data& data )
+{
+    static const auto context = CONTENT + " workspaceSymbolResult:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsArrayOf< SymbolInformation >(
+        context, data, Identifier::symbolInformation, true );
+}
+
+//
+//
 // ApplyWorkspaceEdit
 //
 

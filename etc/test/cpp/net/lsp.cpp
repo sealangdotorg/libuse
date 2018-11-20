@@ -93,8 +93,14 @@ class TestInterface final : public ServerInterface
     {
     }
 
-    void workspace_symbol( const WorkspaceSymbolParams& params ) override
+    WorkspaceSymbolResult workspace_symbol( const WorkspaceSymbolParams& params ) override
     {
+        auto info = std::vector< SymbolInformation >();
+        auto uri = DocumentUri::fromString( "file://users/me/c-projects/" );
+        auto range = Range( Position( 10, 10 ), Position( 10, 10 ) );
+        auto location = Location( uri, range );
+        info.emplace_back( SymbolInformation( "name", SymbolKind::Class, location ) );
+        return WorkspaceSymbolResult( info );
     }
 
     void textDocument_didOpen( const DidOpenTextDocumentParams& params ) noexcept override
@@ -389,6 +395,16 @@ TEST( libstdhl_cpp_network_lsp, workspace_didChangeWatchedFiles )
     events.emplace_back( FileEvent( uri, FileChangeType::Changed ) );
     server.workspace_didChangeWatchedFiles( DidChangeWatchedFilesParams( events ) );
     // server.workspace_didChangeWatchedFiles( DidChangeWatchedFilesParams( empty ) );
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
+
+TEST( libstdhl_cpp_network_lsp, workspace_symbol )
+{
+    TestInterface server;
+    auto result = server.workspace_symbol( WorkspaceSymbolParams( std::string( "query" ) ) );
+
     server.flush( [&]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );

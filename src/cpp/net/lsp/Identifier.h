@@ -105,6 +105,8 @@ namespace libstdhl
 
                 constexpr const char* completionProvider = "completionProvider";
 
+                constexpr const char* containerName = "containerName";
+
                 constexpr const char* contentChanges = "contentChanges";
 
                 constexpr const char* contents = "contents";
@@ -118,6 +120,8 @@ namespace libstdhl
                 constexpr const char* definition = "definition";
 
                 constexpr const char* definitionProvider = "definitionProvider";
+
+                constexpr const char* deprecated = "deprecated";
 
                 constexpr const char* diagnostics = "diagnostics";
 
@@ -207,6 +211,8 @@ namespace libstdhl
 
                 // K
 
+                constexpr const char* kind = "kind";
+
                 // L
 
                 constexpr const char* language = "language";
@@ -214,6 +220,8 @@ namespace libstdhl
                 constexpr const char* languageId = "languageId";
 
                 constexpr const char* line = "line";
+
+                constexpr const char* location = "location";
 
                 // M
 
@@ -246,6 +254,8 @@ namespace libstdhl
                 constexpr const char* processId = "processId";
 
                 // Q
+
+                constexpr const char* query = "query";
 
                 // R
 
@@ -304,6 +314,8 @@ namespace libstdhl
                 constexpr const char* start = "start";
 
                 constexpr const char* symbol = "symbol";
+
+                constexpr const char* symbolInformation = "symbolInformation";
 
                 constexpr const char* synchronization = "synchronization";
 
