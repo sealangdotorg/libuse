@@ -1516,8 +1516,6 @@ namespace libstdhl
 
                 void setLabel( const std::string& label );
 
-                void setLabel( const Data& data );
-
                 static void validate( const Data& data );
             };
 

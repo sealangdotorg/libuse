@@ -67,6 +67,8 @@ namespace libstdhl
 
                 constexpr const char* arguments = "arguments";
 
+                constexpr const char* applied = "applied";
+
                 constexpr const char* applyEdit = "applyEdit";
 
                 // B
@@ -159,6 +161,8 @@ namespace libstdhl
 
                 // E
 
+                constexpr const char* edit = "edit";
+
                 constexpr const char* edits = "edits";
 
                 constexpr const char* end = "end";
@@ -214,6 +218,8 @@ namespace libstdhl
                 constexpr const char* kind = "kind";
 
                 // L
+
+                constexpr const char* label = "label";
 
                 constexpr const char* language = "language";
 

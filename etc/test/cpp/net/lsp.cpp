@@ -424,6 +424,14 @@ TEST( libstdhl_cpp_network_lsp, workspace_executeCommand )
     } );
 }
 
+TEST( libstdhl_cpp_network_lsp, workspace_applyEdit )
+{
+    TestInterface server;
+    server.workspace_applyEdit( ApplyWorkspaceEditParams( WorkspaceEdit() ) );
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
 //
 //  Local variables:
 //  mode: c++
