@@ -3450,8 +3450,40 @@ void WillSaveTextDocumentParams::validate( const Data& data )
 //
 // WillSaveWaitUntilResponse
 //
-WillSaveWaitUntilResponse::WillSaveWaitUntilResponse( void )
+
+WillSaveWaitUntilResponse::WillSaveWaitUntilResponse( const Data& data )
+: Data( data )
 {
+    validate( data );
+}
+
+WillSaveWaitUntilResponse::WillSaveWaitUntilResponse( const std::vector< TextEdit >& textEdit )
+: Data( Data::object() )
+{
+    operator[]( Identifier::textEdit ) = Data::array();
+    for( auto edit : textEdit )
+    {
+        operator[]( Identifier::textEdit ) = edit;
+    }
+}
+
+Data WillSaveWaitUntilResponse::textEdit( void ) const
+{
+    return operator[]( Identifier::textEdit );
+}
+
+void WillSaveWaitUntilResponse::validate( const Data& data )
+{
+    static const auto context = CONTENT + " WillSaveWaitUntilResponse:";
+    Content::validateTypeIsObject( context, data );
+    if( data.find( Identifier::edit ) != data.end() and data[ Identifier::edit ].is_null() )
+    {
+        // ok, due to the possibility that the property can be null
+    }
+    else
+    {
+        Content::validatePropertyIsArrayOf< TextEdit >( context, data, Identifier::edit, true );
+    }
 }
 
 //
