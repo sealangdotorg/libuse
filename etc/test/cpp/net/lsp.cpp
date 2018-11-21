@@ -409,6 +409,21 @@ TEST( libstdhl_cpp_network_lsp, workspace_symbol )
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
+
+TEST( libstdhl_cpp_network_lsp, workspace_executeCommand )
+{
+    TestInterface server;
+    auto params = ExecuteCommandParams( std::string( "Command" ) );
+    EXPECT_TRUE( params.hasArguments() );
+    params.addArgument( Data::object() );
+    EXPECT_TRUE( params.hasArguments() );
+    auto result = server.workspace_executeCommand( params );
+
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
+
 //
 //  Local variables:
 //  mode: c++
