@@ -414,7 +414,6 @@ TEST( libstdhl_cpp_network_lsp, workspace_executeCommand )
 {
     TestInterface server;
     auto params = ExecuteCommandParams( std::string( "Command" ) );
-    EXPECT_TRUE( params.hasArguments() );
     params.addArgument( Data::object() );
     EXPECT_TRUE( params.hasArguments() );
     auto result = server.workspace_executeCommand( params );
