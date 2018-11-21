@@ -3192,14 +3192,82 @@ void WorkspaceSymbolResult::validate( const Data& data )
     Content::validatePropertyIsArrayOf< SymbolInformation >(
         context, data, Identifier::symbolInformation, true );
 }
+//
+//
+// ApplyWorkspaceEditParams
+//
 
-//
-//
-// ApplyWorkspaceEdit
-//
-
-ApplyWorkspaceEditResult::ApplyWorkspaceEditResult( u1 applied )
+ApplyWorkspaceEditParams::ApplyWorkspaceEditParams( const Data& data )
+: Data( data )
 {
+    validate( data );
+}
+
+ApplyWorkspaceEditParams::ApplyWorkspaceEditParams( const WorkspaceEdit& edit )
+: Data( Data::object() )
+{
+    operator[]( Identifier::edit ) = edit;
+}
+
+WorkspaceEdit ApplyWorkspaceEditParams::edit( void ) const
+{
+    return WorkspaceEdit( operator[]( Identifier::edit ) );
+}
+
+u1 ApplyWorkspaceEditParams::hasLabel( void ) const
+{
+    return find( Identifier::edit ) != end();
+}
+
+std::string ApplyWorkspaceEditParams::label( void ) const
+{
+    return at( Identifier::label ).get< std::string >();
+}
+
+void ApplyWorkspaceEditParams::setLabel( const std::string& label )
+{
+    operator[]( Identifier::label ) = label;
+}
+
+void ApplyWorkspaceEditParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " ApplyWorkspaceEditParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< WorkspaceEdit >( context, data, Identifier::edit, true );
+    Content::validatePropertyIsString( context, data, Identifier::label, false );
+}
+
+//
+//
+// ApplyWorkspaceEditResult
+//
+ApplyWorkspaceEditResult::ApplyWorkspaceEditResult( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+ApplyWorkspaceEditResult::ApplyWorkspaceEditResult( const u1 applied )
+: Data( Data::object() )
+{
+    operator[]( Identifier::applied ) = applied;
+}
+
+u1 ApplyWorkspaceEditResult::isApplied( void ) const
+{
+    return operator[]( Identifier::applied ).get< u1 >();
+}
+
+void ApplyWorkspaceEditResult::applied( u1 applied )
+{
+    operator[]( Identifier::applied ) = applied;
+}
+
+void ApplyWorkspaceEditResult::validate( const Data& data )
+{
+    static const auto context = CONTENT + " ApplyWorkspaceEditResult:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsBoolean( context, data, Identifier::applied, true );
 }
 
 //

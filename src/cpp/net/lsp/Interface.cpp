@@ -173,7 +173,7 @@ Data ServerInterface::workspace_configuration( const ConfigurationParams& params
 ApplyWorkspaceEditResult ServerInterface::workspace_applyEdit(
     const ApplyWorkspaceEditParams& params )
 {
-    RequestMessage msg( std::string{ Identifier::workspace_applyEdit } );
+    RequestMessage msg( 0 /* TODO */, std::string{ Identifier::workspace_applyEdit } );
     // request( msg );   // TODO: FIXME: @Clasc
     // TODO: FIXME: @Clasc: handle response
     return ApplyWorkspaceEditResult( true );
