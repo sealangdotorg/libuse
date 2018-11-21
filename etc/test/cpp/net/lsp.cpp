@@ -445,12 +445,15 @@ TEST( libstdhl_cpp_network_lsp, textDocument_willSave )
     } );
 }
 
-TEST( libstdhl_cpp_network_lsp, textDocument_willSaveWaitUntil )
+TEST( libstdhl_cpp_network_lsp, textDocument_didSave )
 {
     TestInterface server;
     auto document = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
-    auto result = server.textDocument_willSaveWaitUntil(
-        WillSaveTextDocumentParams( document, TextDocumentSaveReason::AfterDelay ) );
+    auto params = DidSaveTextDocumentParams( document );
+    EXPECT_FALSE( params.hasText() );
+    params.setText( std::string( "Text" ) );
+    EXPECT_TRUE( params.hasText() );
+    server.textDocument_didSave( params );
 
     server.flush( [&]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
