@@ -349,6 +349,8 @@ namespace libstdhl
                 constexpr const char* textDocument_publishDiagnostics =
                     "textDocument/publishDiagnostics";
 
+                constexpr const char* textEdit = "textEdit";
+
                 constexpr const char* title = "title";
 
                 constexpr const char* trace = "trace";

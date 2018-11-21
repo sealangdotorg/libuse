@@ -1610,13 +1610,11 @@ namespace libstdhl
             class WillSaveWaitUntilResponse : public Data
             {
               public:
-                WillSaveWaitUntilResponse( void );
-
                 WillSaveWaitUntilResponse( const Data& data );
 
                 WillSaveWaitUntilResponse( const std::vector< TextEdit >& textEdit );
 
-                std::vector< TextEdit > textEdit( void ) const;
+                Data textEdit( void ) const;
 
                 static void validate( const Data& data );
             };

@@ -118,7 +118,8 @@ class TestInterface final : public ServerInterface
     WillSaveWaitUntilResponse textDocument_willSaveWaitUntil(
         const WillSaveTextDocumentParams& params ) override
     {
-        return WillSaveWaitUntilResponse();
+        auto result = std::vector< TextEdit >();
+        return WillSaveWaitUntilResponse( result );
     }
 
     void textDocument_didSave( const DidSaveTextDocumentParams& params ) noexcept override
@@ -437,6 +438,18 @@ TEST( libstdhl_cpp_network_lsp, textDocument_willSave )
     TestInterface server;
     auto document = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     server.textDocument_willSave(
+        WillSaveTextDocumentParams( document, TextDocumentSaveReason::AfterDelay ) );
+
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
+
+TEST( libstdhl_cpp_network_lsp, textDocument_willSaveWaitUntil )
+{
+    TestInterface server;
+    auto document = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
+    auto result = server.textDocument_willSaveWaitUntil(
         WillSaveTextDocumentParams( document, TextDocumentSaveReason::AfterDelay ) );
 
     server.flush( [&]( const Message& response ) {
