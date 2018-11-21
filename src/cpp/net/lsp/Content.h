@@ -1427,7 +1427,7 @@ namespace libstdhl
               public:
                 WorkspaceSymbolParams( const Data& data );
 
-                WorkspaceSymbolParams( const std::string query );
+                WorkspaceSymbolParams( const std::string& query );
 
                 std::string query( void ) const;
 
@@ -1467,7 +1467,8 @@ namespace libstdhl
             class SymbolInformation : public Data
             {
               public:
-                SymbolInformation( const std::string& name, SymbolKind kind, Location location );
+                SymbolInformation(
+                    const std::string& name, const SymbolKind kind, const Location& location );
 
                 SymbolInformation( const Data& data );
 

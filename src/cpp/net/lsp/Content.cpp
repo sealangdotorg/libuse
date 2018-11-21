@@ -3075,7 +3075,7 @@ WorkspaceSymbolParams::WorkspaceSymbolParams( const Data& data )
     validate( data );
 }
 
-WorkspaceSymbolParams::WorkspaceSymbolParams( const std::string query )
+WorkspaceSymbolParams::WorkspaceSymbolParams( const std::string& query )
 : Data( Data::object() )
 {
     operator[]( Identifier::query ) = query;
@@ -3097,7 +3097,8 @@ void WorkspaceSymbolParams::validate( const Data& data )
 //
 // SymbolInformation
 //
-SymbolInformation::SymbolInformation( const std::string& name, SymbolKind kind, Location location )
+SymbolInformation::SymbolInformation(
+    const std::string& name, const SymbolKind kind, const Location& location )
 : Data( Data::object() )
 {
     operator[]( Identifier::name ) = name;
