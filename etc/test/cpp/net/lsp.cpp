@@ -431,6 +431,18 @@ TEST( libstdhl_cpp_network_lsp, workspace_applyEdit )
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
+
+TEST( libstdhl_cpp_network_lsp, textDocument_willSave )
+{
+    TestInterface server;
+    auto document = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
+    server.textDocument_willSave(
+        WillSaveTextDocumentParams( document, TextDocumentSaveReason::AfterDelay ) );
+
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
 //
 //  Local variables:
 //  mode: c++

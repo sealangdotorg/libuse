@@ -271,6 +271,8 @@ namespace libstdhl
 
                 constexpr const char* rangeLength = "rangeLength";
 
+                constexpr const char* reason = "reason";
+
                 constexpr const char* references = "references";
 
                 constexpr const char* registerOptions = "registerOptions";

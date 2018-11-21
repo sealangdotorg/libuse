@@ -3409,6 +3409,45 @@ void DidChangeTextDocumentParams::validate( const Data& data )
 
 //
 //
+// WillSaveTextDocumentParams
+//
+
+WillSaveTextDocumentParams::WillSaveTextDocumentParams( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+WillSaveTextDocumentParams::WillSaveTextDocumentParams(
+    const TextDocumentIdentifier& textdocument, TextDocumentSaveReason reason )
+: Data( Data::object() )
+{
+    operator[]( Identifier::textDocument ) = textdocument;
+    operator[]( Identifier::reason ) = static_cast< std::size_t >( reason );
+}
+
+TextDocumentSaveReason WillSaveTextDocumentParams::reason( void ) const
+{
+    return static_cast< TextDocumentSaveReason >( operator[]( Identifier::reason )
+                                                      .get< std::size_t >() );
+}
+
+TextDocumentIdentifier WillSaveTextDocumentParams::textdocument( void ) const
+{
+    return TextDocumentIdentifier( operator[]( Identifier::textDocument ) );
+}
+
+void WillSaveTextDocumentParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " WillSaveTextDocumentParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< TextDocumentIdentifier >(
+        context, data, Identifier::textDocument, true );
+    Content::validatePropertyIsNumber( context, data, Identifier::reason, true );
+}
+
+//
+//
 // WillSaveWaitUntilResponse
 //
 WillSaveWaitUntilResponse::WillSaveWaitUntilResponse( void )
