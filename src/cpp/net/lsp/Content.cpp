@@ -3541,6 +3541,36 @@ void DidSaveTextDocumentParams::validate( const Data& data )
 
 //
 //
+// DidCloseTextDocumentParams
+//
+
+DidCloseTextDocumentParams::DidCloseTextDocumentParams( const TextDocumentIdentifier& textDocument )
+: Data( Data::object() )
+{
+    operator[]( Identifier::textDocument ) = textDocument;
+}
+
+DidCloseTextDocumentParams::DidCloseTextDocumentParams( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+TextDocumentIdentifier DidCloseTextDocumentParams::textDocument( void ) const
+{
+    return operator[]( Identifier::textDocument );
+}
+
+void DidCloseTextDocumentParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " DidCloseTextDocumentParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< TextDocumentIdentifier >(
+        context, data, Identifier::textDocument, true );
+}
+
+//
+//
 // TextDocumentSaveRegistrationOptions
 //
 
