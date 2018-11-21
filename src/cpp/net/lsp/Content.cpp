@@ -3488,6 +3488,92 @@ void WillSaveWaitUntilResponse::validate( const Data& data )
 
 //
 //
+// DidSaveTextDocumentParams
+//
+
+DidSaveTextDocumentParams::DidSaveTextDocumentParams( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+DidSaveTextDocumentParams::DidSaveTextDocumentParams(
+    const TextDocumentIdentifier& textDocumentID, const std::string& text )
+: Data( Data::object() )
+{
+    operator[]( Identifier::textDocument ) = textDocumentID;
+    operator[]( Identifier::text ) = text;
+}
+
+DidSaveTextDocumentParams::DidSaveTextDocumentParams( const TextDocumentIdentifier& textDocumentID )
+{
+    operator[]( Identifier::textDocument ) = textDocumentID;
+}
+
+u1 DidSaveTextDocumentParams::hasText( void ) const
+{
+    return find( Identifier::text ) != end();
+}
+
+void DidSaveTextDocumentParams::setText( const std::string& text )
+{
+    operator[]( Identifier::text ) = text;
+}
+
+TextDocumentIdentifier DidSaveTextDocumentParams::textDocumentID( void ) const
+{
+    return TextDocumentIdentifier( operator[]( Identifier::textDocument ) );
+}
+
+std::string DidSaveTextDocumentParams::text( void ) const
+{
+    return at( Identifier::text ).get< std::string >();
+}
+
+void DidSaveTextDocumentParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " DidSaveTextDocumentParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< TextDocumentIdentifier >(
+        context, data, Identifier::textDocument, true );
+    Content::validatePropertyIsString( context, data, Identifier::text, false );
+}
+
+//
+//
+// TextDocumentSaveRegistrationOptions
+//
+
+TextDocumentSaveRegistrationOptions::TextDocumentSaveRegistrationOptions( const Data& data )
+: TextDocumentRegistrationOptions( data )
+{
+    validate( data );
+}
+
+u1 TextDocumentSaveRegistrationOptions::hasIncludeText( void ) const
+{
+    return find( Identifier::includeText ) != end();
+}
+
+void TextDocumentSaveRegistrationOptions::setIncludeText( const u1 includeText )
+{
+    operator[]( Identifier::includeText ) = includeText;
+}
+
+u1 TextDocumentSaveRegistrationOptions::includeText( void ) const
+{
+    return at( Identifier::includeText ).get< u1 >();
+}
+
+void TextDocumentSaveRegistrationOptions::validate( const Data& data )
+{
+    static const auto context = CONTENT + " TextDocumentSaveRegistrationOptions:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsBoolean( context, data, Identifier::includeText, false );
+}
+
+//
+//
 // CodeActionContext
 //
 
