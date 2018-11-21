@@ -1776,22 +1776,9 @@ namespace libstdhl
 
             enum class TextDocumentSaveReason
             {
-
-                /**
-                  Manually triggered, e.g. by the user pressing save, by starting debugging,
-                  or by an API call.
-                 */
-                Manual = 1,
-
-                /**
-                  Automatic after a delay.
-                 */
-                AfterDelay = 2,
-
-                /**
-                  When the editor lost focus.
-                 */
-                FocusOut = 3
+                Manual = 1,  // by the user pressing save, by starting debugging, or by an API call.
+                AfterDelay = 2,  // Automatic after a delay.
+                FocusOut = 3     //  When the editor lost focus.
             };
 
             class WillSaveTextDocumentParams : public Data
