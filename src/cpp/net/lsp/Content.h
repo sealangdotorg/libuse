@@ -1844,6 +1844,68 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            enum class CompletionTriggerKind
+            {
+                /**
+                 * Completion was triggered by typing an identifier (24x7 code
+                 * complete), manual invocation (e.g Ctrl+Space) or via API.
+                 */
+                Invoked = 1,
+
+                /**
+                 * Completion was triggered by a trigger character specified by
+                 * the `triggerCharacters` properties of the `CompletionRegistrationOptions`.
+                 */
+                TriggerCharacter = 2,
+
+                /**
+                 * Completion was re-triggered as the current completion list is incomplete.
+                 */
+                TriggerForIncompleteCompletions = 3
+            };
+
+            class CompletionContext : public Data
+            {
+              public:
+                CompletionContext( const Data& data );
+
+                CompletionContext( CompletionTriggerKind triggerkind );
+
+                std::string triggerCharacter( void ) const;
+
+                void setTriggerCharacter( std::string triggerCharacter );
+
+                u1 hasTriggerCharacter( void ) const;
+            };
+
+            class CompletionParams : public TextDocumentPositionParams
+            {
+              public:
+                CompletionParams( const Data& Data );
+
+                CompletionContext context( void ) const;
+
+                u1 hasContext( void ) const;
+
+                void setContext( CompletionContext context );
+
+                static void validate( const Data& data );
+            };
+
+            class CompletionList
+            {
+              public:
+                CompletionList( const Data& data );
+
+                CompletionList( const u1 isIncomplete, const std::vector< CompletionItem >& items );
+
+                Data items( void ) const;
+
+                u1 isIncomplete( void ) const;
+
+                static void validate( const Data& data );
+            };
+
             class CodeActionContext : public Data
             {
               public:

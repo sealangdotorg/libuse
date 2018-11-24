@@ -3571,6 +3571,30 @@ void DidCloseTextDocumentParams::validate( const Data& data )
 
 //
 //
+// CompletionList
+//
+CompletionList::CompletionList( const Data& data )
+{
+}
+
+CompletionList::CompletionList( const u1 isIncomplete, const std::vector< CompletionItem >& items )
+{
+}
+
+Data CompletionList::items( void ) const
+{
+}
+
+u1 CompletionList::isIncomplete( void ) const
+{
+}
+
+void CompletionList::validate( const Data& data )
+{
+}
+
+//
+//
 // TextDocumentSaveRegistrationOptions
 //
 

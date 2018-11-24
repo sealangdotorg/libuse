@@ -242,7 +242,7 @@ namespace libstdhl
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_completion
                 // client to server request
                 // TODO: FIXME: @ppaulweber: provide interface @Clasc
-
+                virtual CompletionList textDocument_completion( const HoverParams& params ) = 0;
                 // https://microsoft.github.io/language-server-protocol/specification#completionItem_resolve
                 // client to server request
                 // TODO: FIXME: @ppaulweber: provide interface @Clasc
