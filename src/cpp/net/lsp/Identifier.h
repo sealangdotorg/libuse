@@ -63,6 +63,10 @@ namespace libstdhl
                 // A
                 constexpr const char* actions = "actions";
 
+                constexpr const char* activeParameter = "activeParameter";
+
+                constexpr const char* activeSignature = "activeSignature";
+
                 constexpr const char* added = "added";
 
                 constexpr const char* arguments = "arguments";
@@ -132,6 +136,8 @@ namespace libstdhl
                 constexpr const char* didChangeWatchedFiles = "didChangeWatchedFiles";
 
                 constexpr const char* didSave = "didSave";
+
+                constexpr const char* documentation = "documentation";
 
                 constexpr const char* documentChanges = "documentChanges";
 
@@ -251,6 +257,8 @@ namespace libstdhl
 
                 // P
 
+                constexpr const char* parameters = "parameters";
+
                 constexpr const char* params = "params";
 
                 constexpr const char* pattern = "pattern";
@@ -314,6 +322,8 @@ namespace libstdhl
                 constexpr const char* signatureHelp = "signatureHelp";
 
                 constexpr const char* signatureHelpProvider = "signatureHelpProvider";
+
+                constexpr const char* signatures = "signatures";
 
                 constexpr const char* snippetSupport = "snippetSupport";
 

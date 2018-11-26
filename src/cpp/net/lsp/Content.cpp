@@ -3595,6 +3595,214 @@ void CompletionList::validate( const Data& data )
 
 //
 //
+// MarkupContent
+//
+MarkupContent::MarkupContent( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+MarkupContent::MarkupContent( const std::string kind, const std::string& value )
+: Data( Data::object() )
+{
+    operator[]( Identifier::kind ) = kind;
+    operator[]( Identifier::value ) = value;
+}
+
+MarkupContent::MarkupContent( const std::string& value )
+{
+    operator[]( Identifier::kind ) = MarkupKind::plaintext;
+    operator[]( Identifier::value ) = value;
+}
+
+std::string MarkupContent::kind( void ) const
+{
+    return operator[]( Identifier::kind ).get< std::string >();
+}
+
+std::string MarkupContent::value( void ) const
+{
+    return operator[]( Identifier::value ).get< std::string >();
+}
+
+void MarkupContent::validate( const Data& data )
+{
+    static const auto context = CONTENT + " MarkupContent:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::value, true );
+    Content::validatePropertyIsString( context, data, Identifier::kind, true );
+}
+
+//
+//
+// ParameterInformation
+//
+ParameterInformation::ParameterInformation( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+ParameterInformation::ParameterInformation( const std::string& label )
+: Data( Data::object() )
+{
+    operator[]( Identifier::label ) = label;
+}
+
+MarkupContent ParameterInformation::documentation( void ) const
+{
+    return MarkupContent( at( Identifier::documentation ) );
+}
+
+u1 ParameterInformation::hasDocumentation( void ) const
+{
+    return find( Identifier::documentation ) != end();
+}
+
+void ParameterInformation::setDocumentation( const MarkupContent& doc )
+{
+    operator[]( Identifier::documentation ) = doc;
+}
+
+void ParameterInformation::validate( const Data& data )
+{
+    static const auto context = CONTENT + " ParameterInformation:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::label, true );
+    Content::validatePropertyIsString( context, data, Identifier::documentation, false );
+}
+
+//
+//
+// SignatureInformation
+//
+
+SignatureInformation::SignatureInformation( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+SignatureInformation::SignatureInformation( const std::string& label )
+: Data( Data::object() )
+{
+    operator[]( Identifier::label ) = label;
+}
+
+MarkupContent SignatureInformation::documentation( void ) const
+{
+    return MarkupContent( at( Identifier::documentation ) );
+}
+
+u1 SignatureInformation::hasDocumentation( void ) const
+{
+    return find( Identifier::documentation ) != end();
+}
+
+void SignatureInformation::setDocumentation( const MarkupContent& doc )
+{
+    operator[]( Identifier::documentation ) = doc;
+}
+
+u1 SignatureInformation::hasParameters( void ) const
+{
+    return find( Identifier::parameters ) != end();
+}
+
+Data SignatureInformation::parameters( void ) const
+{
+    return at( Identifier::parameters );
+}
+
+void SignatureInformation::setParameters( const std::vector< ParameterInformation >& parameters )
+{
+    operator[]( Identifier::parameters ) = Data::array();
+
+    for( auto parameter : parameters )
+    {
+        operator[]( Identifier::parameters ).push_back( parameter );
+    }
+}
+
+void SignatureInformation::validate( const Data& data )
+{
+    static const auto context = CONTENT + " SignatureInformation:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::label, true );
+    Content::validatePropertyIsString( context, data, Identifier::documentation, false );
+    Content::validatePropertyIsArrayOf< ParameterInformation >(
+        context, data, Identifier::parameters, false );
+}
+
+//
+//
+// SignatureHelp
+//
+
+SignatureHelp::SignatureHelp( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+SignatureHelp::SignatureHelp( const std::vector< SignatureInformation >& signatures )
+: Data( Data::object() )
+{
+    operator[]( Identifier::signatures ) = Data::array();
+    for( auto signature : signatures )
+    {
+        operator[]( Identifier::signatures ).push_back( signature );
+    }
+}
+
+Data SignatureHelp::signatures( void ) const
+{
+    return operator[]( Identifier::signatures );
+}
+
+u1 SignatureHelp::hasActiveSignature( void ) const
+{
+    return find( Identifier::activeSignature ) != end();
+}
+
+void SignatureHelp::setActiveSignature( const std::size_t activeSignature )
+{
+    operator[]( Identifier::activeSignature ) = activeSignature;
+}
+
+std::size_t SignatureHelp::activeSignature( void ) const
+{
+    return at( Identifier::activeSignature ).get< std::size_t >();
+}
+
+u1 SignatureHelp::hasActiveParameter( void ) const
+{
+    return find( Identifier::activeParameter ) != end();
+}
+
+void SignatureHelp::setActiveParameter( const std::size_t activeParameter )
+{
+    operator[]( Identifier::activeParameter ) = activeParameter;
+}
+
+std::size_t SignatureHelp::activeParameter( void ) const
+{
+    return at( Identifier::activeParameter ).get< std::size_t >();
+}
+
+void SignatureHelp::validate( const Data& data )
+{
+    static const auto context = CONTENT + " SignatureHelp:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsArrayOf< SignatureInformation >(
+        context, data, Identifier::signatures, true );
+    Content::validatePropertyIsNumber( context, data, Identifier::activeSignature, false );
+    Content::validatePropertyIsNumber( context, data, Identifier::activeParameter, false );
+}
+
+//
+//
 // TextDocumentSaveRegistrationOptions
 //
 

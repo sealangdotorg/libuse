@@ -1216,6 +1216,18 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            class SignatureHelpRegistrationOptions : public TextDocumentRegistrationOptions
+            {
+              public:
+                SignatureHelpRegistrationOptions( const Data& data );
+
+                u1 hasTriggerCharacters( void ) const;
+
+                void setTriggerCharacters( const std::string& triggerCharacters );
+
+                std::string triggerCharacters( void ) const;
+            };
+
             class Unregistration : public Data
             {
               public:
@@ -1716,6 +1728,94 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
+
+            namespace MarkupKind
+            {
+                constexpr const char* plaintext = "plaintext";
+                constexpr const char* markdown = "markdown";
+            };
+
+            class MarkupContent : public Data
+            {
+              public:
+                MarkupContent( const Data& data );
+
+                MarkupContent( const std::string kind, const std::string& value );
+
+                MarkupContent( const std::string& value );  // kind will be plaintext
+
+                std::string kind( void ) const;
+
+                std::string value( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            using SignatureHelpParams = TextDocumentPositionParams;
+
+            class ParameterInformation : public Data
+            {
+              public:
+                ParameterInformation( const Data& data );
+
+                ParameterInformation( const std::string& label );
+
+                MarkupContent documentation( void ) const;
+
+                u1 hasDocumentation( void ) const;
+
+                void setDocumentation( const MarkupContent& doc );
+
+                static void validate( const Data& data );
+            };
+
+            class SignatureInformation : public Data
+            {
+              public:
+                SignatureInformation( const Data& data );
+
+                SignatureInformation( const std::string& label );
+
+                MarkupContent documentation( void ) const;
+
+                u1 hasDocumentation( void ) const;
+
+                void setDocumentation( const MarkupContent& doc );
+
+                u1 hasParameters( void ) const;
+
+                Data parameters( void ) const;
+
+                void setParameters( const std::vector< ParameterInformation >& parameters );
+
+                static void validate( const Data& data );
+            };
+
+            class SignatureHelp : public Data
+            {
+              public:
+                SignatureHelp( const Data& data );
+
+                SignatureHelp( const std::vector< SignatureInformation >& signatures );
+
+                Data signatures( void ) const;
+
+                u1 hasActiveSignature( void ) const;
+
+                void setActiveSignature( const std::size_t activeSignature );
+
+                std::size_t activeSignature( void ) const;
+
+                u1 hasActiveParameter( void ) const;
+
+                void setActiveParameter( const std::size_t activeParameter );
+
+                std::size_t activeParameter( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            using SignatureHelpResult = SignatureHelp;
 
             class CodeActionContext : public Data
             {

@@ -254,6 +254,8 @@ namespace libstdhl
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_signatureHelp
                 // client to server request
                 // TODO: FIXME: @ppaulweber: provide interface @Clasc
+                virtual SignatureHelpResult textDocument_signatureHelp(
+                    const SignatureHelpParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_definition
                 // client to server request

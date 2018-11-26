@@ -140,6 +140,13 @@ class TestInterface final : public ServerInterface
         return HoverResult();
     }
 
+    SignatureHelpResult textDocument_signatureHelp( const SignatureHelpParams& params ) override
+    {
+        auto info = std::vector< SignatureInformation >();
+        info.push_back( SignatureInformation( std::string( "label" ) ) );
+        return SignatureHelpResult( info );
+    }
+
     CodeActionResult textDocument_codeAction( const CodeActionParams& params ) override
     {
         return CodeActionResult();
@@ -472,6 +479,17 @@ TEST( libstdhl_cpp_network_lsp, textDocument_didClose )
     auto params = DidCloseTextDocumentParams( document );
     server.textDocument_didClose( params );
 
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
+
+TEST( libstdhl_cpp_network_lsp, textDocument_signatureHelp )
+{
+    TestInterface server;
+    auto document = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
+    auto params = TextDocumentPositionParams( document, Position( 10, 10 ) );
+    auto result = server.textDocument_signatureHelp( params );
     server.flush( [&]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
