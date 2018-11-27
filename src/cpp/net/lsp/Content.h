@@ -1918,20 +1918,22 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
-            namespace MarkupKind
+            enum class MarkupKind
             {
-                constexpr const char* plaintext = "plaintext";
-                constexpr const char* markdown = "markdown";
+                PLAINTEXT,
+                MARKDOWN
             };
+
+            std::string MarkupKind_toStr( MarkupKind kind );
 
             class MarkupContent : public Data
             {
               public:
                 MarkupContent( const Data& data );
 
-                MarkupContent( const std::string kind, const std::string& value );
-
                 MarkupContent( const std::string& value );  // kind will be plaintext
+
+                MarkupContent( const MarkupKind kind, const std::string& value );
 
                 std::string kind( void ) const;
 

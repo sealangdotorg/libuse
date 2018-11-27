@@ -236,6 +236,7 @@ namespace libstdhl
                 constexpr const char* location = "location";
 
                 // M
+                constexpr const char* markdown = "markdown";
 
                 constexpr const char* message = "message";
 
@@ -262,6 +263,8 @@ namespace libstdhl
                 constexpr const char* params = "params";
 
                 constexpr const char* pattern = "pattern";
+
+                constexpr const char* plaintext = "plaintext";
 
                 constexpr const char* position = "position";
 

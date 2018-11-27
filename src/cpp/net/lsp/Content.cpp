@@ -3597,22 +3597,42 @@ void CompletionList::validate( const Data& data )
 //
 // MarkupContent
 //
+
+std::string markupKind_toStr( MarkupKind kind )
+{
+    switch( kind )
+    {
+        case MarkupKind::PLAINTEXT:
+        {
+            return Identifier::plaintext;
+            break;
+        }
+        case MarkupKind::MARKDOWN:
+        {
+            return Identifier::markdown;
+            break;
+        }
+        default:
+            return Identifier::plaintext;
+    }
+}
+
 MarkupContent::MarkupContent( const Data& data )
 : Data( data )
 {
     validate( data );
 }
 
-MarkupContent::MarkupContent( const std::string kind, const std::string& value )
+MarkupContent::MarkupContent( const MarkupKind kind, const std::string& value )
 : Data( Data::object() )
 {
-    operator[]( Identifier::kind ) = kind;
+    operator[]( Identifier::kind ) = markupKind_toStr( kind );
     operator[]( Identifier::value ) = value;
 }
 
 MarkupContent::MarkupContent( const std::string& value )
 {
-    operator[]( Identifier::kind ) = MarkupKind::plaintext;
+    operator[]( Identifier::kind ) = markupKind_toStr( MarkupKind::PLAINTEXT );
     operator[]( Identifier::value ) = value;
 }
 
