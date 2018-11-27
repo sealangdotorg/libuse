@@ -1132,33 +1132,33 @@ void Synchronization::validate( const Data& data )
 // CompletionItem
 //
 
-CompletionItem::CompletionItem( const Data& data )
+TextDocumentClientCapabilities::CompletionItem::CompletionItem( const Data& data )
 : Data( data )
 {
     validate( data );
 }
 
-CompletionItem::CompletionItem( void )
+TextDocumentClientCapabilities::CompletionItem::CompletionItem( void )
 : Data( Data::object() )
 {
 }
 
-u1 CompletionItem::hasSnippetSupport( void ) const
+u1 TextDocumentClientCapabilities::CompletionItem::hasSnippetSupport( void ) const
 {
     return find( Identifier::snippetSupport ) != end();
 }
 
-u1 CompletionItem::snippetSupport( void ) const
+u1 TextDocumentClientCapabilities::CompletionItem::snippetSupport( void ) const
 {
     return at( Identifier::snippetSupport ).get< u1 >();
 }
 
-void CompletionItem::setSnippetSupport( const u1 snippetSupport )
+void TextDocumentClientCapabilities::CompletionItem::setSnippetSupport( const u1 snippetSupport )
 {
     operator[]( Identifier::snippetSupport ) = snippetSupport;
 }
 
-void CompletionItem::validate( const Data& data )
+void TextDocumentClientCapabilities::CompletionItem::validate( const Data& data )
 {
     static const auto context = CONTENT + " CompletionItem:";
     Content::validateTypeIsObject( context, data );
@@ -1170,53 +1170,56 @@ void CompletionItem::validate( const Data& data )
 // Completion
 //
 
-Completion::Completion( const Data& data )
+TextDocumentClientCapabilities::Completion::Completion( const Data& data )
 : Data( data )
 {
     validate( data );
 }
 
-Completion::Completion( void )
+TextDocumentClientCapabilities::Completion::Completion( void )
 : Data( Data::object() )
 {
 }
 
-u1 Completion::hasDynamicRegistration( void ) const
+u1 TextDocumentClientCapabilities::Completion::hasDynamicRegistration( void ) const
 {
     return find( Identifier::dynamicRegistration ) != end();
 }
 
-u1 Completion::dynamicRegistration( void ) const
+u1 TextDocumentClientCapabilities::Completion::dynamicRegistration( void ) const
 {
     return at( Identifier::dynamicRegistration ).get< u1 >();
 }
 
-void Completion::setDynamicRegistration( const u1 dynamicRegistration )
+void TextDocumentClientCapabilities::Completion::setDynamicRegistration(
+    const u1 dynamicRegistration )
 {
     operator[]( Identifier::dynamicRegistration ) = dynamicRegistration;
 }
 
-u1 Completion::hasCompletionItem( void ) const
+u1 TextDocumentClientCapabilities::Completion::hasCompletionItem( void ) const
 {
     return find( Identifier::completionItem ) != end();
 }
 
-CompletionItem Completion::completionItem( void ) const
+TextDocumentClientCapabilities::CompletionItem
+TextDocumentClientCapabilities::Completion::completionItem( void ) const
 {
     return at( Identifier::completionItem );
 }
 
-void Completion::completionItem( const CompletionItem& completionItem )
+void TextDocumentClientCapabilities::Completion::completionItem(
+    const CompletionItem& completionItem )
 {
     operator[]( Identifier::completionItem ) = Data::from_cbor( Data::to_cbor( completionItem ) );
 }
 
-void Completion::validate( const Data& data )
+void TextDocumentClientCapabilities::Completion::validate( const Data& data )
 {
     static const auto context = CONTENT + " Completion:";
     Content::validateTypeIsObject( context, data );
     Content::validatePropertyIsBoolean( context, data, Identifier::dynamicRegistration, false );
-    Content::validatePropertyIs< CompletionItem >(
+    Content::validatePropertyIs< TextDocumentClientCapabilities::CompletionItem >(
         context, data, Identifier::completionItem, false );
 }
 
@@ -1256,7 +1259,7 @@ u1 TextDocumentClientCapabilities::hasCompletion( void ) const
     return find( Identifier::completion ) != end();
 }
 
-Completion TextDocumentClientCapabilities::completion( void ) const
+TextDocumentClientCapabilities::Completion TextDocumentClientCapabilities::completion( void ) const
 {
     return at( Identifier::completion );
 }
