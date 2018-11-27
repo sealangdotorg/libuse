@@ -581,46 +581,11 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
-            class CompletionItem : public Data
-            {
-              public:
-                CompletionItem( const Data& data );
-
-                CompletionItem( void );
-
-                u1 hasSnippetSupport( void ) const;
-
-                u1 snippetSupport( void ) const;
-
-                void setSnippetSupport( const u1 snippetSupport );
-
-                static void validate( const Data& data );
-            };
-
-            class Completion : public Data
-            {
-              public:
-                Completion( const Data& data );
-
-                Completion( void );
-
-                u1 hasDynamicRegistration( void ) const;
-
-                u1 dynamicRegistration( void ) const;
-
-                void setDynamicRegistration( const u1 dynamicRegistration );
-
-                u1 hasCompletionItem( void ) const;
-
-                CompletionItem completionItem( void ) const;
-
-                void completionItem( const CompletionItem& completionItem );
-
-                static void validate( const Data& data );
-            };
-
             class TextDocumentClientCapabilities : public Data
             {
+                class CompletionItem;
+                class Completion;
+
               public:
                 TextDocumentClientCapabilities( const Data& data );
 
@@ -717,6 +682,45 @@ namespace libstdhl
                 void setRename( const DynamicRegistration& rename );
 
                 static void validate( const Data& data );
+
+              private:
+                class Completion : public Data
+                {
+                  public:
+                    Completion( const Data& data );
+
+                    Completion( void );
+
+                    u1 hasDynamicRegistration( void ) const;
+
+                    u1 dynamicRegistration( void ) const;
+
+                    void setDynamicRegistration( const u1 dynamicRegistration );
+
+                    u1 hasCompletionItem( void ) const;
+
+                    CompletionItem completionItem( void ) const;
+
+                    void completionItem( const CompletionItem& completionItem );
+
+                    static void validate( const Data& data );
+                };
+
+                class CompletionItem : public Data
+                {
+                  public:
+                    CompletionItem( const Data& data );
+
+                    CompletionItem( void );
+
+                    u1 hasSnippetSupport( void ) const;
+
+                    u1 snippetSupport( void ) const;
+
+                    void setSnippetSupport( const u1 snippetSupport );
+
+                    static void validate( const Data& data );
+                };
             };
 
             class ClientCapabilities : public Data
@@ -1903,7 +1907,9 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
-
+            class CompletionItem : public Data
+            {
+            };
             class CompletionList
             {
               public:
