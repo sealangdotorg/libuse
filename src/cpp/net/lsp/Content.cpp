@@ -1209,7 +1209,7 @@ TextDocumentClientCapabilities::Completion::completionItem( void ) const
 }
 
 void TextDocumentClientCapabilities::Completion::completionItem(
-    const CompletionItem& completionItem )
+    const TextDocumentClientCapabilities::CompletionItem& completionItem )
 {
     operator[]( Identifier::completionItem ) = Data::from_cbor( Data::to_cbor( completionItem ) );
 }
