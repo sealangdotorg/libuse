@@ -4094,6 +4094,72 @@ void HoverResult::validate( const Data& data )
 
 //
 //
+// DefinitionResult
+//
+
+DefinitionResult::DefinitionResult( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+DefinitionResult::DefinitionResult( const Location& location )
+: Data( Data::object() )
+{
+    operator[]( Identifier::location ) = location;
+}
+
+DefinitionResult::DefinitionResult( const std::vector< Location > locations )
+: Data( Data::object() )
+{
+    operator[]( Identifier::location ) = Data::array();
+
+    for( auto location : locations )
+    {
+        operator[]( Identifier::location ).push_back( location );
+    }
+}
+
+Data DefinitionResult::locations( void ) const
+{
+    return operator[]( Identifier::location );
+}
+
+void DefinitionResult::validate( const Data& data )
+{
+    static const auto context = CONTENT + " DefinitionResult:";
+    Content::validateTypeIsObject( context, data );
+    if( data.find( Identifier::location ) != data.end() )
+    {
+        if( data[ Identifier::location ].is_null() )
+        {
+            // if it is null, do nothing
+        }
+        else
+        {
+            if( data[ Identifier::location ].is_array() )
+            {
+                // object is an Array
+                Content::validatePropertyIsArrayOf< Location >(
+                    context, data, Identifier::location, true );
+            }
+            else
+            {
+                // object is a single Location object
+                Content::validatePropertyIs< Location >(
+                    context, data, Identifier::location, true );
+            }
+        }
+    }
+    else
+    {
+        // object does not contain a Location
+        throw std::invalid_argument( context + " missing property 'Location' " );
+    }
+}
+
+//
+//
 // CodeLensParams
 //
 

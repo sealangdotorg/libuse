@@ -147,6 +147,13 @@ class TestInterface final : public ServerInterface
         return SignatureHelpResult( info );
     }
 
+    DefinitionResult textDocument_definition( const DefinitionParams& params ) override
+    {
+        auto uri = params.textDocument().uri();
+        auto range = Range( Position( 1, 1 ), Position( 10, 1 ) );
+        return DefinitionResult( Location( uri, range ) );
+    }
+
     CodeActionResult textDocument_codeAction( const CodeActionParams& params ) override
     {
         return CodeActionResult();
@@ -490,6 +497,17 @@ TEST( libstdhl_cpp_network_lsp, textDocument_signatureHelp )
     auto document = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto params = TextDocumentPositionParams( document, Position( 10, 10 ) );
     auto result = server.textDocument_signatureHelp( params );
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
+
+TEST( libstdhl_cpp_network_lsp, textDocument_definition )
+{
+    TestInterface server;
+    auto document = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
+    auto params = TextDocumentPositionParams( document, Position( 10, 10 ) );
+    auto result = server.textDocument_definition( params );
     server.flush( [&]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );

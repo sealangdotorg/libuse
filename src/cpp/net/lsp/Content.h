@@ -1913,6 +1913,22 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            using DefinitionParams = TextDocumentPositionParams;
+
+            class DefinitionResult : public Data
+            {
+              public:
+                DefinitionResult( const Data& data );
+
+                DefinitionResult( const Location& location );
+
+                DefinitionResult( const std::vector< Location > locations );
+
+                Data locations( void ) const;
+
+                static void validate( const Data& data );
+            };
+
             class CodeLensParams : public Data
             {
               public:
