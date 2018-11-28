@@ -3574,26 +3574,291 @@ void DidCloseTextDocumentParams::validate( const Data& data )
 
 //
 //
+//  CompletionItem
+//
+CompletionItem::CompletionItem( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+CompletionItem::CompletionItem( const std::string& label )
+: Data( Data::object() )
+{
+    operator[]( Identifier::label ) = label;
+}
+
+std::string CompletionItem::label( void ) const
+{
+    return operator[]( Identifier::label ).get< std::string >();
+}
+
+u1 CompletionItem::hasKind( void ) const
+{
+    return find( Identifier::kind ) != end();
+}
+
+void CompletionItem::setKind( const CompletionItemKind kind )
+{
+    operator[]( Identifier::kind ) = static_cast< std::size_t >( kind );
+}
+
+CompletionItemKind CompletionItem::kind( void ) const
+{
+    return static_cast< CompletionItemKind >( at( Identifier::kind ).get< std::size_t >() );
+}
+
+u1 CompletionItem::hasDetail( void ) const
+{
+    return find( Identifier::detail ) != end();
+}
+
+void CompletionItem::setDetail( const std::string& detail )
+{
+    operator[]( Identifier::detail ) = detail;
+}
+
+std::string CompletionItem::detail( void ) const
+{
+    return at( Identifier::detail ).get< std::string >();
+}
+
+u1 CompletionItem::hasDocumentation( void ) const
+{
+    return find( Identifier::documentation ) != end();
+}
+
+void CompletionItem::setDocumentation( const MarkupContent& doc )
+{
+    operator[]( Identifier::documentation ) = doc;
+}
+
+MarkupContent CompletionItem::docuemtation( void ) const
+{
+    return MarkupContent( at( Identifier::documentation ) );
+}
+
+u1 CompletionItem::hasDeprecated( void ) const
+{
+    return find( Identifier::deprecated ) != end();
+}
+
+void CompletionItem::setDeprecated( const u1 deprecated )
+{
+    operator[]( Identifier::deprecated ) = deprecated;
+}
+
+u1 CompletionItem::isDeprecated( void ) const
+{
+    return at( Identifier::deprecated ).get< u1 >();
+}
+
+u1 CompletionItem::hasPreselected( void ) const
+{
+    return find( Identifier::preselected ) != end();
+}
+
+void CompletionItem::setPreselected( const u1 preselected )
+{
+    operator[]( Identifier::preselected ) = preselected;
+}
+
+u1 CompletionItem::isPreselected( void ) const
+{
+    return at( Identifier::preselected ).get< u1 >();
+}
+
+u1 CompletionItem::hasSortText( void ) const
+{
+    return find( Identifier::sortText ) != end();
+}
+
+void CompletionItem::setSortText( const std::string& sortText )
+{
+    operator[]( Identifier::sortText ) = sortText;
+}
+
+std::string CompletionItem::sortText( void ) const
+{
+    return at( Identifier::sortText ).get< std::string >();
+}
+
+u1 CompletionItem::hasFilterText( void ) const
+{
+    return find( Identifier::filterText ) != end();
+}
+
+void CompletionItem::setFilterText( const std::string& filterText )
+{
+    operator[]( Identifier::filterText ) = filterText;
+}
+
+std::string CompletionItem::filterText( void ) const
+{
+    return at( Identifier::filterText ).get< std::string >();
+}
+
+u1 CompletionItem::hasInsertText( void ) const
+{
+    return find( Identifier::insertText ) != end();
+}
+
+void CompletionItem::setInsertText( const std::string& insertText )
+{
+    operator[]( Identifier::insertText ) = insertText;
+}
+
+std::string CompletionItem::insertText( void ) const
+{
+    return at( Identifier::insertText ).get< std::string >();
+}
+
+u1 CompletionItem::hasInsertTextFormat( void ) const
+{
+    return find( Identifier::insertTextFormat ) != end();
+}
+
+void CompletionItem::setInsertTextFormat( const InsertTextFormat insertTextFormat )
+{
+    operator[]( Identifier::insertTextFormat ) = static_cast< std::size_t >( insertTextFormat );
+}
+
+InsertTextFormat CompletionItem::insertTextFormat( void ) const
+{
+    return static_cast< InsertTextFormat >(
+        at( Identifier::insertTextFormat ).get< std::size_t >() );
+}
+
+u1 CompletionItem::hasTextEdit( void ) const
+{
+    return find( Identifier::textEdit ) != end();
+}
+
+void CompletionItem::setTextEdit( const TextEdit& textEdit )
+{
+    operator[]( Identifier::textEdit ) = textEdit;
+}
+
+TextEdit CompletionItem::textEdit( void ) const
+{
+    return TextEdit( at( Identifier::textEdit ) );
+}
+
+u1 CompletionItem::hasAdditionalTextEdits( void ) const
+{
+    return find( Identifier::additionalTextEdits ) != end();
+}
+
+void CompletionItem::addAdditionalTextEdit( const TextEdit& textEdit )
+{
+    if( not CompletionItem::hasAdditionalTextEdits() )
+    {
+        operator[]( Identifier::additionalTextEdits ) = Data::array();
+    }
+
+    operator[]( Identifier::additionalTextEdits ).push_back( textEdit );
+}
+
+Data CompletionItem::additionalTextEdits( void ) const
+{
+    return at( Identifier::additionalTextEdits );
+}
+
+u1 CompletionItem::hasCommitCharacters( void ) const
+{
+    return find( Identifier::commitCharacters ) != end();
+}
+
+void CompletionItem::addCommitCharacter( const std::string& commitCharacter )
+{
+    if( not CompletionItem::hasCommitCharacters() )
+    {
+        operator[]( Identifier::commitCharacters ) = Data::array();
+    }
+
+    operator[]( Identifier::commitCharacters ).push_back( commitCharacter );
+}
+
+Data CompletionItem::commitCharacters( void ) const
+{
+    return at( Identifier::commitCharacters );
+}
+
+u1 CompletionItem::hasCommand( void ) const
+{
+    return find( Identifier::command ) != end();
+}
+
+void CompletionItem::setCommand( const Command& command )
+{
+    operator[]( Identifier::command ) = command;
+}
+
+Command CompletionItem::command( void ) const
+{
+    return Command( at( Identifier::command ) );
+}
+
+u1 CompletionItem::hasData( void ) const
+{
+    return find( Identifier::data ) != end();
+}
+
+void CompletionItem::setData( const Data& data )
+{
+    operator[]( Identifier::data ) = data;
+}
+
+Data CompletionItem::data( void ) const
+{
+    return at( Identifier::data );
+}
+
+void CompletionItem::validate( const Data& data )
+{
+    static const auto context = CONTENT + " CompletionItem:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::label, true );
+}
+
+//
+//
 // CompletionList
 //
+
 CompletionList::CompletionList( const Data& data )
+: Data( data )
 {
+    validate( data );
 }
 
 CompletionList::CompletionList( const u1 isIncomplete, const std::vector< CompletionItem >& items )
+: Data( Data::object() )
 {
+    operator[]( Identifier::isIncomplete ) = isIncomplete;
+    operator[]( Identifier::items ) = Data::array();
+    for( auto item : items )
+    {
+        operator[]( Identifier::items ).push_back( item );
+    }
 }
 
 Data CompletionList::items( void ) const
 {
+    return operator[]( Identifier::items );
 }
 
 u1 CompletionList::isIncomplete( void ) const
 {
+    return operator[]( Identifier::isIncomplete ).get< u1 >();
 }
 
 void CompletionList::validate( const Data& data )
 {
+    static const auto context = CONTENT + " CompletionList:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsArrayOf< CompletionItem >( context, data, Identifier::items, true );
+    Content::validatePropertyIsBoolean( context, data, Identifier::isIncomplete, true );
 }
 
 //
