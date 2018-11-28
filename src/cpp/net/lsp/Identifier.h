@@ -69,6 +69,8 @@ namespace libstdhl
 
                 constexpr const char* added = "added";
 
+                constexpr const char* additionalTextEdits = "additionalTextEdits";
+
                 constexpr const char* arguments = "arguments";
 
                 constexpr const char* applied = "applied";
@@ -105,6 +107,8 @@ namespace libstdhl
 
                 constexpr const char* commands = "commands";
 
+                constexpr const char* commitCharacters = "commitCharacters";
+
                 constexpr const char* completion = "completion";
 
                 constexpr const char* completionItem = "completionItem";
@@ -128,6 +132,8 @@ namespace libstdhl
                 constexpr const char* definitionProvider = "definitionProvider";
 
                 constexpr const char* deprecated = "deprecated";
+
+                constexpr const char* detail = "detail";
 
                 constexpr const char* diagnostics = "diagnostics";
 
@@ -189,6 +195,8 @@ namespace libstdhl
 
                 constexpr const char* firstTriggerCharacter = "firstTriggerCharacter";
 
+                constexpr const char* filterText = "filterText";
+
                 constexpr const char* formatting = "formatting";
 
                 // G
@@ -211,7 +219,13 @@ namespace libstdhl
 
                 constexpr const char* initialized = "initialized";
 
+                constexpr const char* insertText = "insertText";
+
+                constexpr const char* insertTextFormat = "insertTextFormat";
+
                 constexpr const char* items = "items";
+
+                constexpr const char* isIncomplete = "isIncomplete";
 
                 // J
 
@@ -267,6 +281,8 @@ namespace libstdhl
                 constexpr const char* plaintext = "plaintext";
 
                 constexpr const char* position = "position";
+
+                constexpr const char* preselected = "preselected";
 
                 constexpr const char* processId = "processId";
 
@@ -331,6 +347,8 @@ namespace libstdhl
                 constexpr const char* snippetSupport = "snippetSupport";
 
                 constexpr const char* source = "source";
+
+                constexpr const char* sortText = "sortText";
 
                 constexpr const char* start = "start";
 

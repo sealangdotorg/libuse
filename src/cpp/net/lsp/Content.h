@@ -1907,22 +1907,6 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
-            class CompletionItem : public Data
-            {
-            };
-            class CompletionList
-            {
-              public:
-                CompletionList( const Data& data );
-
-                CompletionList( const u1 isIncomplete, const std::vector< CompletionItem >& items );
-
-                Data items( void ) const;
-
-                u1 isIncomplete( void ) const;
-
-                static void validate( const Data& data );
-            };
 
             enum class MarkupKind
             {
@@ -1944,6 +1928,151 @@ namespace libstdhl
                 std::string kind( void ) const;
 
                 std::string value( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            enum class InsertTextFormat
+            {
+                PlainText = 1,
+                Snippet = 2
+            };
+
+            enum class CompletionItemKind
+            {
+                Text = 1,
+                Method = 2,
+                Function = 3,
+                Constructor = 4,
+                Field = 5,
+                Variable = 6,
+                Class = 7,
+                Interface = 8,
+                Module = 9,
+                Property = 10,
+                Unit = 11,
+                Value = 12,
+                Enum = 13,
+                Keyword = 14,
+                Snippet = 15,
+                Color = 16,
+                File = 17,
+                Reference = 18,
+                Folder = 19,
+                EnumMember = 20,
+                Constant = 21,
+                Struct = 22,
+                Event = 23,
+                Operator = 24,
+                TypeParameter = 25
+            };
+
+            class CompletionItem : public Data
+            {
+              public:
+                CompletionItem( const Data& data );
+
+                CompletionItem( const std::string& label );
+
+                std::string label( void ) const;
+
+                u1 hasKind( void ) const;
+
+                void setKind( const CompletionItemKind kind );
+
+                CompletionItemKind kind( void ) const;
+
+                u1 hasDetail( void ) const;
+
+                void setDetail( const std::string& detail );
+
+                std::string detail( void ) const;
+
+                u1 hasDocumentation( void ) const;
+
+                void setDocumentation( const MarkupContent& doc );
+
+                MarkupContent docuemtation( void ) const;
+
+                u1 hasDeprecated( void ) const;
+
+                void setDeprecated( const u1 deprecated );
+
+                u1 isDeprecated( void ) const;
+
+                u1 hasPreselected( void ) const;
+
+                void setPreselected( const u1 preselected );
+
+                u1 isPreselected( void ) const;
+
+                u1 hasSortText( void ) const;
+
+                void setSortText( const std::string& sortText );
+
+                std::string sortText( void ) const;
+
+                u1 hasFilterText( void ) const;
+
+                void setFilterText( const std::string& filterText );
+
+                std::string filterText( void ) const;
+
+                u1 hasInsertText( void ) const;
+
+                void setInsertText( const std::string& insertText );
+
+                std::string insertText( void ) const;
+
+                u1 hasInsertTextFormat( void ) const;
+
+                void setInsertTextFormat( const InsertTextFormat insertTextFormat );
+
+                InsertTextFormat insertTextFormat( void ) const;
+
+                u1 hasTextEdit( void ) const;
+
+                void setTextEdit( const TextEdit& textEdit );
+
+                TextEdit textEdit( void ) const;
+
+                u1 hasAdditionalTextEdits( void ) const;
+
+                void addAdditionalTextEdit( const TextEdit& textEdit );
+
+                Data additionalTextEdits( void ) const;
+
+                u1 hasCommitCharacters( void ) const;
+
+                void addCommitCharacter( const std::string& commitCharacter );
+
+                Data commitCharacters( void ) const;
+
+                u1 hasCommand( void ) const;
+
+                void setCommand( const Command& command );
+
+                Command command( void ) const;
+
+                u1 hasData( void ) const;
+
+                void setData( const Data& data );
+
+                Data data( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class CompletionList : public Data
+            {
+              public:
+                CompletionList( const Data& data );
+
+                CompletionList( const u1 isIncomplete, const std::vector< CompletionItem >& items );
+
+                Data items( void ) const;
+
+                u1 isIncomplete( void ) const;
 
                 static void validate( const Data& data );
             };
