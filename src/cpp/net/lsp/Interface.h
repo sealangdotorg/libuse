@@ -247,7 +247,8 @@ namespace libstdhl
                 // https://microsoft.github.io/language-server-protocol/specification#completionItem_resolve
                 // client to server request
                 // TODO: FIXME: @ppaulweber: provide interface @Clasc
-
+                virtual CompletionResolveResult completionItem_resolve(
+                    const CompletionParams& params ) = 0;
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_hover
                 // client to server request
                 virtual HoverResult textDocument_hover( const HoverParams& params ) = 0;

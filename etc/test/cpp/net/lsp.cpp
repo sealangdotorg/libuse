@@ -136,6 +136,11 @@ class TestInterface final : public ServerInterface
         return CompletionList( true, items );
     }
 
+    CompletionResolveResult completionItem_resolve( const CompletionParams& params ) override
+    {
+        return CompletionResolveResult( std::string( "label" ) );
+    }
+
     HoverResult textDocument_hover( const HoverParams& params ) override
     {
         return HoverResult();
@@ -524,6 +529,18 @@ TEST( libstdhl_cpp_network_lsp, textDocument_completion )
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
+
+TEST( libstdhl_cpp_network_lsp, completionItem_resolve )
+{
+    TestInterface server;
+    auto document = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
+    auto params = CompletionParams( document, Position( 1, 10 ) );
+    auto result = server.completionItem_resolve( params );
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
+
 //
 //  Local variables:
 //  mode: c++

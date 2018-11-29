@@ -1912,6 +1912,8 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            using CompletionResolveResult = CompletionItem;
+
             using CompletionResult = CompletionList;
 
             using SignatureHelpParams = TextDocumentPositionParams;
