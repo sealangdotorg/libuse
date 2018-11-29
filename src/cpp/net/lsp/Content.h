@@ -1671,6 +1671,25 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            class CompletionRegistrationOptions : public TextDocumentRegistrationOptions
+            {
+                CompletionRegistrationOptions( const Data& data );
+
+                u1 hasTriggerCharacters( void ) const;
+
+                Data triggerCharacters( void ) const;
+
+                void addTriggerCharacter( const std::string& triggerCharacter );
+
+                u1 hasResolveProvider( void ) const;
+
+                u1 resolveProvider( void ) const;
+
+                void setResolveProvider( const u1 resolveProvider );
+
+                static void validate( const Data& data );
+            };
+
             enum class CompletionTriggerKind
             {
                 /**
@@ -1887,6 +1906,8 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
+
+            using CompletionResult = CompletionList;
 
             using SignatureHelpParams = TextDocumentPositionParams;
 

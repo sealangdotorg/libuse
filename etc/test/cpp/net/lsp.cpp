@@ -130,7 +130,7 @@ class TestInterface final : public ServerInterface
     {
     }
 
-    CompletionList textDocument_completion( const HoverParams& params ) override
+    CompletionResult textDocument_completion( const CompletionParams& params ) override
     {
         return CompletionList( Data::object() );
     }

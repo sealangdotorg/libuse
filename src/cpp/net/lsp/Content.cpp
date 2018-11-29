@@ -3655,17 +3655,17 @@ u1 CompletionItem::isDeprecated( void ) const
 
 u1 CompletionItem::hasPreselected( void ) const
 {
-    return find( Identifier::preselected ) != end();
+    return find( Identifier::preselect ) != end();
 }
 
 void CompletionItem::setPreselected( const u1 preselected )
 {
-    operator[]( Identifier::preselected ) = preselected;
+    operator[]( Identifier::preselect ) = preselected;
 }
 
 u1 CompletionItem::isPreselected( void ) const
 {
-    return at( Identifier::preselected ).get< u1 >();
+    return at( Identifier::preselect ).get< u1 >();
 }
 
 u1 CompletionItem::hasSortText( void ) const
@@ -3819,6 +3819,21 @@ void CompletionItem::validate( const Data& data )
     static const auto context = CONTENT + " CompletionItem:";
     Content::validateTypeIsObject( context, data );
     Content::validatePropertyIsString( context, data, Identifier::label, true );
+    Content::validatePropertyIsNumber( context, data, Identifier::kind, false );
+    Content::validatePropertyIsString( context, data, Identifier::detail, false );
+    Content::validatePropertyIs< MarkupContent >( context, data, Identifier::documentation, false );
+    Content::validatePropertyIsBoolean( context, data, Identifier::deprecated, false );
+    Content::validatePropertyIsBoolean( context, data, Identifier::preselect, false );
+    Content::validatePropertyIsString( context, data, Identifier::sortText, false );
+    Content::validatePropertyIsString( context, data, Identifier::filterText, false );
+    Content::validatePropertyIsString( context, data, Identifier::insertText, false );
+    Content::validatePropertyIsNumber( context, data, Identifier::insertTextFormat, false );
+    Content::validatePropertyIs< TextEdit >( context, data, Identifier::textEdit, false );
+    Content::validatePropertyIsArrayOf< TextEdit >(
+        context, data, Identifier::additionalTextEdits, false );
+    Content::validatePropertyIsArrayOfString( context, data, Identifier::commitCharacters, false );
+    Content::validatePropertyIs< Command >( context, data, Identifier::command, false );
+    Content::validatePropertyIsObject( context, data, Identifier::data, false );
 }
 
 //
@@ -3859,6 +3874,58 @@ void CompletionList::validate( const Data& data )
     Content::validateTypeIsObject( context, data );
     Content::validatePropertyIsArrayOf< CompletionItem >( context, data, Identifier::items, true );
     Content::validatePropertyIsBoolean( context, data, Identifier::isIncomplete, true );
+}
+//
+//
+// CompletionRegistrationOptions
+//
+
+CompletionRegistrationOptions::CompletionRegistrationOptions( const Data& data )
+: TextDocumentRegistrationOptions( data )
+{
+    validate( data );
+}
+
+u1 CompletionRegistrationOptions::hasTriggerCharacters( void ) const
+{
+    return find( Identifier::triggerCharacters ) != end();
+}
+
+Data CompletionRegistrationOptions::triggerCharacters( void ) const
+{
+    return at( Identifier::triggerCharacters );
+}
+
+void CompletionRegistrationOptions::addTriggerCharacter( const std::string& triggerCharacter )
+{
+    if( not CompletionRegistrationOptions::hasTriggerCharacters() )
+    {
+        operator[]( Identifier::triggerCharacters ) = Data::array();
+    }
+    operator[]( Identifier::triggerCharacters ).push_back( triggerCharacter );
+}
+
+u1 CompletionRegistrationOptions::hasResolveProvider( void ) const
+{
+    return find( Identifier::resolveProvider ) != end();
+}
+
+u1 CompletionRegistrationOptions::resolveProvider( void ) const
+{
+    return at( Identifier::resolveProvider ).get< u1 >();
+}
+
+void CompletionRegistrationOptions::setResolveProvider( const u1 resolveProvider )
+{
+    operator[]( Identifier::resolveProvider ) = resolveProvider;
+}
+
+void CompletionRegistrationOptions::validate( const Data& data )
+{
+    static const auto context = CONTENT + " CompletionRegistrationOptions:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsArrayOfString( context, data, Identifier::triggerCharacters, false );
+    Content::validatePropertyIsBoolean( context, data, Identifier::resolveProvider, false );
 }
 
 //
