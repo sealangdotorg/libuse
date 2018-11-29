@@ -1920,6 +1920,9 @@ namespace libstdhl
               public:
                 CompletionParams( const Data& data );
 
+                CompletionParams(
+                    const TextDocumentIdentifier& textDocument, const Position& position );
+
                 CompletionContext context( void ) const;
 
                 u1 hasContext( void ) const;

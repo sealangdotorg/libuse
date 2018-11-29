@@ -3623,6 +3623,12 @@ CompletionParams::CompletionParams( const Data& data )
     validate( data );
 }
 
+CompletionParams::CompletionParams(
+    const TextDocumentIdentifier& textDocument, const Position& position )
+: TextDocumentPositionParams( textDocument, position )
+{
+}
+
 CompletionContext CompletionParams::context( void ) const
 {
     return at( Identifier::context );
