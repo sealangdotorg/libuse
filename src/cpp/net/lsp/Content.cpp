@@ -3614,6 +3614,39 @@ void CompletionContext::validate( const Data& data )
 
 //
 //
+//  CompletionParams
+//
+
+CompletionParams::CompletionParams( const Data& data )
+: TextDocumentPositionParams( data )
+{
+    validate( data );
+}
+
+CompletionContext CompletionParams::context( void ) const
+{
+    return at( Identifier::context );
+}
+
+u1 CompletionParams::hasContext( void ) const
+{
+    return find( Identifier::context ) != end();
+}
+
+void CompletionParams::setContext( CompletionContext context )
+{
+    operator[]( Identifier::context ) = context;
+}
+
+void CompletionParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " CompletionParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< CompletionContext >( context, data, Identifier::context, false );
+}
+
+//
+//
 //  CompletionItem
 //
 CompletionItem::CompletionItem( const Data& data )

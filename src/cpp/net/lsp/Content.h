@@ -1918,7 +1918,7 @@ namespace libstdhl
             class CompletionParams : public TextDocumentPositionParams
             {
               public:
-                CompletionParams( const Data& Data );
+                CompletionParams( const Data& data );
 
                 CompletionContext context( void ) const;
 
