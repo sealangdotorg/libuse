@@ -388,6 +388,10 @@ namespace libstdhl
 
                 constexpr const char* triggerCharacters = "triggerCharacters";
 
+                constexpr const char* triggerCharacter = "triggerCharacter";
+
+                constexpr const char* triggerKind = "triggerKind";
+
                 constexpr const char* type = "type";
 
                 // U

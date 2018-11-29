@@ -3574,6 +3574,46 @@ void DidCloseTextDocumentParams::validate( const Data& data )
 
 //
 //
+// CompletionContext
+//
+
+CompletionContext::CompletionContext( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+CompletionContext::CompletionContext( CompletionTriggerKind triggerkind )
+: Data( Data::object() )
+{
+    operator[]( Identifier::triggerKind ) = static_cast< std::size_t >( triggerkind );
+}
+
+std::string CompletionContext::triggerCharacter( void ) const
+{
+    return at( Identifier::triggerCharacter );
+}
+
+void CompletionContext::setTriggerCharacter( std::string triggerCharacter )
+{
+    operator[]( Identifier::triggerCharacter ) = triggerCharacter;
+}
+
+u1 CompletionContext::hasTriggerCharacter( void ) const
+{
+    return find( Identifier::triggerCharacter ) != end();
+}
+
+void CompletionContext::validate( const Data& data )
+{
+    static const auto context = CONTENT + " CompletionContext:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsNumber( context, data, Identifier::triggerKind, true );
+    Content::validatePropertyIsString( context, data, Identifier::triggerCharacter, false );
+}
+
+//
+//
 //  CompletionItem
 //
 CompletionItem::CompletionItem( const Data& data )
