@@ -132,7 +132,8 @@ class TestInterface final : public ServerInterface
 
     CompletionResult textDocument_completion( const CompletionParams& params ) override
     {
-        return CompletionList( Data::object() );
+        auto items = std::vector< CompletionItem >();
+        return CompletionList( true, items );
     }
 
     HoverResult textDocument_hover( const HoverParams& params ) override
@@ -508,6 +509,17 @@ TEST( libstdhl_cpp_network_lsp, textDocument_definition )
     auto document = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto params = TextDocumentPositionParams( document, Position( 10, 10 ) );
     auto result = server.textDocument_definition( params );
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
+
+TEST( libstdhl_cpp_network_lsp, textDocument_completion )
+{
+    TestInterface server;
+    auto document = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
+    auto params = CompletionParams( document, Position( 1, 10 ) );
+    auto result = server.textDocument_completion( params );
     server.flush( [&]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
