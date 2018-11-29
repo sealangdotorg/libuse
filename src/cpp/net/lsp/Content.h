@@ -1722,6 +1722,8 @@ namespace libstdhl
                 void setTriggerCharacter( std::string triggerCharacter );
 
                 u1 hasTriggerCharacter( void ) const;
+
+                static void validate( const Data& data );
             };
 
             class CompletionParams : public TextDocumentPositionParams
