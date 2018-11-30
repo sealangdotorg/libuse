@@ -64,7 +64,7 @@ add_library( ${PROJECT}-test OBJECT
   cpp/logger.cpp
   cpp/math.cpp
   cpp/memory.cpp
-  cpp/net/lsp.cpp
+  cpp/net/lsp/interface.cpp
   cpp/net/lsp/content.cpp
   cpp/random.cpp
   cpp/sourcelocation.cpp
