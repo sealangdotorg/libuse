@@ -3709,12 +3709,13 @@ u1 CompletionItem::hasDocumentation( void ) const
 
 void CompletionItem::setDocumentation( const MarkupContent& doc )
 {
-    operator[]( Identifier::documentation ) = doc;
+    operator[]( Identifier::documentation ) = Data::from_cbor( Data::to_cbor( doc ) );
+    ;
 }
 
 MarkupContent CompletionItem::documentation( void ) const
 {
-    return MarkupContent( at( Identifier::documentation ) );
+    return at( Identifier::documentation );
 }
 
 u1 CompletionItem::hasDeprecated( void ) const
@@ -4045,6 +4046,7 @@ MarkupContent::MarkupContent( const MarkupKind kind, const std::string& value )
 }
 
 MarkupContent::MarkupContent( const std::string& value )
+: Data( Data::object() )
 {
     operator[]( Identifier::kind ) = markupKind_toStr( MarkupKind::PLAINTEXT );
     operator[]( Identifier::value ) = value;

@@ -62,6 +62,12 @@ TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
     obj.setDetail( "detail" );
     EXPECT_STREQ( obj.detail().c_str(), "detail" );
     EXPECT_TRUE( obj.hasDetail() );
+
+    EXPECT_FALSE( obj.hasDocumentation() );
+    auto documentation = MarkupContent( std::string( "doc" ) );
+    obj.setDocumentation( documentation );
+    EXPECT_STREQ( obj.documentation().value().c_str(), "doc" );
+    EXPECT_TRUE( obj.hasDocumentation() );
 }
 
 //
