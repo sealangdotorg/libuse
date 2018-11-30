@@ -3712,7 +3712,7 @@ void CompletionItem::setDocumentation( const MarkupContent& doc )
     operator[]( Identifier::documentation ) = doc;
 }
 
-MarkupContent CompletionItem::docuemtation( void ) const
+MarkupContent CompletionItem::documentation( void ) const
 {
     return MarkupContent( at( Identifier::documentation ) );
 }
@@ -3820,7 +3820,7 @@ void CompletionItem::setTextEdit( const TextEdit& textEdit )
 
 TextEdit CompletionItem::textEdit( void ) const
 {
-    return TextEdit( at( Identifier::textEdit ) );
+    return at( Identifier::textEdit );
 }
 
 u1 CompletionItem::hasAdditionalTextEdits( void ) const

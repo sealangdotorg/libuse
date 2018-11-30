@@ -1827,7 +1827,7 @@ namespace libstdhl
 
                 void setDocumentation( const MarkupContent& doc );
 
-                MarkupContent docuemtation( void ) const;
+                MarkupContent documentation( void ) const;
 
                 u1 hasDeprecated( void ) const;
 
