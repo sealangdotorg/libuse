@@ -78,6 +78,19 @@ TEST( libstdhl_cpp_network_lsp_content, TelemetryEventParams )
     EXPECT_STREQ( params.dump().c_str(), Data::object().dump().c_str() );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, Registration )
+{
+    auto reg = Registration( std::string( "ID" ), std::string( "Method" ) );
+    EXPECT_STREQ( reg.id().c_str(), "ID" );
+    EXPECT_STREQ( reg.method().c_str(), "Method" );
+
+    EXPECT_FALSE( reg.hasRegisterOptions() );
+    reg.addRegisterOption( Data::object() );
+    EXPECT_TRUE( reg.hasRegisterOptions() );
+    reg.registerOptions();
+    EXPECT_STREQ( reg.getRegisterOption( 0 ).dump().c_str(), Data::object().dump().c_str() );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( std::string( "label" ) );

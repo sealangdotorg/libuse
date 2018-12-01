@@ -1172,6 +1172,8 @@ namespace libstdhl
 
                 void addRegisterOption( const Data& option );
 
+                Data getRegisterOption( const number index ) const;
+
                 static void validate( const Data& data );
             };
 
