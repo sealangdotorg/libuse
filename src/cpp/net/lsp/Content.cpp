@@ -272,21 +272,21 @@ Position::Position( const Data& data )
     validate( data );
 }
 
-Position::Position( const std::size_t line, const std::size_t character )
+Position::Position( const number line, const number character )
 : Data( Data::object() )
 {
     operator[]( Identifier::line ) = line;
     operator[]( Identifier::character ) = character;
 }
 
-std::size_t Position::line( void ) const
+number Position::line( void ) const
 {
-    return at( Identifier::line ).get< std::size_t >();
+    return at( Identifier::line ).get< number >();
 }
 
-std::size_t Position::character( void ) const
+number Position::character( void ) const
 {
-    return at( Identifier::character ).get< std::size_t >();
+    return at( Identifier::character ).get< number >();
 }
 
 void Position::validate( const Data& data )
@@ -404,12 +404,12 @@ u1 Diagnostic::hasSeverity( void ) const
 
 DiagnosticSeverity Diagnostic::severity( void ) const
 {
-    return static_cast< DiagnosticSeverity >( at( Identifier::severity ).get< std::size_t >() );
+    return static_cast< DiagnosticSeverity >( at( Identifier::severity ).get< number >() );
 }
 
 void Diagnostic::setSeverity( const DiagnosticSeverity& severity )
 {
-    operator[]( Identifier::severity ) = static_cast< std::size_t >( severity );
+    operator[]( Identifier::severity ) = static_cast< number >( severity );
 }
 
 u1 Diagnostic::hasCode( void ) const
@@ -427,7 +427,7 @@ void Diagnostic::setCode( const std::string& code )
     operator[]( Identifier::code ) = code;
 }
 
-void Diagnostic::setCode( const std::size_t code )
+void Diagnostic::setCode( const number code )
 {
     operator[]( Identifier::code ) = code;
 }
@@ -588,15 +588,15 @@ VersionedTextDocumentIdentifier::VersionedTextDocumentIdentifier( const Data& da
 }
 
 VersionedTextDocumentIdentifier::VersionedTextDocumentIdentifier(
-    const DocumentUri& uri, const std::size_t version )
+    const DocumentUri& uri, const number version )
 : TextDocumentIdentifier( uri )
 {
     operator[]( Identifier::version ) = version;
 }
 
-std::size_t VersionedTextDocumentIdentifier::version( void ) const
+number VersionedTextDocumentIdentifier::version( void ) const
 {
-    return at( Identifier::version ).get< std::size_t >();
+    return at( Identifier::version ).get< number >();
 }
 
 void VersionedTextDocumentIdentifier::validate( const Data& data )
@@ -703,7 +703,7 @@ TextDocumentItem::TextDocumentItem( const Data& data )
 TextDocumentItem::TextDocumentItem(
     const DocumentUri& uri,
     const std::string& languageId,
-    const std::size_t version,
+    const number version,
     const std::string& text )
 : Data( Data::object() )
 {
@@ -723,9 +723,9 @@ std::string TextDocumentItem::languageId( void ) const
     return at( Identifier::languageId ).get< std::string >();
 }
 
-std::size_t TextDocumentItem::version( void ) const
+number TextDocumentItem::version( void ) const
 {
-    return at( Identifier::version ).get< std::size_t >();
+    return at( Identifier::version ).get< number >();
 }
 
 std::string TextDocumentItem::text( void ) const
@@ -1651,12 +1651,12 @@ u1 TextDocumentSyncOptions::hasChange( void ) const
 TextDocumentSyncKind TextDocumentSyncOptions::change( void ) const
 {
     assert( hasChange() );
-    return static_cast< TextDocumentSyncKind >( at( Identifier::change ).get< std::size_t >() );
+    return static_cast< TextDocumentSyncKind >( at( Identifier::change ).get< number >() );
 }
 
 void TextDocumentSyncOptions::setChange( const TextDocumentSyncKind& change )
 {
-    operator[]( Identifier::change ) = static_cast< std::size_t >( change );
+    operator[]( Identifier::change ) = static_cast< number >( change );
 }
 
 u1 TextDocumentSyncOptions::hasWillSave( void ) const
@@ -1966,7 +1966,7 @@ void ServerCapabilities::setTextDocumentSync( const TextDocumentSyncOptions& tex
 
 void ServerCapabilities::setTextDocumentSync( const TextDocumentSyncKind& textDocumentSync )
 {
-    operator[]( Identifier::textDocumentSync ) = static_cast< std::size_t >( textDocumentSync );
+    operator[]( Identifier::textDocumentSync ) = static_cast< number >( textDocumentSync );
 }
 
 u1 ServerCapabilities::hasHoverProvider( void ) const
@@ -2279,9 +2279,7 @@ InitializeParams::InitializeParams( const Data& data )
 }
 
 InitializeParams::InitializeParams(
-    const std::size_t processId,
-    const DocumentUri& rootUri,
-    const ClientCapabilities& capabilities )
+    const number processId, const DocumentUri& rootUri, const ClientCapabilities& capabilities )
 : Data( Data::object() )
 {
     operator[]( Identifier::processId ) = processId;
@@ -2289,9 +2287,9 @@ InitializeParams::InitializeParams(
     operator[]( Identifier::capabilities ) = Data::from_cbor( Data::to_cbor( capabilities ) );
 }
 
-std::size_t InitializeParams::processId( void ) const
+number InitializeParams::processId( void ) const
 {
-    return at( Identifier::processId ).get< std::size_t >();
+    return at( Identifier::processId ).get< number >();
 }
 
 DocumentUri InitializeParams::rootUri( void ) const
@@ -2420,13 +2418,13 @@ ShowMessageParams::ShowMessageParams( const Data& data )
 ShowMessageParams::ShowMessageParams( const MessageType type, const std::string& message )
 : Data( Data::object() )
 {
-    operator[]( Identifier::type ) = static_cast< std::size_t >( type );
+    operator[]( Identifier::type ) = static_cast< number >( type );
     operator[]( Identifier::message ) = message;
 }
 
 MessageType ShowMessageParams::messageType( void ) const
 {
-    return static_cast< MessageType >( at( Identifier::type ).get< std::size_t >() );
+    return static_cast< MessageType >( at( Identifier::type ).get< number >() );
 }
 
 std::string ShowMessageParams::message( void ) const
@@ -2486,13 +2484,13 @@ ShowMessageRequestParams::ShowMessageRequestParams(
     const MessageType type, const std::string& message )
 : Data( Data::object() )
 {
-    operator[]( Identifier::type ) = static_cast< std::size_t >( type );
+    operator[]( Identifier::type ) = static_cast< number >( type );
     operator[]( Identifier::message ) = message;
 }
 
 MessageType ShowMessageRequestParams::messageType( void ) const
 {
-    return static_cast< MessageType >( at( Identifier::type ).get< std::size_t >() );
+    return static_cast< MessageType >( at( Identifier::type ).get< number >() );
 }
 
 u1 ShowMessageRequestParams::hasActions( void )
@@ -2793,7 +2791,7 @@ void WorkspaceFoldersResponse::addWorkspaceFolder( const WorkspaceFolder& worksp
     operator[]( Identifier::workspaceFolders ).push_back( workspaceFolder );
 }
 
-WorkspaceFolder WorkspaceFoldersResponse::at( std::size_t index ) const
+WorkspaceFolder WorkspaceFoldersResponse::at( number index ) const
 {
     auto folder = operator[]( Identifier::workspaceFolders );
     WorkspaceFolder result( folder[ index ] );
@@ -3013,7 +3011,7 @@ FileEvent::FileEvent( const DocumentUri& uri, const FileChangeType type )
 : Data( Data::object() )
 {
     operator[]( Identifier::uri ) = uri.toString();
-    operator[]( Identifier::type ) = static_cast< std::size_t >( type );
+    operator[]( Identifier::type ) = static_cast< number >( type );
 }
 
 DocumentUri FileEvent::documentUri( void ) const
@@ -3023,7 +3021,7 @@ DocumentUri FileEvent::documentUri( void ) const
 
 FileChangeType FileEvent::type( void ) const
 {
-    return static_cast< FileChangeType >( operator[]( Identifier::type ).get< std::size_t >() );
+    return static_cast< FileChangeType >( operator[]( Identifier::type ).get< number >() );
 }
 
 void FileEvent::validate( const Data& data )
@@ -3105,7 +3103,7 @@ SymbolInformation::SymbolInformation(
 : Data( Data::object() )
 {
     operator[]( Identifier::name ) = name;
-    operator[]( Identifier::kind ) = static_cast< std::size_t >( kind );
+    operator[]( Identifier::kind ) = static_cast< number >( kind );
     operator[]( Identifier::location ) = location;
 }
 
@@ -3340,12 +3338,12 @@ u1 TextDocumentContentChangeEvent::hasRangeLength( void ) const
     return find( Identifier::rangeLength ) != end();
 }
 
-std::size_t TextDocumentContentChangeEvent::rangeLength( void ) const
+number TextDocumentContentChangeEvent::rangeLength( void ) const
 {
-    return at( Identifier::rangeLength ).get< std::size_t >();
+    return at( Identifier::rangeLength ).get< number >();
 }
 
-void TextDocumentContentChangeEvent::setRangeLength( const std::size_t rangeLength )
+void TextDocumentContentChangeEvent::setRangeLength( const number rangeLength )
 {
     operator[]( Identifier::rangeLength ) = rangeLength;
 }
@@ -3426,13 +3424,13 @@ WillSaveTextDocumentParams::WillSaveTextDocumentParams(
 : Data( Data::object() )
 {
     operator[]( Identifier::textDocument ) = textdocument;
-    operator[]( Identifier::reason ) = static_cast< std::size_t >( reason );
+    operator[]( Identifier::reason ) = static_cast< number >( reason );
 }
 
 TextDocumentSaveReason WillSaveTextDocumentParams::reason( void ) const
 {
     return static_cast< TextDocumentSaveReason >( operator[]( Identifier::reason )
-                                                      .get< std::size_t >() );
+                                                      .get< number >() );
 }
 
 TextDocumentIdentifier WillSaveTextDocumentParams::textdocument( void ) const
@@ -3586,7 +3584,7 @@ CompletionContext::CompletionContext( const Data& data )
 CompletionContext::CompletionContext( CompletionTriggerKind triggerkind )
 : Data( Data::object() )
 {
-    operator[]( Identifier::triggerKind ) = static_cast< std::size_t >( triggerkind );
+    operator[]( Identifier::triggerKind ) = static_cast< number >( triggerkind );
 }
 
 std::string CompletionContext::triggerCharacter( void ) const
@@ -3679,12 +3677,12 @@ u1 CompletionItem::hasKind( void ) const
 
 void CompletionItem::setKind( const CompletionItemKind kind )
 {
-    operator[]( Identifier::kind ) = static_cast< std::size_t >( kind );
+    operator[]( Identifier::kind ) = static_cast< number >( kind );
 }
 
 CompletionItemKind CompletionItem::kind( void ) const
 {
-    return static_cast< CompletionItemKind >( at( Identifier::kind ).get< std::size_t >() );
+    return static_cast< CompletionItemKind >( at( Identifier::kind ).get< number >() );
 }
 
 u1 CompletionItem::hasDetail( void ) const
@@ -3800,13 +3798,12 @@ u1 CompletionItem::hasInsertTextFormat( void ) const
 
 void CompletionItem::setInsertTextFormat( const InsertTextFormat insertTextFormat )
 {
-    operator[]( Identifier::insertTextFormat ) = static_cast< std::size_t >( insertTextFormat );
+    operator[]( Identifier::insertTextFormat ) = static_cast< number >( insertTextFormat );
 }
 
 InsertTextFormat CompletionItem::insertTextFormat( void ) const
 {
-    return static_cast< InsertTextFormat >(
-        at( Identifier::insertTextFormat ).get< std::size_t >() );
+    return static_cast< InsertTextFormat >( at( Identifier::insertTextFormat ).get< number >() );
 }
 
 u1 CompletionItem::hasTextEdit( void ) const
@@ -3844,7 +3841,7 @@ Data CompletionItem::additionalTextEdits( void ) const
     return at( Identifier::additionalTextEdits );
 }
 
-TextEdit CompletionItem::getAdditionalTextEdit( std::size_t i ) const
+TextEdit CompletionItem::getAdditionalTextEdit( number i ) const
 {
     return at( Identifier::additionalTextEdits ).at( i );
 }
@@ -4212,14 +4209,14 @@ u1 SignatureHelp::hasActiveSignature( void ) const
     return find( Identifier::activeSignature ) != end();
 }
 
-void SignatureHelp::setActiveSignature( const std::size_t activeSignature )
+void SignatureHelp::setActiveSignature( const number activeSignature )
 {
     operator[]( Identifier::activeSignature ) = activeSignature;
 }
 
-std::size_t SignatureHelp::activeSignature( void ) const
+number SignatureHelp::activeSignature( void ) const
 {
-    return at( Identifier::activeSignature ).get< std::size_t >();
+    return at( Identifier::activeSignature ).get< number >();
 }
 
 u1 SignatureHelp::hasActiveParameter( void ) const
@@ -4227,14 +4224,14 @@ u1 SignatureHelp::hasActiveParameter( void ) const
     return find( Identifier::activeParameter ) != end();
 }
 
-void SignatureHelp::setActiveParameter( const std::size_t activeParameter )
+void SignatureHelp::setActiveParameter( const number activeParameter )
 {
     operator[]( Identifier::activeParameter ) = activeParameter;
 }
 
-std::size_t SignatureHelp::activeParameter( void ) const
+number SignatureHelp::activeParameter( void ) const
 {
-    return at( Identifier::activeParameter ).get< std::size_t >();
+    return at( Identifier::activeParameter ).get< number >();
 }
 
 void SignatureHelp::validate( const Data& data )
