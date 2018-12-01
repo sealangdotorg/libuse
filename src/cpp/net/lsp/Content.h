@@ -1186,6 +1186,8 @@ namespace libstdhl
 
                 Data registrations( void ) const;
 
+                Registration getRegistration( const number index ) const;
+
                 static void validate( const Data& data );
             };
 
