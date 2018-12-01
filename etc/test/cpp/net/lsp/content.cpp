@@ -98,6 +98,13 @@ TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
     obj.setInsertTextFormat( InsertTextFormat::PlainText );
     EXPECT_EQ( obj.insertTextFormat(), InsertTextFormat::PlainText );
     EXPECT_TRUE( obj.hasInsertTextFormat() );
+
+    EXPECT_FALSE( obj.hasTextEdit() );
+    auto range = Range( Position( 1, 1 ), Position( 1, 10 ) );
+    auto textEdit = TextEdit( range, std::string( "newText" ) );
+    obj.setTextEdit( textEdit );
+    EXPECT_STREQ( obj.textEdit().newText().c_str(), "newText" );
+    EXPECT_TRUE( obj.hasTextEdit() );
 }
 
 //
