@@ -3844,6 +3844,11 @@ Data CompletionItem::additionalTextEdits( void ) const
     return at( Identifier::additionalTextEdits );
 }
 
+TextEdit CompletionItem::getAdditionalTextEdit( std::size_t i ) const
+{
+    return at( Identifier::additionalTextEdits ).at( i );
+}
+
 u1 CompletionItem::hasCommitCharacters( void ) const
 {
     return find( Identifier::commitCharacters ) != end();
