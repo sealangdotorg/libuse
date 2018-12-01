@@ -112,6 +112,13 @@ TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
     auto result = obj.getAdditionalTextEdit( 0 );
     EXPECT_STREQ( result.dump().c_str(), textEdit.dump().c_str() );
     EXPECT_TRUE( obj.hasTextEdit() );
+
+    EXPECT_FALSE( obj.hasCommitCharacters() );
+    obj.addCommitCharacter( "CommitCharacter" );
+    auto CommitCharacters = obj.commitCharacters();
+    auto getCharacter = obj.getCommitCharacter( 0 );
+    EXPECT_STREQ( getCharacter.c_str(), "CommitCharacter" );
+    EXPECT_TRUE( obj.hasCommitCharacters() );
 }
 
 //
