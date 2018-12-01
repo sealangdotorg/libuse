@@ -126,6 +126,11 @@ TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
     EXPECT_STREQ( obj.command().title().c_str(), "title" );
     EXPECT_STREQ( obj.command().command().c_str(), "command" );
     EXPECT_TRUE( obj.hasCommand() );
+
+    EXPECT_FALSE( obj.hasData() );
+    obj.setData( Data::object() );
+    EXPECT_STREQ( obj.data().dump().c_str(), Data::object().dump().c_str() );
+    EXPECT_TRUE( obj.hasData() );
 }
 
 //
