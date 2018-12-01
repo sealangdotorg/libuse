@@ -2681,6 +2681,36 @@ void TextDocumentRegistrationOptions::validate( const Data& data )
 
 //
 //
+// TextDocumentChangeRegistrationOptions
+//
+
+TextDocumentChangeRegistrationOptions::TextDocumentChangeRegistrationOptions( const Data& data )
+: TextDocumentRegistrationOptions( data )
+{
+    validate( data );
+}
+
+TextDocumentChangeRegistrationOptions::TextDocumentChangeRegistrationOptions(
+    const DocumentSelector& documentSelector, const TextDocumentSyncKind kind )
+: TextDocumentRegistrationOptions( documentSelector )
+{
+    operator[]( Identifier::kind ) = static_cast< number >( kind );
+}
+
+TextDocumentSyncKind TextDocumentChangeRegistrationOptions::kind( void ) const
+{
+    return static_cast< TextDocumentSyncKind >( operator[]( Identifier::kind ).get< number >() );
+}
+
+void TextDocumentChangeRegistrationOptions::validate( const Data& data )
+{
+    static const auto context = CONTENT + " TextDocumentChangeRegistrationOptions:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsNumber( context, data, Identifier::kind, true );
+}
+
+//
+//
 // Unregistration
 //
 

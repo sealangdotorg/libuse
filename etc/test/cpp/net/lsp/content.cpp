@@ -114,6 +114,16 @@ TEST( libstdhl_cpp_network_lsp_content, TextDocumentRegistrationOptions )
     EXPECT_STREQ( selector.dump().c_str(), DocumentSelector( filters ).dump().c_str() );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, TextDocumentChangeRegistrationOptions )
+{
+    auto filter = DocumentFilter();
+    auto filters = std::vector< DocumentFilter >();
+    filters.emplace_back( filter );
+    auto selector = DocumentSelector( filters );
+    auto options = TextDocumentChangeRegistrationOptions( selector, TextDocumentSyncKind::None );
+    EXPECT_STREQ( selector.dump().c_str(), DocumentSelector( filters ).dump().c_str() );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( std::string( "label" ) );

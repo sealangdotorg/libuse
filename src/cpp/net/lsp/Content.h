@@ -1206,7 +1206,10 @@ namespace libstdhl
             class TextDocumentChangeRegistrationOptions : public TextDocumentRegistrationOptions
             {
               public:
-                TextDocumentChangeRegistrationOptions( const TextDocumentSyncKind kind );
+                TextDocumentChangeRegistrationOptions( const Data& data );
+
+                TextDocumentChangeRegistrationOptions(
+                    const DocumentSelector& documentSelector, TextDocumentSyncKind kind );
 
                 TextDocumentSyncKind kind( void ) const;
 
