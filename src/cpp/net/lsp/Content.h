@@ -1138,6 +1138,8 @@ namespace libstdhl
 
                 void addAction( const MessageActionItem& action );
 
+                MessageActionItem getAction( number index ) const;
+
                 std::string message( void ) const;
 
                 static void validate( const Data& data );

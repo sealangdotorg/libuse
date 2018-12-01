@@ -61,6 +61,17 @@ TEST( libstdhl_cpp_network_lsp_content, MessageActionItem )
     EXPECT_STREQ( item.title().c_str(), "Title" );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, ShowMessageRequestParams )
+{
+    auto params = ShowMessageRequestParams( MessageType::Error, std::string( "Message" ) );
+    EXPECT_STREQ( params.message().c_str(), "Message" );
+    EXPECT_EQ( params.messageType(), MessageType::Error );
+    EXPECT_FALSE( params.hasActions() );
+    params.addAction( MessageActionItem( std::string( "title" ) ) );
+    EXPECT_STREQ( params.getAction( 0 ).title().c_str(), "title" );
+    EXPECT_TRUE( params.hasActions() );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( std::string( "label" ) );
