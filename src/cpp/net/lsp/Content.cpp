@@ -4308,6 +4308,13 @@ TextDocumentSaveRegistrationOptions::TextDocumentSaveRegistrationOptions( const 
     validate( data );
 }
 
+TextDocumentSaveRegistrationOptions::TextDocumentSaveRegistrationOptions(
+    const DocumentSelector& documentSelector )
+: TextDocumentRegistrationOptions( documentSelector )
+{
+    // leave empty, call parent ctor
+}
+
 u1 TextDocumentSaveRegistrationOptions::hasIncludeText( void ) const
 {
     return find( Identifier::includeText ) != end();
