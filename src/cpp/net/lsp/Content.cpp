@@ -2572,17 +2572,26 @@ std::string Registration::method( void ) const
 
 Data Registration::registerOptions( void ) const
 {
-    return operator[]( Identifier::registerOptions );
+    return at( Identifier::registerOptions );
 }
 
 u1 Registration::hasRegisterOptions( void ) const
 {
-    return find( Identifier::actions ) != end();
+    return find( Identifier::registerOptions ) != end();
 }
 
 void Registration::addRegisterOption( const Data& option )
 {
+    if( not Registration::hasRegisterOptions() )
+    {
+        operator[]( Identifier::registerOptions ) = Data::array();
+    }
     operator[]( Identifier::registerOptions ).push_back( option );
+}
+
+Data Registration::getRegisterOption( const number index ) const
+{
+    return at( Identifier::registerOptions ).at( index );
 }
 
 void Registration::validate( const Data& data )
