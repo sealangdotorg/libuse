@@ -2628,6 +2628,11 @@ Data RegistrationParams::registrations( void ) const
     return operator[]( Identifier::registrations );
 }
 
+Registration RegistrationParams::getRegistration( const number index ) const
+{
+    return operator[]( Identifier::registrations ).at( index );
+}
+
 void RegistrationParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " RegistrationParams:";

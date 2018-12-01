@@ -91,6 +91,19 @@ TEST( libstdhl_cpp_network_lsp_content, Registration )
     EXPECT_STREQ( reg.getRegisterOption( 0 ).dump().c_str(), Data::object().dump().c_str() );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, RegistrationParams )
+{
+    auto reg = Registration( std::string( "ID" ), std::string( "Method" ) );
+    auto registrations = std::vector< Registration >();
+    registrations.emplace_back( reg );
+    registrations.emplace_back( reg );
+    auto params = RegistrationParams( registrations );
+    EXPECT_STREQ( params.getRegistration( 0 ).id().c_str(), "ID" );
+    EXPECT_STREQ( params.getRegistration( 0 ).method().c_str(), "Method" );
+    EXPECT_STREQ( params.getRegistration( 1 ).id().c_str(), "ID" );
+    EXPECT_STREQ( params.getRegistration( 1 ).method().c_str(), "Method" );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( std::string( "label" ) );
