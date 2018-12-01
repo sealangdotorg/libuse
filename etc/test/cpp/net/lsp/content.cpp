@@ -72,6 +72,12 @@ TEST( libstdhl_cpp_network_lsp_content, ShowMessageRequestParams )
     EXPECT_TRUE( params.hasActions() );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, TelemetryEventParams )
+{
+    auto params = TelemetryEventParams( Data::object() );
+    EXPECT_STREQ( params.dump().c_str(), Data::object().dump().c_str() );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( std::string( "label" ) );
