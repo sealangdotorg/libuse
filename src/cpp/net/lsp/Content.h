@@ -185,6 +185,8 @@ namespace libstdhl
                 };
             }
 
+            using number = std::size_t;
+
             enum class ErrorCode : i32
             {
                 // defined by JSON RPC
@@ -233,11 +235,11 @@ namespace libstdhl
               public:
                 Position( const Data& data );
 
-                Position( const std::size_t line, const std::size_t character );
+                Position( const number line, const number character );
 
-                std::size_t line( void ) const;
+                number line( void ) const;
 
-                std::size_t character( void ) const;
+                number character( void ) const;
 
                 static void validate( const Data& data );
             };
@@ -270,7 +272,7 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
-            enum class DiagnosticSeverity : std::size_t
+            enum class DiagnosticSeverity : number
             {
                 Error = 1,
                 Warning = 2,
@@ -301,7 +303,7 @@ namespace libstdhl
 
                 void setCode( const std::string& code );
 
-                void setCode( const std::size_t code );
+                void setCode( const number code );
 
                 u1 hasSource( void ) const;
 
@@ -363,10 +365,9 @@ namespace libstdhl
               public:
                 VersionedTextDocumentIdentifier( const Data& data );
 
-                VersionedTextDocumentIdentifier(
-                    const DocumentUri& uri, const std::size_t version );
+                VersionedTextDocumentIdentifier( const DocumentUri& uri, const number version );
 
-                std::size_t version( void ) const;
+                number version( void ) const;
 
                 static void validate( const Data& data );
             };
@@ -413,14 +414,14 @@ namespace libstdhl
                 TextDocumentItem(
                     const DocumentUri& uri,
                     const std::string& languageId,
-                    const std::size_t version,
+                    const number version,
                     const std::string& text );
 
                 DocumentUri uri( void ) const;
 
                 std::string languageId( void ) const;
 
-                std::size_t version( void ) const;
+                number version( void ) const;
 
                 std::string text( void ) const;
 
@@ -1032,11 +1033,11 @@ namespace libstdhl
                 InitializeParams( const Data& data );
 
                 InitializeParams(
-                    const std::size_t processId,
+                    const number processId,
                     const DocumentUri& rootUri,
                     const ClientCapabilities& capabilities );
 
-                std::size_t processId( void ) const;
+                number processId( void ) const;
 
                 // rootPath interface omitted!
 
@@ -1281,7 +1282,7 @@ namespace libstdhl
 
                 Data workspaceFolders( void ) const;
 
-                WorkspaceFolder at( std::size_t ) const;
+                WorkspaceFolder at( number ) const;
 
                 void addWorkspaceFolder( const WorkspaceFolder& workspaceFolder );
 
@@ -1769,9 +1770,9 @@ namespace libstdhl
 
                 u1 hasRangeLength( void ) const;
 
-                std::size_t rangeLength( void ) const;
+                number rangeLength( void ) const;
 
-                void setRangeLength( const std::size_t rangeLength );
+                void setRangeLength( const number rangeLength );
 
                 std::string text( void ) const;
 
@@ -2066,7 +2067,7 @@ namespace libstdhl
 
                 Data additionalTextEdits( void ) const;
 
-                TextEdit getAdditionalTextEdit( std::size_t i ) const;
+                TextEdit getAdditionalTextEdit( number i ) const;
 
                 u1 hasCommitCharacters( void ) const;
 
@@ -2158,15 +2159,15 @@ namespace libstdhl
 
                 u1 hasActiveSignature( void ) const;
 
-                void setActiveSignature( const std::size_t activeSignature );
+                void setActiveSignature( const number activeSignature );
 
-                std::size_t activeSignature( void ) const;
+                number activeSignature( void ) const;
 
                 u1 hasActiveParameter( void ) const;
 
-                void setActiveParameter( const std::size_t activeParameter );
+                void setActiveParameter( const number activeParameter );
 
-                std::size_t activeParameter( void ) const;
+                number activeParameter( void ) const;
 
                 static void validate( const Data& data );
             };
