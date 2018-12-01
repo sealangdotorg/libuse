@@ -329,8 +329,8 @@ void Range::validate( const Data& data )
 {
     static const auto context = CONTENT + " Range:";
     Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< Range >( context, data, Identifier::start, true );
-    Content::validatePropertyIs< Range >( context, data, Identifier::end, true );
+    Content::validatePropertyIs< Position >( context, data, Identifier::start, true );
+    Content::validatePropertyIs< Position >( context, data, Identifier::end, true );
 }
 
 //
@@ -522,7 +522,7 @@ TextEdit::TextEdit( const Data& data )
     validate( data );
 }
 
-TextEdit::TextEdit( const Range& range, const std::string newText )
+TextEdit::TextEdit( const Range& range, const std::string& newText )
 : Data( Data::object() )
 {
     operator[]( Identifier::range ) = Data::from_cbor( Data::to_cbor( range ) );
@@ -3816,7 +3816,7 @@ u1 CompletionItem::hasTextEdit( void ) const
 
 void CompletionItem::setTextEdit( const TextEdit& textEdit )
 {
-    operator[]( Identifier::textEdit ) = textEdit;
+    operator[]( Identifier::textEdit ) = Data::from_cbor( Data::to_cbor( textEdit ) );
 }
 
 TextEdit CompletionItem::textEdit( void ) const

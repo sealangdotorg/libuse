@@ -337,7 +337,7 @@ namespace libstdhl
               public:
                 TextEdit( const Data& data );
 
-                TextEdit( const Range& range, const std::string newText );
+                TextEdit( const Range& range, const std::string& newText );
 
                 Range range( void ) const;
 
