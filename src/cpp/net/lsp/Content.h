@@ -1221,6 +1221,8 @@ namespace libstdhl
               public:
                 TextDocumentSaveRegistrationOptions( const Data& data );
 
+                TextDocumentSaveRegistrationOptions( const DocumentSelector& documentSelector );
+
                 u1 hasIncludeText( void ) const;
 
                 void setIncludeText( const u1 includeText );
