@@ -48,11 +48,17 @@ using namespace libstdhl;
 using namespace Network;
 using namespace LSP;
 
-TEST( libstdhl_cpp_network_lsp_content, MessageParams )
+TEST( libstdhl_cpp_network_lsp_content, ShowMessageParams )
 {
     auto params = ShowMessageParams( MessageType::Error, std::string( "Message" ) );
     EXPECT_STREQ( params.message().c_str(), "Message" );
     EXPECT_EQ( params.messageType(), MessageType::Error );
+}
+
+TEST( libstdhl_cpp_network_lsp_content, MessageActionItem )
+{
+    auto item = MessageActionItem( std::string( "Title" ) );
+    EXPECT_STREQ( item.title().c_str(), "Title" );
 }
 
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
