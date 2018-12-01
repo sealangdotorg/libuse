@@ -68,6 +68,36 @@ TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
     obj.setDocumentation( documentation );
     EXPECT_STREQ( obj.documentation().value().c_str(), "doc" );
     EXPECT_TRUE( obj.hasDocumentation() );
+
+    EXPECT_FALSE( obj.hasDeprecated() );
+    obj.setDeprecated( true );
+    EXPECT_TRUE( obj.isDeprecated() );
+    EXPECT_TRUE( obj.hasDeprecated() );
+
+    EXPECT_FALSE( obj.hasPreselected() );
+    obj.setPreselected( true );
+    EXPECT_TRUE( obj.isPreselected() );
+    EXPECT_TRUE( obj.hasPreselected() );
+
+    EXPECT_FALSE( obj.hasSortText() );
+    obj.setSortText( "SortText" );
+    EXPECT_STREQ( obj.sortText().c_str(), "SortText" );
+    EXPECT_TRUE( obj.hasSortText() );
+
+    EXPECT_FALSE( obj.hasFilterText() );
+    obj.setFilterText( "FilterText" );
+    EXPECT_STREQ( obj.filterText().c_str(), "FilterText" );
+    EXPECT_TRUE( obj.hasFilterText() );
+
+    EXPECT_FALSE( obj.hasInsertText() );
+    obj.setInsertText( "InsertText" );
+    EXPECT_STREQ( obj.insertText().c_str(), "InsertText" );
+    EXPECT_TRUE( obj.hasInsertText() );
+
+    EXPECT_FALSE( obj.hasInsertTextFormat() );
+    obj.setInsertTextFormat( InsertTextFormat::PlainText );
+    EXPECT_EQ( obj.insertTextFormat(), InsertTextFormat::PlainText );
+    EXPECT_TRUE( obj.hasInsertTextFormat() );
 }
 
 //
