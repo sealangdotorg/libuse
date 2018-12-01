@@ -4339,6 +4339,64 @@ void TextDocumentSaveRegistrationOptions::validate( const Data& data )
 
 //
 //
+// SignatureHelpRegistrationOptions
+//
+
+SignatureHelpRegistrationOptions::SignatureHelpRegistrationOptions( const Data& data )
+: TextDocumentRegistrationOptions( data )
+{
+    validate( data );
+}
+
+SignatureHelpRegistrationOptions::SignatureHelpRegistrationOptions(
+    const DocumentSelector& documentSelector )
+: TextDocumentRegistrationOptions( documentSelector )
+{
+}
+
+u1 SignatureHelpRegistrationOptions::hasTriggerCharacters( void ) const
+{
+    return find( Identifier::triggerCharacters ) != end();
+}
+
+void SignatureHelpRegistrationOptions::setTriggerCharacters(
+    const std::vector< std::string >& triggerCharacters )
+{
+    operator[]( Identifier::triggerCharacters ) = Data::array();
+    for( auto character : triggerCharacters )
+    {
+        operator[]( Identifier::triggerCharacters ).push_back( character );
+    }
+}
+
+void SignatureHelpRegistrationOptions::addTriggerCharacter( const std::string& triggerCharacter )
+{
+    if( not SignatureHelpRegistrationOptions::hasTriggerCharacters() )
+    {
+        operator[]( Identifier::triggerCharacters ) = Data::array();
+    }
+    operator[]( Identifier::triggerCharacters ).push_back( triggerCharacter );
+}
+
+Data SignatureHelpRegistrationOptions::triggerCharacters( void ) const
+{
+    return at( Identifier::triggerCharacters );
+}
+
+std::string SignatureHelpRegistrationOptions::getTriggerCharacter( const number index ) const
+{
+    return at( Identifier::triggerCharacters ).at( index ).get< std::string >();
+}
+
+void SignatureHelpRegistrationOptions::validate( const Data& data )
+{
+    static const auto context = CONTENT + " SignatureHelpRegistrationOptions:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsArrayOfString( context, data, Identifier::triggerCharacters, false );
+}
+
+//
+//
 // CodeActionContext
 //
 

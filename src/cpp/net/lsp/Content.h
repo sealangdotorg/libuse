@@ -1237,11 +1237,19 @@ namespace libstdhl
               public:
                 SignatureHelpRegistrationOptions( const Data& data );
 
+                SignatureHelpRegistrationOptions( const DocumentSelector& documentSelector );
+
                 u1 hasTriggerCharacters( void ) const;
 
-                void setTriggerCharacters( const std::string& triggerCharacters );
+                void setTriggerCharacters( const std::vector< std::string >& triggerCharacters );
 
-                std::string triggerCharacters( void ) const;
+                void addTriggerCharacter( const std::string& triggerCharacter );
+
+                Data triggerCharacters( void ) const;
+
+                std::string getTriggerCharacter( const number index ) const;
+
+                static void validate( const Data& data );
             };
 
             class Unregistration : public Data
