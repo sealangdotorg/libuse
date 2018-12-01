@@ -2505,7 +2505,16 @@ Data ShowMessageRequestParams::actions( void ) const
 
 void ShowMessageRequestParams::addAction( const MessageActionItem& action )
 {
+    if( not ShowMessageRequestParams::hasActions() )
+    {
+        operator[]( Identifier::actions ) = Data::array();
+    }
     operator[]( Identifier::actions ).push_back( action );
+}
+
+MessageActionItem ShowMessageRequestParams::getAction( number index ) const
+{
+    return at( Identifier::actions ).at( index );
 }
 
 std::string ShowMessageRequestParams::message( void ) const
