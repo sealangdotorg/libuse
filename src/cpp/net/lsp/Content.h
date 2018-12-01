@@ -2066,6 +2066,8 @@ namespace libstdhl
 
                 Data additionalTextEdits( void ) const;
 
+                TextEdit getAdditionalTextEdit( std::size_t i ) const;
+
                 u1 hasCommitCharacters( void ) const;
 
                 void addCommitCharacter( const std::string& commitCharacter );

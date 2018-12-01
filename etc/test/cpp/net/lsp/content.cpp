@@ -105,6 +105,13 @@ TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
     obj.setTextEdit( textEdit );
     EXPECT_STREQ( obj.textEdit().newText().c_str(), "newText" );
     EXPECT_TRUE( obj.hasTextEdit() );
+
+    EXPECT_FALSE( obj.hasAdditionalTextEdits() );
+    obj.addAdditionalTextEdit( textEdit );
+    auto textEdits = obj.additionalTextEdits();
+    auto result = obj.getAdditionalTextEdit( 0 );
+    EXPECT_STREQ( result.dump().c_str(), textEdit.dump().c_str() );
+    EXPECT_TRUE( obj.hasTextEdit() );
 }
 
 //
