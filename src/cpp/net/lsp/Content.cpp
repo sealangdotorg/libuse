@@ -3869,6 +3869,11 @@ Data CompletionItem::commitCharacters( void ) const
     return at( Identifier::commitCharacters );
 }
 
+std::string CompletionItem::getCommitCharacter( number i ) const
+{
+    return at( Identifier::commitCharacters ).at( i );
+}
+
 u1 CompletionItem::hasCommand( void ) const
 {
     return find( Identifier::command ) != end();

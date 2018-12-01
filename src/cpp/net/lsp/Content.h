@@ -2075,6 +2075,8 @@ namespace libstdhl
 
                 Data commitCharacters( void ) const;
 
+                std::string getCommitCharacter( number i ) const;
+
                 u1 hasCommand( void ) const;
 
                 void setCommand( const Command& command );
