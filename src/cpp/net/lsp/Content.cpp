@@ -3878,7 +3878,7 @@ u1 CompletionItem::hasCommand( void ) const
 
 void CompletionItem::setCommand( const Command& command )
 {
-    operator[]( Identifier::command ) = command;
+    operator[]( Identifier::command ) = Data::from_cbor( Data::to_cbor( command ) );
 }
 
 Command CompletionItem::command( void ) const

@@ -119,6 +119,13 @@ TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
     auto getCharacter = obj.getCommitCharacter( 0 );
     EXPECT_STREQ( getCharacter.c_str(), "CommitCharacter" );
     EXPECT_TRUE( obj.hasCommitCharacters() );
+
+    EXPECT_FALSE( obj.hasCommand() );
+    auto command = Command( "title", "command" );
+    obj.setCommand( command );
+    EXPECT_STREQ( obj.command().title().c_str(), "title" );
+    EXPECT_STREQ( obj.command().command().c_str(), "command" );
+    EXPECT_TRUE( obj.hasCommand() );
 }
 
 //
