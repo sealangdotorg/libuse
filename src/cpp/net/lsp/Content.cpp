@@ -2625,14 +2625,15 @@ RegistrationParams::RegistrationParams( const std::vector< Registration >& regis
     }
 }
 
-Data RegistrationParams::registrations( void ) const
+std::vector< Registration > RegistrationParams::registrations( void ) const
 {
-    return operator[]( Identifier::registrations );
-}
-
-Registration RegistrationParams::getRegistration( const std::size_t index ) const
-{
-    return operator[]( Identifier::registrations ).at( index );
+    auto array = operator[]( Identifier::registrations );
+    auto registrations = std::vector< Registration >();
+    for( auto registration : array )
+    {
+        registrations.push_back( Registration( registration ) );
+    }
+    return registrations;
 }
 
 void RegistrationParams::validate( const Data& data )
