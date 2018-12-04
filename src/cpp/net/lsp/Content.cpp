@@ -2591,11 +2591,6 @@ void Registration::addRegisterOption( const Data& option )
     operator[]( Identifier::registerOptions ).push_back( option );
 }
 
-Data Registration::getRegisterOption( const std::size_t index ) const
-{
-    return at( Identifier::registerOptions ).at( index );
-}
-
 void Registration::validate( const Data& data )
 {
     static const auto context = CONTENT + " Registration:";
