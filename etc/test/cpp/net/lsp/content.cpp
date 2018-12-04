@@ -87,8 +87,7 @@ TEST( libstdhl_cpp_network_lsp_content, Registration )
     EXPECT_FALSE( reg.hasRegisterOptions() );
     reg.addRegisterOption( Data::object() );
     EXPECT_TRUE( reg.hasRegisterOptions() );
-    reg.registerOptions();
-    EXPECT_STREQ( reg.getRegisterOption( 0 ).dump().c_str(), Data::object().dump().c_str() );
+    EXPECT_STREQ( reg.registerOptions()[ 0 ].dump().c_str(), Data::object().dump().c_str() );
 }
 
 TEST( libstdhl_cpp_network_lsp_content, RegistrationParams )

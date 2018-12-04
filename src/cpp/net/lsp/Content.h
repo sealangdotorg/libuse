@@ -1171,8 +1171,6 @@ namespace libstdhl
 
                 void addRegisterOption( const Data& option );
 
-                Data getRegisterOption( const std::size_t index ) const;
-
                 static void validate( const Data& data );
             };
 
