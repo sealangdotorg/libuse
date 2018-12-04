@@ -1133,11 +1133,9 @@ namespace libstdhl
 
                 u1 hasActions( void );
 
-                Data actions( void ) const;
+                std::vector< MessageActionItem > actions( void ) const;
 
                 void addAction( const MessageActionItem& action );
-
-                MessageActionItem getAction( std::size_t index ) const;
 
                 std::string message( void ) const;
 
