@@ -2500,9 +2500,15 @@ u1 ShowMessageRequestParams::hasActions( void )
     return find( Identifier::actions ) != end();
 }
 
-Data ShowMessageRequestParams::actions( void ) const
+std::vector< MessageActionItem > ShowMessageRequestParams::actions( void ) const
 {
-    return at( Identifier::actions );
+    auto actions = operator[]( Identifier::actions );
+    auto vector = std::vector< MessageActionItem >();
+    for( auto action : actions )
+    {
+        vector.emplace_back( MessageActionItem( action ) );
+    }
+    return vector;
 }
 
 void ShowMessageRequestParams::addAction( const MessageActionItem& action )
@@ -2512,11 +2518,6 @@ void ShowMessageRequestParams::addAction( const MessageActionItem& action )
         operator[]( Identifier::actions ) = Data::array();
     }
     operator[]( Identifier::actions ).push_back( action );
-}
-
-MessageActionItem ShowMessageRequestParams::getAction( std::size_t index ) const
-{
-    return at( Identifier::actions ).at( index );
 }
 
 std::string ShowMessageRequestParams::message( void ) const

@@ -68,7 +68,7 @@ TEST( libstdhl_cpp_network_lsp_content, ShowMessageRequestParams )
     EXPECT_EQ( params.messageType(), MessageType::Error );
     EXPECT_FALSE( params.hasActions() );
     params.addAction( MessageActionItem( std::string( "title" ) ) );
-    EXPECT_STREQ( params.getAction( 0 ).title().c_str(), "title" );
+    EXPECT_STREQ( params.actions()[ 0 ].title().c_str(), "title" );
     EXPECT_TRUE( params.hasActions() );
 }
 
