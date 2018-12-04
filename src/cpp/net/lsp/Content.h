@@ -1238,9 +1238,7 @@ namespace libstdhl
 
                 void addTriggerCharacter( const std::string& triggerCharacter );
 
-                Data triggerCharacters( void ) const;
-
-                std::string getTriggerCharacter( const std::size_t index ) const;
+                std::vector< std::string > triggerCharacters( void ) const;
 
                 static void validate( const Data& data );
             };

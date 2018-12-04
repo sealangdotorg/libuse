@@ -151,8 +151,8 @@ TEST( libstdhl_cpp_network_lsp_content, SignatureHelpRegistrationOptions )
     options.setTriggerCharacters( characters );
     options.addTriggerCharacter( std::string( "Character" ) );
     options.triggerCharacters();
-    EXPECT_STREQ( options.getTriggerCharacter( 0 ).c_str(), "test" );
-    EXPECT_STREQ( options.getTriggerCharacter( 1 ).c_str(), "Character" );
+    EXPECT_STREQ( options.triggerCharacters()[ 0 ].c_str(), "test" );
+    EXPECT_STREQ( options.triggerCharacters()[ 1 ].c_str(), "Character" );
 }
 
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
