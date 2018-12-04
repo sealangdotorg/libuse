@@ -98,10 +98,10 @@ TEST( libstdhl_cpp_network_lsp_content, RegistrationParams )
     registrations.emplace_back( reg );
     registrations.emplace_back( reg );
     auto params = RegistrationParams( registrations );
-    EXPECT_STREQ( params.getRegistration( 0 ).id().c_str(), "ID" );
-    EXPECT_STREQ( params.getRegistration( 0 ).method().c_str(), "Method" );
-    EXPECT_STREQ( params.getRegistration( 1 ).id().c_str(), "ID" );
-    EXPECT_STREQ( params.getRegistration( 1 ).method().c_str(), "Method" );
+    EXPECT_STREQ( params.registrations()[ 0 ].id().c_str(), "ID" );
+    EXPECT_STREQ( params.registrations()[ 0 ].method().c_str(), "Method" );
+    EXPECT_STREQ( params.registrations()[ 1 ].id().c_str(), "ID" );
+    EXPECT_STREQ( params.registrations()[ 1 ].method().c_str(), "Method" );
 }
 
 TEST( libstdhl_cpp_network_lsp_content, TextDocumentRegistrationOptions )

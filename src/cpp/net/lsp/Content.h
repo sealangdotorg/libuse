@@ -1183,9 +1183,7 @@ namespace libstdhl
 
                 RegistrationParams( const std::vector< Registration >& registrations );
 
-                Data registrations( void ) const;
-
-                Registration getRegistration( const std::size_t index ) const;
+                std::vector< Registration > registrations( void ) const;
 
                 static void validate( const Data& data );
             };
