@@ -4379,14 +4379,15 @@ void SignatureHelpRegistrationOptions::addTriggerCharacter( const std::string& t
     operator[]( Identifier::triggerCharacters ).push_back( triggerCharacter );
 }
 
-Data SignatureHelpRegistrationOptions::triggerCharacters( void ) const
+std::vector< std::string > SignatureHelpRegistrationOptions::triggerCharacters( void ) const
 {
-    return at( Identifier::triggerCharacters );
-}
-
-std::string SignatureHelpRegistrationOptions::getTriggerCharacter( const std::size_t index ) const
-{
-    return at( Identifier::triggerCharacters ).at( index ).get< std::string >();
+    auto vector = std::vector< std::string >();
+    auto triggerCharacters = at( Identifier::triggerCharacters );
+    for( auto triggerCharacter : triggerCharacters )
+    {
+        vector.emplace_back( triggerCharacter.get< std::string >() );
+    }
+    return vector;
 }
 
 void SignatureHelpRegistrationOptions::validate( const Data& data )
