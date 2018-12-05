@@ -3465,11 +3465,6 @@ u1 ApplyWorkspaceEditResult::isApplied( void ) const
     return operator[]( Identifier::applied ).get< u1 >();
 }
 
-void ApplyWorkspaceEditResult::applied( u1 applied )
-{
-    operator[]( Identifier::applied ) = applied;
-}
-
 void ApplyWorkspaceEditResult::validate( const Data& data )
 {
     static const auto context = CONTENT + " ApplyWorkspaceEditResult:";
