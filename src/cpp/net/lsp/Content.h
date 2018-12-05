@@ -1441,7 +1441,7 @@ namespace libstdhl
 
                 FileSystemWatcher( const std::string& globPattern, const WatchKind kind );
 
-                std::string pattern( void );
+                std::string globPattern( void );
 
                 u1 hasKind( void ) const;
 
