@@ -224,6 +224,12 @@ TEST( libstdhl_cpp_network_lsp_content, DidChangeWorkspaceFoldersParams )
     EXPECT_STREQ( params.event().added()[ 0 ].name().c_str(), "name" );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, DidChangeConfigurationParams )
+{
+    auto params = DidChangeConfigurationParams( Data::object() );
+    EXPECT_STREQ( params.settings().dump().c_str(), Data::object().dump().c_str() );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( std::string( "label" ) );
