@@ -261,6 +261,16 @@ TEST( libstdhl_cpp_network_lsp_content, FileEvent )
     EXPECT_EQ( event.type(), FileChangeType::Changed );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, DidChangeWatchedFilesParams )
+{
+    auto event = FileEvent( DocumentUri::fromString( "test://uri" ), FileChangeType::Changed );
+    auto events = FileEvents();
+    events.emplace_back( event );
+    auto params = DidChangeWatchedFilesParams( events );
+    EXPECT_STREQ( params.changes()[ 0 ].documentUri().toString().c_str(), "test://uri" );
+    EXPECT_EQ( params.changes()[ 0 ].type(), FileChangeType::Changed );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( std::string( "label" ) );

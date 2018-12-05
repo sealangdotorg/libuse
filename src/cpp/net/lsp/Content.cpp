@@ -3138,9 +3138,15 @@ DidChangeWatchedFilesParams::DidChangeWatchedFilesParams( const Data& data )
     validate( data );
 }
 
-Data DidChangeWatchedFilesParams::changes( void ) const
+FileEvents DidChangeWatchedFilesParams::changes( void ) const
 {
-    return operator[]( Identifier::changes );
+    auto changes = operator[]( Identifier::changes );
+    auto vector = FileEvents();
+    for( auto change : changes )
+    {
+        vector.emplace_back( change );
+    }
+    return vector;
 }
 
 void DidChangeWatchedFilesParams::validate( const Data& data )
