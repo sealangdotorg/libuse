@@ -2822,55 +2822,50 @@ void WorkspaceFolder::validate( const Data& data )
 
 //
 //
-// WorkspaceFoldersResponse
+// WorkspaceFoldersResult
 //
 
-WorkspaceFoldersResponse::WorkspaceFoldersResponse( const Data& data )
+WorkspaceFoldersResult::WorkspaceFoldersResult()
+: Data( Data::array() )
+{
+}
+
+WorkspaceFoldersResult::WorkspaceFoldersResult( const Data& data )
 {
     validate( data );
 }
 
-WorkspaceFoldersResponse::WorkspaceFoldersResponse(
-    const std::vector< WorkspaceFolder >& workspaceFolders )
+WorkspaceFoldersResult::WorkspaceFoldersResult( const WorkspaceFolders& workspaceFolders )
+: Data( Data::array() )
 {
-    operator[]( Identifier::workspaceFolders ) = Data::array();
     for( auto folder : workspaceFolders )
     {
-        operator[]( Identifier::workspaceFolders ).push_back( folder );
+        push_back( folder );
     }
 }
 
-Data WorkspaceFoldersResponse::workspaceFolders( void ) const
+WorkspaceFolders WorkspaceFoldersResult::toVec( void ) const
 {
-    return operator[]( Identifier::workspaceFolders );
+    auto vector = WorkspaceFolders();
+
+    for( auto folder : *this )
+    {
+        vector.emplace_back( folder );
+    }
+    return vector;
 }
 
-void WorkspaceFoldersResponse::addWorkspaceFolder( const WorkspaceFolder& workspaceFolder )
-{
-    operator[]( Identifier::workspaceFolders ).push_back( workspaceFolder );
-}
-
-WorkspaceFolder WorkspaceFoldersResponse::at( std::size_t index ) const
-{
-    auto folder = operator[]( Identifier::workspaceFolders );
-    WorkspaceFolder result( folder[ index ] );
-    return result;
-}
-
-void WorkspaceFoldersResponse::validate( const Data& data )
+void WorkspaceFoldersResult::validate( const Data& data )
 {
     static const auto context = CONTENT + " WorkSpaceFolderResponse:";
-    Content::validateTypeIsObject( context, data );
 
-    if( data.find( Identifier::workspaceFolders ) != data.end() and
-        data[ Identifier::workspaceFolders ].is_null() )
+    if( data.is_null() )
     {
-        // ok, due to the possibility that the property can be null
+        // ok, due to the possibility that array can be null
     }
     else
     {
-        Content::validatePropertyIsArrayOf< WorkspaceFolder >(
-            context, data, Identifier::workspaceFolders, true );
+        Content::validateTypeIsArrayOf< WorkspaceFolder >( context, data );
     }
 }
 

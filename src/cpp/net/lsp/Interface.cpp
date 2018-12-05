@@ -153,13 +153,13 @@ void ServerInterface::client_unregisterCapability( const UnregistrationParams& p
     // TODO: FIXME: @Clasc: handle response
 }
 
-WorkspaceFoldersResponse ServerInterface::workspace_workspaceFolders( void )
+WorkspaceFoldersResult ServerInterface::workspace_workspaceFolders( void )
 {
     RequestMessage msg( 0 /* TODO */, std::string{ Identifier::workspace_workspaceFolders } );
     // request( msg );   // TODO: FIXME: @Clasc
     // TODO: FIXME: @Clasc: handle response
     auto folders = std::vector< WorkspaceFolder >();
-    return WorkspaceFoldersResponse( folders );
+    return WorkspaceFoldersResult( folders );
 }
 
 Data ServerInterface::workspace_configuration( const ConfigurationParams& params )

@@ -184,6 +184,20 @@ TEST( libstdhl_cpp_network_lsp_content, WorkspaceFolder )
     EXPECT_STREQ( folder.name().c_str(), "name" );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, WorkspaceFoldersResult )
+{
+    auto folder = WorkspaceFolder( "test://uri", "name" );
+    WorkspaceFoldersResult();
+    auto vector = WorkspaceFolders();
+    vector.emplace_back( folder );
+    auto result = WorkspaceFoldersResult( vector );
+    result.push_back( folder );
+    EXPECT_STREQ( result.toVec()[ 0 ].uri().c_str(), "test://uri" );
+    EXPECT_STREQ( result.toVec()[ 0 ].name().c_str(), "name" );
+    EXPECT_STREQ( result[ 1 ][ "uri" ].get< std::string >().c_str(), "test://uri" );
+    EXPECT_STREQ( result[ 1 ][ "name" ].get< std::string >().c_str(), "name" );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( std::string( "label" ) );

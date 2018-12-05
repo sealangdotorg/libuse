@@ -1290,18 +1290,18 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
-            class WorkspaceFoldersResponse : public Data
+            using WorkspaceFolders = std::vector< WorkspaceFolder >;
+
+            class WorkspaceFoldersResult : public Data
             {
               public:
-                WorkspaceFoldersResponse( const Data& data );
+                WorkspaceFoldersResult();
 
-                WorkspaceFoldersResponse( const std::vector< WorkspaceFolder >& workspaceFolders );
+                WorkspaceFoldersResult( const Data& data );
 
-                Data workspaceFolders( void ) const;
+                WorkspaceFoldersResult( const WorkspaceFolders& workspaceFolders );
 
-                WorkspaceFolder at( std::size_t ) const;
-
-                void addWorkspaceFolder( const WorkspaceFolder& workspaceFolder );
+                WorkspaceFolders toVec( void ) const;
 
                 static void validate( const Data& data );
             };
