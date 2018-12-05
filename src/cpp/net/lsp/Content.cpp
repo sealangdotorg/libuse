@@ -3413,17 +3413,17 @@ ApplyWorkspaceEditParams::ApplyWorkspaceEditParams( const Data& data )
 ApplyWorkspaceEditParams::ApplyWorkspaceEditParams( const WorkspaceEdit& edit )
 : Data( Data::object() )
 {
-    operator[]( Identifier::edit ) = edit;
+    operator[]( Identifier::edit ) = Data::from_cbor( Data::to_cbor( edit ) );
 }
 
 WorkspaceEdit ApplyWorkspaceEditParams::edit( void ) const
 {
-    return WorkspaceEdit( operator[]( Identifier::edit ) );
+    return operator[]( Identifier::edit );
 }
 
 u1 ApplyWorkspaceEditParams::hasLabel( void ) const
 {
-    return find( Identifier::edit ) != end();
+    return find( Identifier::label ) != end();
 }
 
 std::string ApplyWorkspaceEditParams::label( void ) const

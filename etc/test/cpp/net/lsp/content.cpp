@@ -338,6 +338,17 @@ TEST( libstdhl_cpp_network_lsp_content, WorkspaceSymbolResult )
     EXPECT_STREQ( result.symbolInformation()[ 0 ].name().c_str(), "name" );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, ApplyWorkspaceEditParams )
+{
+    auto params = ApplyWorkspaceEditParams( WorkspaceEdit() );
+    ApplyWorkspaceEditParams p( params );
+    EXPECT_STREQ( params.edit().dump().c_str(), WorkspaceEdit().dump().c_str() );
+    EXPECT_FALSE( params.hasLabel() );
+    params.setLabel( "label" );
+    EXPECT_TRUE( params.hasLabel() );
+    EXPECT_STREQ( params.label().c_str(), "label" );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( std::string( "label" ) );
