@@ -201,6 +201,8 @@ namespace libstdhl
 
                 // G
 
+                constexpr const char* globPattern = "globPattern";
+
                 // H
 
                 constexpr const char* hover = "hover";

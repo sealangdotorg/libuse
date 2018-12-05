@@ -271,6 +271,17 @@ TEST( libstdhl_cpp_network_lsp_content, DidChangeWatchedFilesParams )
     EXPECT_EQ( params.changes()[ 0 ].type(), FileChangeType::Changed );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, FileSystemWatcher )
+{
+    auto watcher = FileSystemWatcher( std::string( "globPattern" ) );
+    FileSystemWatcher w( watcher );
+    EXPECT_FALSE( watcher.hasKind() );
+    watcher.setKind( WatchKind::Change );
+    EXPECT_TRUE( watcher.hasKind() );
+    EXPECT_STREQ( watcher.globPattern().c_str(), "globPattern" );
+    EXPECT_EQ( watcher.kind(), WatchKind::Change );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( std::string( "label" ) );

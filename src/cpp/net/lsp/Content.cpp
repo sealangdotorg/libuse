@@ -3158,6 +3158,57 @@ void DidChangeWatchedFilesParams::validate( const Data& data )
 
 //
 //
+// FileSystemWatcher
+//
+
+FileSystemWatcher::FileSystemWatcher( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+FileSystemWatcher::FileSystemWatcher( const std::string& globPattern )
+: Data( Data::object() )
+{
+    operator[]( Identifier::globPattern ) = globPattern;
+}
+
+FileSystemWatcher::FileSystemWatcher( const std::string& globPattern, const WatchKind kind )
+: FileSystemWatcher( globPattern )
+{
+    operator[]( Identifier::kind ) = static_cast< std::size_t >( kind );
+}
+
+std::string FileSystemWatcher::globPattern( void )
+{
+    return operator[]( Identifier::globPattern ).get< std::string >();
+}
+
+u1 FileSystemWatcher::hasKind( void ) const
+{
+    return find( Identifier::kind ) != end();
+}
+
+WatchKind FileSystemWatcher::kind( void ) const
+{
+    return static_cast< WatchKind >( at( Identifier::kind ).get< std::size_t >() );
+}
+
+void FileSystemWatcher::setKind( const WatchKind kind )
+{
+    operator[]( Identifier::kind ) = static_cast< std::size_t >( kind );
+}
+
+void FileSystemWatcher::validate( const Data& data )
+{
+    static const auto context = CONTENT + " FileSystemWatchers:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::globPattern, true );
+    Content::validatePropertyIsNumber( context, data, Identifier::kind, false );
+}
+
+//
+//
 // WorkspaceSymbolParams
 //
 
