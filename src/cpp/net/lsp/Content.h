@@ -1580,8 +1580,6 @@ namespace libstdhl
 
                 u1 isApplied( void ) const;
 
-                void applied( u1 applied );
-
                 static void validate( const Data& data );
             };
 

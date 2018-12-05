@@ -349,6 +349,13 @@ TEST( libstdhl_cpp_network_lsp_content, ApplyWorkspaceEditParams )
     EXPECT_STREQ( params.label().c_str(), "label" );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, ApplyWorkspaceEditResult )
+{
+    auto result = ApplyWorkspaceEditResult( true );
+    ApplyWorkspaceEditResult r( result );
+    EXPECT_TRUE( result.isApplied() );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( std::string( "label" ) );
