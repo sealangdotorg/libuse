@@ -1328,6 +1328,8 @@ namespace libstdhl
 
                 DidChangeWorkspaceFoldersParams( const WorkspaceFoldersChangeEvent& event );
 
+                WorkspaceFoldersChangeEvent event( void ) const;
+
                 static void validate( const Data& data );
             };
 
