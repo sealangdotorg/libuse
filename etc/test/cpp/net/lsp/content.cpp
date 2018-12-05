@@ -176,6 +176,14 @@ TEST( libstdhl_cpp_network_lsp_content, UnregistrationParams )
     EXPECT_STREQ( params.unregistrations()[ 0 ].method().c_str(), "method" );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, WorkspaceFolder )
+{
+    auto folder = WorkspaceFolder( "test://uri", "name" );
+    WorkspaceFolder f( folder );
+    EXPECT_STREQ( folder.uri().c_str(), "test://uri" );
+    EXPECT_STREQ( folder.name().c_str(), "name" );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( std::string( "label" ) );
