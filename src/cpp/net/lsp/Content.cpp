@@ -2500,7 +2500,7 @@ u1 ShowMessageRequestParams::hasActions( void )
     return find( Identifier::actions ) != end();
 }
 
-std::vector< MessageActionItem > ShowMessageRequestParams::actions( void ) const
+MessageActionItems ShowMessageRequestParams::actions( void ) const
 {
     auto actions = operator[]( Identifier::actions );
     auto vector = std::vector< MessageActionItem >();
@@ -2611,7 +2611,7 @@ RegistrationParams::RegistrationParams( const Data& data )
     validate( data );
 }
 
-RegistrationParams::RegistrationParams( const std::vector< Registration >& registrations )
+RegistrationParams::RegistrationParams( const Registrations& registrations )
 : Data( Data::object() )
 {
     operator[]( Identifier::registrations ) = Data::array();
@@ -2621,7 +2621,7 @@ RegistrationParams::RegistrationParams( const std::vector< Registration >& regis
     }
 }
 
-std::vector< Registration > RegistrationParams::registrations( void ) const
+Registrations RegistrationParams::registrations( void ) const
 {
     auto array = operator[]( Identifier::registrations );
     auto registrations = std::vector< Registration >();
@@ -3890,7 +3890,7 @@ void CompletionItem::addAdditionalTextEdit( const TextEdit& textEdit )
     operator[]( Identifier::additionalTextEdits ).push_back( textEdit );
 }
 
-std::vector< TextEdit > CompletionItem::additionalTextEdits( void ) const
+TextEdits CompletionItem::additionalTextEdits( void ) const
 {
     auto textEdits = at( Identifier::additionalTextEdits );
     auto vector = std::vector< TextEdit >();
@@ -3917,7 +3917,7 @@ void CompletionItem::addCommitCharacter( const std::string& commitCharacter )
     operator[]( Identifier::commitCharacters ).push_back( commitCharacter );
 }
 
-std::vector< std::string > CompletionItem::commitCharacters( void ) const
+CommitCharacters CompletionItem::commitCharacters( void ) const
 {
     auto commitCharacters = at( Identifier::commitCharacters );
     auto vector = std::vector< std::string >();
@@ -4365,7 +4365,7 @@ u1 SignatureHelpRegistrationOptions::hasTriggerCharacters( void ) const
 }
 
 void SignatureHelpRegistrationOptions::setTriggerCharacters(
-    const std::vector< std::string >& triggerCharacters )
+    const TriggerCharacters& triggerCharacters )
 {
     operator[]( Identifier::triggerCharacters ) = Data::array();
     for( auto character : triggerCharacters )
@@ -4383,7 +4383,7 @@ void SignatureHelpRegistrationOptions::addTriggerCharacter( const std::string& t
     operator[]( Identifier::triggerCharacters ).push_back( triggerCharacter );
 }
 
-std::vector< std::string > SignatureHelpRegistrationOptions::triggerCharacters( void ) const
+TriggerCharacters SignatureHelpRegistrationOptions::triggerCharacters( void ) const
 {
     auto vector = std::vector< std::string >();
     auto triggerCharacters = at( Identifier::triggerCharacters );

@@ -1122,6 +1122,8 @@ namespace libstdhl
 
             using ShowMessageRequestResult = MessageActionItem;
 
+            using MessageActionItems = std::vector< MessageActionItem >;
+
             class ShowMessageRequestParams : public Data
             {
               public:
@@ -1133,7 +1135,7 @@ namespace libstdhl
 
                 u1 hasActions( void );
 
-                std::vector< MessageActionItem > actions( void ) const;
+                MessageActionItems actions( void ) const;
 
                 void addAction( const MessageActionItem& action );
 
@@ -1172,14 +1174,16 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            using Registrations = std::vector< Registration >;
+
             class RegistrationParams : public Data
             {
               public:
                 RegistrationParams( const Data& data );
 
-                RegistrationParams( const std::vector< Registration >& registrations );
+                RegistrationParams( const Registrations& registrations );
 
-                std::vector< Registration > registrations( void ) const;
+                Registrations registrations( void ) const;
 
                 static void validate( const Data& data );
             };
@@ -1225,6 +1229,8 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            using TriggerCharacters = std::vector< std::string >;
+
             class SignatureHelpRegistrationOptions : public TextDocumentRegistrationOptions
             {
               public:
@@ -1234,11 +1240,11 @@ namespace libstdhl
 
                 u1 hasTriggerCharacters( void ) const;
 
-                void setTriggerCharacters( const std::vector< std::string >& triggerCharacters );
+                void setTriggerCharacters( const TriggerCharacters& triggerCharacters );
 
                 void addTriggerCharacter( const std::string& triggerCharacter );
 
-                std::vector< std::string > triggerCharacters( void ) const;
+                TriggerCharacters triggerCharacters( void ) const;
 
                 static void validate( const Data& data );
             };
@@ -2002,6 +2008,10 @@ namespace libstdhl
                 TypeParameter = 25
             };
 
+            using CommitCharacters = std::vector< std::string >;
+
+            using TextEdits = std::vector< TextEdit >;
+
             class CompletionItem : public Data
             {
               public:
@@ -2075,13 +2085,13 @@ namespace libstdhl
 
                 void addAdditionalTextEdit( const TextEdit& textEdit );
 
-                std::vector< TextEdit > additionalTextEdits( void ) const;
+                TextEdits additionalTextEdits( void ) const;
 
                 u1 hasCommitCharacters( void ) const;
 
                 void addCommitCharacter( const std::string& commitCharacter );
 
-                std::vector< std::string > commitCharacters( void ) const;
+                CommitCharacters commitCharacters( void ) const;
 
                 u1 hasCommand( void ) const;
 

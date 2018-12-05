@@ -215,8 +215,7 @@ TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 
     EXPECT_FALSE( obj.hasAdditionalTextEdits() );
     obj.addAdditionalTextEdit( textEdit );
-    auto textEdits = obj.additionalTextEdits();
-    auto result = textEdits[ 0 ];
+    auto result = obj.additionalTextEdits()[ 0 ];
     EXPECT_STREQ( result.dump().c_str(), textEdit.dump().c_str() );
     EXPECT_TRUE( obj.hasTextEdit() );
 
