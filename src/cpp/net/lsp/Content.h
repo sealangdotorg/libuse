@@ -1538,7 +1538,7 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
-
+            using SymbolInformationArray = std::vector< SymbolInformation >;
             class WorkspaceSymbolResult : public Data
             {
               public:
@@ -1548,7 +1548,7 @@ namespace libstdhl
 
                 void addSymbolInformation( const SymbolInformation& information );
 
-                Data symbolInformation( void ) const;
+                SymbolInformationArray symbolInformation( void ) const;
 
                 static void validate( const Data& data );
             };
