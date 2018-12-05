@@ -1408,14 +1408,16 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            using FileEvents = std::vector< FileEvent >;
+
             class DidChangeWatchedFilesParams : public Data
             {
               public:
-                DidChangeWatchedFilesParams( const std::vector< FileEvent >& changes );
+                DidChangeWatchedFilesParams( const FileEvents& changes );
 
                 DidChangeWatchedFilesParams( const Data& data );
 
-                Data changes( void ) const;
+                FileEvents changes( void ) const;
 
                 static void validate( const Data& data );
             };
