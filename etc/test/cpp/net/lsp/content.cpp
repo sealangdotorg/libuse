@@ -48,6 +48,8 @@ using namespace libstdhl;
 using namespace Network;
 using namespace LSP;
 
+auto uri = DocumentUri::fromString( "test://uri" );
+
 TEST( libstdhl_cpp_network_lsp_content, ShowMessageParams )
 {
     auto params = ShowMessageParams( MessageType::Error, std::string( "Message" ) );
@@ -303,7 +305,6 @@ TEST( libstdhl_cpp_network_lsp_content, WorkspaceSymbolParams )
 
 TEST( libstdhl_cpp_network_lsp_content, SymbolInformation )
 {
-    auto uri = DocumentUri::fromString( "test://uri" );
     auto range = Range( Position( 1, 1 ), Position( 10, 1 ) );
     auto location = Location( uri, range );
     auto info = SymbolInformation( "name", SymbolKind::Array, location );
@@ -325,7 +326,6 @@ TEST( libstdhl_cpp_network_lsp_content, SymbolInformation )
 
 TEST( libstdhl_cpp_network_lsp_content, WorkspaceSymbolResult )
 {
-    auto uri = DocumentUri::fromString( "test://uri" );
     auto range = Range( Position( 1, 1 ), Position( 10, 1 ) );
     auto location = Location( uri, range );
     auto info = SymbolInformation( "name", SymbolKind::Array, location );
@@ -354,6 +354,13 @@ TEST( libstdhl_cpp_network_lsp_content, ApplyWorkspaceEditResult )
     auto result = ApplyWorkspaceEditResult( true );
     ApplyWorkspaceEditResult r( result );
     EXPECT_TRUE( result.isApplied() );
+}
+
+TEST( libstdhl_cpp_network_lsp_content, DidOpenTextDocumentParams )
+{
+    auto params = DidOpenTextDocumentParams( TextDocumentItem( uri, "languageId", 1, "text" ) );
+    DidOpenTextDocumentParams p( params );
+    EXPECT_STREQ( params.textDocument().uri().toString().c_str(), uri.toString().c_str() );
 }
 
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
