@@ -155,6 +155,15 @@ TEST( libstdhl_cpp_network_lsp_content, SignatureHelpRegistrationOptions )
     EXPECT_STREQ( options.triggerCharacters()[ 1 ].c_str(), "Character" );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, Unregistration )
+{
+    auto unregistration = Unregistration( "id", "method" );
+    // test Constructor
+    Unregistration u( unregistration );
+    EXPECT_STREQ( unregistration.id().c_str(), "id" );
+    EXPECT_STREQ( unregistration.method().c_str(), "method" );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( std::string( "label" ) );
