@@ -323,6 +323,21 @@ TEST( libstdhl_cpp_network_lsp_content, SymbolInformation )
     EXPECT_STREQ( info.location().dump().c_str(), location.dump().c_str() );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, WorkspaceSymbolResult )
+{
+    auto uri = DocumentUri::fromString( "test://uri" );
+    auto range = Range( Position( 1, 1 ), Position( 10, 1 ) );
+    auto location = Location( uri, range );
+    auto info = SymbolInformation( "name", SymbolKind::Array, location );
+    auto infos = SymbolInformationArray();
+    infos.emplace_back( info );
+    auto result = WorkspaceSymbolResult( infos );
+    result.addSymbolInformation( info );
+    WorkspaceSymbolResult r( result );
+    EXPECT_STREQ( result.dump().c_str(), r.dump().c_str() );
+    EXPECT_STREQ( result.symbolInformation()[ 0 ].name().c_str(), "name" );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( std::string( "label" ) );

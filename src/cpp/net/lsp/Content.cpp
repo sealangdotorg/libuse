@@ -3364,8 +3364,7 @@ WorkspaceSymbolResult::WorkspaceSymbolResult( const Data& data )
     validate( data );
 }
 
-WorkspaceSymbolResult::WorkspaceSymbolResult(
-    const std::vector< SymbolInformation >& symbolInformation )
+WorkspaceSymbolResult::WorkspaceSymbolResult( const SymbolInformationArray& symbolInformation )
 : Data( Data::object() )
 {
     operator[]( Identifier::symbolInformation ) = Data::array();
@@ -3381,9 +3380,16 @@ void WorkspaceSymbolResult::addSymbolInformation( const SymbolInformation& infor
     operator[]( Identifier::symbolInformation ).push_back( information );
 }
 
-Data WorkspaceSymbolResult::symbolInformation( void ) const
+SymbolInformationArray WorkspaceSymbolResult::symbolInformation( void ) const
 {
-    return operator[]( Identifier::symbolInformation );
+    auto infos = operator[]( Identifier::symbolInformation );
+    auto result = SymbolInformationArray();
+
+    for( auto info : infos )
+    {
+        result.emplace_back( info );
+    }
+    return result;
 }
 
 void WorkspaceSymbolResult::validate( const Data& data )
