@@ -1530,6 +1530,12 @@ namespace libstdhl
 
                 void setContainerName( const std::string& containerName );
 
+                Location location( void ) const;
+
+                std::string name( void ) const;
+
+                SymbolKind kind( void ) const;
+
                 static void validate( const Data& data );
             };
 

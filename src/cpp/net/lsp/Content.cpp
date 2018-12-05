@@ -3289,7 +3289,7 @@ SymbolInformation::SymbolInformation(
 {
     operator[]( Identifier::name ) = name;
     operator[]( Identifier::kind ) = static_cast< std::size_t >( kind );
-    operator[]( Identifier::location ) = location;
+    operator[]( Identifier::location ) = Data::from_cbor( Data::to_cbor( location ) );
 }
 
 SymbolInformation::SymbolInformation( const Data& data )
@@ -3326,6 +3326,21 @@ u1 SymbolInformation::hasContainerName( void ) const
 void SymbolInformation::setContainerName( const std::string& containerName )
 {
     operator[]( Identifier::containerName ) = containerName;
+}
+
+Location SymbolInformation::location( void ) const
+{
+    return operator[]( Identifier::location );
+}
+
+std::string SymbolInformation::name( void ) const
+{
+    return operator[]( Identifier::name ).get< std::string >();
+}
+
+SymbolKind SymbolInformation::kind( void ) const
+{
+    return static_cast< SymbolKind >( operator[]( Identifier::kind ).get< std::size_t >() );
 }
 
 void SymbolInformation::validate( const Data& data )
