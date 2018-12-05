@@ -230,6 +230,19 @@ TEST( libstdhl_cpp_network_lsp_content, DidChangeConfigurationParams )
     EXPECT_STREQ( params.settings().dump().c_str(), Data::object().dump().c_str() );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, ConfigurationItem )
+{
+    auto item = ConfigurationItem( Data::object() );
+    EXPECT_FALSE( item.hasScopeUri() );
+    EXPECT_FALSE( item.hasSection() );
+    item.setScopeUri( "scopeUri" );
+    item.setSection( "section" );
+    EXPECT_STREQ( item.scopeUri().c_str(), "scopeUri" );
+    EXPECT_STREQ( item.section().c_str(), "section" );
+    EXPECT_TRUE( item.hasScopeUri() );
+    EXPECT_TRUE( item.hasSection() );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( std::string( "label" ) );
