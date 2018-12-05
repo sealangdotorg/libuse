@@ -3890,14 +3890,16 @@ void CompletionItem::addAdditionalTextEdit( const TextEdit& textEdit )
     operator[]( Identifier::additionalTextEdits ).push_back( textEdit );
 }
 
-Data CompletionItem::additionalTextEdits( void ) const
+std::vector< TextEdit > CompletionItem::additionalTextEdits( void ) const
 {
-    return at( Identifier::additionalTextEdits );
-}
+    auto textEdits = at( Identifier::additionalTextEdits );
+    auto vector = std::vector< TextEdit >();
 
-TextEdit CompletionItem::getAdditionalTextEdit( std::size_t i ) const
-{
-    return at( Identifier::additionalTextEdits ).at( i );
+    for( auto textEdit : textEdits )
+    {
+        vector.emplace_back( textEdit );
+    }
+    return vector;
 }
 
 u1 CompletionItem::hasCommitCharacters( void ) const

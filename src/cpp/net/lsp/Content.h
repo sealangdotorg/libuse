@@ -2075,9 +2075,7 @@ namespace libstdhl
 
                 void addAdditionalTextEdit( const TextEdit& textEdit );
 
-                Data additionalTextEdits( void ) const;
-
-                TextEdit getAdditionalTextEdit( std::size_t i ) const;
+                std::vector< TextEdit > additionalTextEdits( void ) const;
 
                 u1 hasCommitCharacters( void ) const;
 
