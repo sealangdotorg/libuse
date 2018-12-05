@@ -1401,11 +1401,11 @@ namespace libstdhl
 
                 FileEvent( const DocumentUri& uri, const FileChangeType type );
 
-                static void validate( const Data& data );
-
                 DocumentUri documentUri( void ) const;
 
                 FileChangeType type( void ) const;
+
+                static void validate( const Data& data );
             };
 
             class DidChangeWatchedFilesParams : public Data
