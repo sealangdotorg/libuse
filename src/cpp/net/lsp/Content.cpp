@@ -3917,14 +3917,16 @@ void CompletionItem::addCommitCharacter( const std::string& commitCharacter )
     operator[]( Identifier::commitCharacters ).push_back( commitCharacter );
 }
 
-Data CompletionItem::commitCharacters( void ) const
+std::vector< std::string > CompletionItem::commitCharacters( void ) const
 {
-    return at( Identifier::commitCharacters );
-}
+    auto commitCharacters = at( Identifier::commitCharacters );
+    auto vector = std::vector< std::string >();
 
-std::string CompletionItem::getCommitCharacter( std::size_t i ) const
-{
-    return at( Identifier::commitCharacters ).at( i );
+    for( auto character : commitCharacters )
+    {
+        vector.emplace_back( character.get< std::string >() );
+    }
+    return vector;
 }
 
 u1 CompletionItem::hasCommand( void ) const

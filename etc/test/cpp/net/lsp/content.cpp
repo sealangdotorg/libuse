@@ -222,8 +222,8 @@ TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 
     EXPECT_FALSE( obj.hasCommitCharacters() );
     obj.addCommitCharacter( "CommitCharacter" );
-    auto CommitCharacters = obj.commitCharacters();
-    auto getCharacter = obj.getCommitCharacter( 0 );
+    auto commitCharacters = obj.commitCharacters();
+    auto getCharacter = commitCharacters[ 0 ];
     EXPECT_STREQ( getCharacter.c_str(), "CommitCharacter" );
     EXPECT_TRUE( obj.hasCommitCharacters() );
 

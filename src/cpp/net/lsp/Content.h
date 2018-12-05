@@ -2081,9 +2081,7 @@ namespace libstdhl
 
                 void addCommitCharacter( const std::string& commitCharacter );
 
-                Data commitCharacters( void ) const;
-
-                std::string getCommitCharacter( std::size_t i ) const;
+                std::vector< std::string > commitCharacters( void ) const;
 
                 u1 hasCommand( void ) const;
 
