@@ -294,6 +294,13 @@ TEST( libstdhl_cpp_network_lsp_content, DidChangeWatchedFilesRegistrationOptions
     EXPECT_STREQ( options.watchers()[ 1 ].globPattern().c_str(), "globPattern" );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, WorkspaceSymbolParams )
+{
+    auto params = WorkspaceSymbolParams( std::string( "query" ) );
+    WorkspaceSymbolParams p( params );
+    EXPECT_STREQ( params.query().c_str(), "query" );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( std::string( "label" ) );
