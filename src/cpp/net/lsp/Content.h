@@ -1262,6 +1262,7 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
+            using Unregistrations = std::vector< Unregistration >;
 
             class UnregistrationParams : public Data
             {
@@ -1270,7 +1271,7 @@ namespace libstdhl
 
                 UnregistrationParams( const Data& data );
 
-                Data unregistrations( void ) const;
+                Unregistrations unregistrations( void ) const;
 
                 static void validate( const Data& data );
             };

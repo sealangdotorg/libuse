@@ -164,6 +164,18 @@ TEST( libstdhl_cpp_network_lsp_content, Unregistration )
     EXPECT_STREQ( unregistration.method().c_str(), "method" );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, UnregistrationParams )
+{
+    auto unregistration = Unregistration( "id", "method" );
+    auto vector = Unregistrations();
+    vector.emplace_back( unregistration );
+    auto params = UnregistrationParams( vector );
+    // test ctor
+    UnregistrationParams p( params );
+    EXPECT_STREQ( params.unregistrations()[ 0 ].id().c_str(), "id" );
+    EXPECT_STREQ( params.unregistrations()[ 0 ].method().c_str(), "method" );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( std::string( "label" ) );

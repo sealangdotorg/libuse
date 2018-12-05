@@ -2766,9 +2766,15 @@ UnregistrationParams::UnregistrationParams( const Data& data )
     validate( data );
 }
 
-Data UnregistrationParams::unregistrations( void ) const
+Unregistrations UnregistrationParams::unregistrations( void ) const
 {
-    return operator[]( Identifier::unregistrations );
+    auto unregistrations = operator[]( Identifier::unregistrations );
+    auto vector = std::vector< Unregistration >();
+    for( auto unregistration : unregistrations )
+    {
+        vector.emplace_back( unregistration );
+    }
+    return vector;
 }
 
 void UnregistrationParams::validate( const Data& data )
