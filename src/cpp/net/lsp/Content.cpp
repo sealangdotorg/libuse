@@ -3209,6 +3209,49 @@ void FileSystemWatcher::validate( const Data& data )
 
 //
 //
+// DidChangeWatchedFilesRegistrationOptions
+//
+
+DidChangeWatchedFilesRegistrationOptions::DidChangeWatchedFilesRegistrationOptions(
+    const FileSystemWatchers watchers )
+: Data( Data::object() )
+{
+    operator[]( Identifier::watchers ) = Data::array();
+    for( auto watcher : watchers )
+    {
+        operator[]( Identifier::watchers ).push_back( watcher );
+    }
+}
+
+DidChangeWatchedFilesRegistrationOptions::DidChangeWatchedFilesRegistrationOptions(
+    const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+FileSystemWatchers DidChangeWatchedFilesRegistrationOptions::watchers( void ) const
+{
+    auto watchers = operator[]( Identifier::watchers );
+    auto result = FileSystemWatchers();
+
+    for( auto watcher : watchers )
+    {
+        result.emplace_back( watcher );
+    }
+    return result;
+}
+
+void DidChangeWatchedFilesRegistrationOptions::validate( const Data& data )
+{
+    static const auto context = CONTENT + " DidChangeWatchedFilesRegistrationOptions:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsArrayOf< FileSystemWatcher >(
+        context, data, Identifier::watchers, true );
+}
+
+//
+//
 // WorkspaceSymbolParams
 //
 

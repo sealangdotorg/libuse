@@ -282,6 +282,18 @@ TEST( libstdhl_cpp_network_lsp_content, FileSystemWatcher )
     EXPECT_EQ( watcher.kind(), WatchKind::Change );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, DidChangeWatchedFilesRegistrationOptions )
+{
+    auto watcher = FileSystemWatcher( std::string( "globPattern" ) );
+    FileSystemWatcher w( watcher );
+    auto watchers = FileSystemWatchers();
+    watchers.emplace_back( watcher );
+    watchers.emplace_back( w );
+    auto options = DidChangeWatchedFilesRegistrationOptions( watchers );
+    EXPECT_STREQ( options.watchers()[ 0 ].globPattern().c_str(), "globPattern" );
+    EXPECT_STREQ( options.watchers()[ 1 ].globPattern().c_str(), "globPattern" );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( std::string( "label" ) );
