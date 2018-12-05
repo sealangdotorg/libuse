@@ -301,6 +301,28 @@ TEST( libstdhl_cpp_network_lsp_content, WorkspaceSymbolParams )
     EXPECT_STREQ( params.query().c_str(), "query" );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, SymbolInformation )
+{
+    auto uri = DocumentUri::fromString( "test://uri" );
+    auto range = Range( Position( 1, 1 ), Position( 10, 1 ) );
+    auto location = Location( uri, range );
+    auto info = SymbolInformation( "name", SymbolKind::Array, location );
+    EXPECT_FALSE( info.hasDeprecated() );
+    EXPECT_FALSE( info.hasContainerName() );
+    info.setDeprecated( true );
+    info.setContainerName( "Containername" );
+    EXPECT_TRUE( info.hasDeprecated() );
+    EXPECT_TRUE( info.hasContainerName() );
+    EXPECT_TRUE( info.isDeprecated() );
+    EXPECT_STREQ( info.containerName().c_str(), "Containername" );
+
+    SymbolInformation s( info );
+    EXPECT_STREQ( info.dump().c_str(), s.dump().c_str() );
+    EXPECT_STREQ( info.name().c_str(), "name" );
+    EXPECT_EQ( info.kind(), SymbolKind::Array );
+    EXPECT_STREQ( info.location().dump().c_str(), location.dump().c_str() );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( std::string( "label" ) );
