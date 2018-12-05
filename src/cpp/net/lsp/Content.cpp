@@ -2944,7 +2944,12 @@ DidChangeWorkspaceFoldersParams::DidChangeWorkspaceFoldersParams( const Data& da
 DidChangeWorkspaceFoldersParams::DidChangeWorkspaceFoldersParams(
     const WorkspaceFoldersChangeEvent& event )
 {
-    operator[]( Identifier::event ) = event;
+    operator[]( Identifier::event ) = Data::from_cbor( Data::to_cbor( event ) );
+}
+
+WorkspaceFoldersChangeEvent DidChangeWorkspaceFoldersParams::event( void ) const
+{
+    return operator[]( Identifier::event );
 }
 
 void DidChangeWorkspaceFoldersParams::validate( const Data& data )
