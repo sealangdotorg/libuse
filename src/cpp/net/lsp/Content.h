@@ -1455,15 +1455,15 @@ namespace libstdhl
             /**
               Describe options to be used when registering for text document change events.
              */
+            using FileSystemWatchers = std::vector< FileSystemWatcher >;
             class DidChangeWatchedFilesRegistrationOptions : public Data
             {
               public:
-                DidChangeWatchedFilesRegistrationOptions(
-                    const std::vector< FileSystemWatcher >& watchers );
+                DidChangeWatchedFilesRegistrationOptions( const FileSystemWatchers watchers );
 
                 DidChangeWatchedFilesRegistrationOptions( const Data& data );
 
-                std::vector< FileSystemWatcher > watchers( void ) const;
+                FileSystemWatchers watchers( void ) const;
 
                 static void validate( const Data& data );
             };

@@ -410,6 +410,8 @@ namespace libstdhl
 
                 // W
 
+                constexpr const char* watchers = "watchers";
+
                 constexpr const char* willSave = "willSave";
 
                 constexpr const char* willSaveWaitUntil = "willSaveWaitUntil";
