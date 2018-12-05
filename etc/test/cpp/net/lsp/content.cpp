@@ -198,6 +198,19 @@ TEST( libstdhl_cpp_network_lsp_content, WorkspaceFoldersResult )
     EXPECT_STREQ( result[ 1 ][ "name" ].get< std::string >().c_str(), "name" );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, WorkspaceFoldersChangeEvent )
+{
+    auto added = WorkspaceFolders();
+    auto removed = WorkspaceFolders();
+    auto folder = WorkspaceFolder( "test://uri", "name" );
+    added.push_back( folder );
+    removed.push_back( folder );
+    auto event = WorkspaceFoldersChangeEvent( added, removed );
+    WorkspaceFoldersChangeEvent e( event );
+    EXPECT_STREQ( event.added()[ 0 ].uri().c_str(), "test://uri" );
+    EXPECT_STREQ( event.added()[ 0 ].name().c_str(), "name" );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( std::string( "label" ) );

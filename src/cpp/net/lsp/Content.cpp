@@ -2875,7 +2875,7 @@ void WorkspaceFoldersResult::validate( const Data& data )
 //
 
 WorkspaceFoldersChangeEvent::WorkspaceFoldersChangeEvent(
-    const std::vector< WorkspaceFolder >& added, const std::vector< WorkspaceFolder >& removed )
+    const WorkspaceFolders& added, const WorkspaceFolders& removed )
 : Data( Data::object() )
 {
     operator[]( Identifier::added ) = Data::array();
@@ -2897,14 +2897,28 @@ WorkspaceFoldersChangeEvent::WorkspaceFoldersChangeEvent( const Data& data )
     validate( data );
 }
 
-Data WorkspaceFoldersChangeEvent::added( void ) const
+WorkspaceFolders WorkspaceFoldersChangeEvent::added( void ) const
 {
-    return operator[]( Identifier::added );
+    auto vector = WorkspaceFolders();
+    auto added = operator[]( Identifier::added );
+
+    for( auto element : added )
+    {
+        vector.emplace_back( element );
+    }
+    return vector;
 }
 
-Data WorkspaceFoldersChangeEvent::removed( void ) const
+WorkspaceFolders WorkspaceFoldersChangeEvent::removed( void ) const
 {
-    return operator[]( Identifier::removed );
+    auto vector = WorkspaceFolders();
+    auto removed = operator[]( Identifier::removed );
+
+    for( auto element : removed )
+    {
+        vector.emplace_back( element );
+    }
+    return vector;
 }
 
 void WorkspaceFoldersChangeEvent::validate( const Data& data )
