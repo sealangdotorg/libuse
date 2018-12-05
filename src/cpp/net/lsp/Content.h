@@ -1310,14 +1310,13 @@ namespace libstdhl
             {
               public:
                 WorkspaceFoldersChangeEvent(
-                    const std::vector< WorkspaceFolder >& added,
-                    const std::vector< WorkspaceFolder >& removed );
+                    const WorkspaceFolders& added, const WorkspaceFolders& removed );
 
                 WorkspaceFoldersChangeEvent( const Data& data );
 
-                Data added( void ) const;
+                WorkspaceFolders added( void ) const;
 
-                Data removed( void ) const;
+                WorkspaceFolders removed( void ) const;
 
                 static void validate( const Data& data );
             };
