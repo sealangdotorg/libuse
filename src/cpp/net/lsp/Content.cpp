@@ -3061,6 +3061,18 @@ ConfigurationParams::ConfigurationParams( const Data& data )
     validate( data );
 }
 
+ConfigurationItems ConfigurationParams::items( void ) const
+{
+    auto items = operator[]( Identifier::items );
+    auto vector = ConfigurationItems();
+
+    for( auto item : items )
+    {
+        vector.emplace_back( item );
+    }
+    return vector;
+}
+
 void ConfigurationParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " ConfigurationParams:";

@@ -1368,12 +1368,16 @@ namespace libstdhl
             };
             using ConfigurationResult = Data;
 
+            using ConfigurationItems = std::vector< ConfigurationItem >;
+
             class ConfigurationParams : public Data
             {
               public:
-                ConfigurationParams( const std::vector< ConfigurationItem >& items );
+                ConfigurationParams( const ConfigurationItems& items );
 
                 ConfigurationParams( const Data& data );
+
+                ConfigurationItems items( void ) const;
 
                 static void validate( const Data& data );
             };

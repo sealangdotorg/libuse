@@ -243,6 +243,16 @@ TEST( libstdhl_cpp_network_lsp_content, ConfigurationItem )
     EXPECT_TRUE( item.hasSection() );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, ConfigurationParams )
+{
+    auto item = ConfigurationItem( Data::object() );
+    auto items = ConfigurationItems();
+    items.emplace_back( item );
+    auto params = ConfigurationParams( items );
+    ConfigurationParams p( params );
+    params.items();
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( std::string( "label" ) );
