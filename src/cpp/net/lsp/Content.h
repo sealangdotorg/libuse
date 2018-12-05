@@ -1334,6 +1334,7 @@ namespace libstdhl
             };
 
             using DidChangeConfigurationSettings = Data;
+
             class DidChangeConfigurationParams : public Data
             {
               public:

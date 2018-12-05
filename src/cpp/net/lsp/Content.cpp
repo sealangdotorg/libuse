@@ -2969,8 +2969,8 @@ DidChangeConfigurationParams::DidChangeConfigurationParams(
     const DidChangeConfigurationSettings& settings )
 : Data( Data::object() )
 {
-    operator[]( Identifier::settings ) = settings;
-    validate( settings );
+    operator[]( Identifier::settings ) = Data::from_cbor( Data::to_cbor( settings ) );
+    validate( *this );
 }
 
 DidChangeConfigurationSettings DidChangeConfigurationParams::settings( void ) const
@@ -2981,7 +2981,7 @@ DidChangeConfigurationSettings DidChangeConfigurationParams::settings( void ) co
 void DidChangeConfigurationParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " DidChangeConfigurationParams:";
-    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsObject( context, data, Identifier::settings, true );
 }
 
 //
