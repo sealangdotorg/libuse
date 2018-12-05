@@ -253,6 +253,14 @@ TEST( libstdhl_cpp_network_lsp_content, ConfigurationParams )
     params.items();
 }
 
+TEST( libstdhl_cpp_network_lsp_content, FileEvent )
+{
+    auto event = FileEvent( DocumentUri::fromString( "test://uri" ), FileChangeType::Changed );
+
+    EXPECT_STREQ( event.documentUri().toString().c_str(), "test://uri" );
+    EXPECT_EQ( event.type(), FileChangeType::Changed );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( std::string( "label" ) );
