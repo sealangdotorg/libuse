@@ -3670,13 +3670,19 @@ WillSaveWaitUntilResponse::WillSaveWaitUntilResponse( const std::vector< TextEdi
     operator[]( Identifier::textEdit ) = Data::array();
     for( auto edit : textEdit )
     {
-        operator[]( Identifier::textEdit ) = edit;
+        operator[]( Identifier::textEdit ).push_back( edit );
     }
 }
 
-Data WillSaveWaitUntilResponse::textEdit( void ) const
+TextEdits WillSaveWaitUntilResponse::textEdit( void ) const
 {
-    return operator[]( Identifier::textEdit );
+    auto textEdits = operator[]( Identifier::textEdit );
+    auto result = TextEdits();
+    for( auto edit : textEdits )
+    {
+        result.push_back( edit );
+    }
+    return result;
 }
 
 void WillSaveWaitUntilResponse::validate( const Data& data )
