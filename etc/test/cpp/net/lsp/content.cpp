@@ -358,7 +358,7 @@ TEST( libstdhl_cpp_network_lsp_content, ApplyWorkspaceEditResult )
 {
     auto result = ApplyWorkspaceEditResult( true );
     ApplyWorkspaceEditResult r( result );
-    EXPECT_TRUE( result.isApplied() );
+    EXPECT_TRUE( result.applied() );
 }
 
 TEST( libstdhl_cpp_network_lsp_content, DidOpenTextDocumentParams )

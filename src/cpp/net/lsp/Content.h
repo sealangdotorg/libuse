@@ -1578,7 +1578,7 @@ namespace libstdhl
 
                 ApplyWorkspaceEditResult( const u1 applied );
 
-                u1 isApplied( void ) const;
+                u1 applied( void ) const;
 
                 static void validate( const Data& data );
             };

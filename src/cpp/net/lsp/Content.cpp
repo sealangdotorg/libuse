@@ -3460,7 +3460,7 @@ ApplyWorkspaceEditResult::ApplyWorkspaceEditResult( const u1 applied )
     operator[]( Identifier::applied ) = applied;
 }
 
-u1 ApplyWorkspaceEditResult::isApplied( void ) const
+u1 ApplyWorkspaceEditResult::applied( void ) const
 {
     return operator[]( Identifier::applied ).get< u1 >();
 }
