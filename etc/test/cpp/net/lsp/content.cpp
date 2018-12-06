@@ -49,28 +49,37 @@ using namespace Network;
 using namespace LSP;
 
 auto uri = DocumentUri::fromString( "test://uri" );
+const auto range = Range( Position( 1, 1 ), Position( 10, 1 ) );
+const auto location = Location( uri, range );
+const auto text = std::string( "text" );
+const auto label = std::string( "label" );
+const auto message = std::string( "message" );
+const auto title = std::string( "title" );
+const auto method = std::string( "method" );
+const auto name = std::string( "name" );
+const auto id = std::string( "id" );
 
 TEST( libstdhl_cpp_network_lsp_content, ShowMessageParams )
 {
-    auto params = ShowMessageParams( MessageType::Error, std::string( "Message" ) );
-    EXPECT_STREQ( params.message().c_str(), "Message" );
+    auto params = ShowMessageParams( MessageType::Error, message );
+    EXPECT_STREQ( params.message().c_str(), message.c_str() );
     EXPECT_EQ( params.messageType(), MessageType::Error );
 }
 
 TEST( libstdhl_cpp_network_lsp_content, MessageActionItem )
 {
-    auto item = MessageActionItem( std::string( "Title" ) );
-    EXPECT_STREQ( item.title().c_str(), "Title" );
+    auto item = MessageActionItem( title );
+    EXPECT_STREQ( item.title().c_str(), title.c_str() );
 }
 
 TEST( libstdhl_cpp_network_lsp_content, ShowMessageRequestParams )
 {
-    auto params = ShowMessageRequestParams( MessageType::Error, std::string( "Message" ) );
-    EXPECT_STREQ( params.message().c_str(), "Message" );
+    auto params = ShowMessageRequestParams( MessageType::Error, message );
+    EXPECT_STREQ( params.message().c_str(), message.c_str() );
     EXPECT_EQ( params.messageType(), MessageType::Error );
     EXPECT_FALSE( params.hasActions() );
-    params.addAction( MessageActionItem( std::string( "title" ) ) );
-    EXPECT_STREQ( params.actions()[ 0 ].title().c_str(), "title" );
+    params.addAction( MessageActionItem( title ) );
+    EXPECT_STREQ( params.actions()[ 0 ].title().c_str(), title.c_str() );
     EXPECT_TRUE( params.hasActions() );
 }
 
@@ -82,9 +91,9 @@ TEST( libstdhl_cpp_network_lsp_content, TelemetryEventParams )
 
 TEST( libstdhl_cpp_network_lsp_content, Registration )
 {
-    auto reg = Registration( std::string( "ID" ), std::string( "Method" ) );
-    EXPECT_STREQ( reg.id().c_str(), "ID" );
-    EXPECT_STREQ( reg.method().c_str(), "Method" );
+    auto reg = Registration( id, method );
+    EXPECT_STREQ( reg.id().c_str(), id.c_str() );
+    EXPECT_STREQ( reg.method().c_str(), method.c_str() );
 
     EXPECT_FALSE( reg.hasRegisterOptions() );
     reg.addRegisterOption( Data::object() );
@@ -94,15 +103,15 @@ TEST( libstdhl_cpp_network_lsp_content, Registration )
 
 TEST( libstdhl_cpp_network_lsp_content, RegistrationParams )
 {
-    auto reg = Registration( std::string( "ID" ), std::string( "Method" ) );
+    auto reg = Registration( id, method );
     auto registrations = std::vector< Registration >();
     registrations.emplace_back( reg );
     registrations.emplace_back( reg );
     auto params = RegistrationParams( registrations );
-    EXPECT_STREQ( params.registrations()[ 0 ].id().c_str(), "ID" );
-    EXPECT_STREQ( params.registrations()[ 0 ].method().c_str(), "Method" );
-    EXPECT_STREQ( params.registrations()[ 1 ].id().c_str(), "ID" );
-    EXPECT_STREQ( params.registrations()[ 1 ].method().c_str(), "Method" );
+    EXPECT_STREQ( params.registrations()[ 0 ].id().c_str(), id.c_str() );
+    EXPECT_STREQ( params.registrations()[ 0 ].method().c_str(), method.c_str() );
+    EXPECT_STREQ( params.registrations()[ 1 ].id().c_str(), id.c_str() );
+    EXPECT_STREQ( params.registrations()[ 1 ].method().c_str(), method.c_str() );
 }
 
 TEST( libstdhl_cpp_network_lsp_content, TextDocumentRegistrationOptions )
@@ -159,71 +168,71 @@ TEST( libstdhl_cpp_network_lsp_content, SignatureHelpRegistrationOptions )
 
 TEST( libstdhl_cpp_network_lsp_content, Unregistration )
 {
-    auto unregistration = Unregistration( "id", "method" );
+    auto unregistration = Unregistration( id, method );
     // test Constructor
     Unregistration u( unregistration );
-    EXPECT_STREQ( unregistration.id().c_str(), "id" );
-    EXPECT_STREQ( unregistration.method().c_str(), "method" );
+    EXPECT_STREQ( unregistration.id().c_str(), id.c_str() );
+    EXPECT_STREQ( unregistration.method().c_str(), method.c_str() );
 }
 
 TEST( libstdhl_cpp_network_lsp_content, UnregistrationParams )
 {
-    auto unregistration = Unregistration( "id", "method" );
+    auto unregistration = Unregistration( id, method );
     auto vector = Unregistrations();
     vector.emplace_back( unregistration );
     auto params = UnregistrationParams( vector );
     // test ctor
     UnregistrationParams p( params );
-    EXPECT_STREQ( params.unregistrations()[ 0 ].id().c_str(), "id" );
-    EXPECT_STREQ( params.unregistrations()[ 0 ].method().c_str(), "method" );
+    EXPECT_STREQ( params.unregistrations()[ 0 ].id().c_str(), id.c_str() );
+    EXPECT_STREQ( params.unregistrations()[ 0 ].method().c_str(), method.c_str() );
 }
 
 TEST( libstdhl_cpp_network_lsp_content, WorkspaceFolder )
 {
-    auto folder = WorkspaceFolder( "test://uri", "name" );
+    auto folder = WorkspaceFolder( "test://uri", name );
     WorkspaceFolder f( folder );
     EXPECT_STREQ( folder.uri().c_str(), "test://uri" );
-    EXPECT_STREQ( folder.name().c_str(), "name" );
+    EXPECT_STREQ( folder.name().c_str(), name.c_str() );
 }
 
 TEST( libstdhl_cpp_network_lsp_content, WorkspaceFoldersResult )
 {
-    auto folder = WorkspaceFolder( "test://uri", "name" );
+    auto folder = WorkspaceFolder( "test://uri", name );
     WorkspaceFoldersResult();
     auto vector = WorkspaceFolders();
     vector.emplace_back( folder );
     auto result = WorkspaceFoldersResult( vector );
     result.push_back( folder );
     EXPECT_STREQ( result.toVec()[ 0 ].uri().c_str(), "test://uri" );
-    EXPECT_STREQ( result.toVec()[ 0 ].name().c_str(), "name" );
+    EXPECT_STREQ( result.toVec()[ 0 ].name().c_str(), name.c_str() );
     EXPECT_STREQ( result[ 1 ][ "uri" ].get< std::string >().c_str(), "test://uri" );
-    EXPECT_STREQ( result[ 1 ][ "name" ].get< std::string >().c_str(), "name" );
+    EXPECT_STREQ( result[ 1 ][ name ].get< std::string >().c_str(), name.c_str() );
 }
 
 TEST( libstdhl_cpp_network_lsp_content, WorkspaceFoldersChangeEvent )
 {
     auto added = WorkspaceFolders();
     auto removed = WorkspaceFolders();
-    auto folder = WorkspaceFolder( "test://uri", "name" );
+    auto folder = WorkspaceFolder( "test://uri", name );
     added.push_back( folder );
     removed.push_back( folder );
     auto event = WorkspaceFoldersChangeEvent( added, removed );
     WorkspaceFoldersChangeEvent e( event );
     EXPECT_STREQ( event.added()[ 0 ].uri().c_str(), "test://uri" );
-    EXPECT_STREQ( event.added()[ 0 ].name().c_str(), "name" );
+    EXPECT_STREQ( event.added()[ 0 ].name().c_str(), name.c_str() );
 }
 
 TEST( libstdhl_cpp_network_lsp_content, DidChangeWorkspaceFoldersParams )
 {
     auto added = WorkspaceFolders();
     auto removed = WorkspaceFolders();
-    auto folder = WorkspaceFolder( "test://uri", "name" );
+    auto folder = WorkspaceFolder( "test://uri", name );
     added.push_back( folder );
     removed.push_back( folder );
     auto event = WorkspaceFoldersChangeEvent( added, removed );
     auto params = DidChangeWorkspaceFoldersParams( event );
     EXPECT_STREQ( params.event().added()[ 0 ].uri().c_str(), "test://uri" );
-    EXPECT_STREQ( params.event().added()[ 0 ].name().c_str(), "name" );
+    EXPECT_STREQ( params.event().added()[ 0 ].name().c_str(), name.c_str() );
 }
 
 TEST( libstdhl_cpp_network_lsp_content, DidChangeConfigurationParams )
@@ -257,7 +266,7 @@ TEST( libstdhl_cpp_network_lsp_content, ConfigurationParams )
 
 TEST( libstdhl_cpp_network_lsp_content, FileEvent )
 {
-    auto event = FileEvent( DocumentUri::fromString( "test://uri" ), FileChangeType::Changed );
+    auto event = FileEvent( uri, FileChangeType::Changed );
 
     EXPECT_STREQ( event.documentUri().toString().c_str(), "test://uri" );
     EXPECT_EQ( event.type(), FileChangeType::Changed );
@@ -265,7 +274,7 @@ TEST( libstdhl_cpp_network_lsp_content, FileEvent )
 
 TEST( libstdhl_cpp_network_lsp_content, DidChangeWatchedFilesParams )
 {
-    auto event = FileEvent( DocumentUri::fromString( "test://uri" ), FileChangeType::Changed );
+    auto event = FileEvent( uri, FileChangeType::Changed );
     auto events = FileEvents();
     events.emplace_back( event );
     auto params = DidChangeWatchedFilesParams( events );
@@ -305,9 +314,7 @@ TEST( libstdhl_cpp_network_lsp_content, WorkspaceSymbolParams )
 
 TEST( libstdhl_cpp_network_lsp_content, SymbolInformation )
 {
-    auto range = Range( Position( 1, 1 ), Position( 10, 1 ) );
-    auto location = Location( uri, range );
-    auto info = SymbolInformation( "name", SymbolKind::Array, location );
+    auto info = SymbolInformation( name, SymbolKind::Array, location );
     EXPECT_FALSE( info.hasDeprecated() );
     EXPECT_FALSE( info.hasContainerName() );
     info.setDeprecated( true );
@@ -319,23 +326,21 @@ TEST( libstdhl_cpp_network_lsp_content, SymbolInformation )
 
     SymbolInformation s( info );
     EXPECT_STREQ( info.dump().c_str(), s.dump().c_str() );
-    EXPECT_STREQ( info.name().c_str(), "name" );
+    EXPECT_STREQ( info.name().c_str(), name.c_str() );
     EXPECT_EQ( info.kind(), SymbolKind::Array );
     EXPECT_STREQ( info.location().dump().c_str(), location.dump().c_str() );
 }
 
 TEST( libstdhl_cpp_network_lsp_content, WorkspaceSymbolResult )
 {
-    auto range = Range( Position( 1, 1 ), Position( 10, 1 ) );
-    auto location = Location( uri, range );
-    auto info = SymbolInformation( "name", SymbolKind::Array, location );
+    auto info = SymbolInformation( name, SymbolKind::Array, location );
     auto infos = SymbolInformationArray();
     infos.emplace_back( info );
     auto result = WorkspaceSymbolResult( infos );
     result.addSymbolInformation( info );
     WorkspaceSymbolResult r( result );
     EXPECT_STREQ( result.dump().c_str(), r.dump().c_str() );
-    EXPECT_STREQ( result.symbolInformation()[ 0 ].name().c_str(), "name" );
+    EXPECT_STREQ( result.symbolInformation()[ 0 ].name().c_str(), name.c_str() );
 }
 
 TEST( libstdhl_cpp_network_lsp_content, ApplyWorkspaceEditParams )
@@ -344,9 +349,9 @@ TEST( libstdhl_cpp_network_lsp_content, ApplyWorkspaceEditParams )
     ApplyWorkspaceEditParams p( params );
     EXPECT_STREQ( params.edit().dump().c_str(), WorkspaceEdit().dump().c_str() );
     EXPECT_FALSE( params.hasLabel() );
-    params.setLabel( "label" );
+    params.setLabel( label );
     EXPECT_TRUE( params.hasLabel() );
-    EXPECT_STREQ( params.label().c_str(), "label" );
+    EXPECT_STREQ( params.label().c_str(), label.c_str() );
 }
 
 TEST( libstdhl_cpp_network_lsp_content, ApplyWorkspaceEditResult )
@@ -358,15 +363,15 @@ TEST( libstdhl_cpp_network_lsp_content, ApplyWorkspaceEditResult )
 
 TEST( libstdhl_cpp_network_lsp_content, DidOpenTextDocumentParams )
 {
-    auto params = DidOpenTextDocumentParams( TextDocumentItem( uri, "languageId", 1, "text" ) );
+    auto params = DidOpenTextDocumentParams( TextDocumentItem( uri, "languageId", 1, text ) );
     DidOpenTextDocumentParams p( params );
     EXPECT_STREQ( params.textDocument().uri().toString().c_str(), uri.toString().c_str() );
 }
 
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
-    CompletionItem obj( std::string( "label" ) );
-    EXPECT_STREQ( obj.label().c_str(), "label" );
+    CompletionItem obj( label );
+    EXPECT_STREQ( obj.label().c_str(), label.c_str() );
 
     EXPECT_FALSE( obj.hasKind() );
     obj.setKind( CompletionItemKind::Text );
@@ -415,8 +420,7 @@ TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
     EXPECT_TRUE( obj.hasInsertTextFormat() );
 
     EXPECT_FALSE( obj.hasTextEdit() );
-    auto range = Range( Position( 1, 1 ), Position( 1, 10 ) );
-    auto textEdit = TextEdit( range, std::string( "newText" ) );
+    auto textEdit = TextEdit( range, "newText" );
     obj.setTextEdit( textEdit );
     EXPECT_STREQ( obj.textEdit().newText().c_str(), "newText" );
     EXPECT_TRUE( obj.hasTextEdit() );
@@ -435,9 +439,9 @@ TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
     EXPECT_TRUE( obj.hasCommitCharacters() );
 
     EXPECT_FALSE( obj.hasCommand() );
-    auto command = Command( "title", "command" );
+    auto command = Command( title, "command" );
     obj.setCommand( command );
-    EXPECT_STREQ( obj.command().title().c_str(), "title" );
+    EXPECT_STREQ( obj.command().title().c_str(), title.c_str() );
     EXPECT_STREQ( obj.command().command().c_str(), "command" );
     EXPECT_TRUE( obj.hasCommand() );
 
