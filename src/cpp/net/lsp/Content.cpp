@@ -3626,10 +3626,10 @@ WillSaveTextDocumentParams::WillSaveTextDocumentParams( const Data& data )
 }
 
 WillSaveTextDocumentParams::WillSaveTextDocumentParams(
-    const TextDocumentIdentifier& textdocument, TextDocumentSaveReason reason )
+    const TextDocumentIdentifier& textDocument, TextDocumentSaveReason reason )
 : Data( Data::object() )
 {
-    operator[]( Identifier::textDocument ) = textdocument;
+    operator[]( Identifier::textDocument ) = Data::from_cbor( Data::to_cbor( textDocument ) );
     operator[]( Identifier::reason ) = static_cast< std::size_t >( reason );
 }
 
@@ -3639,7 +3639,7 @@ TextDocumentSaveReason WillSaveTextDocumentParams::reason( void ) const
                                                       .get< std::size_t >() );
 }
 
-TextDocumentIdentifier WillSaveTextDocumentParams::textdocument( void ) const
+TextDocumentIdentifier WillSaveTextDocumentParams::textDocument( void ) const
 {
     return TextDocumentIdentifier( operator[]( Identifier::textDocument ) );
 }
