@@ -3641,7 +3641,7 @@ TextDocumentSaveReason WillSaveTextDocumentParams::reason( void ) const
 
 TextDocumentIdentifier WillSaveTextDocumentParams::textDocument( void ) const
 {
-    return TextDocumentIdentifier( operator[]( Identifier::textDocument ) );
+    return operator[]( Identifier::textDocument );
 }
 
 void WillSaveTextDocumentParams::validate( const Data& data )
