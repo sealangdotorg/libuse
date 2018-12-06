@@ -1963,7 +1963,7 @@ namespace libstdhl
 
                 u1 hasContext( void ) const;
 
-                void setContext( CompletionContext context );
+                void setContext( const CompletionContext& context );
 
                 static void validate( const Data& data );
             };

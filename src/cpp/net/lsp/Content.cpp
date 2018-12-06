@@ -3848,9 +3848,9 @@ u1 CompletionParams::hasContext( void ) const
     return find( Identifier::context ) != end();
 }
 
-void CompletionParams::setContext( CompletionContext context )
+void CompletionParams::setContext( const CompletionContext& context )
 {
-    operator[]( Identifier::context ) = context;
+    operator[]( Identifier::context ) = Data::from_cbor( Data::to_cbor( context ) );
 }
 
 void CompletionParams::validate( const Data& data )
