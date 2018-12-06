@@ -1459,7 +1459,7 @@ namespace libstdhl
             class DidChangeWatchedFilesRegistrationOptions : public Data
             {
               public:
-                DidChangeWatchedFilesRegistrationOptions( const FileSystemWatchers watchers );
+                DidChangeWatchedFilesRegistrationOptions( const FileSystemWatchers& watchers );
 
                 DidChangeWatchedFilesRegistrationOptions( const Data& data );
 
