@@ -1808,6 +1808,8 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            using TextDocumentContentChangeEvents = std::vector< TextDocumentContentChangeEvent >;
+
             class DidChangeTextDocumentParams : public Data
             {
               public:
@@ -1815,11 +1817,11 @@ namespace libstdhl
 
                 DidChangeTextDocumentParams(
                     const VersionedTextDocumentIdentifier& textDocument,
-                    const std::vector< TextDocumentContentChangeEvent >& contentChanges );
+                    const TextDocumentContentChangeEvents& contentChanges );
 
                 VersionedTextDocumentIdentifier textDocument( void ) const;
 
-                Data contentChanges( void ) const;
+                TextDocumentContentChangeEvents contentChanges( void ) const;
 
                 static void validate( const Data& data );
             };

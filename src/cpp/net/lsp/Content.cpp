@@ -3576,11 +3576,10 @@ DidChangeTextDocumentParams::DidChangeTextDocumentParams( const Data& data )
 
 DidChangeTextDocumentParams::DidChangeTextDocumentParams(
     const VersionedTextDocumentIdentifier& textDocument,
-    const std::vector< TextDocumentContentChangeEvent >& contentChanges )
+    const TextDocumentContentChangeEvents& contentChanges )
 : Data( Data::object() )
 {
-    operator[]( Identifier::textDocument ) =
-        Data::from_cbor( Data::to_cbor( Identifier::textDocument ) );
+    operator[]( Identifier::textDocument ) = Data::from_cbor( Data::to_cbor( textDocument ) );
     operator[]( Identifier::contentChanges ) = Data::array();
 
     for( auto contentChange : contentChanges )
@@ -3594,9 +3593,15 @@ VersionedTextDocumentIdentifier DidChangeTextDocumentParams::textDocument( void 
     return at( Identifier::textDocument );
 }
 
-Data DidChangeTextDocumentParams::contentChanges( void ) const
+TextDocumentContentChangeEvents DidChangeTextDocumentParams::contentChanges( void ) const
 {
-    return at( Identifier::contentChanges );
+    auto contentChanges = at( Identifier::contentChanges );
+    auto result = TextDocumentContentChangeEvents();
+    for( auto change : contentChanges )
+    {
+        result.emplace_back( change );
+    }
+    return result;
 }
 
 void DidChangeTextDocumentParams::validate( const Data& data )

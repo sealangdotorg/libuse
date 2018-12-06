@@ -383,6 +383,18 @@ TEST( libstdhl_cpp_network_lsp_content, TextDocumentContentChangeEvent )
     EXPECT_STREQ( event.text().c_str(), text.c_str() );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, DidChangeTextDocumentParams )
+{
+    auto events = TextDocumentContentChangeEvents();
+    events.push_back( TextDocumentContentChangeEvent( text ) );
+    auto params = DidChangeTextDocumentParams( VersionedTextDocumentIdentifier( uri, 1 ), events );
+    DidChangeTextDocumentParams p( params );
+    EXPECT_STREQ( params.dump().c_str(), p.dump().c_str() );
+    EXPECT_STREQ( params.textDocument().uri().toString().c_str(), uri.toString().c_str() );
+    EXPECT_STREQ( params.contentChanges()[ 0 ].text().c_str(), text.c_str() );
+    EXPECT_STREQ( params.textDocument().uri().toString().c_str(), uri.toString().c_str() );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( label );
