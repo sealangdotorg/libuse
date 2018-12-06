@@ -1650,11 +1650,11 @@ namespace libstdhl
                 WillSaveTextDocumentParams( const Data& data );
 
                 WillSaveTextDocumentParams(
-                    const TextDocumentIdentifier& textdocument, TextDocumentSaveReason reason );
+                    const TextDocumentIdentifier& textDocument, TextDocumentSaveReason reason );
 
                 TextDocumentSaveReason reason( void ) const;
 
-                TextDocumentIdentifier textdocument( void ) const;
+                TextDocumentIdentifier textDocument( void ) const;
 
                 static void validate( const Data& data );
             };

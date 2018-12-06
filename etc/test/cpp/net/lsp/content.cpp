@@ -395,6 +395,16 @@ TEST( libstdhl_cpp_network_lsp_content, DidChangeTextDocumentParams )
     EXPECT_STREQ( params.textDocument().uri().toString().c_str(), uri.toString().c_str() );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, WillSaveTextDocumentParams )
+{
+    auto params = WillSaveTextDocumentParams(
+        VersionedTextDocumentIdentifier( uri, 1 ), TextDocumentSaveReason::Manual );
+    WillSaveTextDocumentParams p( params );
+    EXPECT_STREQ( params.dump().c_str(), p.dump().c_str() );
+    EXPECT_STREQ( params.textDocument().uri().toString().c_str(), uri.toString().c_str() );
+    EXPECT_STREQ( params.textDocument().uri().toString().c_str(), uri.toString().c_str() );
+    EXPECT_EQ( params.reason(), TextDocumentSaveReason::Manual );
+}
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( label );
