@@ -3213,7 +3213,7 @@ void FileSystemWatcher::validate( const Data& data )
 //
 
 DidChangeWatchedFilesRegistrationOptions::DidChangeWatchedFilesRegistrationOptions(
-    const FileSystemWatchers watchers )
+    const FileSystemWatchers& watchers )
 : Data( Data::object() )
 {
     operator[]( Identifier::watchers ) = Data::array();
