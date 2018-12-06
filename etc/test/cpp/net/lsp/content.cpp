@@ -426,6 +426,13 @@ TEST( libstdhl_cpp_network_lsp_content, DidSaveTextDocumentParams )
     EXPECT_STREQ( params.textDocument().uri().toString().c_str(), uri.toString().c_str() );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, DidCloseTextDocumentParams )
+{
+    auto params = DidCloseTextDocumentParams( TextDocumentIdentifier( uri ) );
+    DidCloseTextDocumentParams p( params );
+    EXPECT_STREQ( params.textDocument().uri().toString().c_str(), uri.toString().c_str() );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( label );
