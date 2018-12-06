@@ -415,6 +415,17 @@ TEST( libstdhl_cpp_network_lsp_content, WillSaveWaitUntilResponse )
     EXPECT_STREQ( response.textEdit()[ 0 ].newText().c_str(), text.c_str() );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, DidSaveTextDocumentParams )
+{
+    auto params = DidSaveTextDocumentParams( TextDocumentIdentifier( uri ) );
+    DidSaveTextDocumentParams p( params );
+    EXPECT_FALSE( params.hasText() );
+    params.setText( text );
+    EXPECT_TRUE( params.hasText() );
+    EXPECT_STREQ( params.text().c_str(), text.c_str() );
+    EXPECT_STREQ( params.textDocument().uri().toString().c_str(), uri.toString().c_str() );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( label );

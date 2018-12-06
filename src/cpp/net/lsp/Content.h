@@ -1867,16 +1867,13 @@ namespace libstdhl
               public:
                 DidSaveTextDocumentParams( const Data& data );
 
-                DidSaveTextDocumentParams(
-                    const TextDocumentIdentifier& textDocumentID, const std::string& text );
-
-                DidSaveTextDocumentParams( const TextDocumentIdentifier& textDocumentID );
+                DidSaveTextDocumentParams( const TextDocumentIdentifier& textDocument );
 
                 u1 hasText( void ) const;
 
                 void setText( const std::string& text );
 
-                TextDocumentIdentifier textDocumentID( void ) const;
+                TextDocumentIdentifier textDocument( void ) const;
 
                 std::string text( void ) const;
 
