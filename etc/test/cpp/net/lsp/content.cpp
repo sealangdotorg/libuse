@@ -405,6 +405,16 @@ TEST( libstdhl_cpp_network_lsp_content, WillSaveTextDocumentParams )
     EXPECT_STREQ( params.textDocument().uri().toString().c_str(), uri.toString().c_str() );
     EXPECT_EQ( params.reason(), TextDocumentSaveReason::Manual );
 }
+
+TEST( libstdhl_cpp_network_lsp_content, WillSaveWaitUntilResponse )
+{
+    auto textEdits = TextEdits();
+    textEdits.push_back( TextEdit( range, text ) );
+    auto response = WillSaveWaitUntilResponse( textEdits );
+    WillSaveWaitUntilResponse r( response );
+    EXPECT_STREQ( response.textEdit()[ 0 ].newText().c_str(), text.c_str() );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( label );

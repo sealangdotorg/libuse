@@ -1848,6 +1848,8 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            using TextEdits = std::vector< TextEdit >;
+
             class WillSaveWaitUntilResponse : public Data
             {
               public:
@@ -1855,7 +1857,7 @@ namespace libstdhl
 
                 WillSaveWaitUntilResponse( const std::vector< TextEdit >& textEdit );
 
-                Data textEdit( void ) const;
+                TextEdits textEdit( void ) const;
 
                 static void validate( const Data& data );
             };
@@ -2024,8 +2026,6 @@ namespace libstdhl
             };
 
             using CommitCharacters = std::vector< std::string >;
-
-            using TextEdits = std::vector< TextEdit >;
 
             class CompletionItem : public Data
             {
