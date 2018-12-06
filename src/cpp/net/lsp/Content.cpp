@@ -3753,7 +3753,7 @@ void DidSaveTextDocumentParams::validate( const Data& data )
 DidCloseTextDocumentParams::DidCloseTextDocumentParams( const TextDocumentIdentifier& textDocument )
 : Data( Data::object() )
 {
-    operator[]( Identifier::textDocument ) = textDocument;
+    operator[]( Identifier::textDocument ) = Data::from_cbor( Data::to_cbor( textDocument ) );
 }
 
 DidCloseTextDocumentParams::DidCloseTextDocumentParams( const Data& data )
