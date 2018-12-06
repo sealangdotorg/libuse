@@ -1704,11 +1704,14 @@ namespace libstdhl
 
             class CompletionRegistrationOptions : public TextDocumentRegistrationOptions
             {
+              public:
                 CompletionRegistrationOptions( const Data& data );
+
+                CompletionRegistrationOptions( const DocumentSelector& documentSelector );
 
                 u1 hasTriggerCharacters( void ) const;
 
-                Data triggerCharacters( void ) const;
+                TriggerCharacters triggerCharacters( void ) const;
 
                 void addTriggerCharacter( const std::string& triggerCharacter );
 
