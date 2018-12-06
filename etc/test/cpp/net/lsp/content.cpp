@@ -334,7 +334,7 @@ TEST( libstdhl_cpp_network_lsp_content, SymbolInformation )
 TEST( libstdhl_cpp_network_lsp_content, WorkspaceSymbolResult )
 {
     auto info = SymbolInformation( name, SymbolKind::Array, location );
-    auto infos = SymbolInformationArray();
+    auto infos = SymbolInformations();
     infos.emplace_back( info );
     auto result = WorkspaceSymbolResult( infos );
     result.addSymbolInformation( info );

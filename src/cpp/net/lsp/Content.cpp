@@ -3364,7 +3364,7 @@ WorkspaceSymbolResult::WorkspaceSymbolResult( const Data& data )
     validate( data );
 }
 
-WorkspaceSymbolResult::WorkspaceSymbolResult( const SymbolInformationArray& symbolInformation )
+WorkspaceSymbolResult::WorkspaceSymbolResult( const SymbolInformations& symbolInformation )
 : Data( Data::object() )
 {
     operator[]( Identifier::symbolInformation ) = Data::array();
@@ -3380,10 +3380,10 @@ void WorkspaceSymbolResult::addSymbolInformation( const SymbolInformation& infor
     operator[]( Identifier::symbolInformation ).push_back( information );
 }
 
-SymbolInformationArray WorkspaceSymbolResult::symbolInformation( void ) const
+SymbolInformations WorkspaceSymbolResult::symbolInformation( void ) const
 {
     auto infos = operator[]( Identifier::symbolInformation );
-    auto result = SymbolInformationArray();
+    auto result = SymbolInformations();
 
     for( auto info : infos )
     {
