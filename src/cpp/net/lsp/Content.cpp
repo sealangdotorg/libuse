@@ -3710,17 +3710,10 @@ DidSaveTextDocumentParams::DidSaveTextDocumentParams( const Data& data )
     validate( data );
 }
 
-DidSaveTextDocumentParams::DidSaveTextDocumentParams(
-    const TextDocumentIdentifier& textDocumentID, const std::string& text )
+DidSaveTextDocumentParams::DidSaveTextDocumentParams( const TextDocumentIdentifier& textDocument )
 : Data( Data::object() )
 {
-    operator[]( Identifier::textDocument ) = textDocumentID;
-    operator[]( Identifier::text ) = text;
-}
-
-DidSaveTextDocumentParams::DidSaveTextDocumentParams( const TextDocumentIdentifier& textDocumentID )
-{
-    operator[]( Identifier::textDocument ) = textDocumentID;
+    operator[]( Identifier::textDocument ) = Data::from_cbor( Data::to_cbor( textDocument ) );
 }
 
 u1 DidSaveTextDocumentParams::hasText( void ) const
@@ -3733,7 +3726,7 @@ void DidSaveTextDocumentParams::setText( const std::string& text )
     operator[]( Identifier::text ) = text;
 }
 
-TextDocumentIdentifier DidSaveTextDocumentParams::textDocumentID( void ) const
+TextDocumentIdentifier DidSaveTextDocumentParams::textDocument( void ) const
 {
     return TextDocumentIdentifier( operator[]( Identifier::textDocument ) );
 }
