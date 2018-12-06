@@ -1938,13 +1938,15 @@ namespace libstdhl
               public:
                 CompletionContext( const Data& data );
 
-                CompletionContext( CompletionTriggerKind triggerkind );
+                CompletionContext( const CompletionTriggerKind triggerkind );
 
                 std::string triggerCharacter( void ) const;
 
-                void setTriggerCharacter( std::string triggerCharacter );
+                void setTriggerCharacter( const std::string& triggerCharacter );
 
                 u1 hasTriggerCharacter( void ) const;
+
+                CompletionTriggerKind triggerKind( void ) const;
 
                 static void validate( const Data& data );
             };
