@@ -461,6 +461,19 @@ TEST( libstdhl_cpp_network_lsp_content, CompletionContext )
     EXPECT_STREQ( context.triggerCharacter().c_str(), text.c_str() );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, CompletionParams )
+{
+    auto params = CompletionParams( TextDocumentIdentifier( uri ), Position( 1, 1 ) );
+    CompletionParams p( params );
+    EXPECT_FALSE( params.hasContext() );
+    params.setContext( CompletionContext( CompletionTriggerKind::Invoked ) );
+    EXPECT_TRUE( params.hasContext() );
+    EXPECT_EQ( params.context().triggerKind(), CompletionTriggerKind::Invoked );
+    EXPECT_STREQ(
+        params.textDocument().dump().c_str(), TextDocumentIdentifier( uri ).dump().c_str() );
+    EXPECT_STREQ( params.position().dump().c_str(), Position( 1, 1 ).dump().c_str() );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( label );
