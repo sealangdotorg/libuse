@@ -433,6 +433,23 @@ TEST( libstdhl_cpp_network_lsp_content, DidCloseTextDocumentParams )
     EXPECT_STREQ( params.textDocument().uri().toString().c_str(), uri.toString().c_str() );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, CompletionRegistrationOptions )
+{
+    auto filters = std::vector< DocumentFilter >();
+    filters.push_back( DocumentFilter() );
+    auto options = CompletionRegistrationOptions( DocumentSelector( filters ) );
+    CompletionRegistrationOptions o( options );
+    EXPECT_FALSE( options.hasTriggerCharacters() );
+    options.addTriggerCharacter( text );
+    EXPECT_TRUE( options.hasTriggerCharacters() );
+    EXPECT_STREQ( options.triggerCharacters()[ 0 ].c_str(), text.c_str() );
+
+    EXPECT_FALSE( options.hasResolveProvider() );
+    options.setResolveProvider( true );
+    EXPECT_TRUE( options.hasResolveProvider() );
+    EXPECT_TRUE( options.resolveProvider() );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( label );

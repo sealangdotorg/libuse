@@ -4183,14 +4183,27 @@ CompletionRegistrationOptions::CompletionRegistrationOptions( const Data& data )
     validate( data );
 }
 
+CompletionRegistrationOptions::CompletionRegistrationOptions(
+    const DocumentSelector& documentSelector )
+: TextDocumentRegistrationOptions( documentSelector )
+{
+    // leave empty, only call parent ctor
+}
+
 u1 CompletionRegistrationOptions::hasTriggerCharacters( void ) const
 {
     return find( Identifier::triggerCharacters ) != end();
 }
 
-Data CompletionRegistrationOptions::triggerCharacters( void ) const
+TriggerCharacters CompletionRegistrationOptions::triggerCharacters( void ) const
 {
-    return at( Identifier::triggerCharacters );
+    auto triggerCharacters = at( Identifier::triggerCharacters );
+    auto result = TriggerCharacters();
+    for( auto triggerCharacter : triggerCharacters )
+    {
+        result.push_back( triggerCharacter );
+    }
+    return result;
 }
 
 void CompletionRegistrationOptions::addTriggerCharacter( const std::string& triggerCharacter )
