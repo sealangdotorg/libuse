@@ -450,6 +450,17 @@ TEST( libstdhl_cpp_network_lsp_content, CompletionRegistrationOptions )
     EXPECT_TRUE( options.resolveProvider() );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, CompletionContext )
+{
+    auto context = CompletionContext( CompletionTriggerKind::Invoked );
+    CompletionContext c( context );
+    EXPECT_EQ( context.triggerKind(), CompletionTriggerKind::Invoked );
+    EXPECT_FALSE( context.hasTriggerCharacter() );
+    context.setTriggerCharacter( text );
+    EXPECT_TRUE( context.hasTriggerCharacter() );
+    EXPECT_STREQ( context.triggerCharacter().c_str(), text.c_str() );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( label );

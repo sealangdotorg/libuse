@@ -3786,7 +3786,7 @@ CompletionContext::CompletionContext( const Data& data )
     validate( data );
 }
 
-CompletionContext::CompletionContext( CompletionTriggerKind triggerkind )
+CompletionContext::CompletionContext( const CompletionTriggerKind triggerkind )
 : Data( Data::object() )
 {
     operator[]( Identifier::triggerKind ) = static_cast< std::size_t >( triggerkind );
@@ -3797,7 +3797,7 @@ std::string CompletionContext::triggerCharacter( void ) const
     return at( Identifier::triggerCharacter );
 }
 
-void CompletionContext::setTriggerCharacter( std::string triggerCharacter )
+void CompletionContext::setTriggerCharacter( const std::string& triggerCharacter )
 {
     operator[]( Identifier::triggerCharacter ) = triggerCharacter;
 }
@@ -3805,6 +3805,12 @@ void CompletionContext::setTriggerCharacter( std::string triggerCharacter )
 u1 CompletionContext::hasTriggerCharacter( void ) const
 {
     return find( Identifier::triggerCharacter ) != end();
+}
+
+CompletionTriggerKind CompletionContext::triggerKind( void ) const
+{
+    return static_cast< CompletionTriggerKind >( operator[]( Identifier::triggerKind )
+                                                     .get< std::size_t >() );
 }
 
 void CompletionContext::validate( const Data& data )
