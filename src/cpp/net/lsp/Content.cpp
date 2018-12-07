@@ -4292,9 +4292,16 @@ std::string MarkupContent::value( void ) const
 void MarkupContent::validate( const Data& data )
 {
     static const auto context = CONTENT + " MarkupContent:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::value, true );
-    Content::validatePropertyIsString( context, data, Identifier::kind, true );
+    if( data.is_object() )
+    {
+        Content::validateTypeIsObject( context, data );
+        Content::validatePropertyIsString( context, data, Identifier::value, true );
+        Content::validatePropertyIsString( context, data, Identifier::kind, true );
+    }
+    else if( data.is_string() )
+    {
+        Content::validateTypeIsString( context, data );
+    }
 }
 
 //
