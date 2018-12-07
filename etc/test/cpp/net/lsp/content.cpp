@@ -44,6 +44,8 @@
 
 #include <libstdhl/net/lsp/LSP>
 
+#include <libstdhl/net/lsp/Identifier>
+
 using namespace libstdhl;
 using namespace Network;
 using namespace LSP;
@@ -472,6 +474,17 @@ TEST( libstdhl_cpp_network_lsp_content, CompletionParams )
     EXPECT_STREQ(
         params.textDocument().dump().c_str(), TextDocumentIdentifier( uri ).dump().c_str() );
     EXPECT_STREQ( params.position().dump().c_str(), Position( 1, 1 ).dump().c_str() );
+}
+
+TEST( libstdhl_cpp_network_lsp_content, MarkupContent )
+{
+    auto mc = MarkupContent( text );
+    auto content = MarkupContent( MarkupKind::MARKDOWN, text );
+    MarkupContent m( mc );
+    MarkupContent c( content );
+    EXPECT_STREQ( mc.value().c_str(), text.c_str() );
+    EXPECT_STREQ( mc.kind().c_str(), Identifier::plaintext );
+    EXPECT_STREQ( content.kind().c_str(), Identifier::markdown );
 }
 
 TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
