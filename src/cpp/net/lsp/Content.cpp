@@ -4249,25 +4249,6 @@ void CompletionRegistrationOptions::validate( const Data& data )
 // MarkupContent
 //
 
-std::string markupKind_toStr( MarkupKind kind )
-{
-    switch( kind )
-    {
-        case MarkupKind::PLAINTEXT:
-        {
-            return Identifier::plaintext;
-            break;
-        }
-        case MarkupKind::MARKDOWN:
-        {
-            return Identifier::markdown;
-            break;
-        }
-        default:
-            return Identifier::plaintext;
-    }
-}
-
 MarkupContent::MarkupContent( const Data& data )
 : Data( data )
 {
@@ -4277,15 +4258,25 @@ MarkupContent::MarkupContent( const Data& data )
 MarkupContent::MarkupContent( const MarkupKind kind, const std::string& value )
 : Data( Data::object() )
 {
-    operator[]( Identifier::kind ) = markupKind_toStr( kind );
+    switch( kind )
+    {
+        case MarkupKind::PLAINTEXT:
+        {
+            operator[]( Identifier::kind ) = std::string( Identifier::plaintext );
+            break;
+        }
+        case MarkupKind::MARKDOWN:
+        {
+            operator[]( Identifier::kind ) = std::string( Identifier::markdown );
+            break;
+        }
+    }
     operator[]( Identifier::value ) = value;
 }
 
 MarkupContent::MarkupContent( const std::string& value )
-: Data( Data::object() )
+: MarkupContent( MarkupKind::PLAINTEXT, value )
 {
-    operator[]( Identifier::kind ) = markupKind_toStr( MarkupKind::PLAINTEXT );
-    operator[]( Identifier::value ) = value;
 }
 
 std::string MarkupContent::kind( void ) const

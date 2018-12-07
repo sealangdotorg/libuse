@@ -1785,8 +1785,6 @@ namespace libstdhl
                 MARKDOWN
             };
 
-            std::string MarkupKind_toStr( MarkupKind kind );
-
             class MarkupContent : public Data
             {
               public:
