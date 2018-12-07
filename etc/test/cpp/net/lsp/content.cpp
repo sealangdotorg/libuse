@@ -491,7 +491,12 @@ TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
 {
     CompletionItem obj( label );
     EXPECT_STREQ( obj.label().c_str(), label.c_str() );
-
+    Data data = Data::object();
+    data[ Identifier::label ] = label;
+    data[ Identifier::documentation ] = text;
+    CompletionItem item( data );
+    CompletionItem test( label );
+    test.setDocumentation( name );
     EXPECT_FALSE( obj.hasKind() );
     obj.setKind( CompletionItemKind::Text );
     EXPECT_EQ( obj.kind(), CompletionItemKind::Text );
