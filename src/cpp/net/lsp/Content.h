@@ -2151,6 +2151,8 @@ namespace libstdhl
 
                 ParameterInformation( const std::string& label );
 
+                std::string label( void ) const;
+
                 MarkupContent documentation( void ) const;
 
                 u1 hasDocumentation( void ) const;

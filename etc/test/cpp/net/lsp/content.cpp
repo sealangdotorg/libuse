@@ -585,6 +585,16 @@ TEST( libstdhl_cpp_network_lsp_content, CompletionList )
     EXPECT_STREQ( list.items()[ 0 ].label().c_str(), label.c_str() );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, ParameterInformation )
+{
+    auto information = ParameterInformation( label );
+    ParameterInformation i( information );
+    EXPECT_FALSE( information.hasDocumentation() );
+    information.setDocumentation( text );
+    EXPECT_TRUE( information.hasDocumentation() );
+    EXPECT_STREQ( information.label().c_str(), label.c_str() );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, SignatureHelp )
 {
     auto signatures = SignatureInformations();
