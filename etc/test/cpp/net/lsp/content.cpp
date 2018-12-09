@@ -575,6 +575,16 @@ TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
     EXPECT_TRUE( obj.hasData() );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, CompletionList )
+{
+    auto items = CompletionItems();
+    items.emplace_back( CompletionItem( label ) );
+    auto list = CompletionList( true, items );
+    CompletionList l( list );
+    EXPECT_TRUE( list.isIncomplete() );
+    EXPECT_STREQ( list.items()[ 0 ].label().c_str(), label.c_str() );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, SignatureHelp )
 {
     auto signatures = SignatureInformations();

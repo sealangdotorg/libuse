@@ -4150,7 +4150,7 @@ CompletionList::CompletionList( const Data& data )
     validate( data );
 }
 
-CompletionList::CompletionList( const u1 isIncomplete, const std::vector< CompletionItem >& items )
+CompletionList::CompletionList( const u1 isIncomplete, const CompletionItems& items )
 : Data( Data::object() )
 {
     operator[]( Identifier::isIncomplete ) = isIncomplete;
@@ -4161,9 +4161,14 @@ CompletionList::CompletionList( const u1 isIncomplete, const std::vector< Comple
     }
 }
 
-Data CompletionList::items( void ) const
+CompletionItems CompletionList::items( void ) const
 {
-    return operator[]( Identifier::items );
+    auto result = CompletionItems();
+    for( auto item : operator[]( Identifier::items ) )
+    {
+        result.emplace_back( item );
+    }
+    return result;
 }
 
 u1 CompletionList::isIncomplete( void ) const
