@@ -280,7 +280,8 @@ namespace libstdhl
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_references
                 // client to server request
                 // TODO: FIXME: @ppaulweber: provide interface @Clasc
-
+                virtual ReferenceResult textDocument_references(
+                    const ReferenceParams& params ) = 0;
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_documentHighlight
                 // client to server request
                 // TODO: FIXME: @ppaulweber: provide interface @Clasc

@@ -4643,6 +4643,98 @@ void TypeDefinitionResult::validate( const Data& data )
 
 //
 //
+// ReferenceContext
+//
+
+ReferenceContext::ReferenceContext( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+ReferenceContext::ReferenceContext( const u1 includeDeclaration )
+: Data( Data::object() )
+{
+    operator[]( Identifier::includeDeclaration ) = includeDeclaration;
+}
+
+u1 ReferenceContext::includeDeclaration( void ) const
+{
+    return operator[]( Identifier::includeDeclaration ).get< u1 >();
+}
+
+void ReferenceContext::validate( const Data& data )
+{
+    static const auto context = CONTENT + " ReferenceContext:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsBoolean( context, data, Identifier::includeDeclaration, true );
+}
+
+//
+//
+// ReferenceParams
+//
+ReferenceParams::ReferenceParams( const Data& data )
+: TextDocumentPositionParams( data )
+{
+    validate( data );
+}
+
+ReferenceParams::ReferenceParams(
+    const TextDocumentIdentifier& textDocument,
+    const Position& position,
+    const ReferenceContext& context )
+: TextDocumentPositionParams( textDocument, position )
+{
+    operator[]( Identifier::context ) = Data::from_cbor( Data::to_cbor( context ) );
+}
+
+ReferenceContext ReferenceParams::context( void ) const
+{
+    return operator[]( Identifier::context );
+}
+
+void ReferenceParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " ReferenceParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< ReferenceContext >( context, data, Identifier::context, true );
+}
+
+//
+//
+// ReferenceResult
+//
+ReferenceResult::ReferenceResult( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+ReferenceResult::ReferenceResult( const Locations& locations )
+: Data( Data::array() )
+{
+    for( auto location : locations )
+    {
+        push_back( location );
+    }
+}
+
+void ReferenceResult::validate( const Data& data )
+{
+    static const auto context = CONTENT + " ReferenceResult:";
+    if( data.is_null() )
+    {
+        // ok, do nothing
+    }
+    else
+    {
+        Content::validateTypeIsArrayOf< Location >( context, data );
+    }
+}
+
+//
+//
 // CodeActionContext
 //
 

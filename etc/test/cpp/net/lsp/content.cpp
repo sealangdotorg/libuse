@@ -634,6 +634,28 @@ TEST( libstdhl_cpp_network_lsp_content, TypeDefinitionResult )
     TypeDefinitionResult tdr( typeDefinitionResult );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, ReferenceContext )
+{
+    auto context = ReferenceContext( true );
+    EXPECT_TRUE( context.includeDeclaration() );
+    ReferenceContext c( context );
+}
+
+TEST( libstdhl_cpp_network_lsp_content, ReferenceParams )
+{
+    auto uri = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
+    auto pos = Position( 1, 1 );
+    auto params = ReferenceParams( uri, pos, ReferenceContext( true ) );
+    ReferenceParams p( params );
+    EXPECT_TRUE( params.context().includeDeclaration() );
+}
+TEST( libstdhl_cpp_network_lsp_content, ReferenceResult )
+{
+    auto result = ReferenceResult( Data() );
+    auto locations = Locations{ location, location, location };
+    auto refResult = ReferenceResult( locations );
+    ReferenceResult r( refResult );
+}
 //
 //  Local variables:
 //  mode: c++
