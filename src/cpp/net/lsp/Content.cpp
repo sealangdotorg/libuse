@@ -4360,6 +4360,11 @@ SignatureInformation::SignatureInformation( const std::string& label )
     operator[]( Identifier::label ) = label;
 }
 
+std::string SignatureInformation::label( void ) const
+{
+    return operator[]( Identifier::label ).get< std::string >();
+}
+
 MarkupContent SignatureInformation::documentation( void ) const
 {
     return MarkupContent( at( Identifier::documentation ) );
@@ -4372,7 +4377,7 @@ u1 SignatureInformation::hasDocumentation( void ) const
 
 void SignatureInformation::setDocumentation( const MarkupContent& doc )
 {
-    operator[]( Identifier::documentation ) = doc;
+    operator[]( Identifier::documentation ) = Data::from_cbor( Data::to_cbor( doc ) );
 }
 
 u1 SignatureInformation::hasParameters( void ) const
@@ -4416,7 +4421,7 @@ SignatureHelp::SignatureHelp( const Data& data )
     validate( data );
 }
 
-SignatureHelp::SignatureHelp( const std::vector< SignatureInformation >& signatures )
+SignatureHelp::SignatureHelp( const SignatureInformations& signatures )
 : Data( Data::object() )
 {
     operator[]( Identifier::signatures ) = Data::array();
@@ -4426,9 +4431,14 @@ SignatureHelp::SignatureHelp( const std::vector< SignatureInformation >& signatu
     }
 }
 
-Data SignatureHelp::signatures( void ) const
+SignatureInformations SignatureHelp::signatures( void ) const
 {
-    return operator[]( Identifier::signatures );
+    auto result = SignatureInformations();
+    for( auto information : operator[]( Identifier::signatures ) )
+    {
+        result.emplace_back( information );
+    }
+    return result;
 }
 
 u1 SignatureHelp::hasActiveSignature( void ) const

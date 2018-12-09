@@ -575,6 +575,23 @@ TEST( libstdhl_cpp_network_lsp_content, CompletionItem )
     EXPECT_TRUE( obj.hasData() );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, SignatureHelp )
+{
+    auto signatures = SignatureInformations();
+    signatures.emplace_back( SignatureInformation( label ) );
+    auto help = SignatureHelp( signatures );
+    SignatureHelp h( help );
+    EXPECT_STREQ( help.signatures()[ 0 ].label().c_str(), label.c_str() );
+    EXPECT_FALSE( help.hasActiveSignature() );
+    help.setActiveSignature( 1 );
+    EXPECT_TRUE( help.hasActiveSignature() );
+    EXPECT_EQ( help.activeSignature(), 1 );
+    EXPECT_FALSE( help.hasActiveParameter() );
+    help.setActiveParameter( 1 );
+    EXPECT_TRUE( help.hasActiveParameter() );
+    EXPECT_EQ( help.activeParameter(), 1 );
+}
+
 //
 //  Local variables:
 //  mode: c++
