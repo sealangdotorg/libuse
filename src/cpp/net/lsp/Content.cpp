@@ -4601,6 +4601,7 @@ void SignatureHelpRegistrationOptions::validate( const Data& data )
 //
 
 TypeDefinitionResult::TypeDefinitionResult( const Data& data )
+: Data( data )
 {
     validate( data );
 }
