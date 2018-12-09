@@ -4597,6 +4597,52 @@ void SignatureHelpRegistrationOptions::validate( const Data& data )
 
 //
 //
+// TypeDefinitionResult
+//
+
+TypeDefinitionResult::TypeDefinitionResult( const Data& data )
+{
+    validate( data );
+}
+
+TypeDefinitionResult::TypeDefinitionResult( const Locations locations )
+: Data( Data::array() )
+{
+    for( auto location : locations )
+    {
+        push_back( location );
+    }
+}
+
+TypeDefinitionResult::TypeDefinitionResult( const Location location )
+{
+    *this = Data::from_cbor( Data::to_cbor( location ) );
+}
+
+void TypeDefinitionResult::validate( const Data& data )
+{
+    static const auto context = CONTENT + " TypeDefinitionResult:";
+
+    if( data.is_null() )
+    {
+        // ok, do nothing
+    }
+    else
+    {
+        if( data.is_array() )
+        {
+            Content::validateTypeIsArrayOf< Location >( context, data );
+        }
+        else
+        {
+            Content::validateTypeIsObject( context, data );
+            Location::validate( data );
+        }
+    }
+}
+
+//
+//
 // CodeActionContext
 //
 

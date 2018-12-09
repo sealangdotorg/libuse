@@ -169,6 +169,10 @@ class TestInterface final : public ServerInterface
     {
         return CodeLensResult();
     }
+    TypeDefinitionResult textDocument_typeDefinition( const TypeDefinitionParams& params ) override
+    {
+        return TypeDefinitionResult( Data() );
+    }
 };
 
 TEST( libstdhl_cpp_network_lsp, parse_packet_request_initialize_monaco )
@@ -536,6 +540,16 @@ TEST( libstdhl_cpp_network_lsp, completionItem_resolve )
     auto document = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto params = CompletionParams( document, Position( 1, 10 ) );
     auto result = server.completionItem_resolve( params );
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
+
+TEST( libstdhl_cpp_network_lsp, textDocument_typeDefinition )
+{
+    TestInterface server;
+    auto result = server.textDocument_typeDefinition( TextDocumentPositionParams(
+        TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) ), Position( 1, 1 ) ) );
     server.flush( [&]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
