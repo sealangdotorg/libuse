@@ -173,6 +173,12 @@ class TestInterface final : public ServerInterface
     {
         return TypeDefinitionResult( Data() );
     }
+
+    TextDocumentImplementationResult textDocument_implementation(
+        const TextDocumentImplementationParams& params ) override
+    {
+        return TextDocumentImplementationResult( Data() );
+    }
 };
 
 TEST( libstdhl_cpp_network_lsp, parse_packet_request_initialize_monaco )
@@ -554,7 +560,15 @@ TEST( libstdhl_cpp_network_lsp, textDocument_typeDefinition )
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
-
+TEST( libstdhl_cpp_network_lsp, textDocument_implementation )
+{
+    TestInterface server;
+    auto result = server.textDocument_implementation( TextDocumentPositionParams(
+        TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) ), Position( 1, 1 ) ) );
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
 //
 //  Local variables:
 //  mode: c++
