@@ -213,6 +213,8 @@ namespace libstdhl
 
                 constexpr const char* id = "id";
 
+                constexpr const char* includeDeclaration = "includeDeclaration";
+
                 constexpr const char* includeText = "includeText";
 
                 constexpr const char* initializationOptions = "initializationOptions";

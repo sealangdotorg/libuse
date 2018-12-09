@@ -2045,6 +2045,42 @@ namespace libstdhl
 
             using TextDocumentImplementationParams = TextDocumentPositionParams;
 
+            class ReferenceContext : public Data
+            {
+              public:
+                ReferenceContext( const Data& data );
+
+                ReferenceContext( const u1 includeDeclaration );
+
+                u1 includeDeclaration( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class ReferenceParams : public TextDocumentPositionParams
+            {
+              public:
+                ReferenceParams( const Data& data );
+
+                ReferenceParams(
+                    const TextDocumentIdentifier& textDocument,
+                    const Position& position,
+                    const ReferenceContext& context );
+
+                ReferenceContext context( void ) const;
+
+                static void validate( const Data& data );
+            };
+            class ReferenceResult : public Data
+            {
+              public:
+                ReferenceResult( const Data& data );
+
+                ReferenceResult( const Locations& locations );
+
+                static void validate( const Data& data );
+            };
+
             class CodeActionContext : public Data
             {
               public:
