@@ -2214,6 +2214,22 @@ namespace libstdhl
 
             using SignatureHelpResult = SignatureHelp;
 
+            using TypeDefinitionParams = TextDocumentPositionParams;
+
+            using Locations = std::vector< Location >;
+
+            class TypeDefinitionResult : public Data
+            {
+              public:
+                TypeDefinitionResult( const Data& data );
+
+                TypeDefinitionResult( const Locations locations );
+
+                TypeDefinitionResult( const Location location );
+
+                static void validate( const Data& data );
+            };
+
             class CodeActionContext : public Data
             {
               public:

@@ -268,6 +268,8 @@ namespace libstdhl
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_typeDefinition
                 // client to server request
                 // TODO: FIXME: @ppaulweber: provide interface @Clasc
+                virtual TypeDefinitionResult textDocument_typeDefinition(
+                    const TypeDefinitionParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_implementation
                 // client to server request

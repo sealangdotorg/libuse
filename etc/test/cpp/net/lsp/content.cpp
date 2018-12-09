@@ -625,6 +625,15 @@ TEST( libstdhl_cpp_network_lsp_content, SignatureHelp )
     EXPECT_EQ( help.activeParameter(), 1 );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, TypeDefinitionResult )
+{
+    auto result = TypeDefinitionResult( Data() );
+    auto r = TypeDefinitionResult( Location( uri, range ) );
+    auto locations = Locations{ location, location, location };
+    auto typeDefinitionResult = TypeDefinitionResult( locations );
+    TypeDefinitionResult tdr( typeDefinitionResult );
+}
+
 //
 //  Local variables:
 //  mode: c++
