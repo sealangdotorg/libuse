@@ -2041,6 +2041,10 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            using TextDocumentImplementationResult = TypeDefinitionResult;
+
+            using TextDocumentImplementationParams = TextDocumentPositionParams;
+
             class CodeActionContext : public Data
             {
               public:
