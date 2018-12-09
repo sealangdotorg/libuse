@@ -1973,6 +1973,7 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            using ParameterInformations = std::vector< ParameterInformation >;
             class SignatureInformation : public Data
             {
               public:
@@ -1990,9 +1991,9 @@ namespace libstdhl
 
                 u1 hasParameters( void ) const;
 
-                Data parameters( void ) const;
+                ParameterInformations parameters( void ) const;
 
-                void setParameters( const std::vector< ParameterInformation >& parameters );
+                void setParameters( const ParameterInformations& parameters );
 
                 static void validate( const Data& data );
             };
