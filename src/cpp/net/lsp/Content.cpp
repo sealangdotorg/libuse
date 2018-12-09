@@ -4325,6 +4325,11 @@ ParameterInformation::ParameterInformation( const std::string& label )
     operator[]( Identifier::label ) = label;
 }
 
+std::string ParameterInformation::label( void ) const
+{
+    return operator[]( Identifier::label ).get< std::string >();
+}
+
 MarkupContent ParameterInformation::documentation( void ) const
 {
     return MarkupContent( at( Identifier::documentation ) );
@@ -4337,7 +4342,7 @@ u1 ParameterInformation::hasDocumentation( void ) const
 
 void ParameterInformation::setDocumentation( const MarkupContent& doc )
 {
-    operator[]( Identifier::documentation ) = doc;
+    operator[]( Identifier::documentation ) = Data::from_cbor( Data::to_cbor( doc ) );
 }
 
 void ParameterInformation::validate( const Data& data )
