@@ -2166,6 +2166,8 @@ namespace libstdhl
 
                 SignatureInformation( const std::string& label );
 
+                std::string label( void ) const;
+
                 MarkupContent documentation( void ) const;
 
                 u1 hasDocumentation( void ) const;
@@ -2181,14 +2183,15 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            using SignatureInformations = std::vector< SignatureInformation >;
             class SignatureHelp : public Data
             {
               public:
                 SignatureHelp( const Data& data );
 
-                SignatureHelp( const std::vector< SignatureInformation >& signatures );
+                SignatureHelp( const SignatureInformations& signatures );
 
-                Data signatures( void ) const;
+                SignatureInformations signatures( void ) const;
 
                 u1 hasActiveSignature( void ) const;
 
