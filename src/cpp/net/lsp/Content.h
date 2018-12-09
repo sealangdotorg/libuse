@@ -1934,14 +1934,15 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            using CompletionItems = std::vector< CompletionItem >;
             class CompletionList : public Data
             {
               public:
                 CompletionList( const Data& data );
 
-                CompletionList( const u1 isIncomplete, const std::vector< CompletionItem >& items );
+                CompletionList( const u1 isIncomplete, const CompletionItems& items );
 
-                Data items( void ) const;
+                CompletionItems items( void ) const;
 
                 u1 isIncomplete( void ) const;
 
