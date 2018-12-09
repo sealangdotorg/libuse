@@ -4395,12 +4395,17 @@ u1 SignatureInformation::hasParameters( void ) const
     return find( Identifier::parameters ) != end();
 }
 
-Data SignatureInformation::parameters( void ) const
+ParameterInformations SignatureInformation::parameters( void ) const
 {
-    return at( Identifier::parameters );
+    auto result = ParameterInformations();
+    for( auto parameter : at( Identifier::parameters ) )
+    {
+        result.emplace_back( parameter );
+    }
+    return result;
 }
 
-void SignatureInformation::setParameters( const std::vector< ParameterInformation >& parameters )
+void SignatureInformation::setParameters( const ParameterInformations& parameters )
 {
     operator[]( Identifier::parameters ) = Data::array();
 
