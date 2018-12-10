@@ -5165,6 +5165,58 @@ void DocumentSymbolParams::validate( const Data& data )
     Content::validatePropertyIs< TextDocumentIdentifier >(
         context, data, Identifier::textDocument, true );
 }
+
+//
+//
+// DocumentSymbolResult
+//
+
+DocumentSymbolResult::DocumentSymbolResult( void )
+: Data()
+{
+}
+
+DocumentSymbolResult::DocumentSymbolResult( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+DocumentSymbolResult::DocumentSymbolResult( const DocumentSymbols& symbols )
+: Data( Data::array() )
+{
+    push_back( symbols );
+}
+
+DocumentSymbolResult::DocumentSymbolResult( const SymbolInformations& information )
+: Data( Data::array() )
+{
+    push_back( information );
+}
+
+void DocumentSymbolResult::validate( const Data& data )
+{
+    static const auto context = CONTENT + " DocumentSymbolResult:";
+    if( data.is_null() )
+    {
+    }
+    else
+    {
+        Content::validateTypeIsArray( context, data );
+        for( auto element : data )
+        {
+            try
+            {
+                DocumentSymbol::validate( element );
+            }
+            catch( std::invalid_argument a )
+            {
+                SymbolInformation::validate( element );
+            }
+        }
+    }
+}
+
 //
 //
 // DocumentSymbol

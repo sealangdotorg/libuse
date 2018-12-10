@@ -2292,6 +2292,8 @@ namespace libstdhl
             class DocumentSymbolResult : public Data
             {
               public:
+                DocumentSymbolResult( void );
+
                 DocumentSymbolResult( const Data& data );
 
                 DocumentSymbolResult( const DocumentSymbols& symbols );

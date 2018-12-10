@@ -709,6 +709,19 @@ TEST( libstdhl_cpp_network_lsp_content, DocumentSymbol )
     EXPECT_TRUE( symbol.hasDeprecated() );
     EXPECT_TRUE( symbol.deprecated() );
 }
+
+TEST( libstdhl_cpp_network_lsp_content, DocumentSymbolResult )
+{
+    auto result = DocumentSymbolResult( DocumentSymbols() );
+    auto res = DocumentSymbolResult( SymbolInformations() );
+    auto data = Data::array();
+    data.push_back( SymbolInformation( name, SymbolKind::Array, location ) );
+    auto array = DocumentSymbolResult( data );
+    DocumentSymbolResult r( result );
+    DocumentSymbolResult obj( res );
+    DocumentSymbolResult();
+}
+
 //
 //  Local variables:
 //  mode: c++
