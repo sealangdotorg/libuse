@@ -2422,6 +2422,74 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            class DocumentSymbolParams : public Data
+            {
+              public:
+                DocumentSymbolParams( const TextDocumentIdentifier& textDocument );
+
+                DocumentSymbolParams( const Data& data );
+
+                TextDocumentIdentifier textDocument( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class DocumentSymbol;
+
+            using DocumentSymbols = std::vector< DocumentSymbol >;
+
+            class DocumentSymbol : public Data
+            {
+              public:
+                DocumentSymbol( const Data& data );
+
+                DocumentSymbol(
+                    const std::string& name,
+                    const SymbolKind kind,
+                    Range range,
+                    Range selectionRange );
+
+                std::string name( void ) const;
+
+                SymbolKind kind( void ) const;
+
+                Range range( void ) const;
+
+                Range selectionRange( void ) const;
+
+                u1 hasDetail( void ) const;
+
+                void setDetail( const std::string& detail );
+
+                std::string detail( void ) const;
+
+                u1 hasDeprecated( void ) const;
+
+                u1 deprecated( void ) const;
+
+                void setDeprecated( const u1 deprecated );
+
+                u1 hasChildren( void ) const;
+
+                DocumentSymbols children( void ) const;
+
+                void addChild( const DocumentSymbol& symbol );
+
+                static void validate( const Data& data );
+            };
+
+            class DocumentSymbolResult : public Data
+            {
+              public:
+                DocumentSymbolResult( const Data& data );
+
+                DocumentSymbolResult( const DocumentSymbols& symbols );
+
+                DocumentSymbolResult( const SymbolInformations& information );
+
+                static void validate( const Data& data );
+            };
+
             class CodeLensParams : public Data
             {
               public:
