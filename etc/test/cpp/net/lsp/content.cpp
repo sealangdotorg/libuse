@@ -632,6 +632,7 @@ TEST( libstdhl_cpp_network_lsp_content, TypeDefinitionResult )
     EXPECT_STREQ( r[ Identifier::uri ].get< std::string >().c_str(), uri.toString().c_str() );
     auto locations = Locations{ location, location, location };
     auto typeDefinitionResult = TypeDefinitionResult( locations );
+    auto res = TypeDefinitionResult( typeDefinitionResult );
     EXPECT_STREQ(
         typeDefinitionResult[ 0 ][ Identifier::uri ].get< std::string >().c_str(),
         uri.toString().c_str() );
