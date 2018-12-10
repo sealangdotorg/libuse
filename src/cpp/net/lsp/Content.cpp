@@ -5138,6 +5138,143 @@ void DocumentHighlightResult::validate( const Data& data )
 
 //
 //
+// DocumentSymbolParams
+//
+
+DocumentSymbolParams::DocumentSymbolParams( const TextDocumentIdentifier& textDocument )
+: Data( Data::object() )
+{
+    operator[]( Identifier::textDocument ) = Data::from_cbor( Data::to_cbor( textDocument ) );
+}
+
+DocumentSymbolParams::DocumentSymbolParams( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+TextDocumentIdentifier DocumentSymbolParams::textDocument( void ) const
+{
+    return operator[]( Identifier::textDocument );
+}
+
+void DocumentSymbolParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " DocumentSymbolParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< TextDocumentIdentifier >(
+        context, data, Identifier::textDocument, true );
+}
+//
+//
+// DocumentSymbol
+//
+DocumentSymbol::DocumentSymbol( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+DocumentSymbol::DocumentSymbol(
+    const std::string& name, const SymbolKind kind, Range range, Range selectionRange )
+: Data( Data::object() )
+{
+    operator[]( Identifier::name ) = name;
+    operator[]( Identifier::kind ) = static_cast< std::size_t >( kind );
+    operator[]( Identifier::range ) = Data::from_cbor( Data::to_cbor( range ) );
+    operator[]( Identifier::selectionRange ) = Data::from_cbor( Data::to_cbor( selectionRange ) );
+}
+
+std::string DocumentSymbol::name( void ) const
+{
+    return operator[]( Identifier::name ).get< std::string >();
+}
+
+SymbolKind DocumentSymbol::kind( void ) const
+{
+    return static_cast< SymbolKind >( operator[]( Identifier::kind ).get< std::size_t >() );
+}
+
+Range DocumentSymbol::range( void ) const
+{
+    return operator[]( Identifier::range );
+}
+
+Range DocumentSymbol::selectionRange( void ) const
+{
+    return operator[]( Identifier::selectionRange );
+}
+
+u1 DocumentSymbol::hasDetail( void ) const
+{
+    return find( Identifier::detail ) != end();
+}
+
+void DocumentSymbol::setDetail( const std::string& detail )
+{
+    operator[]( Identifier::detail ) = detail;
+}
+
+std::string DocumentSymbol::detail( void ) const
+{
+    return at( Identifier::detail ).get< std::string >();
+}
+
+u1 DocumentSymbol::hasDeprecated( void ) const
+{
+    return find( Identifier::deprecated ) != end();
+}
+
+u1 DocumentSymbol::deprecated( void ) const
+{
+    return at( Identifier::deprecated ).get< u1 >();
+}
+
+void DocumentSymbol::setDeprecated( const u1 deprecated )
+{
+    operator[]( Identifier::deprecated ) = deprecated;
+}
+
+u1 DocumentSymbol::hasChildren( void ) const
+{
+    return find( Identifier::children ) != end();
+}
+
+DocumentSymbols DocumentSymbol::children( void ) const
+{
+    auto result = DocumentSymbols();
+    for( auto symbol : at( Identifier::children ) )
+    {
+        result.emplace_back( symbol );
+    }
+    return result;
+}
+
+void DocumentSymbol::addChild( const DocumentSymbol& symbol )
+{
+    if( not hasChildren() )
+    {
+        operator[]( Identifier::children ) = Data::array();
+    }
+    operator[]( Identifier::children ).push_back( symbol );
+}
+
+void DocumentSymbol::validate( const Data& data )
+{
+    static const auto context = CONTENT + "DocumentSymbol:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< Range >( context, data, Identifier::range, true );
+    Content::validatePropertyIs< Range >( context, data, Identifier::selectionRange, true );
+    Content::validatePropertyIsString( context, data, Identifier::name, true );
+    Content::validatePropertyIsNumber( context, data, Identifier::kind, true );
+    Content::validatePropertyIsArrayOf< DocumentSymbol >(
+        context, data, Identifier::children, false );
+    Content::validatePropertyIsString( context, data, Identifier::detail, false );
+    Content::validatePropertyIsBoolean( context, data, Identifier::deprecated, false );
+}
+
+//
+//
 // CodeLensParams
 //
 

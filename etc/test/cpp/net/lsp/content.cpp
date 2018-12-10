@@ -677,6 +677,38 @@ TEST( libstdhl_cpp_network_lsp_content, DocumentHighlightResult )
     auto result = DocumentHighlightResult( null );
     auto res = DocumentHighlightResult( DocumentHighlights() );
 }
+
+TEST( libstdhl_cpp_network_lsp_content, DocumentSymbolParams )
+{
+    auto params = DocumentSymbolParams( TextDocumentIdentifier( uri ) );
+    DocumentSymbolParams p( params );
+    EXPECT_STREQ( params.textDocument().uri().toString().c_str(), uri.toString().c_str() );
+}
+
+TEST( libstdhl_cpp_network_lsp_content, DocumentSymbol )
+{
+    auto symbol = DocumentSymbol( name, SymbolKind::Array, range, range );
+    DocumentSymbol s( symbol );
+    EXPECT_STREQ( symbol.name().c_str(), name.c_str() );
+    EXPECT_EQ( symbol.kind(), SymbolKind::Array );
+    EXPECT_STREQ( symbol.range().dump().c_str(), range.dump().c_str() );
+    EXPECT_STREQ( symbol.selectionRange().dump().c_str(), range.dump().c_str() );
+
+    EXPECT_FALSE( symbol.hasDetail() );
+    symbol.setDetail( text );
+    EXPECT_TRUE( symbol.hasDetail() );
+    EXPECT_STREQ( symbol.detail().c_str(), text.c_str() );
+
+    EXPECT_FALSE( symbol.hasChildren() );
+    symbol.addChild( symbol );
+    EXPECT_TRUE( symbol.hasChildren() );
+    EXPECT_STREQ( symbol.children()[ 0 ].name().c_str(), name.c_str() );
+
+    EXPECT_FALSE( symbol.hasDeprecated() );
+    symbol.setDeprecated( true );
+    EXPECT_TRUE( symbol.hasDeprecated() );
+    EXPECT_TRUE( symbol.deprecated() );
+}
 //
 //  Local variables:
 //  mode: c++

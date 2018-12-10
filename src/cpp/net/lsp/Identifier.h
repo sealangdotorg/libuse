@@ -89,6 +89,8 @@ namespace libstdhl
 
                 constexpr const char* character = "character";
 
+                constexpr const char* children = "children";
+
                 constexpr const char* client_registerCapability = "client/registerCapability";
 
                 constexpr const char* client_unregisterCapability = "client/unregisterCapability";
@@ -335,6 +337,8 @@ namespace libstdhl
                 constexpr const char* scopeUri = "scopeUri";
 
                 constexpr const char* section = "section";
+
+                constexpr const char* selectionRange = "selectionRange";
 
                 constexpr const char* settings = "settings";
 
