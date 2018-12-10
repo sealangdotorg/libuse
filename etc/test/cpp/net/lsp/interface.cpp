@@ -183,6 +183,11 @@ class TestInterface final : public ServerInterface
     {
         return ReferenceResult( Data() );
     }
+    DocumentHighlightResult textDocument_documentHighlight(
+        const DocumentHighlightParams& params ) override
+    {
+        return DocumentHighlightResult();
+    }
 };
 
 TEST( libstdhl_cpp_network_lsp, parse_packet_request_initialize_monaco )
@@ -580,6 +585,17 @@ TEST( libstdhl_cpp_network_lsp, textDocument_references )
     auto pos = Position( 1, 1 );
     auto result =
         server.textDocument_references( ReferenceParams( uri, pos, ReferenceContext( true ) ) );
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
+
+TEST( libstdhl_cpp_network_lsp, textDocument_documentHighlight )
+{
+    TestInterface server;
+    auto uri = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
+    auto pos = Position( 1, 1 );
+    auto result = server.textDocument_documentHighlight( DocumentHighlightParams( uri, pos ) );
     server.flush( [&]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );

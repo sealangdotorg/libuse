@@ -285,6 +285,8 @@ namespace libstdhl
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_documentHighlight
                 // client to server request
                 // TODO: FIXME: @ppaulweber: provide interface @Clasc
+                virtual DocumentHighlightResult textDocument_documentHighlight(
+                    const DocumentHighlightParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_documentSymbol
                 // client to server request

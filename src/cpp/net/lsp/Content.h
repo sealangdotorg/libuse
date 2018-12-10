@@ -2193,6 +2193,46 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            using DocumentHighlightParams = TextDocumentPositionParams;
+
+            enum class DocumentHighlightKind
+            {
+                Text = 1,
+                Read = 2,
+                Write = 3
+            };
+
+            class DocumentHighlight : public Data
+            {
+              public:
+                DocumentHighlight( const Data& data );
+
+                DocumentHighlight( const Range& range );
+
+                Range range( void ) const;
+
+                u1 hasKind( void ) const;
+
+                DocumentHighlightKind kind( void ) const;
+
+                void setKind( const DocumentHighlightKind kind );
+
+                static void validate( const Data& data );
+            };
+            using DocumentHighlights = std::vector< DocumentHighlight >;
+
+            class DocumentHighlightResult : public Data
+            {
+              public:
+                DocumentHighlightResult( void );
+
+                DocumentHighlightResult( const Data& data );
+
+                DocumentHighlightResult( const DocumentHighlights& highlights );
+
+                static void validate( const Data& data );
+            };
+
             class CodeLensParams : public Data
             {
               public:

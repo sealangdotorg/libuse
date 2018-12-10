@@ -660,6 +660,22 @@ TEST( libstdhl_cpp_network_lsp_content, ReferenceResult )
     auto refResult = ReferenceResult( locations );
     ReferenceResult r( refResult );
 }
+TEST( libstdhl_cpp_network_lsp_content, DocumentHighlight )
+{
+    auto highlight = DocumentHighlight( range );
+    DocumentHighlight h( highlight );
+    EXPECT_FALSE( highlight.hasKind() );
+    highlight.setKind( DocumentHighlightKind::Read );
+    EXPECT_TRUE( highlight.hasKind() );
+    EXPECT_EQ( highlight.kind(), DocumentHighlightKind::Read );
+}
+
+TEST( libstdhl_cpp_network_lsp_content, DocumentHighlightResult )
+{
+    auto null = DocumentHighlightResult();
+    auto result = DocumentHighlightResult( null );
+    auto res = DocumentHighlightResult( DocumentHighlights() );
+}
 //
 //  Local variables:
 //  mode: c++
