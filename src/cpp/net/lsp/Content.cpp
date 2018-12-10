@@ -5060,6 +5060,84 @@ void DefinitionResult::validate( const Data& data )
 
 //
 //
+// DocumentHighlight
+//
+DocumentHighlight::DocumentHighlight( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+DocumentHighlight::DocumentHighlight( const Range& range )
+: Data( Data::object() )
+{
+    operator[]( Identifier::range ) = Data::from_cbor( Data::to_cbor( range ) );
+}
+Range DocumentHighlight::range( void ) const
+{
+    return operator[]( Identifier::range );
+}
+u1 DocumentHighlight::hasKind( void ) const
+{
+    return find( Identifier::kind ) != end();
+}
+DocumentHighlightKind DocumentHighlight::kind( void ) const
+{
+    return static_cast< DocumentHighlightKind >( operator[]( Identifier::kind )
+                                                     .get< std::size_t >() );
+}
+void DocumentHighlight::setKind( const DocumentHighlightKind kind )
+{
+    operator[]( Identifier::kind ) = static_cast< std::size_t >( kind );
+}
+void DocumentHighlight::validate( const Data& data )
+{
+    static const auto context = CONTENT + " DocumentHighlight:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< Range >( context, data, Identifier::range, true );
+    Content::validatePropertyIsNumber( context, data, Identifier::kind, false );
+}
+
+//
+//
+// DocumentHighlightResult
+//
+
+DocumentHighlightResult::DocumentHighlightResult( void )
+: Data()
+{
+}
+
+DocumentHighlightResult::DocumentHighlightResult( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+DocumentHighlightResult::DocumentHighlightResult( const DocumentHighlights& highlights )
+: Data( Data::array() )
+{
+    for( auto highlight : highlights )
+    {
+        push_back( highlight );
+    }
+}
+
+void DocumentHighlightResult::validate( const Data& data )
+{
+    static const auto context = CONTENT + " DefinitionResult:";
+    Content::validateTypeIsObject( context, data );
+    if( data.is_null() )
+    {
+        // if it is null, do nothing
+    }
+    else
+    {
+        Content::validateTypeIsArrayOf< DocumentHighlight >( context, data );
+    }
+}
+
+//
+//
 // CodeLensParams
 //
 
