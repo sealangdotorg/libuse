@@ -627,6 +627,15 @@ TEST( libstdhl_cpp_network_lsp, textDocument_codeAction )
     } );
 }
 
+TEST( libstdhl_cpp_network_lsp, textDocument_codeLens )
+{
+    TestInterface server;
+    auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
+    auto result = server.textDocument_codeLens( CodeLensParams( doc ) );
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
 //
 //  Local variables:
 //  mode: c++
