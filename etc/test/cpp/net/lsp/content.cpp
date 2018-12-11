@@ -785,6 +785,15 @@ TEST( libstdhl_cpp_network_lsp_content, CodeActionOptions )
     EXPECT_STREQ( options.codeActionKinds()[ 0 ].c_str(), Identifier::refactor );
     CodeActionOptions o( options );
 }
+
+TEST( libstdhl_cpp_network_lsp_content, CodeLensResult )
+{
+    auto result = CodeLensResult( std::vector< CodeLens >() );
+    result.addCodeLens( CodeLens( range ) );
+    CodeLensResult r( result );
+    auto empty = CodeLensResult( Data() );
+}
+
 //
 //  Local variables:
 //  mode: c++
