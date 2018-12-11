@@ -741,6 +741,15 @@ TEST( libstdhl_cpp_network_lsp_content, CodeActionParams )
     EXPECT_STREQ( params.range().dump().c_str(), range.dump().c_str() );
     EXPECT_STREQ( params.textDocument().uri().toString().c_str(), uri.toString().c_str() );
 }
+
+TEST( libstdhl_cpp_network_lsp_content, CodeActionResult )
+{
+    auto r = CodeActionResult();
+    auto commands = std::vector< Command >();
+    auto result = CodeActionResult( commands );
+    result.addCommand( Command( title, text ) );
+    auto code( result );
+}
 //
 //  Local variables:
 //  mode: c++
