@@ -734,6 +734,13 @@ TEST( libstdhl_cpp_network_lsp_content, CodeActionContext )
     EXPECT_STREQ( context.kind().c_str(), Identifier::quickfix );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, CodeActionParams )
+{
+    auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
+    auto params = CodeActionParams( doc, range, CodeActionContext( Diagnostics() ) );
+    EXPECT_STREQ( params.range().dump().c_str(), range.dump().c_str() );
+    EXPECT_STREQ( params.textDocument().uri().toString().c_str(), uri.toString().c_str() );
+}
 //
 //  Local variables:
 //  mode: c++
