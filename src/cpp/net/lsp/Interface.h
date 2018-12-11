@@ -291,6 +291,8 @@ namespace libstdhl
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_documentSymbol
                 // client to server request
                 // TODO: FIXME: @ppaulweber: provide interface @Clasc
+                virtual DocumentSymbolResult textDocument_documentSymbol(
+                    const DocumentSymbolParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_codeAction
                 // client to server request

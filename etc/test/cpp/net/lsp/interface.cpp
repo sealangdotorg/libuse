@@ -188,6 +188,10 @@ class TestInterface final : public ServerInterface
     {
         return DocumentHighlightResult();
     }
+    DocumentSymbolResult textDocument_documentSymbol( const DocumentSymbolParams& params ) override
+    {
+        return DocumentSymbolResult();
+    }
 };
 
 TEST( libstdhl_cpp_network_lsp, parse_packet_request_initialize_monaco )
@@ -596,6 +600,16 @@ TEST( libstdhl_cpp_network_lsp, textDocument_documentHighlight )
     auto uri = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto pos = Position( 1, 1 );
     auto result = server.textDocument_documentHighlight( DocumentHighlightParams( uri, pos ) );
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
+
+TEST( libstdhl_cpp_network_lsp, textDocument_documentSymbol )
+{
+    TestInterface server;
+    auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
+    auto result = server.textDocument_documentSymbol( DocumentSymbolParams( doc ) );
     server.flush( [&]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
