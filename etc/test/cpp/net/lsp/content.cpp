@@ -750,6 +750,31 @@ TEST( libstdhl_cpp_network_lsp_content, CodeActionResult )
     result.addCommand( Command( title, text ) );
     auto code( result );
 }
+
+TEST( libstdhl_cpp_network_lsp_content, CodeAction )
+{
+    auto action = CodeAction( title );
+    EXPECT_FALSE( action.hasKind() );
+    action.setKind( CodeActionKind::QuickFix );
+    EXPECT_TRUE( action.hasKind() );
+    EXPECT_STREQ( action.kind().c_str(), Identifier::quickfix );
+
+    EXPECT_FALSE( action.hasDiagnostics() );
+    action.addDiagnostic( Diagnostic( range, text ) );
+    EXPECT_TRUE( action.hasDiagnostics() );
+    EXPECT_STREQ( action.diagnostics()[ 0 ].message().c_str(), text.c_str() );
+
+    EXPECT_FALSE( action.hasEdit() );
+    action.setEdit( WorkspaceEdit() );
+    EXPECT_TRUE( action.hasEdit() );
+    EXPECT_STREQ( action.edit().dump().c_str(), WorkspaceEdit().dump().c_str() );
+
+    EXPECT_FALSE( action.hasCommand() );
+    action.setCommand( Command( title, text ) );
+    EXPECT_TRUE( action.hasCommand() );
+    EXPECT_STREQ( action.command().title().c_str(), title.c_str() );
+    CodeAction test( action );
+}
 //
 //  Local variables:
 //  mode: c++

@@ -4906,7 +4906,143 @@ void CodeActionResult::addCommand( const Command& command )
 void CodeActionResult::validate( const Data& data )
 {
     static const auto context = CONTENT + " CodeActionResult:";
-    Content::validateTypeIsArrayOf< Command >( context, data );
+    Content::validateTypeIsMixedArrayOf< Command, CodeAction >( context, data );
+}
+
+//
+//
+// CodeAction
+//
+
+CodeAction::CodeAction( const Data& data )
+: Data( Data::object() )
+{
+    validate( data );
+}
+
+CodeAction::CodeAction( const std::string& title )
+: Data( Data::object() )
+{
+    operator[]( Identifier::title ) = title;
+}
+
+std::string CodeAction::title( void ) const
+{
+    return operator[]( Identifier::title ).get< std::string >();
+}
+
+u1 CodeAction::hasKind( void ) const
+{
+    return find( Identifier::kind ) != end();
+}
+
+std::string CodeAction::kind( void ) const
+{
+    return at( Identifier::kind ).get< std::string >();
+}
+
+void CodeAction::setKind( const CodeActionKind kind )
+{
+    switch( kind )
+    {
+        case CodeActionKind::QuickFix:
+        {
+            operator[]( Identifier::kind ) = Identifier::quickfix;
+            break;
+        }
+        case CodeActionKind::Refactor:
+        {
+            operator[]( Identifier::kind ) = Identifier::refactor;
+            break;
+        }
+        case CodeActionKind::RefactorExtract:
+        {
+            operator[]( Identifier::kind ) = Identifier::refactorExtract;
+            break;
+        }
+        case CodeActionKind::RefactorInline:
+        {
+            operator[]( Identifier::kind ) = Identifier::refactorInline;
+            break;
+        }
+        case CodeActionKind::RefactorRewrite:
+        {
+            operator[]( Identifier::kind ) = Identifier::refactorRewrite;
+            break;
+        }
+        case CodeActionKind::Source:
+        {
+            operator[]( Identifier::kind ) = Identifier::source;
+            break;
+        }
+        case CodeActionKind::SourceOrganizeImports:
+        {
+            operator[]( Identifier::kind ) = Identifier::sourceOrganizeImports;
+            break;
+        }
+    }
+}
+
+u1 CodeAction::hasDiagnostics( void ) const
+{
+    return find( Identifier::diagnostics ) != end();
+}
+
+Diagnostics CodeAction::diagnostics( void ) const
+{
+    auto result = Diagnostics();
+    for( auto diagnostic : at( Identifier::diagnostics ) )
+    {
+        result.push_back( diagnostic );
+    }
+    return result;
+}
+
+void CodeAction::addDiagnostic( const Diagnostic& diagnostic )
+{
+    operator[]( Identifier::diagnostics ).push_back( diagnostic );
+}
+
+u1 CodeAction::hasEdit( void ) const
+{
+    return find( Identifier::edit ) != end();
+}
+
+WorkspaceEdit CodeAction::edit( void ) const
+{
+    return at( Identifier::edit );
+}
+
+void CodeAction::setEdit( const WorkspaceEdit& edit )
+{
+    operator[]( Identifier::edit ) = Data::from_cbor( Data::to_cbor( edit ) );
+}
+
+void CodeAction::setCommand( const Command& command )
+{
+    operator[]( Identifier::command ) = Data::from_cbor( Data::to_cbor( command ) );
+}
+
+u1 CodeAction::hasCommand( void ) const
+{
+    return find( Identifier::command ) != end();
+}
+
+Command CodeAction::command( void ) const
+{
+    return at( Identifier::command );
+}
+
+void CodeAction::validate( const Data& data )
+{
+    static const auto context = CONTENT + " CodeAction:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::title, true );
+    Content::validatePropertyIsString( context, data, Identifier::kind, false );
+    Content::validatePropertyIsArrayOf< Diagnostic >(
+        context, data, Identifier::diagnostics, false );
+    Content::validatePropertyIs< WorkspaceEdit >( context, data, Identifier::edit, false );
+    Content::validatePropertyIs< Command >( context, data, Identifier::command, false );
 }
 
 //
