@@ -5703,7 +5703,14 @@ void CodeLensResult::addCodeLens( const CodeLens& codeLens )
 void CodeLensResult::validate( const Data& data )
 {
     static const auto context = CONTENT + " CodeLensResult:";
-    Content::validateTypeIsArrayOf< CodeLens >( context, data );
+    if( data.is_null() )
+    {
+        // ok, do nothing.
+    }
+    else
+    {
+        Content::validateTypeIsArrayOf< CodeLens >( context, data );
+    }
 }
 
 //
