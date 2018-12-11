@@ -5202,18 +5202,7 @@ void DocumentSymbolResult::validate( const Data& data )
     }
     else
     {
-        Content::validateTypeIsArray( context, data );
-        for( auto element : data )
-        {
-            try
-            {
-                DocumentSymbol::validate( element );
-            }
-            catch( std::invalid_argument a )
-            {
-                SymbolInformation::validate( element );
-            }
-        }
+        Content::validateTypeIsArrayOf< DocumentSymbol, SymbolInformation >( context, data );
     }
 }
 
