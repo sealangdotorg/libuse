@@ -614,6 +614,19 @@ TEST( libstdhl_cpp_network_lsp, textDocument_documentSymbol )
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
+
+TEST( libstdhl_cpp_network_lsp, textDocument_codeAction )
+{
+    TestInterface server;
+    auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
+    auto range = Range( Position( 10, 10 ), Position( 10, 10 ) );
+    auto result = server.textDocument_codeAction(
+        CodeActionParams( doc, range, CodeActionContext( Diagnostics() ) ) );
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
+
 //
 //  Local variables:
 //  mode: c++
