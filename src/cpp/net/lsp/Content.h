@@ -2643,6 +2643,54 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            class DocumentLinkParams : public Data
+            {
+              public:
+                DocumentLinkParams( const Data& data );
+
+                DocumentLinkParams( const TextDocumentIdentifier& textDocument );
+
+                TextDocumentIdentifier textDocument( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class DocumentLink : public Data
+            {
+              public:
+                DocumentLink( const Data& data );
+
+                DocumentLink( const Range& range );
+
+                Range range( void ) const;
+
+                u1 hasTarget( void ) const;
+
+                void setTarget( const DocumentUri& target );
+
+                DocumentUri target( void ) const;
+
+                u1 hasData( void ) const;
+
+                void setData( const Data& data );
+
+                Data data( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class DocumentLinkResult : public Data
+            {
+              public:
+                DocumentLinkResult( void );
+
+                DocumentLinkResult( const Data& data );
+
+                DocumentLinkResult( const DocumentLink link );
+
+                static void validate( const Data& data );
+            };
+
             using CodeLensResolveParams = CodeLens;
             using CodeLensResolveResult = CodeLens;
 
