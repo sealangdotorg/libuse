@@ -794,6 +794,31 @@ TEST( libstdhl_cpp_network_lsp_content, CodeLensResult )
     auto empty = CodeLensResult( Data() );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, DocumentLinkParams )
+{
+    auto params = DocumentLinkParams( TextDocumentIdentifier( uri ) );
+    auto p = DocumentLinkParams( params );
+    EXPECT_STREQ( params.textDocument().uri().toString().c_str(), uri.toString().c_str() );
+}
+
+TEST( libstdhl_cpp_network_lsp_content, DocumentLink )
+{
+    auto link = DocumentLink( range );
+    auto l = DocumentLink( link );
+    EXPECT_FALSE( link.hasTarget() );
+    EXPECT_FALSE( link.hasData() );
+    link.setTarget( uri );
+    link.setData( Data::object() );
+    EXPECT_TRUE( link.hasTarget() );
+    EXPECT_TRUE( link.hasData() );
+}
+
+TEST( libstdhl_cpp_network_lsp_content, DocumentLinkResult )
+{
+    auto empty = DocumentLinkResult();
+    auto result = DocumentLinkResult( DocumentLink( range ) );
+    auto r = DocumentLinkResult( result );
+}
 //
 //  Local variables:
 //  mode: c++

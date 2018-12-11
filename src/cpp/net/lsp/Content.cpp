@@ -5760,6 +5760,128 @@ void ExecuteCommandParams::validate( const Data& data )
 }
 
 //
+//
+// DocumentLinkParams
+//
+DocumentLinkParams::DocumentLinkParams( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+DocumentLinkParams::DocumentLinkParams( const TextDocumentIdentifier& textDocument )
+: Data( Data::object() )
+{
+    operator[]( Identifier::textDocument ) = Data::from_cbor( Data::to_cbor( textDocument ) );
+}
+
+TextDocumentIdentifier DocumentLinkParams::textDocument( void ) const
+{
+    return operator[]( Identifier::textDocument );
+}
+
+void DocumentLinkParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " DocumentLinkParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< TextDocumentIdentifier >(
+        context, data, Identifier::textDocument, true );
+}
+
+//
+//
+// DocumentLink
+//
+
+DocumentLink::DocumentLink( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+DocumentLink::DocumentLink( const Range& range )
+: Data( Data::object() )
+{
+    operator[]( Identifier::range ) = Data::from_cbor( Data::to_cbor( range ) );
+}
+
+Range DocumentLink::range( void ) const
+{
+    return operator[]( Identifier::range );
+}
+
+u1 DocumentLink::hasTarget( void ) const
+{
+    return find( Identifier::target ) != end();
+}
+
+void DocumentLink::setTarget( const DocumentUri& target )
+{
+    operator[]( Identifier::target ) = target.toString();
+}
+
+DocumentUri DocumentLink::target( void ) const
+{
+    return DocumentUri::fromString( at( Identifier::target ).get< std::string >() );
+}
+
+u1 DocumentLink::hasData( void ) const
+{
+    return find( Identifier::data ) != end();
+}
+
+void DocumentLink::setData( const Data& data )
+{
+    operator[]( Identifier::data ) = Data::from_cbor( Data::to_cbor( data ) );
+}
+
+Data DocumentLink::data( void ) const
+{
+    return operator[]( Identifier::data );
+}
+
+void DocumentLink::validate( const Data& data )
+{
+    static const auto context = CONTENT + " DocumentLink:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< Range >( context, data, Identifier::range, true );
+    Content::validatePropertyIsString( context, data, Identifier::target, false );
+}
+
+//
+//
+// DocumentLinkResult
+//
+DocumentLinkResult::DocumentLinkResult( void )
+: Data()
+{
+}
+
+DocumentLinkResult::DocumentLinkResult( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+DocumentLinkResult::DocumentLinkResult( const DocumentLink link )
+: Data( link )
+{
+}
+
+void DocumentLinkResult::validate( const Data& data )
+{
+    static const auto context = CONTENT + " DocumentLink:";
+    if( data.is_null() )
+    {
+        // ok, do nothing.
+    }
+    else
+    {
+        DocumentLink::validate( data );
+    }
+}
+
+//
 //  Local variables:
 //  mode: c++
 //  indent-tabs-mode: nil
