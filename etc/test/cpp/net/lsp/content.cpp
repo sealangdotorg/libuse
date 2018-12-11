@@ -783,6 +783,7 @@ TEST( libstdhl_cpp_network_lsp_content, CodeActionOptions )
     options.addCodeActionKind( CodeActionKind::Refactor );
     EXPECT_TRUE( options.hasCodeActionKinds() );
     EXPECT_STREQ( options.codeActionKinds()[ 0 ].c_str(), Identifier::refactor );
+    CodeActionOptions o( options );
 }
 //
 //  Local variables:
