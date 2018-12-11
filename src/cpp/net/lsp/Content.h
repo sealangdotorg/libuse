@@ -183,6 +183,34 @@ namespace libstdhl
                         T::validate( element );
                     }
                 };
+                template < class T, class U >
+                void validateTypeIsMixedArrayOf( const std::string& context, const Data& data )
+                {
+                    Content::validateTypeIsArray( context, data );
+                    for( auto element : data )
+                    {
+                        try
+                        {
+                            T::validate( element );
+                        }
+                        catch( std::invalid_argument a )
+                        {
+                            U::validate( element );
+                        }
+                    }
+                };
+                template < class T, class U >
+                void validateTypeIsArrayOf( const std::string& context, const Data& data )
+                {
+                    try
+                    {
+                        validateTypeIsArrayOf< T >( context, data );
+                    }
+                    catch( std::invalid_argument a )
+                    {
+                        validateTypeIsArrayOf< U >( context, data );
+                    }
+                };
             }
 
             enum class ErrorCode : i32
