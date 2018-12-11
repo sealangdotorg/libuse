@@ -722,6 +722,18 @@ TEST( libstdhl_cpp_network_lsp_content, DocumentSymbolResult )
     DocumentSymbolResult();
 }
 
+TEST( libstdhl_cpp_network_lsp_content, CodeActionContext )
+{
+    auto diagnostics = Diagnostics();
+    diagnostics.push_back( Diagnostic( range, text ) );
+    auto context = CodeActionContext( diagnostics );
+    EXPECT_STREQ( context.diagnostics()[ 0 ].message().c_str(), text.c_str() );
+    EXPECT_FALSE( context.hasKind() );
+    context.setKind( CodeActionKind::QuickFix );
+    EXPECT_TRUE( context.hasKind() );
+    EXPECT_STREQ( context.kind().c_str(), Identifier::quickfix );
+}
+
 //
 //  Local variables:
 //  mode: c++

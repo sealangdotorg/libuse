@@ -4756,9 +4756,66 @@ CodeActionContext::CodeActionContext( const std::vector< Diagnostic >& diagnosti
     }
 }
 
-Data CodeActionContext::diagnostics( void ) const
+u1 CodeActionContext::hasKind( void ) const
 {
-    return at( Identifier::diagnostics );
+    return find( Identifier::kind ) != end();
+}
+
+void CodeActionContext::setKind( const CodeActionKind kind )
+{
+    switch( kind )
+    {
+        case CodeActionKind::QuickFix:
+        {
+            operator[]( Identifier::kind ) = Identifier::quickfix;
+            break;
+        }
+        case CodeActionKind::Refactor:
+        {
+            operator[]( Identifier::kind ) = Identifier::refactor;
+            break;
+        }
+        case CodeActionKind::RefactorExtract:
+        {
+            operator[]( Identifier::kind ) = Identifier::refactorExtract;
+            break;
+        }
+        case CodeActionKind::RefactorInline:
+        {
+            operator[]( Identifier::kind ) = Identifier::refactorInline;
+            break;
+        }
+        case CodeActionKind::RefactorRewrite:
+        {
+            operator[]( Identifier::kind ) = Identifier::refactorRewrite;
+            break;
+        }
+        case CodeActionKind::Source:
+        {
+            operator[]( Identifier::kind ) = Identifier::source;
+            break;
+        }
+        case CodeActionKind::SourceOrganizeImports:
+        {
+            operator[]( Identifier::kind ) = Identifier::sourceOrganizeImports;
+            break;
+        }
+    }
+}
+
+std::string CodeActionContext::kind( void ) const
+{
+    return at( Identifier::kind ).get< std::string >();
+}
+
+Diagnostics CodeActionContext::diagnostics( void ) const
+{
+    auto result = Diagnostics();
+    for( auto diagnostic : at( Identifier::diagnostics ) )
+    {
+        result.push_back( diagnostic );
+    }
+    return result;
 }
 
 void CodeActionContext::validate( const Data& data )

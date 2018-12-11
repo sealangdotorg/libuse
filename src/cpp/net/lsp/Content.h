@@ -2109,14 +2109,33 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            enum class CodeActionKind
+            {
+                QuickFix,
+                Refactor,
+                RefactorExtract,
+                RefactorInline,
+                RefactorRewrite,
+                Source,
+                SourceOrganizeImports
+            };
+
+            using Diagnostics = std::vector< Diagnostic >;
+
             class CodeActionContext : public Data
             {
               public:
                 CodeActionContext( const Data& data );
 
-                CodeActionContext( const std::vector< Diagnostic >& diagnostics );
+                CodeActionContext( const Diagnostics& diagnostics );
 
-                Data diagnostics( void ) const;
+                Diagnostics diagnostics( void ) const;
+
+                u1 hasKind( void ) const;
+
+                void setKind( const CodeActionKind kind );
+
+                std::string kind( void ) const;
 
                 static void validate( const Data& data );
             };
