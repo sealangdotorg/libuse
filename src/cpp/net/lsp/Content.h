@@ -2643,6 +2643,9 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            using CodeLensResolveParams = CodeLens;
+            using CodeLensResolveResult = CodeLens;
+
             class ExecuteCommandParams : public Data
             {
               public:

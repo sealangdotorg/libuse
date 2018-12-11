@@ -306,6 +306,8 @@ namespace libstdhl
                 // https://microsoft.github.io/language-server-protocol/specification#codeLens_resolve
                 // client to server request
                 // TODO: FIXME: @ppaulweber: provide interface @Clasc
+                virtual CodeLensResolveResult codeLens_resolve(
+                    const CodeLensResolveParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_documentLink
                 // client to server request
