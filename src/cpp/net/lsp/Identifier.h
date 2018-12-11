@@ -99,6 +99,8 @@ namespace libstdhl
 
                 constexpr const char* codeAction = "codeAction";
 
+                constexpr const char* codeActionKinds = "codeActionKinds";
+
                 constexpr const char* codeActionProvider = "codeActionProvider";
 
                 constexpr const char* codeLens = "codeLens";

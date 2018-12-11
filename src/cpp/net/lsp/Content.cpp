@@ -4736,6 +4736,85 @@ void ReferenceResult::validate( const Data& data )
 
 //
 //
+// CodeActionOptions
+//
+CodeActionOptions::CodeActionOptions( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+u1 CodeActionOptions::hasCodeActionKinds( void ) const
+{
+    return find( Identifier::codeActionKinds ) != end();
+}
+
+void CodeActionOptions::addCodeActionKind( CodeActionKind kind )
+{
+    if( not hasCodeActionKinds() )
+    {
+        operator[]( Identifier::codeActionKinds ) = Data::array();
+    }
+    switch( kind )
+    {
+        case CodeActionKind::QuickFix:
+        {
+            operator[]( Identifier::codeActionKinds ).push_back( Identifier::quickfix );
+            break;
+        }
+        case CodeActionKind::Refactor:
+        {
+            operator[]( Identifier::codeActionKinds ).push_back( Identifier::refactor );
+            break;
+        }
+        case CodeActionKind::RefactorExtract:
+        {
+            operator[]( Identifier::codeActionKinds ).push_back( Identifier::refactorExtract );
+            break;
+        }
+        case CodeActionKind::RefactorInline:
+        {
+            operator[]( Identifier::codeActionKinds ).push_back( Identifier::refactorInline );
+            break;
+        }
+        case CodeActionKind::RefactorRewrite:
+        {
+            operator[]( Identifier::codeActionKinds ).push_back( Identifier::refactorRewrite );
+            break;
+        }
+        case CodeActionKind::Source:
+        {
+            operator[]( Identifier::codeActionKinds ).push_back( Identifier::source );
+            break;
+        }
+        case CodeActionKind::SourceOrganizeImports:
+        {
+            operator[]( Identifier::codeActionKinds )
+                .push_back( Identifier::sourceOrganizeImports );
+            break;
+        }
+    }
+}
+
+std::vector< std::string > CodeActionOptions::codeActionKinds( void ) const
+{
+    auto result = std::vector< std::string >();
+    for( auto kind : at( Identifier::codeActionKinds ) )
+    {
+        result.push_back( kind );
+    }
+    return result;
+}
+
+void CodeActionOptions::validate( const Data& data )
+{
+    static const auto context = CONTENT + " CodeActionOptions:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsArrayOfString( context, data, Identifier::codeActionKinds, false );
+}
+
+//
+//
 // CodeActionContext
 //
 

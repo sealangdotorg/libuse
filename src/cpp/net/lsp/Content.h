@@ -2309,6 +2309,20 @@ namespace libstdhl
                 SourceOrganizeImports
             };
 
+            class CodeActionOptions : public Data
+            {
+              public:
+                CodeActionOptions( const Data& data );
+
+                u1 hasCodeActionKinds( void ) const;
+
+                void addCodeActionKind( CodeActionKind kind );
+
+                std::vector< std::string > codeActionKinds( void ) const;
+
+                static void validate( const Data& data );
+            };
+
             using Diagnostics = std::vector< Diagnostic >;
 
             class CodeActionContext : public Data
@@ -2396,6 +2410,12 @@ namespace libstdhl
                 void addCommand( const Command& command );
 
                 static void validate( const Data& data );
+            };
+
+            class CodeActionRegistrationOptions
+            : public TextDocumentRegistrationOptions
+            , public CodeActionOptions
+            {
             };
 
             class PublishDiagnosticsParams : public Data
