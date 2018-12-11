@@ -775,6 +775,15 @@ TEST( libstdhl_cpp_network_lsp_content, CodeAction )
     EXPECT_STREQ( action.command().title().c_str(), title.c_str() );
     CodeAction test( action );
 }
+
+TEST( libstdhl_cpp_network_lsp_content, CodeActionOptions )
+{
+    auto options = CodeActionOptions( Data::object() );
+    EXPECT_FALSE( options.hasCodeActionKinds() );
+    options.addCodeActionKind( CodeActionKind::Refactor );
+    EXPECT_TRUE( options.hasCodeActionKinds() );
+    EXPECT_STREQ( options.codeActionKinds()[ 0 ].c_str(), Identifier::refactor );
+}
 //
 //  Local variables:
 //  mode: c++
