@@ -294,6 +294,8 @@ namespace libstdhl
 
                 // Q
 
+                constexpr const char* quickfix = "quickfix";
+
                 constexpr const char* query = "query";
 
                 // R
@@ -305,6 +307,14 @@ namespace libstdhl
                 constexpr const char* rangeLength = "rangeLength";
 
                 constexpr const char* reason = "reason";
+
+                constexpr const char* refactor = "refactor";
+
+                constexpr const char* refactorExtract = "refactor.extract";
+
+                constexpr const char* refactorInline = "refactor.inline";
+
+                constexpr const char* refactorRewrite = "refactor.rewrite";
 
                 constexpr const char* references = "references";
 
@@ -355,6 +365,8 @@ namespace libstdhl
                 constexpr const char* snippetSupport = "snippetSupport";
 
                 constexpr const char* source = "source";
+
+                constexpr const char* sourceOrganizeImports = "source.organizeImports";
 
                 constexpr const char* sortText = "sortText";
 
