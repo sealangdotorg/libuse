@@ -4843,10 +4843,9 @@ CodeActionParams::CodeActionParams(
     const CodeActionContext& context )
 : Data( Data::object() )
 {
-    operator[]( Identifier::textDocument ) =
-        Data::from_cbor( Data::to_cbor( Identifier::textDocument ) );
-    operator[]( Identifier::range ) = Data::from_cbor( Data::to_cbor( Identifier::range ) );
-    operator[]( Identifier::context ) = Data::from_cbor( Data::to_cbor( Identifier::context ) );
+    operator[]( Identifier::textDocument ) = Data::from_cbor( Data::to_cbor( textDocument ) );
+    operator[]( Identifier::range ) = Data::from_cbor( Data::to_cbor( range ) );
+    operator[]( Identifier::context ) = Data::from_cbor( Data::to_cbor( context ) );
 }
 
 TextDocumentIdentifier CodeActionParams::textDocument( void ) const
