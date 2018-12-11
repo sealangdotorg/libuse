@@ -2348,6 +2348,42 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            class CodeAction : public Data
+            {
+              public:
+                CodeAction( const Data& data );
+
+                CodeAction( const std::string& title );
+
+                std::string title( void ) const;
+
+                u1 hasKind( void ) const;
+
+                std::string kind( void ) const;
+
+                void setKind( const CodeActionKind kind );
+
+                u1 hasDiagnostics( void ) const;
+
+                Diagnostics diagnostics( void ) const;
+
+                void addDiagnostic( const Diagnostic& diagnostic );
+
+                u1 hasEdit( void ) const;
+
+                WorkspaceEdit edit( void ) const;
+
+                void setEdit( const WorkspaceEdit& edit );
+
+                void setCommand( const Command& command );
+
+                u1 hasCommand( void ) const;
+
+                Command command( void ) const;
+
+                static void validate( const Data& data );
+            };
+
             class CodeActionResult : public Data
             {
               public:
