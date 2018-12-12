@@ -6142,6 +6142,109 @@ void ColorPresentationResult::validate( const Data& data )
 }
 
 //
+//
+// DocumentFormattingParams
+//
+DocumentFormattingParams::DocumentFormattingParams( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+DocumentFormattingParams::DocumentFormattingParams(
+    const TextDocumentIdentifier& textDocument, FormattingOptions& options )
+: Data( Data::object() )
+{
+    operator[]( Identifier::textDocument ) = Data::from_cbor( Data::to_cbor( textDocument ) );
+    operator[]( Identifier::options ) = Data::from_cbor( Data::to_cbor( options ) );
+}
+
+TextDocumentIdentifier DocumentFormattingParams::textDocument( void ) const
+{
+    return operator[]( Identifier::textDocument );
+}
+
+FormattingOptions DocumentFormattingParams::options( void ) const
+{
+    return operator[]( Identifier::options );
+}
+
+void DocumentFormattingParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " DocumentFormattingParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< TextDocumentIdentifier >(
+        context, data, Identifier::textDocument, true );
+    Content::validatePropertyIs< FormattingOptions >( context, data, Identifier::options, true );
+}
+
+//
+//
+// FormattingOptions
+//
+FormattingOptions::FormattingOptions( const Data& data )
+: Data( Data::object() )
+{
+    validate( data );
+}
+
+FormattingOptions::FormattingOptions( const std::size_t tabSize, const u1 insertSpaces )
+: Data( Data::object() )
+{
+    operator[]( Identifier::tabSize ) = tabSize;
+    operator[]( Identifier::insertSpaces ) = insertSpaces;
+}
+
+void FormattingOptions::validateAdditionalOptions( const Data& data )
+{
+    static const auto context = CONTENT + " FormattingOptions:";
+    for( auto element : data )
+    {
+        if( element.is_boolean() || element.is_number() || element.is_string() )
+        {
+            // do nothing
+        }
+        else
+        {
+            throw std::invalid_argument(
+                context + " invalid data type, shall be 'boolean', 'number' or 'string'" );
+        }
+    }
+}
+
+void FormattingOptions::addBool( const std::string& key, const u1 boolean )
+{
+    operator[]( key ) = boolean;
+}
+void FormattingOptions::addNumber( const std::string& key, const float number )
+{
+    operator[]( key ) = number;
+}
+void FormattingOptions::addString( const std::string& key, const std::string& string )
+{
+    operator[]( key ) = string;
+}
+
+std::size_t FormattingOptions::tabSize( void ) const
+{
+    return operator[]( Identifier::tabSize ).get< std::size_t >();
+}
+
+u1 FormattingOptions::insertSpaces( void ) const
+{
+    return operator[]( Identifier::insertSpaces ).get< u1 >();
+}
+
+void FormattingOptions::validate( const Data& data )
+{
+    static const auto context = CONTENT + " FormattingOptions:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsNumber( context, data, Identifier::tabSize, true );
+    Content::validatePropertyIsBoolean( context, data, Identifier::insertSpaces, true );
+    validateAdditionalOptions( data );
+}
+
+//
 //  Local variables:
 //  mode: c++
 //  indent-tabs-mode: nil

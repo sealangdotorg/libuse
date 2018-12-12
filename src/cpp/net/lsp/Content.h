@@ -2615,6 +2615,56 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            class FormattingOptions : public Data
+            {
+              private:
+                static void validateAdditionalOptions( const Data& data );
+
+              public:
+                FormattingOptions( const Data& data );
+
+                FormattingOptions( const std::size_t tabSize, const u1 insertSpaces );
+
+                std::size_t tabSize( void ) const;
+
+                void addBool( const std::string& key, const u1 boolean );
+
+                void addNumber( const std::string& key, const float number );
+
+                void addString( const std::string& key, const std::string& string );
+
+                u1 insertSpaces( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class DocumentFormattingParams : public Data
+            {
+              public:
+                DocumentFormattingParams( const Data& data );
+
+                DocumentFormattingParams(
+                    const TextDocumentIdentifier& textDocument, FormattingOptions& options );
+
+                TextDocumentIdentifier textDocument( void ) const;
+
+                FormattingOptions options( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class DocumentFormattingResult : public Data
+            {
+              public:
+                DocumentFormattingResult( void );
+
+                DocumentFormattingResult( const Data& data );
+
+                DocumentFormattingResult( const TextEdits& edits );
+
+                static void validate( const Data& data );
+            };
+
             class ExecuteCommandParams : public Data
             {
               public:

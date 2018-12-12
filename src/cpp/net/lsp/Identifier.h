@@ -235,6 +235,8 @@ namespace libstdhl
 
                 constexpr const char* initialized = "initialized";
 
+                constexpr const char* insertSpaces = "insertSpaces";
+
                 constexpr const char* insertText = "insertText";
 
                 constexpr const char* insertTextFormat = "insertTextFormat";
@@ -285,6 +287,8 @@ namespace libstdhl
                 constexpr const char* onTypeFormatting = "onTypeFormatting";
 
                 constexpr const char* openClose = "openClose";
+
+                constexpr const char* options = "options";
 
                 // P
 
@@ -393,6 +397,8 @@ namespace libstdhl
                 // T
 
                 constexpr const char* target = "target";
+
+                constexpr const char* tabSize = "tabSize";
 
                 constexpr const char* telemetry_event = "telemetry/event";
 
