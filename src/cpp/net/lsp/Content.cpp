@@ -6119,6 +6119,28 @@ void ColorPresentation::validate( const Data& data )
     Content::validatePropertyIsArrayOf< TextEdit >(
         context, data, Identifier::additionalTextEdits, false );
 }
+
+ColorPresentationResult::ColorPresentationResult( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+ColorPresentationResult::ColorPresentationResult( ColorPresentations presentations )
+: Data( Data::array() )
+{
+    for( auto presentation : presentations )
+    {
+        push_back( presentation );
+    }
+}
+
+void ColorPresentationResult::validate( const Data& data )
+{
+    static const auto context = CONTENT + " ColorPresentationResult:";
+    Content::validateTypeIsArrayOf< ColorPresentation >( context, data );
+}
+
 //
 //  Local variables:
 //  mode: c++

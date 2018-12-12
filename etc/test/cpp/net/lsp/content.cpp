@@ -878,6 +878,14 @@ TEST( libstdhl_cpp_network_lsp_content, ColorPresentation )
     EXPECT_STREQ( presentation.textEdit().dump().c_str(), edit.dump().c_str() );
     EXPECT_STREQ( presentation.additionalTextEdits()[ 0 ].dump().c_str(), edit.dump().c_str() );
 }
+
+TEST( libstdhl_cpp_network_lsp_content, ColorPresentationResult )
+{
+    auto presentations = ColorPresentations();
+    presentations.emplace_back( ColorPresentation( label ) );
+    auto result = ColorPresentationResult( ColorPresentations() );
+    auto r = ColorPresentationResult( result );
+}
 //
 //  Local variables:
 //  mode: c++
