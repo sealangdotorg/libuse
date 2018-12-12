@@ -2504,6 +2504,20 @@ namespace libstdhl
 
             using CodeLensResolveParams = CodeLens;
             using CodeLensResolveResult = CodeLens;
+            using DocumentLinkResolveResult = DocumentLink;
+            using DocumentLinkResolveParams = DocumentLink;
+
+            class DocumentColorParams : public Data
+            {
+              public:
+                DocumentColorParams( const Data& data );
+
+                DocumentColorParams( const TextDocumentIdentifier& textDocument );
+
+                TextDocumentIdentifier textDocument( void ) const;
+
+                static void validate( const Data& data );
+            };
 
             class ExecuteCommandParams : public Data
             {
