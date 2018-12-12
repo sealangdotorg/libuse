@@ -2562,6 +2562,23 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            class ColorPresentationParams : public DocumentColorParams
+            {
+              public:
+                ColorPresentationParams( const Data& data );
+
+                ColorPresentationParams(
+                    const TextDocumentIdentifier& textDocument,
+                    const Color& color,
+                    const Range& range );
+
+                Color color( void ) const;
+
+                Range range( void ) const;
+
+                static void validate( const Data& data );
+            };
+
             class ExecuteCommandParams : public Data
             {
               public:

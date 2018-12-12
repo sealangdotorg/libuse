@@ -837,6 +837,8 @@ TEST( libstdhl_cpp_network_lsp_content, Color )
     EXPECT_EQ( 0.4f, color.alpha() );
 }
 
+auto color = Color( 0.2, 0.3, 0.4, 0.4 );
+
 TEST( libstdhl_cpp_network_lsp_content, ColorInformation )
 {
     auto color = Color( 0.2, 0.3, 0.4, 0.4 );
@@ -850,6 +852,16 @@ TEST( libstdhl_cpp_network_lsp_content, DocumentColorResult )
 {
     auto result = DocumentColorResult( ColorInformations() );
     auto r = DocumentColorResult( result );
+}
+
+TEST( libstdhl_cpp_network_lsp_content, ColorPresentationParams )
+{
+    auto params = ColorPresentationParams( TextDocumentIdentifier( uri ), color, range );
+    EXPECT_STREQ( params.textDocument().uri().toString().c_str(), uri.toString().c_str() );
+    EXPECT_STREQ( params.color().dump().c_str(), color.dump().c_str() );
+    EXPECT_STREQ( params.range().dump().c_str(), range.dump().c_str() );
+    auto p = ColorPresentationParams( params );
+    EXPECT_STREQ( params.dump().c_str(), p.dump().c_str() );
 }
 
 //

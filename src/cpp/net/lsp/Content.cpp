@@ -6019,6 +6019,41 @@ void DocumentColorResult::validate( const Data& data )
 }
 
 //
+//
+// ColorPresentationParams
+//
+ColorPresentationParams::ColorPresentationParams( const Data& data )
+: DocumentColorParams( data )
+{
+    validate( data );
+}
+
+ColorPresentationParams::ColorPresentationParams(
+    const TextDocumentIdentifier& textDocument, const Color& color, const Range& range )
+: DocumentColorParams( textDocument )
+{
+    operator[]( Identifier::color ) = Data::from_cbor( Data::to_cbor( color ) );
+    operator[]( Identifier::range ) = Data::from_cbor( Data::to_cbor( range ) );
+}
+
+Color ColorPresentationParams::color( void ) const
+{
+    return operator[]( Identifier::color );
+}
+
+Range ColorPresentationParams::range( void ) const
+{
+    return operator[]( Identifier::range );
+}
+
+void ColorPresentationParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " ColorPresentationParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< Color >( context, data, Identifier::color, true );
+    Content::validatePropertyIs< Range >( context, data, Identifier::range, true );
+}
+//
 //  Local variables:
 //  mode: c++
 //  indent-tabs-mode: nil
