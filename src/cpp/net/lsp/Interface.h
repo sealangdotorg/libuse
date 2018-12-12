@@ -330,6 +330,8 @@ namespace libstdhl
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_colorPresentation
                 // client to server request
                 // TODO: FIXME: @ppaulweber: provide interface @Clasc
+                virtual ColorPresentationResult textDocument_colorPresentation(
+                    const ColorPresentationParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_formatting
                 // client to server request
