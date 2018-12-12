@@ -214,6 +214,11 @@ class TestInterface final : public ServerInterface
     {
         return DocumentColorResult( ColorInformations() );
     }
+    virtual ColorPresentationResult textDocument_colorPresentation(
+        const ColorPresentationParams& params ) override
+    {
+        return ColorPresentationResult( ColorPresentations() );
+    }
 };
 
 TEST( libstdhl_cpp_network_lsp, parse_packet_request_initialize_monaco )
@@ -700,6 +705,21 @@ TEST( libstdhl_cpp_network_lsp, textDocument_documentColor )
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
+TEST( libstdhl_cpp_network_lsp, textDocument_colorPresentation )
+{
+    TestInterface server;
+    auto start = Position( 1, 1 );
+    auto end = Position( 1, 10 );
+    auto range = Range( start, end );
+    auto color = Color( 0.2f, 0.4f, 0.5f, 0.5f );
+    auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
+    auto result =
+        server.textDocument_colorPresentation( ColorPresentationParams( doc, color, range ) );
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
+
 //
 //  Local variables:
 //  mode: c++
