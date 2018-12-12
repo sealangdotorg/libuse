@@ -6053,6 +6053,72 @@ void ColorPresentationParams::validate( const Data& data )
     Content::validatePropertyIs< Color >( context, data, Identifier::color, true );
     Content::validatePropertyIs< Range >( context, data, Identifier::range, true );
 }
+
+ColorPresentation::ColorPresentation( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+ColorPresentation::ColorPresentation( const std::string& label )
+: Data( Data::object() )
+{
+    operator[]( Identifier::label ) = label;
+}
+
+std::string ColorPresentation::label( void ) const
+{
+    return operator[]( Identifier::label ).get< std::string >();
+}
+
+u1 ColorPresentation::hasTextEdit( void ) const
+{
+    return find( Identifier::textEdit ) != end();
+}
+
+void ColorPresentation::setTextEdit( const TextEdit& textEdit )
+{
+    operator[]( Identifier::textEdit ) = Data::from_cbor( Data::to_cbor( textEdit ) );
+}
+
+TextEdit ColorPresentation::textEdit( void ) const
+{
+    return at( Identifier::textEdit );
+}
+
+u1 ColorPresentation::hasAdditionalTextEdits( void ) const
+{
+    return find( Identifier::additionalTextEdits ) != end();
+}
+
+void ColorPresentation::addAdditionalTextEdit( const TextEdit& textEdit )
+{
+    if( not hasAdditionalTextEdits() )
+    {
+        operator[]( Identifier::additionalTextEdits ) = Data::array();
+    }
+    operator[]( Identifier::additionalTextEdits ).push_back( textEdit );
+}
+
+TextEdits ColorPresentation::additionalTextEdits( void ) const
+{
+    auto result = TextEdits();
+    for( auto textEdit : at( Identifier::additionalTextEdits ) )
+    {
+        result.push_back( textEdit );
+    }
+    return result;
+}
+
+void ColorPresentation::validate( const Data& data )
+{
+    static const auto context = CONTENT + " ColorPresentation:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::label, true );
+    Content::validatePropertyIs< TextEdit >( context, data, Identifier::textEdit, false );
+    Content::validatePropertyIsArrayOf< TextEdit >(
+        context, data, Identifier::additionalTextEdits, false );
+}
 //
 //  Local variables:
 //  mode: c++

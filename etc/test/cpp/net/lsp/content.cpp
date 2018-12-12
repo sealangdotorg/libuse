@@ -864,6 +864,20 @@ TEST( libstdhl_cpp_network_lsp_content, ColorPresentationParams )
     EXPECT_STREQ( params.dump().c_str(), p.dump().c_str() );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, ColorPresentation )
+{
+    auto presentation = ColorPresentation( label );
+    EXPECT_FALSE( presentation.hasTextEdit() );
+    EXPECT_FALSE( presentation.hasAdditionalTextEdits() );
+    auto edit = TextEdit( range, text );
+    presentation.setTextEdit( edit );
+    presentation.addAdditionalTextEdit( edit );
+    EXPECT_TRUE( presentation.hasTextEdit() );
+    EXPECT_TRUE( presentation.hasAdditionalTextEdits() );
+    EXPECT_STREQ( presentation.label().c_str(), label.c_str() );
+    EXPECT_STREQ( presentation.textEdit().dump().c_str(), edit.dump().c_str() );
+    EXPECT_STREQ( presentation.additionalTextEdits()[ 0 ].dump().c_str(), edit.dump().c_str() );
+}
 //
 //  Local variables:
 //  mode: c++

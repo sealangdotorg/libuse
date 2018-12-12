@@ -2768,6 +2768,30 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            class ColorPresentation : public Data
+            {
+              public:
+                ColorPresentation( const Data& data );
+
+                ColorPresentation( const std::string& label );
+
+                std::string label( void ) const;
+
+                u1 hasTextEdit( void ) const;
+
+                void setTextEdit( const TextEdit& textEdit );
+
+                TextEdit textEdit( void ) const;
+
+                u1 hasAdditionalTextEdits( void ) const;
+
+                void addAdditionalTextEdit( const TextEdit& textEdit );
+
+                TextEdits additionalTextEdits( void ) const;
+
+                static void validate( const Data& data );
+            };
+
             class ExecuteCommandParams : public Data
             {
               public:
