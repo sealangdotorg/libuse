@@ -209,6 +209,11 @@ class TestInterface final : public ServerInterface
         auto end = Position( 1, 10 );
         return DocumentLinkResolveResult( Range( start, end ) );
     }
+    virtual DocumentColorResult textDocument_documentColor(
+        const DocumentColorParams& params ) override
+    {
+        return DocumentColorResult( ColorInformations() );
+    }
 };
 
 TEST( libstdhl_cpp_network_lsp, parse_packet_request_initialize_monaco )
@@ -681,6 +686,16 @@ TEST( libstdhl_cpp_network_lsp, documentLink_resolve )
     auto start = Position( 1, 1 );
     auto end = Position( 1, 10 );
     auto result = server.documentLink_resolve( DocumentLinkResolveParams( Range( start, end ) ) );
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
+
+TEST( libstdhl_cpp_network_lsp, textDocument_documentColor )
+{
+    TestInterface server;
+    auto result = server.textDocument_documentColor(
+        DocumentColorParams( TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) ) ) );
     server.flush( [&]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
