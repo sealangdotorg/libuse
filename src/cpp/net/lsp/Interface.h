@@ -318,6 +318,8 @@ namespace libstdhl
                 // https://microsoft.github.io/language-server-protocol/specification#documentLink_resolve
                 // client to server request
                 // TODO: FIXME: @ppaulweber: provide interface @Clasc
+                virtual DocumentLinkResolveResult documentLink_resolve(
+                    const DocumentLinkResolveParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_documentColor
                 // client to server request

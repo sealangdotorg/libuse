@@ -202,6 +202,13 @@ class TestInterface final : public ServerInterface
     {
         return DocumentLinkResult();
     }
+    DocumentLinkResolveResult documentLink_resolve(
+        const DocumentLinkResolveParams& params ) override
+    {
+        auto start = Position( 1, 1 );
+        auto end = Position( 1, 10 );
+        return DocumentLinkResolveResult( Range( start, end ) );
+    }
 };
 
 TEST( libstdhl_cpp_network_lsp, parse_packet_request_initialize_monaco )
@@ -663,6 +670,17 @@ TEST( libstdhl_cpp_network_lsp, textDocument_documentLink )
     TestInterface server;
     auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto result = server.textDocument_documentLink( DocumentLinkParams( doc ) );
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
+
+TEST( libstdhl_cpp_network_lsp, documentLink_resolve )
+{
+    TestInterface server;
+    auto start = Position( 1, 1 );
+    auto end = Position( 1, 10 );
+    auto result = server.documentLink_resolve( DocumentLinkResolveParams( Range( start, end ) ) );
     server.flush( [&]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );

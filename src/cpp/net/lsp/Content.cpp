@@ -5882,6 +5882,36 @@ void DocumentLinkResult::validate( const Data& data )
 }
 
 //
+//
+// DocumentColorParams
+//
+
+DocumentColorParams::DocumentColorParams( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+DocumentColorParams::DocumentColorParams( const TextDocumentIdentifier& textDocument )
+: Data( Data::object() )
+{
+    operator[]( Identifier::textDocument ) = Data::from_cbor( Data::to_cbor( textDocument ) );
+}
+
+TextDocumentIdentifier DocumentColorParams::textDocument( void ) const
+{
+    return operator[]( Identifier::textDocument );
+}
+
+void DocumentColorParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " DocumentColorParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< TextDocumentIdentifier >(
+        context, data, Identifier::textDocument, true );
+}
+
+//
 //  Local variables:
 //  mode: c++
 //  indent-tabs-mode: nil
