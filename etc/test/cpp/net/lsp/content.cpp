@@ -886,6 +886,28 @@ TEST( libstdhl_cpp_network_lsp_content, ColorPresentationResult )
     auto result = ColorPresentationResult( ColorPresentations() );
     auto r = ColorPresentationResult( result );
 }
+
+TEST( libstdhl_cpp_network_lsp_content, FormattingOptions )
+{
+    auto options = FormattingOptions( 2, true );
+    options.addBool( "key", true );
+    options.addString( "string", text );
+    options.addNumber( "number", 201 );
+    auto test = FormattingOptions( options );
+}
+
+TEST( libstdhl_cpp_network_lsp_content, DocumentFormattingParams )
+{
+    auto options = FormattingOptions( 2, true );
+    options.addBool( "key", true );
+    options.addString( "string", text );
+    options.addNumber( "number", 201 );
+    auto params = DocumentFormattingParams( TextDocumentIdentifier( uri ), options );
+    auto p = DocumentFormattingParams( params );
+    params.textDocument();
+    params.options();
+}
+
 //
 //  Local variables:
 //  mode: c++
