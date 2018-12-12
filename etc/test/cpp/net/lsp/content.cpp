@@ -819,6 +819,39 @@ TEST( libstdhl_cpp_network_lsp_content, DocumentLinkResult )
     auto result = DocumentLinkResult( DocumentLink( range ) );
     auto r = DocumentLinkResult( result );
 }
+
+TEST( libstdhl_cpp_network_lsp_content, DocumentColorParams )
+{
+    auto params = DocumentColorParams( TextDocumentIdentifier( uri ) );
+    auto p = DocumentColorParams( params );
+    EXPECT_STREQ( params.textDocument().uri().toString().c_str(), uri.toString().c_str() );
+}
+
+TEST( libstdhl_cpp_network_lsp_content, Color )
+{
+    auto color = Color( 0.2, 0.3, 0.4, 0.4 );
+    auto c = Color( color );
+    EXPECT_EQ( 0.2f, color.red() );
+    EXPECT_EQ( 0.3f, color.green() );
+    EXPECT_EQ( 0.4f, color.blue() );
+    EXPECT_EQ( 0.4f, color.alpha() );
+}
+
+TEST( libstdhl_cpp_network_lsp_content, ColorInformation )
+{
+    auto color = Color( 0.2, 0.3, 0.4, 0.4 );
+    auto information = ColorInformation( range, color );
+    EXPECT_STREQ( information.range().dump().c_str(), range.dump().c_str() );
+    EXPECT_STREQ( information.color().dump().c_str(), color.dump().c_str() );
+    auto i = ColorInformation( information );
+}
+
+TEST( libstdhl_cpp_network_lsp_content, DocumentColorResult )
+{
+    auto result = DocumentColorResult( ColorInformations() );
+    auto r = DocumentColorResult( result );
+}
+
 //
 //  Local variables:
 //  mode: c++

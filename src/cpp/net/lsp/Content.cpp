@@ -5910,6 +5910,113 @@ void DocumentColorParams::validate( const Data& data )
     Content::validatePropertyIs< TextDocumentIdentifier >(
         context, data, Identifier::textDocument, true );
 }
+//
+// Color
+//
+//
+
+Color::Color( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+Color::Color( const float red, const float green, const float blue, const float alpha )
+{
+    operator[]( Identifier::red ) = red;
+    operator[]( Identifier::green ) = green;
+    operator[]( Identifier::blue ) = blue;
+    operator[]( Identifier::alpha ) = alpha;
+}
+
+float Color::red( void ) const
+{
+    return operator[]( Identifier::red ).get< float >();
+}
+
+float Color::green( void ) const
+{
+    return operator[]( Identifier::green ).get< float >();
+}
+
+float Color::blue( void ) const
+{
+    return operator[]( Identifier::blue ).get< float >();
+}
+
+float Color::alpha( void ) const
+{
+    return operator[]( Identifier::alpha ).get< float >();
+}
+
+void Color::validate( const Data& data )
+{
+    static const auto context = CONTENT + " Color:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsNumber( context, data, Identifier::red, true );
+    Content::validatePropertyIsNumber( context, data, Identifier::green, true );
+    Content::validatePropertyIsNumber( context, data, Identifier::blue, true );
+    Content::validatePropertyIsNumber( context, data, Identifier::alpha, true );
+}
+//
+//
+// ColorInformation
+//
+
+ColorInformation::ColorInformation( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+ColorInformation::ColorInformation( const Range& range, const Color& color )
+{
+    operator[]( Identifier::range ) = Data::from_cbor( Data::to_cbor( range ) );
+    operator[]( Identifier::color ) = Data::from_cbor( Data::to_cbor( color ) );
+}
+
+Range ColorInformation::range( void ) const
+{
+    return operator[]( Identifier::range );
+}
+
+Color ColorInformation::color( void ) const
+{
+    return operator[]( Identifier::color );
+}
+
+void ColorInformation::validate( const Data& data )
+{
+    static const auto context = CONTENT + " ColorInformation:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< Range >( context, data, Identifier::range, true );
+    Content::validatePropertyIs< Color >( context, data, Identifier::color, true );
+}
+
+//
+//
+// DocumentColorResult
+//
+DocumentColorResult::DocumentColorResult( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+DocumentColorResult::DocumentColorResult( const ColorInformations& colorInformations )
+: Data( Data::array() )
+{
+    for( auto colorInformation : colorInformations )
+    {
+        push_back( colorInformation );
+    }
+}
+
+void DocumentColorResult::validate( const Data& data )
+{
+    static const auto context = CONTENT + " ColorInformation:";
+    Content::validateTypeIsArrayOf< ColorInformation >( context, data );
+}
 
 //
 //  Local variables:

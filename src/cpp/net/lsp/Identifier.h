@@ -71,6 +71,8 @@ namespace libstdhl
 
                 constexpr const char* additionalTextEdits = "additionalTextEdits";
 
+                constexpr const char* alpha = "alpha";
+
                 constexpr const char* arguments = "arguments";
 
                 constexpr const char* applied = "applied";
@@ -78,6 +80,8 @@ namespace libstdhl
                 constexpr const char* applyEdit = "applyEdit";
 
                 // B
+
+                constexpr const char* blue = "blue";
 
                 // C
 
@@ -106,6 +110,8 @@ namespace libstdhl
                 constexpr const char* codeLens = "codeLens";
 
                 constexpr const char* codeLensProvider = "codeLensProvider";
+
+                constexpr const char* color = "color";
 
                 constexpr const char* command = "command";
 
@@ -204,6 +210,8 @@ namespace libstdhl
                 constexpr const char* formatting = "formatting";
 
                 // G
+
+                constexpr const char* green = "green";
 
                 constexpr const char* globPattern = "globPattern";
 
@@ -309,6 +317,8 @@ namespace libstdhl
                 constexpr const char* rangeLength = "rangeLength";
 
                 constexpr const char* reason = "reason";
+
+                constexpr const char* red = "red";
 
                 constexpr const char* refactor = "refactor";
 

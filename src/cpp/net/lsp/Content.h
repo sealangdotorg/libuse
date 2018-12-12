@@ -2519,6 +2519,49 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            class Color : public Data
+            {
+              public:
+                Color( const Data& data );
+
+                Color( const float red, const float green, const float blue, const float alpha );
+
+                float red( void ) const;
+
+                float green( void ) const;
+
+                float blue( void ) const;
+
+                float alpha( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class ColorInformation : public Data
+            {
+              public:
+                ColorInformation( const Data& data );
+
+                ColorInformation( const Range& range, const Color& color );
+
+                Range range( void ) const;
+
+                Color color( void ) const;
+
+                static void validate( const Data& data );
+            };
+            using ColorInformations = std::vector< ColorInformation >;
+
+            class DocumentColorResult : public Data
+            {
+              public:
+                DocumentColorResult( const Data& data );
+
+                DocumentColorResult( const ColorInformations& colorInformations );
+
+                static void validate( const Data& data );
+            };
+
             class ExecuteCommandParams : public Data
             {
               public:
