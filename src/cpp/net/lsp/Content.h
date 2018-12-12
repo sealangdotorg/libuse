@@ -2792,6 +2792,18 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            using ColorPresentations = std::vector< ColorPresentation >;
+
+            class ColorPresentationResult : public Data
+            {
+              public:
+                ColorPresentationResult( const Data& data );
+
+                ColorPresentationResult( ColorPresentations presentations );
+
+                static void validate( const Data& data );
+            };
+
             class ExecuteCommandParams : public Data
             {
               public:
