@@ -219,6 +219,11 @@ class TestInterface final : public ServerInterface
     {
         return ColorPresentationResult( ColorPresentations() );
     }
+    virtual DocumentFormattingResult textDocument_formatting(
+        const DocumentFormattingParams& params )
+    {
+        return DocumentFormattingResult();
+    }
 };
 
 TEST( libstdhl_cpp_network_lsp, parse_packet_request_initialize_monaco )
@@ -719,7 +724,16 @@ TEST( libstdhl_cpp_network_lsp, textDocument_colorPresentation )
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
-
+TEST( libstdhl_cpp_network_lsp, textDocument_formatting )
+{
+    TestInterface server;
+    auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
+    auto options = FormattingOptions( 2, true );
+    auto result = server.textDocument_formatting( DocumentFormattingParams( doc, options ) );
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
 //
 //  Local variables:
 //  mode: c++
