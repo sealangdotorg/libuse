@@ -6152,7 +6152,7 @@ DocumentFormattingParams::DocumentFormattingParams( const Data& data )
 }
 
 DocumentFormattingParams::DocumentFormattingParams(
-    const TextDocumentIdentifier& textDocument, FormattingOptions& options )
+    const TextDocumentIdentifier& textDocument, const FormattingOptions& options )
 : Data( Data::object() )
 {
     operator[]( Identifier::textDocument ) = Data::from_cbor( Data::to_cbor( textDocument ) );
@@ -6275,6 +6275,33 @@ void DocumentFormattingResult::validate( const Data& data )
     {
         Content::validateTypeIsArrayOf< TextEdit >( context, data );
     }
+}
+
+DocumentRangeFormattingParams::DocumentRangeFormattingParams( const Data& data )
+: DocumentFormattingParams( data )
+{
+    validate( data );
+}
+
+DocumentRangeFormattingParams::DocumentRangeFormattingParams(
+    const TextDocumentIdentifier& textDocument,
+    const Range& range,
+    const FormattingOptions& options )
+: DocumentFormattingParams( textDocument, options )
+{
+    operator[]( Identifier::range ) = Data::from_cbor( Data::to_cbor( range ) );
+}
+
+Range DocumentRangeFormattingParams::range( void ) const
+{
+    return operator[]( Identifier::range );
+}
+
+void DocumentRangeFormattingParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " DocumentRangeFormattingParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< Range >( context, data, Identifier::range, true );
 }
 
 //

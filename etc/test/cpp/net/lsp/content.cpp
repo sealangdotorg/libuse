@@ -917,6 +917,19 @@ TEST( libstdhl_cpp_network_lsp_content, DocumentFormattingResult )
     auto r = DocumentFormattingResult( result );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, DocumentRangeFormattingParams )
+{
+    auto options = FormattingOptions( 2, true );
+    options.addBool( "key", true );
+    options.addString( "string", text );
+    options.addNumber( "number", 201 );
+    auto params = DocumentRangeFormattingParams( TextDocumentIdentifier( uri ), range, options );
+    auto p = DocumentRangeFormattingParams( params );
+    params.textDocument();
+    params.options();
+    params.range();
+}
+
 //
 //  Local variables:
 //  mode: c++

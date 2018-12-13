@@ -2644,7 +2644,7 @@ namespace libstdhl
                 DocumentFormattingParams( const Data& data );
 
                 DocumentFormattingParams(
-                    const TextDocumentIdentifier& textDocument, FormattingOptions& options );
+                    const TextDocumentIdentifier& textDocument, const FormattingOptions& options );
 
                 TextDocumentIdentifier textDocument( void ) const;
 
@@ -2664,6 +2664,22 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
+            class DocumentRangeFormattingParams : public DocumentFormattingParams
+            {
+              public:
+                DocumentRangeFormattingParams( const Data& data );
+
+                DocumentRangeFormattingParams(
+                    const TextDocumentIdentifier& textDocument,
+                    const Range& range,
+                    const FormattingOptions& options );
+
+                Range range( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            using DocumentRangeFormattingResult = DocumentFormattingResult;
 
             class ExecuteCommandParams : public Data
             {
