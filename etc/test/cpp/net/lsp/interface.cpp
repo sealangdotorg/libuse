@@ -237,6 +237,10 @@ class TestInterface final : public ServerInterface
     {
         return RenameResult();
     }
+    PrepareRenameResult textDocument_prepareRename( const PrepareRenameParams& params ) override
+    {
+        return PrepareRenameResult();
+    }
 };
 
 TEST( libstdhl_cpp_network_lsp, parse_packet_request_initialize_monaco )
@@ -782,6 +786,17 @@ TEST( libstdhl_cpp_network_lsp, textDocument_rename )
     auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto start = Position( 1, 1 );
     auto result = server.textDocument_rename( RenameParams( doc, start, "newName" ) );
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
+
+TEST( libstdhl_cpp_network_lsp, textDocument_prepareRename )
+{
+    TestInterface server;
+    auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
+    auto start = Position( 1, 1 );
+    auto result = server.textDocument_prepareRename( PrepareRenameParams( doc, start ) );
     server.flush( [&]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );

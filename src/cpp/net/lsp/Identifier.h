@@ -302,6 +302,8 @@ namespace libstdhl
 
                 constexpr const char* pattern = "pattern";
 
+                constexpr const char* placeholder = "placeholder";
+
                 constexpr const char* plaintext = "plaintext";
 
                 constexpr const char* position = "position";

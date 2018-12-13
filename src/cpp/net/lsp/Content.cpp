@@ -6510,6 +6510,51 @@ void RenameResult::validate( const Data& data )
         WorkspaceEdit::validate( data );
     }
 }
+
+//
+//
+// PrepareRenameResult
+//
+PrepareRenameResult::PrepareRenameResult( void )
+: Data()
+{
+}
+
+PrepareRenameResult::PrepareRenameResult( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+PrepareRenameResult::PrepareRenameResult( const Range& range, const std::string& placeholder )
+: Data( Data::object() )
+{
+    operator[]( Identifier::range ) = Data::from_cbor( Data::to_cbor( range ) );
+    operator[]( Identifier::placeholder ) = placeholder;
+}
+
+void PrepareRenameResult::validate( const Data& data )
+{
+    static const auto context = CONTENT + " RenameRegistrationOptions";
+    if( data.is_null() )
+    {
+        // ok, do nothing
+    }
+    else
+    {
+        try
+        {
+            Range::validate( data );
+        }
+        catch( std::invalid_argument a )
+        {
+            Content::validateTypeIsObject( context, data );
+            Content::validatePropertyIs< Range >( context, data, Identifier::range, true );
+            Content::validatePropertyIsString( context, data, Identifier::placeholder, true );
+        }
+    }
+}
+
 //
 //  Local variables:
 //  mode: c++

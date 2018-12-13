@@ -990,6 +990,15 @@ TEST( libstdhl_cpp_network_lsp_content, RenameResult )
     auto r = RenameResult( result );
     EXPECT_STREQ( result.dump().c_str(), r.dump().c_str() );
 }
+
+TEST( libstdhl_cpp_network_lsp_content, PrepareRenameResult )
+{
+    auto empty = PrepareRenameResult();
+    auto result = PrepareRenameResult( range );
+    auto wplaceholder = PrepareRenameResult( range, "placeholder" );
+    auto test = PrepareRenameResult( result );
+    test = PrepareRenameResult( wplaceholder );
+}
 //
 //  Local variables:
 //  mode: c++
