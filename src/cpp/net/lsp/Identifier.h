@@ -282,6 +282,8 @@ namespace libstdhl
 
                 constexpr const char* name = "name";
 
+                constexpr const char* newName = "newName";
+
                 constexpr const char* newText = "newText";
 
                 // O
@@ -303,6 +305,8 @@ namespace libstdhl
                 constexpr const char* plaintext = "plaintext";
 
                 constexpr const char* position = "position";
+
+                constexpr const char* prepareProvider = "prepareProvider";
 
                 constexpr const char* preselect = "preselect";
 

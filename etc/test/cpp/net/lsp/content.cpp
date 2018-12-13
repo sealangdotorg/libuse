@@ -959,6 +959,37 @@ TEST( libstdhl_cpp_network_lsp_content, DocumentOnTypeFormattingRegistrationOpti
     EXPECT_STREQ( options.firstTriggerCharacter().c_str(), "a" );
     auto o = DocumentOnTypeFormattingRegistrationOptions( options );
 }
+
+TEST( libstdhl_cpp_network_lsp_content, RenameParams )
+{
+    auto params = RenameParams( TextDocumentIdentifier( uri ), Position( 1, 1 ), name );
+    EXPECT_STREQ( params.textDocument().uri().toString().c_str(), uri.toString().c_str() );
+    params.position();
+    EXPECT_STREQ( params.newName().c_str(), name.c_str() );
+    auto p = RenameParams( params );
+}
+
+TEST( libstdhl_cpp_network_lsp_content, RenameRegistrationOptions )
+{
+    auto filter = DocumentFilter();
+    auto filters = std::vector< DocumentFilter >();
+    filters.emplace_back( filter );
+    auto selector = DocumentSelector( filters );
+    auto options = RenameRegistrationOptions( selector );
+    EXPECT_FALSE( options.hasPrepareProvider() );
+    options.setPrepareProvider( true );
+    EXPECT_TRUE( options.hasPrepareProvider() );
+    EXPECT_TRUE( options.prepareProvider() );
+    auto o = RenameRegistrationOptions( options );
+}
+
+TEST( libstdhl_cpp_network_lsp_content, RenameResult )
+{
+    auto empty = RenameResult();
+    auto result = RenameResult( WorkspaceEdit() );
+    auto r = RenameResult( result );
+    EXPECT_STREQ( result.dump().c_str(), r.dump().c_str() );
+}
 //
 //  Local variables:
 //  mode: c++
