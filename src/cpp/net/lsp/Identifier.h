@@ -119,6 +119,8 @@ namespace libstdhl
 
                 constexpr const char* commands = "commands";
 
+                constexpr const char* comment = "comment";
+
                 constexpr const char* commitCharacters = "commitCharacters";
 
                 constexpr const char* completion = "completion";
@@ -191,6 +193,10 @@ namespace libstdhl
 
                 constexpr const char* end = "end";
 
+                constexpr const char* endCharacter = "endCharacter";
+
+                constexpr const char* endLine = "endLine";
+
                 constexpr const char* error = "error";
 
                 constexpr const char* event = "event";
@@ -226,6 +232,8 @@ namespace libstdhl
                 // I
 
                 constexpr const char* id = "id";
+
+                constexpr const char* imports = "imports";
 
                 constexpr const char* includeDeclaration = "includeDeclaration";
 
@@ -342,6 +350,8 @@ namespace libstdhl
 
                 constexpr const char* references = "references";
 
+                constexpr const char* region = "region";
+
                 constexpr const char* registerOptions = "registerOptions";
 
                 constexpr const char* registrations = "registrations";
@@ -395,6 +405,10 @@ namespace libstdhl
                 constexpr const char* sortText = "sortText";
 
                 constexpr const char* start = "start";
+
+                constexpr const char* startLine = "startLine";
+
+                constexpr const char* startCharacter = "startCharacter";
 
                 constexpr const char* symbol = "symbol";
 

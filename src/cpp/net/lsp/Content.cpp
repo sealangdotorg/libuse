@@ -6556,6 +6556,172 @@ void PrepareRenameResult::validate( const Data& data )
 }
 
 //
+//
+// FoldingRangeParams
+//
+FoldingRangeParams::FoldingRangeParams( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+FoldingRangeParams::FoldingRangeParams( const TextDocumentIdentifier& textDocument )
+: Data( Data::object() )
+{
+    operator[]( Identifier::textDocument ) = Data::from_cbor( Data::to_cbor( textDocument ) );
+}
+
+TextDocumentIdentifier FoldingRangeParams::textDocument( void ) const
+{
+    return operator[]( Identifier::textDocument );
+}
+
+void FoldingRangeParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " FoldingRangeParams";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< TextDocumentIdentifier >(
+        context, data, Identifier::textDocument, true );
+}
+
+//
+//
+// FoldingRange
+//
+FoldingRange::FoldingRange( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+FoldingRange::FoldingRange( const std::size_t startLine, const std::size_t endLine )
+: Data( Data::object() )
+{
+    operator[]( Identifier::startLine ) = startLine;
+    operator[]( Identifier::endLine ) = endLine;
+}
+
+std::size_t FoldingRange::startLine( void ) const
+{
+    return operator[]( Identifier::startLine ).get< std::size_t >();
+}
+
+std::size_t FoldingRange::endLine( void ) const
+{
+    return operator[]( Identifier::endLine ).get< std::size_t >();
+}
+
+u1 FoldingRange::hasStartCharacter( void ) const
+{
+    return find( Identifier::startCharacter ) != end();
+}
+
+void FoldingRange::setStartCharacter( const std::size_t startCharacter )
+{
+    operator[]( Identifier::startCharacter ) = startCharacter;
+}
+
+std::size_t FoldingRange::startCharacter( void ) const
+{
+    return at( Identifier::startCharacter ).get< std::size_t >();
+}
+
+u1 FoldingRange::hasEndCharacter( void ) const
+{
+    return find( Identifier::endCharacter ) != end();
+}
+
+void FoldingRange::setEndCharacter( const std::size_t endCharacter )
+{
+    operator[]( Identifier::endCharacter ) = endCharacter;
+}
+
+std::size_t FoldingRange::endCharacter( void ) const
+{
+    return at( Identifier::endCharacter ).get< std::size_t >();
+}
+
+u1 FoldingRange::hasKind( void ) const
+{
+    return find( Identifier::kind ) != end();
+}
+
+void FoldingRange::setKind( const FoldingRangeKind kind )
+{
+    switch( kind )
+    {
+        case FoldingRangeKind::Comment:
+        {
+            operator[]( Identifier::kind ) = Identifier::comment;
+            break;
+        }
+        case FoldingRangeKind::Imports:
+        {
+            operator[]( Identifier::kind ) = Identifier::imports;
+            break;
+        }
+        case FoldingRangeKind::Region:
+        {
+            operator[]( Identifier::kind ) = Identifier::region;
+            break;
+        }
+    }
+}
+
+std::string FoldingRange::kind( void ) const
+{
+    return at( Identifier::kind ).get< std::string >();
+}
+
+void FoldingRange::validate( const Data& data )
+{
+    static const auto context = CONTENT + " FoldingRange";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsNumber( context, data, Identifier::startLine, true );
+    Content::validatePropertyIsNumber( context, data, Identifier::endLine, true );
+    Content::validatePropertyIsNumber( context, data, Identifier::startCharacter, false );
+    Content::validatePropertyIsNumber( context, data, Identifier::endCharacter, false );
+    Content::validatePropertyIsString( context, data, Identifier::kind, false );
+}
+
+//
+//
+// FoldingRangeResult
+//
+FoldingRangeResult::FoldingRangeResult( void )
+: Data()
+{
+}
+
+FoldingRangeResult::FoldingRangeResult( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+FoldingRangeResult::FoldingRangeResult( const FoldingRanges ranges )
+: Data( Data::array() )
+{
+    for( auto range : ranges )
+    {
+        push_back( range );
+    }
+}
+
+void FoldingRangeResult::validate( const Data& data )
+{
+    static const auto context = CONTENT + " FoldingRangeResult";
+    if( data.is_null() )
+    {
+        // okay, do nothing
+    }
+    else
+    {
+        Content::validateTypeIsArrayOf< FoldingRange >( context, data );
+    }
+}
+
+//
 //  Local variables:
 //  mode: c++
 //  indent-tabs-mode: nil

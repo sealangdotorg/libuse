@@ -364,6 +364,8 @@ namespace libstdhl
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_foldingRange
                 // client to server request
                 // TODO: FIXME: @ppaulweber: provide interface @Clasc
+                virtual FoldingRangeResult textDocument_foldingRange(
+                    const FoldingRangeParams& params ) = 0;
 
               private:
                 std::vector< Message > m_responseBuffer[ 2 ];

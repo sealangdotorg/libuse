@@ -2783,6 +2783,68 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            class FoldingRangeParams : public Data
+            {
+              public:
+                FoldingRangeParams( const Data& data );
+
+                FoldingRangeParams( const TextDocumentIdentifier& textDocument );
+
+                TextDocumentIdentifier textDocument( void ) const;
+
+                static void validate( const Data& data );
+            };
+            enum class FoldingRangeKind
+            {
+                Comment,
+                Imports,
+                Region
+            };
+
+            class FoldingRange : public Data
+            {
+              public:
+                FoldingRange( const Data& data );
+
+                FoldingRange( const std::size_t startLine, const std::size_t endLine );
+
+                std::size_t startLine( void ) const;
+
+                std::size_t endLine( void ) const;
+
+                u1 hasStartCharacter( void ) const;
+
+                void setStartCharacter( const std::size_t startCharacter );
+
+                std::size_t startCharacter( void ) const;
+
+                u1 hasEndCharacter( void ) const;
+
+                void setEndCharacter( const std::size_t endCharacter );
+
+                std::size_t endCharacter( void ) const;
+
+                u1 hasKind( void ) const;
+
+                void setKind( const FoldingRangeKind kind );
+
+                std::string kind( void ) const;
+
+                static void validate( const Data& data );
+            };
+            using FoldingRanges = std::vector< FoldingRange >;
+            class FoldingRangeResult : public Data
+            {
+              public:
+                FoldingRangeResult( void );
+
+                FoldingRangeResult( const Data& data );
+
+                FoldingRangeResult( const FoldingRanges ranges );
+
+                static void validate( const Data& data );
+            };
+
             class ExecuteCommandParams : public Data
             {
               public:

@@ -241,6 +241,10 @@ class TestInterface final : public ServerInterface
     {
         return PrepareRenameResult();
     }
+    FoldingRangeResult textDocument_foldingRange( const FoldingRangeParams& params ) override
+    {
+        return FoldingRangeResult();
+    }
 };
 
 TEST( libstdhl_cpp_network_lsp, parse_packet_request_initialize_monaco )
@@ -797,6 +801,16 @@ TEST( libstdhl_cpp_network_lsp, textDocument_prepareRename )
     auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto start = Position( 1, 1 );
     auto result = server.textDocument_prepareRename( PrepareRenameParams( doc, start ) );
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
+TEST( libstdhl_cpp_network_lsp, textDocument_foldingRange )
+{
+    TestInterface server;
+    auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
+    auto start = Position( 1, 1 );
+    auto result = server.textDocument_foldingRange( FoldingRangeParams( doc ) );
     server.flush( [&]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );

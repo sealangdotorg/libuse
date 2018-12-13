@@ -999,6 +999,47 @@ TEST( libstdhl_cpp_network_lsp_content, PrepareRenameResult )
     auto test = PrepareRenameResult( result );
     test = PrepareRenameResult( wplaceholder );
 }
+
+TEST( libstdhl_cpp_network_lsp_content, FoldingRangeParams )
+{
+    auto params = FoldingRangeParams( TextDocumentIdentifier( uri ) );
+    EXPECT_STREQ(
+        params.textDocument().dump().c_str(), TextDocumentIdentifier( uri ).dump().c_str() );
+    auto p = FoldingRangeParams( params );
+}
+
+TEST( libstdhl_cpp_network_lsp_content, FoldingRange )
+{
+    auto foldingRange = FoldingRange( 1, 2 );
+    EXPECT_FALSE( foldingRange.hasStartCharacter() );
+    EXPECT_FALSE( foldingRange.hasEndCharacter() );
+    EXPECT_FALSE( foldingRange.hasKind() );
+    foldingRange.setStartCharacter( 3 );
+    foldingRange.setEndCharacter( 4 );
+    foldingRange.setKind( FoldingRangeKind::Comment );
+    EXPECT_STREQ( foldingRange.kind().c_str(), Identifier::comment );
+    foldingRange.setKind( FoldingRangeKind::Imports );
+    EXPECT_STREQ( foldingRange.kind().c_str(), Identifier::imports );
+    foldingRange.setKind( FoldingRangeKind::Region );
+    EXPECT_STREQ( foldingRange.kind().c_str(), Identifier::region );
+    EXPECT_TRUE( foldingRange.hasStartCharacter() );
+    EXPECT_TRUE( foldingRange.hasEndCharacter() );
+    EXPECT_TRUE( foldingRange.hasKind() );
+    EXPECT_EQ( foldingRange.startLine(), 1 );
+    EXPECT_EQ( foldingRange.endLine(), 2 );
+    EXPECT_EQ( foldingRange.startCharacter(), 3 );
+    EXPECT_EQ( foldingRange.endCharacter(), 4 );
+    auto f = FoldingRange( foldingRange );
+}
+TEST( libstdhl_cpp_network_lsp_content, FoldingRangeResult )
+{
+    auto empty = FoldingRangeResult();
+    auto ranges = FoldingRanges();
+    ranges.push_back( FoldingRange( 1, 2 ) );
+    auto result = FoldingRangeResult( ranges );
+    auto test = FoldingRangeResult( empty );
+    test = FoldingRangeResult( result );
+}
 //
 //  Local variables:
 //  mode: c++
