@@ -348,7 +348,8 @@ namespace libstdhl
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_onTypeFormatting
                 // client to server request
                 // TODO: FIXME: @ppaulweber: provide interface @Clasc
-
+                virtual DocumentOnTypeFormattingResult textDocument_onTypeFormatting(
+                    const DocumentOnTypeFormattingParams& params ) = 0;
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_rename
                 // client to server request
                 // TODO: FIXME: @ppaulweber: provide interface @Clasc

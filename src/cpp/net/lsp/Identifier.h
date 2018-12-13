@@ -87,6 +87,8 @@ namespace libstdhl
 
                 constexpr const char* capabilities = "capabilities";
 
+                constexpr const char* ch = "ch";
+
                 constexpr const char* change = "change";
 
                 constexpr const char* changes = "changes";
