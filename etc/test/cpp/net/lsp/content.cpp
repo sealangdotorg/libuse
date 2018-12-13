@@ -908,6 +908,15 @@ TEST( libstdhl_cpp_network_lsp_content, DocumentFormattingParams )
     params.options();
 }
 
+TEST( libstdhl_cpp_network_lsp_content, DocumentFormattingResult )
+{
+    auto empty = DocumentFormattingResult();
+    auto edits = TextEdits();
+    edits.push_back( TextEdit( range, text ) );
+    auto result = DocumentFormattingResult( edits );
+    auto r = DocumentFormattingResult( result );
+}
+
 //
 //  Local variables:
 //  mode: c++

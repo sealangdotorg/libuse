@@ -6243,6 +6243,39 @@ void FormattingOptions::validate( const Data& data )
     Content::validatePropertyIsBoolean( context, data, Identifier::insertSpaces, true );
     validateAdditionalOptions( data );
 }
+//
+//
+// DocumentFormattingResult
+//
+DocumentFormattingResult::DocumentFormattingResult( void )
+: Data()
+{
+}
+DocumentFormattingResult::DocumentFormattingResult( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+DocumentFormattingResult::DocumentFormattingResult( const TextEdits& edits )
+: Data( Data::array() )
+{
+    for( auto edit : edits )
+    {
+        push_back( edit );
+    }
+}
+void DocumentFormattingResult::validate( const Data& data )
+{
+    static const auto context = CONTENT + " DocumentFormattingResult:";
+    if( data.is_null() )
+    {
+        // ok, do nothing
+    }
+    else
+    {
+        Content::validateTypeIsArrayOf< TextEdit >( context, data );
+    }
+}
 
 //
 //  Local variables:
