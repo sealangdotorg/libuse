@@ -355,9 +355,11 @@ namespace libstdhl
                 // TODO: FIXME: @ppaulweber: provide interface @Clasc
                 virtual RenameResult textDocument_rename( const RenameParams& params ) = 0;
 
-                // https://microsoft.github.io/language-server-protocol/specification#textDocument_rename
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_prepareRename
                 // client to server request
                 // TODO: FIXME: @ppaulweber: provide interface @Clasc
+                virtual PrepareRenameResult textDocument_prepareRename(
+                    const PrepareRenameParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_foldingRange
                 // client to server request

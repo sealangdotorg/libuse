@@ -2957,6 +2957,21 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
+
+            using PrepareRenameParams = TextDocumentPositionParams;
+
+            class PrepareRenameResult : public Data
+            {
+              public:
+                PrepareRenameResult( void );
+
+                PrepareRenameResult( const Data& data );
+
+                PrepareRenameResult( const Range& range, const std::string& placeholder );
+
+                static void validate( const Data& data );
+            };
+
             class ExecuteCommandParams : public Data
             {
               public:
