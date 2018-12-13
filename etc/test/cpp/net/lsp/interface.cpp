@@ -220,14 +220,19 @@ class TestInterface final : public ServerInterface
         return ColorPresentationResult( ColorPresentations() );
     }
     virtual DocumentFormattingResult textDocument_formatting(
-        const DocumentFormattingParams& params )
+        const DocumentFormattingParams& params ) override
     {
         return DocumentFormattingResult();
     }
     virtual DocumentRangeFormattingResult textDocument_rangeFormatting(
-        const DocumentRangeFormattingParams& params )
+        const DocumentRangeFormattingParams& params ) override
     {
         return DocumentRangeFormattingResult();
+    }
+    virtual DocumentOnTypeFormattingResult textDocument_onTypeFormatting(
+        const DocumentOnTypeFormattingParams& params ) override
+    {
+        return DocumentOnTypeFormattingResult();
     }
 };
 
@@ -750,6 +755,19 @@ TEST( libstdhl_cpp_network_lsp, textDocument_rangeFormatting )
     auto range = Range( start, end );
     auto result =
         server.textDocument_rangeFormatting( DocumentRangeFormattingParams( doc, range, options ) );
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
+
+TEST( libstdhl_cpp_network_lsp, textDocument_onTypeFormatting )
+{
+    TestInterface server;
+    auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
+    auto options = FormattingOptions( 2, true );
+    auto start = Position( 1, 1 );
+    auto result = server.textDocument_onTypeFormatting(
+        DocumentOnTypeFormattingParams( doc, options, start, "a" ) );
     server.flush( [&]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );

@@ -930,6 +930,35 @@ TEST( libstdhl_cpp_network_lsp_content, DocumentRangeFormattingParams )
     params.range();
 }
 
+TEST( libstdhl_cpp_network_lsp_content, DocumentOnTypeFormattingParams )
+{
+    auto options = FormattingOptions( 2, true );
+    options.addBool( "key", true );
+    options.addString( "string", text );
+    options.addNumber( "number", 201 );
+    auto params = DocumentOnTypeFormattingParams(
+        TextDocumentIdentifier( uri ), options, Position( 1, 1 ), "c" );
+    auto p = DocumentOnTypeFormattingParams( params );
+    params.textDocument();
+    params.options();
+    params.position();
+    EXPECT_STREQ( params.ch().c_str(), "c" );
+}
+
+TEST( libstdhl_cpp_network_lsp_content, DocumentOnTypeFormattingRegistrationOptions )
+{
+    auto filter = DocumentFilter();
+    auto filters = std::vector< DocumentFilter >();
+    filters.emplace_back( filter );
+    auto selector = DocumentSelector( filters );
+    auto options = DocumentOnTypeFormattingRegistrationOptions( selector, "a" );
+    EXPECT_FALSE( options.hasMoreTriggerCharacter() );
+    options.addMoreTriggerCharacter( "b" );
+    EXPECT_TRUE( options.hasMoreTriggerCharacter() );
+    EXPECT_STREQ( options.moreTriggerCharacter()[ 0 ].c_str(), "b" );
+    EXPECT_STREQ( options.firstTriggerCharacter().c_str(), "a" );
+    auto o = DocumentOnTypeFormattingRegistrationOptions( options );
+}
 //
 //  Local variables:
 //  mode: c++

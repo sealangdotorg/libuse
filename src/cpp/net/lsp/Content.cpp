@@ -6303,7 +6303,101 @@ void DocumentRangeFormattingParams::validate( const Data& data )
     Content::validateTypeIsObject( context, data );
     Content::validatePropertyIs< Range >( context, data, Identifier::range, true );
 }
+//
+//
+// DocumentOnTypeFormattingParams
+//
+DocumentOnTypeFormattingParams::DocumentOnTypeFormattingParams( const Data& data )
+: DocumentFormattingParams( data )
+{
+    validate( data );
+}
 
+DocumentOnTypeFormattingParams::DocumentOnTypeFormattingParams(
+    const TextDocumentIdentifier& textDocument,
+    const FormattingOptions& options,
+    const Position& position,
+    const std::string& ch )
+: DocumentFormattingParams( textDocument, options )
+{
+    operator[]( Identifier::position ) = Data::from_cbor( Data::to_cbor( position ) );
+    operator[]( Identifier::ch ) = ch;
+}
+
+Position DocumentOnTypeFormattingParams::position( void ) const
+{
+    return operator[]( Identifier::position );
+}
+
+std::string DocumentOnTypeFormattingParams::ch( void ) const
+{
+    return operator[]( Identifier::ch ).get< std::string >();
+}
+
+void DocumentOnTypeFormattingParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " DocumentOnTypeFormattingParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< Position >( context, data, Identifier::position, true );
+    Content::validatePropertyIsString( context, data, Identifier::ch, true );
+}
+
+//
+//
+// DocumentOnTypeFormattingRegistrationOptions
+//
+DocumentOnTypeFormattingRegistrationOptions::DocumentOnTypeFormattingRegistrationOptions(
+    const Data& data )
+: TextDocumentRegistrationOptions( data )
+{
+    validate( data );
+}
+
+DocumentOnTypeFormattingRegistrationOptions::DocumentOnTypeFormattingRegistrationOptions(
+    const DocumentSelector& documentSelector, const std::string& firstTriggerCharacter )
+: TextDocumentRegistrationOptions( documentSelector )
+{
+    operator[]( Identifier::firstTriggerCharacter ) = firstTriggerCharacter;
+}
+std::string DocumentOnTypeFormattingRegistrationOptions::firstTriggerCharacter( void ) const
+{
+    return operator[]( Identifier::firstTriggerCharacter ).get< std::string >();
+}
+
+u1 DocumentOnTypeFormattingRegistrationOptions::hasMoreTriggerCharacter( void ) const
+{
+    return find( Identifier::moreTriggerCharacter ) != end();
+}
+
+void DocumentOnTypeFormattingRegistrationOptions::addMoreTriggerCharacter(
+    const std::string& character )
+{
+    if( not hasMoreTriggerCharacter() )
+    {
+        operator[]( Identifier::moreTriggerCharacter ) = Data::array();
+    }
+    operator[]( Identifier::moreTriggerCharacter ).push_back( character );
+}
+
+std::vector< std::string > DocumentOnTypeFormattingRegistrationOptions::moreTriggerCharacter(
+    void ) const
+{
+    auto result = std::vector< std::string >();
+    for( auto ch : operator[]( Identifier::moreTriggerCharacter ) )
+    {
+        result.push_back( ch );
+    }
+    return result;
+}
+
+void DocumentOnTypeFormattingRegistrationOptions::validate( const Data& data )
+{
+    static const auto context = CONTENT + " DocumentOnTypeFormattingRegistrationOptions:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::firstTriggerCharacter, true );
+    Content::validatePropertyIsArrayOfString(
+        context, data, Identifier::moreTriggerCharacter, true );
+}
 //
 //  Local variables:
 //  mode: c++

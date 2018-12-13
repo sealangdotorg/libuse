@@ -2868,6 +2868,47 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            class DocumentOnTypeFormattingParams : public DocumentFormattingParams
+            {
+              public:
+                DocumentOnTypeFormattingParams( const Data& data );
+
+                DocumentOnTypeFormattingParams(
+                    const TextDocumentIdentifier& textDocument,
+                    const FormattingOptions& options,
+                    const Position& position,
+                    const std::string& ch );
+
+                Position position( void ) const;
+
+                std::string ch( void ) const;  // character that has been typed.
+
+                static void validate( const Data& data );
+            };
+
+            class DocumentOnTypeFormattingRegistrationOptions
+            : public TextDocumentRegistrationOptions
+            {
+              public:
+                DocumentOnTypeFormattingRegistrationOptions( const Data& data );
+
+                DocumentOnTypeFormattingRegistrationOptions(
+                    const DocumentSelector& documentSelector,
+                    const std::string& firstTriggerCharacter );
+
+                std::string firstTriggerCharacter( void ) const;
+
+                u1 hasMoreTriggerCharacter( void ) const;
+
+                void addMoreTriggerCharacter( const std::string& character );
+
+                std::vector< std::string > moreTriggerCharacter( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            using DocumentOnTypeFormattingResult = DocumentFormattingResult;
+
             using DocumentRangeFormattingResult = DocumentFormattingResult;
 
             class ExecuteCommandParams : public Data
