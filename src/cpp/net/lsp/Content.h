@@ -2722,6 +2722,52 @@ namespace libstdhl
 
             using DocumentRangeFormattingResult = DocumentFormattingResult;
 
+            class RenameParams : public Data
+            {
+              public:
+                RenameParams( const Data& data );
+
+                RenameParams(
+                    const TextDocumentIdentifier& textDocument,
+                    const Position& position,
+                    const std::string& newName );
+
+                TextDocumentIdentifier textDocument( void ) const;
+
+                Position position( void ) const;
+
+                std::string newName( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class RenameRegistrationOptions : public TextDocumentRegistrationOptions
+            {
+              public:
+                RenameRegistrationOptions( const Data& data );
+
+                RenameRegistrationOptions( const DocumentSelector& selector );
+
+                u1 hasPrepareProvider( void ) const;
+
+                void setPrepareProvider( const u1 prepareProvider );
+
+                u1 prepareProvider( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class RenameResult : public Data
+            {
+              public:
+                RenameResult( void );
+
+                RenameResult( const Data& data );
+
+                RenameResult( const WorkspaceEdit& edit );
+
+                static void validate( const Data& data );
+            };
             class ExecuteCommandParams : public Data
             {
               public:

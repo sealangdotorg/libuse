@@ -209,30 +209,33 @@ class TestInterface final : public ServerInterface
         auto end = Position( 1, 10 );
         return DocumentLinkResolveResult( Range( start, end ) );
     }
-    virtual DocumentColorResult textDocument_documentColor(
-        const DocumentColorParams& params ) override
+    DocumentColorResult textDocument_documentColor( const DocumentColorParams& params ) override
     {
         return DocumentColorResult( ColorInformations() );
     }
-    virtual ColorPresentationResult textDocument_colorPresentation(
+    ColorPresentationResult textDocument_colorPresentation(
         const ColorPresentationParams& params ) override
     {
         return ColorPresentationResult( ColorPresentations() );
     }
-    virtual DocumentFormattingResult textDocument_formatting(
+    DocumentFormattingResult textDocument_formatting(
         const DocumentFormattingParams& params ) override
     {
         return DocumentFormattingResult();
     }
-    virtual DocumentRangeFormattingResult textDocument_rangeFormatting(
+    DocumentRangeFormattingResult textDocument_rangeFormatting(
         const DocumentRangeFormattingParams& params ) override
     {
         return DocumentRangeFormattingResult();
     }
-    virtual DocumentOnTypeFormattingResult textDocument_onTypeFormatting(
+    DocumentOnTypeFormattingResult textDocument_onTypeFormatting(
         const DocumentOnTypeFormattingParams& params ) override
     {
         return DocumentOnTypeFormattingResult();
+    }
+    RenameResult textDocument_rename( const RenameParams& params ) override
+    {
+        return RenameResult();
     }
 };
 
@@ -768,6 +771,17 @@ TEST( libstdhl_cpp_network_lsp, textDocument_onTypeFormatting )
     auto start = Position( 1, 1 );
     auto result = server.textDocument_onTypeFormatting(
         DocumentOnTypeFormattingParams( doc, options, start, "a" ) );
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
+
+TEST( libstdhl_cpp_network_lsp, textDocument_rename )
+{
+    TestInterface server;
+    auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
+    auto start = Position( 1, 1 );
+    auto result = server.textDocument_rename( RenameParams( doc, start, "newName" ) );
     server.flush( [&]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );

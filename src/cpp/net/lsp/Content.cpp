@@ -6398,6 +6398,118 @@ void DocumentOnTypeFormattingRegistrationOptions::validate( const Data& data )
     Content::validatePropertyIsArrayOfString(
         context, data, Identifier::moreTriggerCharacter, true );
 }
+
+//
+//
+// RenameParams
+//
+RenameParams::RenameParams( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+RenameParams::RenameParams(
+    const TextDocumentIdentifier& textDocument,
+    const Position& position,
+    const std::string& newName )
+: Data( Data::object() )
+{
+    operator[]( Identifier::textDocument ) = Data::from_cbor( Data::to_cbor( textDocument ) );
+    operator[]( Identifier::position ) = Data::from_cbor( Data::to_cbor( position ) );
+    operator[]( Identifier::newName ) = newName;
+}
+
+TextDocumentIdentifier RenameParams::textDocument( void ) const
+{
+    return operator[]( Identifier::textDocument );
+}
+
+Position RenameParams::position( void ) const
+{
+    return operator[]( Identifier::position );
+}
+
+std::string RenameParams::newName( void ) const
+{
+    return operator[]( Identifier::newName ).get< std::string >();
+}
+
+void RenameParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " RenameParams:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< TextDocumentIdentifier >(
+        context, data, Identifier::textDocument, true );
+    Content::validatePropertyIs< Position >( context, data, Identifier::position, true );
+    Content::validatePropertyIsString( context, data, Identifier::newName, true );
+}
+
+RenameRegistrationOptions::RenameRegistrationOptions( const Data& data )
+: TextDocumentRegistrationOptions( data )
+{
+    validate( data );
+}
+
+RenameRegistrationOptions::RenameRegistrationOptions( const DocumentSelector& selector )
+: TextDocumentRegistrationOptions( selector )
+{
+}
+
+u1 RenameRegistrationOptions::hasPrepareProvider( void ) const
+{
+    return find( Identifier::prepareProvider ) != end();
+}
+
+void RenameRegistrationOptions::setPrepareProvider( const u1 prepareProvider )
+{
+    operator[]( Identifier::prepareProvider ) = prepareProvider;
+}
+
+u1 RenameRegistrationOptions::prepareProvider( void ) const
+{
+    return at( Identifier::prepareProvider ).get< u1 >();
+}
+
+void RenameRegistrationOptions::validate( const Data& data )
+{
+    static const auto context = CONTENT + " RenameRegistrationOptions";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsBoolean( context, data, Identifier::prepareProvider, false );
+}
+
+//
+//
+// RenameResult
+//
+RenameResult::RenameResult( void )
+: Data()
+{
+}
+
+RenameResult::RenameResult( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+RenameResult::RenameResult( const WorkspaceEdit& edit )
+: Data( edit )
+{
+}
+
+void RenameResult::validate( const Data& data )
+{
+    static const auto context = CONTENT + " RenameResult";
+    if( data.is_null() )
+    {
+        // ok, do nothing.
+    }
+    else
+    {
+        WorkspaceEdit::validate( data );
+    }
+}
 //
 //  Local variables:
 //  mode: c++

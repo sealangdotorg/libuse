@@ -353,6 +353,7 @@ namespace libstdhl
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_rename
                 // client to server request
                 // TODO: FIXME: @ppaulweber: provide interface @Clasc
+                virtual RenameResult textDocument_rename( const RenameParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_rename
                 // client to server request
