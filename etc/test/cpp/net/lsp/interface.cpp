@@ -224,6 +224,11 @@ class TestInterface final : public ServerInterface
     {
         return DocumentFormattingResult();
     }
+    virtual DocumentRangeFormattingResult textDocument_rangeFormatting(
+        const DocumentRangeFormattingParams& params )
+    {
+        return DocumentRangeFormattingResult();
+    }
 };
 
 TEST( libstdhl_cpp_network_lsp, parse_packet_request_initialize_monaco )
@@ -730,6 +735,21 @@ TEST( libstdhl_cpp_network_lsp, textDocument_formatting )
     auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto options = FormattingOptions( 2, true );
     auto result = server.textDocument_formatting( DocumentFormattingParams( doc, options ) );
+    server.flush( [&]( const Message& response ) {
+        const auto packet = libstdhl::Network::LSP::Packet( response );
+    } );
+}
+
+TEST( libstdhl_cpp_network_lsp, textDocument_rangeFormatting )
+{
+    TestInterface server;
+    auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
+    auto options = FormattingOptions( 2, true );
+    auto start = Position( 1, 1 );
+    auto end = Position( 1, 10 );
+    auto range = Range( start, end );
+    auto result =
+        server.textDocument_rangeFormatting( DocumentRangeFormattingParams( doc, range, options ) );
     server.flush( [&]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
