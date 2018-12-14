@@ -47,6 +47,7 @@
 #include <libstdhl/net/lsp/Message>
 
 #include <mutex>
+#include <unordered_map>
 
 /**
    @brief    TBD
@@ -78,6 +79,12 @@ namespace libstdhl
                 void respond( const ResponseMessage& message );
 
                 void notify( const NotificationMessage& message );
+
+                void request(
+                    const RequestMessage& message,
+                    const std::function< void( const ResponseMessage& ) >& callback );
+
+                void handle( const ResponseMessage& message );
 
                 void flush( const std::function< void( const Message& ) >& callback );
 
@@ -118,8 +125,10 @@ namespace libstdhl
 
                 // https://microsoft.github.io/language-server-protocol/specification#window_showMessageRequest
                 // server to client request
-                virtual ShowMessageRequestResult window_showMessageRequest(
-                    const ShowMessageRequestParams& params ) final;
+                virtual void window_showMessageRequest(
+                    const ShowMessageRequestParams& params,
+                    const std::function< void( const ShowMessageRequestResult& ) >& callback )
+                    final;
 
                 // https://microsoft.github.io/language-server-protocol/specification#window_logMessage
                 // server to client notification
@@ -375,6 +384,14 @@ namespace libstdhl
                 std::vector< Message > m_notificationBuffer[ 2 ];
                 std::size_t m_notificationBufferSlot;
                 std::mutex m_notificationBufferLock;
+
+                std::vector< Message > m_requestBuffer[ 2 ];
+                std::size_t m_requestBufferSlot;
+                std::mutex m_requestBufferLock;
+                std::unordered_map<
+                    std::string,
+                    const std::function< void( const ResponseMessage& ) >* >
+                    m_requestCallback;
 
                 std::mutex m_serverFlushLock;
             };

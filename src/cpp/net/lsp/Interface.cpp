@@ -56,6 +56,10 @@ ServerInterface::ServerInterface( void )
 , m_notificationBufferSlot( 0 )
 , m_notificationBufferLock()
 , m_serverFlushLock()
+, m_requestBuffer()
+, m_requestBufferSlot( 0 )
+, m_requestBufferLock()
+, m_requestCallback()
 {
 }
 
@@ -69,6 +73,25 @@ void ServerInterface::notify( const NotificationMessage& message )
 {
     std::lock_guard< std::mutex > guard( m_notificationBufferLock );
     m_notificationBuffer[ m_notificationBufferSlot ].emplace_back( message );
+}
+
+void ServerInterface::request(
+    const RequestMessage& message, const std::function< void( const ResponseMessage& ) >& callback )
+{
+    std::lock_guard< std::mutex > guard( m_requestBufferLock );
+    m_requestBuffer[ m_requestBufferSlot ].emplace_back( message );
+
+    // TODO: @ppaulweber: check for unique value (msg id) condition @Clasc
+    m_requestCallback[ message.id() ] = &callback;
+}
+
+void ServerInterface::handle( const ResponseMessage& message )
+{
+    const auto result = m_requestCallback.find( message.id() );
+    if( result != m_requestCallback.end() )
+    {
+        ( *result->second )( message );
+    }
 }
 
 void ServerInterface::flush( const std::function< void( const Message& ) >& callback )
@@ -102,6 +125,19 @@ void ServerInterface::flush( const std::function< void( const Message& ) >& call
     }
 
     m_notificationBuffer[ pos ].clear();
+
+    {
+        std::lock_guard< std::mutex > guard( m_requestBufferLock );
+        pos = m_requestBufferSlot;
+        m_requestBufferSlot = ( pos + 1 ) % 2;
+    }
+
+    for( auto msg : m_requestBuffer[ pos ] )
+    {
+        callback( msg );
+    }
+
+    m_requestBuffer[ pos ].clear();
 }
 void ServerInterface::server_cancel( const CancelParams& params ) noexcept
 {
@@ -117,16 +153,20 @@ void ServerInterface::window_showMessage( const ShowMessageParams& params ) noex
     notify( msg );
 }
 
-ShowMessageRequestResult ServerInterface::window_showMessageRequest(
-    const ShowMessageRequestParams& params )
+void ServerInterface::window_showMessageRequest(
+    const ShowMessageRequestParams& params,
+    const std::function< void( const ShowMessageRequestResult& ) >& callback )
 {
     RequestMessage msg( 0 /* TODO */, std::string{ Identifier::window_showMessageRequest } );
-
     msg.setParams( params );
-    // request( msg );   // TODO: FIXME: @Clasc
-    // TODO: FIXME: @Clasc: handle response
 
-    return ShowMessageRequestResult( std::string{ "TODO" } );
+    const auto responseCallback = [&]( const ResponseMessage& response ) {
+        auto result = static_cast< const ShowMessageRequestResult >( response.result() );
+        callback( result );
+        // TODO: @ppaulweber: error handling has to be defined
+    };
+
+    request( msg, responseCallback );
 }
 
 void ServerInterface::window_logMessage( const LogMessageParams& params ) noexcept
