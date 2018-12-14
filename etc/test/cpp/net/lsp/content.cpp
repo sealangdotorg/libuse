@@ -61,6 +61,15 @@ const auto method = std::string( "method" );
 const auto name = std::string( "name" );
 const auto id = std::string( "id" );
 
+TEST( libstdhl_cpp_network_lsp_content, CancelParams )
+{
+    auto params = CancelParams( 1 );
+    auto p = CancelParams( params );
+    auto s = CancelParams( std::string( "2" ) );
+    EXPECT_STREQ( params.id().c_str(), "1" );
+    EXPECT_STREQ( s.id().c_str(), "2" );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, ShowMessageParams )
 {
     auto params = ShowMessageParams( MessageType::Error, message );

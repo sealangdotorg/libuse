@@ -103,6 +103,12 @@ void ServerInterface::flush( const std::function< void( const Message& ) >& call
 
     m_notificationBuffer[ pos ].clear();
 }
+void ServerInterface::server_cancel( const CancelParams& params ) noexcept
+{
+    NotificationMessage msg( std::string{ Identifier::cancelRequest } );
+    msg.setParams( params );
+    notify( msg );
+}
 
 void ServerInterface::window_showMessage( const ShowMessageParams& params ) noexcept
 {

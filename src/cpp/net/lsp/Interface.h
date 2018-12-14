@@ -103,10 +103,10 @@ namespace libstdhl
                 virtual void exit( void ) noexcept = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#cancelRequest
-                // client to server notification
                 // server to client notification
-                // TODO: FIXME: @ppaulweber: provide interface @Clasc
-
+                virtual void server_cancel( const CancelParams& params ) noexcept final;
+                // client to server notification
+                virtual void client_cancel( const CancelParams& params ) noexcept = 0;
                 //
                 //
                 //  Window

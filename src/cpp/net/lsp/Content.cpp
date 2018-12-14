@@ -2408,6 +2408,51 @@ void InitializeError::validate( const Data& data )
 
 //
 //
+// CancelParams
+//
+CancelParams::CancelParams( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+CancelParams::CancelParams( const std::size_t& id )
+: Data( Data::object() )
+{
+    operator[]( Identifier::id ) = id;
+}
+
+CancelParams::CancelParams( const std::string& id )
+: Data( Data::object() )
+{
+    operator[]( Identifier::id ) = id;
+}
+std::string CancelParams::id( void ) const
+{
+    std::string result;
+    if( operator[]( Identifier::id ).is_number() )
+    {
+        return std::to_string( operator[]( Identifier::id ).get< std::size_t >() );
+    }
+    return operator[]( Identifier::id ).get< std::string >();
+}
+
+void CancelParams::validate( const Data& data )
+{
+    static const auto context = CONTENT + " CancelParams:";
+    Content::validateTypeIsObject( context, data );
+    if( data[ Identifier::id ].is_number() )
+    {
+        Content::validatePropertyIsNumber( context, data, Identifier::id, true );
+    }
+    else
+    {
+        Content::validatePropertyIsString( context, data, Identifier::id, true );
+    }
+}
+
+//
+//
 // ShowMessageParams
 //
 
