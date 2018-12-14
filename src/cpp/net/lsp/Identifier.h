@@ -85,6 +85,8 @@ namespace libstdhl
 
                 // C
 
+                constexpr const char* cancelRequest = "$/cancelRequest";
+
                 constexpr const char* capabilities = "capabilities";
 
                 constexpr const char* ch = "ch";

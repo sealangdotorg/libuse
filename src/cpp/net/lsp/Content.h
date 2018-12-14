@@ -1122,6 +1122,20 @@ namespace libstdhl
                 Log = 4
             };
 
+            class CancelParams : public Data
+            {
+              public:
+                CancelParams( const Data& data );
+
+                CancelParams( const std::size_t& id );
+
+                CancelParams( const std::string& id );
+
+                std::string id( void ) const;
+
+                static void validate( const Data& data );
+            };
+
             class ShowMessageParams : public Data
             {
               public:

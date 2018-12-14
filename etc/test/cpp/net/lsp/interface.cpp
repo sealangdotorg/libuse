@@ -72,6 +72,9 @@ class TestInterface final : public ServerInterface
     void exit( void ) noexcept override
     {
     }
+    void client_cancel( const CancelParams& params ) noexcept override
+    {
+    }
 
     ExecuteCommandResult workspace_executeCommand( const ExecuteCommandParams& params ) override
     {
