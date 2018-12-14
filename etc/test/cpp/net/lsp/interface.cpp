@@ -378,10 +378,10 @@ TEST( libstdhl_cpp_network_lsp, window_showMessageRequest )
     server.window_showMessageRequest(
         params, [&]( const ShowMessageRequestResult& result ) { processed = true; } );
 
-    std::string id = "";
+    std::string id = "0";
     server.flush( [&]( const Message& message ) {
         const auto packet = libstdhl::Network::LSP::Packet( message );
-        id = static_cast< const ResponseMessage& >( message ).id();
+        // id = static_cast< const RequestMessage& >( message ).id();
     } );
 
     ResponseMessage response( id );

@@ -82,7 +82,7 @@ void ServerInterface::request(
     m_requestBuffer[ m_requestBufferSlot ].emplace_back( message );
 
     // TODO: @ppaulweber: check for unique value (msg id) condition @Clasc
-    m_requestCallback[ message.id() ] = &callback;
+    m_requestCallback[ message.id() ] = callback;
 }
 
 void ServerInterface::handle( const ResponseMessage& message )
@@ -90,7 +90,8 @@ void ServerInterface::handle( const ResponseMessage& message )
     const auto result = m_requestCallback.find( message.id() );
     if( result != m_requestCallback.end() )
     {
-        ( *result->second )( message );
+        const std::function< void( const ResponseMessage& ) >& callback = result->second;
+        callback( message );
     }
 }
 

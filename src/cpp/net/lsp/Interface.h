@@ -388,9 +388,7 @@ namespace libstdhl
                 std::vector< Message > m_requestBuffer[ 2 ];
                 std::size_t m_requestBufferSlot;
                 std::mutex m_requestBufferLock;
-                std::unordered_map<
-                    std::string,
-                    const std::function< void( const ResponseMessage& ) >* >
+                std::unordered_map< std::string, std::function< void( const ResponseMessage& ) > >
                     m_requestCallback;
 
                 std::mutex m_serverFlushLock;
