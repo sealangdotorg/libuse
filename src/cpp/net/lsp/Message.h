@@ -195,9 +195,11 @@ namespace libstdhl
 
                 ResponseMessage( const std::size_t id );
 
-                ResponseMessage( const std::string id );
+                ResponseMessage( const std::string& id );
 
                 ResponseMessage( void );
+
+                std::string id( void ) const;
 
                 u1 hasResult( void ) const;
 

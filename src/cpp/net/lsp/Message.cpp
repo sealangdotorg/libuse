@@ -190,10 +190,11 @@ Message Message::parse( const std::string& data )
         case ID::UNKNOWN:  // [[fallthrough]]
         case ID::_SIZE_:
         {
-            throw std::invalid_argument( "LSP: unknown JSON-RPC message payload" );
-            return Message();
+            break;
         }
     }
+    throw std::invalid_argument( "LSP: unknown JSON-RPC message payload" );
+    return Message();
 }
 
 //
@@ -456,10 +457,10 @@ ResponseMessage::ResponseMessage( const Data& data )
 ResponseMessage::ResponseMessage( const std::size_t id )
 : Message( ID::RESPONSE_MESSAGE )
 {
-    operator[]( Identifier::id ) = id;
+    operator[]( Identifier::id ) = std::to_string( id );
 }
 
-ResponseMessage::ResponseMessage( const std::string id )
+ResponseMessage::ResponseMessage( const std::string& id )
 : Message( ID::RESPONSE_MESSAGE )
 {
     operator[]( Identifier::id ) = id;
@@ -469,6 +470,11 @@ ResponseMessage::ResponseMessage( void )
 : Message( ID::RESPONSE_MESSAGE )
 {
     operator[]( Identifier::id ) = nullptr;
+}
+
+std::string ResponseMessage::id( void ) const
+{
+    return at( Identifier::id ).get< std::string >();
 }
 
 u1 ResponseMessage::hasResult( void ) const
@@ -515,7 +521,7 @@ void ResponseMessage::setError( const ErrorCode code, const std::string& name, c
 
 void ResponseMessage::process( ServerInterface& interface ) const
 {
-    assert( !" TODO! " );
+    interface.handle( *this );
 }
 
 void ResponseMessage::validate( const Data& data )
