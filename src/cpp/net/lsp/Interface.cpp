@@ -184,12 +184,17 @@ void ServerInterface::telemetry_event( const TelemetryEventParams& params ) noex
     notify( msg );
 }
 
-void ServerInterface::client_registerCapability( const RegistrationParams& params )
+void ServerInterface::client_registerCapability(
+    const RegistrationParams& params, const std::function< void( void ) >& callback )
 {
     RequestMessage msg( 0 /* TODO */, std::string{ Identifier::client_registerCapability } );
     msg.setParams( params );
-    // request( msg );   // TODO: FIXME: @Clasc
-    // TODO: FIXME: @Clasc: handle response
+
+    const auto responseCallback = [&]( const ResponseMessage& response ) {
+        callback();
+        // TODO: @ppaulweber: error handling has to be defined
+    };
+    request( msg, responseCallback );
 }
 
 void ServerInterface::client_unregisterCapability( const UnregistrationParams& params )
