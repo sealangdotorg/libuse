@@ -375,13 +375,15 @@ TEST( libstdhl_cpp_network_lsp, window_showMessageRequest )
 
     u1 processed = false;
     const auto params = ShowMessageRequestParams( MessageType::Info, "Info Message" );
-    server.window_showMessageRequest(
-        params, [&]( const ShowMessageRequestResult& result ) { processed = true; } );
+    server.window_showMessageRequest( params, [&]( const ShowMessageRequestResult& result ) {
+        processed = true;
+        EXPECT_STREQ( result.title().c_str(), "title" );
+    } );
 
-    std::string id = "0";
+    std::string id = "";
     server.flush( [&]( const Message& message ) {
         const auto packet = libstdhl::Network::LSP::Packet( message );
-        // id = static_cast< const RequestMessage& >( message ).id();
+        id = static_cast< const RequestMessage& >( message ).id();
     } );
 
     ResponseMessage response( id );
