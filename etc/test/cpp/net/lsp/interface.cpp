@@ -420,20 +420,25 @@ TEST( libstdhl_cpp_network_lsp, telemetry_event )
 TEST( libstdhl_cpp_network_lsp, client_registerCapability )
 {
     TestInterface server;
+    u1 processed = false;
     Registration reg( "1", "test/method" );
     Registration reg2( "2", "test/method" );
     auto registrations = std::vector< Registration >( { reg, reg2 } );
-
-    server.client_registerCapability( RegistrationParams( registrations ) );
-
+    server.client_registerCapability( RegistrationParams( registrations ), [&]( void ) {
+        processed = true;
+    } );
     Data registrationsData( Data::object() );
     registrationsData[ "registrations" ].push_back( reg );
 
-    server.client_registerCapability( RegistrationParams( registrationsData ) );
-
-    server.flush( [&]( const Message& response ) {
-        const auto packet = libstdhl::Network::LSP::Packet( response );
+    std::string id = "";
+    server.flush( [&]( const Message& message ) {
+        const auto packet = libstdhl::Network::LSP::Packet( message );
+        id = static_cast< const RequestMessage& >( message ).id();
     } );
+    ResponseMessage response( id );
+    EXPECT_FALSE( processed );
+    response.process( server );
+    EXPECT_TRUE( processed );
 }
 
 TEST( libstdhl_cpp_network_lsp, client_unregisterCapability )
