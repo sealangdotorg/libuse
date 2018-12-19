@@ -424,9 +424,8 @@ TEST( libstdhl_cpp_network_lsp, client_registerCapability )
     Registration reg( "1", "test/method" );
     Registration reg2( "2", "test/method" );
     auto registrations = std::vector< Registration >( { reg, reg2 } );
-    server.client_registerCapability( RegistrationParams( registrations ), [&]( void ) {
-        processed = true;
-    } );
+    server.client_registerCapability(
+        RegistrationParams( registrations ), [&]( void ) { processed = true; } );
     Data registrationsData( Data::object() );
     registrationsData[ "registrations" ].push_back( reg );
 
@@ -439,6 +438,44 @@ TEST( libstdhl_cpp_network_lsp, client_registerCapability )
     EXPECT_FALSE( processed );
     response.process( server );
     EXPECT_TRUE( processed );
+}
+
+TEST( libstdhl_cpp_network_lsp, ID_increment )
+{
+    TestInterface server;
+    u1 messageRequestProcessed = false;
+    std::string id = "";
+
+    // make first request
+    server.window_showMessageRequest(
+        ShowMessageRequestParams( MessageType::Info, "Message" ),
+        [&]( const ShowMessageRequestResult& result ) { messageRequestProcessed = true; } );
+    server.flush( [&]( const Message& message ) {
+        const auto packet = libstdhl::Network::LSP::Packet( message );
+        id = static_cast< const RequestMessage& >( message ).id();
+    } );
+
+    ResponseMessage response( id );
+    response.setResult( MessageActionItem( std::string{ "title" } ) );
+    EXPECT_FALSE( messageRequestProcessed );
+    response.process( server );
+    EXPECT_TRUE( messageRequestProcessed );
+    EXPECT_STREQ( id.c_str(), "0" );
+
+    // make second request
+    u1 registerRequestProcessed = false;
+    server.client_registerCapability(
+        RegistrationParams( Registrations() ), [&]( void ) { registerRequestProcessed = true; } );
+    server.flush( [&]( const Message& message ) {
+        const auto packet = libstdhl::Network::LSP::Packet( message );
+        id = static_cast< const RequestMessage& >( message ).id();
+    } );
+    ResponseMessage registerResponse( id );
+    registerResponse.setResult( Data() );
+    EXPECT_FALSE( registerRequestProcessed );
+    registerResponse.process( server );
+    EXPECT_TRUE( registerRequestProcessed );
+    EXPECT_STREQ( id.c_str(), "1" );
 }
 
 TEST( libstdhl_cpp_network_lsp, client_unregisterCapability )

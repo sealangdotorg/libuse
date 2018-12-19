@@ -158,7 +158,7 @@ void ServerInterface::window_showMessageRequest(
     const ShowMessageRequestParams& params,
     const std::function< void( const ShowMessageRequestResult& ) >& callback )
 {
-    RequestMessage msg( 0 /* TODO */, std::string{ Identifier::window_showMessageRequest } );
+    RequestMessage msg( request_id++, std::string{ Identifier::window_showMessageRequest } );
     msg.setParams( params );
 
     const auto responseCallback = [&]( const ResponseMessage& response ) {
@@ -187,7 +187,7 @@ void ServerInterface::telemetry_event( const TelemetryEventParams& params ) noex
 void ServerInterface::client_registerCapability(
     const RegistrationParams& params, const std::function< void( void ) >& callback )
 {
-    RequestMessage msg( 0 /* TODO */, std::string{ Identifier::client_registerCapability } );
+    RequestMessage msg( request_id++, std::string{ Identifier::client_registerCapability } );
     msg.setParams( params );
 
     const auto responseCallback = [&]( const ResponseMessage& response ) {
