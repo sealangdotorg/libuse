@@ -167,7 +167,8 @@ namespace libstdhl
 
                 // https://microsoft.github.io/language-server-protocol/specification#workspace_workspaceFolders
                 // server to client request
-                virtual WorkspaceFoldersResult workspace_workspaceFolders( void ) final;
+                virtual void workspace_workspaceFolders(
+                    const std::function< void( WorkspaceFoldersResult ) >& callback ) final;
 
                 // https://microsoft.github.io/language-server-protocol/specification#workspace_didChangeWorkspaceFolders
                 // client to server notification
