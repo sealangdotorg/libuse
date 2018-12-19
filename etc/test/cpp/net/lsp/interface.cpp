@@ -481,20 +481,23 @@ TEST( libstdhl_cpp_network_lsp, ID_increment )
 TEST( libstdhl_cpp_network_lsp, client_unregisterCapability )
 {
     TestInterface server;
+    u1 processed = false;
+    std::string id = "";
     Unregistration reg( "1", "test/method" );
     Unregistration reg2( "2", "test/method" );
     auto unregistrations = std::vector< Unregistration >( { reg, reg2 } );
-
-    server.client_unregisterCapability( UnregistrationParams( unregistrations ) );
-
-    Data unregistrationsData( Data::object() );
-    unregistrationsData[ "unregistrations" ].push_back( reg );
-
-    server.client_unregisterCapability( UnregistrationParams( unregistrationsData ) );
-
-    server.flush( [&]( const Message& response ) {
-        const auto packet = libstdhl::Network::LSP::Packet( response );
+    server.client_unregisterCapability(
+        UnregistrationParams( unregistrations ), [&]( void ) { processed = true; } );
+    server.flush( [&]( const Message& message ) {
+        const auto packet = libstdhl::Network::LSP::Packet( message );
+        id = static_cast< const RequestMessage& >( message ).id();
     } );
+    ResponseMessage response( id );
+    response.setResult( Data() );
+    EXPECT_FALSE( processed );
+    response.process( server );
+    EXPECT_TRUE( processed );
+    EXPECT_STREQ( id.c_str(), "0" );
 }
 
 TEST( libstdhl_cpp_network_lsp, workspace_didChangeWorkspaceFolders )

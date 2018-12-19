@@ -197,12 +197,16 @@ void ServerInterface::client_registerCapability(
     request( msg, responseCallback );
 }
 
-void ServerInterface::client_unregisterCapability( const UnregistrationParams& params )
+void ServerInterface::client_unregisterCapability(
+    const UnregistrationParams& params, const std::function< void( void ) >& callback )
 {
-    RequestMessage msg( 0 /* TODO */, std::string{ Identifier::client_unregisterCapability } );
+    RequestMessage msg( request_id++, std::string{ Identifier::client_unregisterCapability } );
     msg.setParams( params );
-    // request( msg );   // TODO: FIXME: @Clasc
-    // TODO: FIXME: @Clasc: handle response
+    const auto responseCallback = [&]( const ResponseMessage& response ) {
+        callback();
+        // TODO: @ppaulweber: error handling has to be defined
+    };
+    request( msg, responseCallback );
 }
 
 WorkspaceFoldersResult ServerInterface::workspace_workspaceFolders( void )
