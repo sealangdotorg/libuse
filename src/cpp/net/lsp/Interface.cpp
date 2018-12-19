@@ -209,13 +209,17 @@ void ServerInterface::client_unregisterCapability(
     request( msg, responseCallback );
 }
 
-WorkspaceFoldersResult ServerInterface::workspace_workspaceFolders( void )
+void ServerInterface::workspace_workspaceFolders(
+    const std::function< void( WorkspaceFoldersResult ) >& callback )
 {
-    RequestMessage msg( 0 /* TODO */, std::string{ Identifier::workspace_workspaceFolders } );
-    // request( msg );   // TODO: FIXME: @Clasc
-    // TODO: FIXME: @Clasc: handle response
-    auto folders = std::vector< WorkspaceFolder >();
-    return WorkspaceFoldersResult( folders );
+    RequestMessage msg( request_id++, std::string{ Identifier::workspace_workspaceFolders } );
+    msg.setParams( Data() );
+    const auto responseCallback = [&]( const ResponseMessage& response ) {
+        auto result = static_cast< const WorkspaceFoldersResult >( response.result() );
+        callback( result );
+        // TODO: @ppaulweber: error handling has to be defined
+    };
+    request( msg, responseCallback );
 }
 
 Data ServerInterface::workspace_configuration( const ConfigurationParams& params )
