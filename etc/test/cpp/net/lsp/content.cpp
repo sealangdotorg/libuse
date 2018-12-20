@@ -670,6 +670,19 @@ TEST( libstdhl_cpp_network_lsp_content, SignatureHelp )
     EXPECT_EQ( help.activeParameter(), 1 );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, SignatureHelpResult )
+{
+    auto signatures = SignatureInformations();
+    signatures.emplace_back( SignatureInformation( label ) );
+    auto help = SignatureHelp( signatures );
+    auto result = SignatureHelpResult( help );
+    auto empty = SignatureHelpResult();
+    auto test = SignatureHelpResult( result );
+    EXPECT_STREQ( result.dump().c_str(), help.dump().c_str() );
+    EXPECT_STREQ( empty.dump().c_str(), Data().dump().c_str() );
+    EXPECT_STREQ( test.dump().c_str(), help.dump().c_str() );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, TypeDefinitionResult )
 {
     auto result = TypeDefinitionResult( Data() );

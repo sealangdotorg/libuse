@@ -4642,7 +4642,37 @@ void SignatureHelp::validate( const Data& data )
     Content::validatePropertyIsNumber( context, data, Identifier::activeSignature, false );
     Content::validatePropertyIsNumber( context, data, Identifier::activeParameter, false );
 }
+//
+//
+// SignatureHelpResult
+//
+SignatureHelpResult::SignatureHelpResult( void )
+: Data( Data() )
+{
+}
 
+SignatureHelpResult::SignatureHelpResult( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+SignatureHelpResult::SignatureHelpResult( const SignatureHelp& signature )
+: Data( Data::from_cbor( Data::to_cbor( signature ) ) )
+{
+}
+
+void SignatureHelpResult::validate( const Data& data )
+{
+    if( data.is_null() )
+    {
+        // ok, do nothing
+    }
+    else
+    {
+        SignatureHelp::validate( data );
+    }
+}
 //
 //
 // TextDocumentSaveRegistrationOptions
