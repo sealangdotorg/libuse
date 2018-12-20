@@ -222,12 +222,18 @@ void ServerInterface::workspace_workspaceFolders(
     request( msg, responseCallback );
 }
 
-Data ServerInterface::workspace_configuration( const ConfigurationParams& params )
+void ServerInterface::workspace_configuration(
+    const ConfigurationParams& params,
+    const std::function< void( ConfigurationResult ) >& callback )
 {
-    RequestMessage msg( 0 /* TODO */, std::string{ Identifier::workspace_configuration } );
-    // request( msg );   // TODO: FIXME: @Clasc
-    // TODO: FIXME: @Clasc: handle response
-    return Data( Data::object() );
+    RequestMessage msg( request_id++, std::string{ Identifier::workspace_configuration } );
+    msg.setParams( params );
+    const auto responseCallback = [&]( const ResponseMessage& response ) {
+        auto result = static_cast< const ConfigurationResult >( response.result() );
+        callback( result );
+        // TODO: @ppaulweber: error handling has to be defined
+    };
+    request( msg, responseCallback );
 }
 
 ApplyWorkspaceEditResult ServerInterface::workspace_applyEdit(

@@ -546,14 +546,22 @@ TEST( libstdhl_cpp_network_lsp, workspace_didChangeConfiguration )
 TEST( libstdhl_cpp_network_lsp, workspace_configuration )
 {
     TestInterface server;
+    u1 processed = false;
+    std::string id = "";
     auto items = std::vector< ConfigurationItem >();
     items.emplace_back( ConfigurationItem( "scope://Uri", "section" ) );
-    auto empty = std::vector< ConfigurationItem >();
-    server.workspace_configuration( ConfigurationParams( items ) );
-    server.workspace_configuration( ConfigurationParams( empty ) );
-    server.flush( [&]( const Message& response ) {
-        const auto packet = libstdhl::Network::LSP::Packet( response );
+    server.workspace_configuration(
+        ConfigurationParams( items ),
+        [&]( const ConfigurationResult& result ) { processed = true; } );
+    server.flush( [&]( const Message& message ) {
+        const auto packet = libstdhl::Network::LSP::Packet( message );
+        id = static_cast< RequestMessage >( message ).id();
     } );
+    ResponseMessage response( id );
+    response.setResult( Data::array() );
+    EXPECT_FALSE( processed );
+    response.process( server );
+    EXPECT_TRUE( processed );
 }
 
 TEST( libstdhl_cpp_network_lsp, workspace_didChangeWatchedFiles )
