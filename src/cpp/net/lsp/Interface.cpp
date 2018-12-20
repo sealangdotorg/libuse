@@ -162,7 +162,7 @@ void ServerInterface::window_showMessageRequest(
     msg.setParams( params );
 
     const auto responseCallback = [&]( const ResponseMessage& response ) {
-        auto result = static_cast< const ShowMessageRequestResult >( response.result() );
+        auto result = static_cast< const ShowMessageRequestResult& >( response.result() );
         callback( result );
         // TODO: @ppaulweber: error handling has to be defined
     };
@@ -210,12 +210,12 @@ void ServerInterface::client_unregisterCapability(
 }
 
 void ServerInterface::workspace_workspaceFolders(
-    const std::function< void( WorkspaceFoldersResult ) >& callback )
+    const std::function< void( const WorkspaceFoldersResult& ) >& callback )
 {
     RequestMessage msg( request_id++, std::string{ Identifier::workspace_workspaceFolders } );
     msg.setParams( Data() );
     const auto responseCallback = [&]( const ResponseMessage& response ) {
-        auto result = static_cast< const WorkspaceFoldersResult >( response.result() );
+        auto result = static_cast< const WorkspaceFoldersResult& >( response.result() );
         callback( result );
         // TODO: @ppaulweber: error handling has to be defined
     };
@@ -224,12 +224,12 @@ void ServerInterface::workspace_workspaceFolders(
 
 void ServerInterface::workspace_configuration(
     const ConfigurationParams& params,
-    const std::function< void( ConfigurationResult ) >& callback )
+    const std::function< void( const ConfigurationResult& ) >& callback )
 {
     RequestMessage msg( request_id++, std::string{ Identifier::workspace_configuration } );
     msg.setParams( params );
     const auto responseCallback = [&]( const ResponseMessage& response ) {
-        auto result = static_cast< const ConfigurationResult >( response.result() );
+        auto result = static_cast< const ConfigurationResult& >( response.result() );
         callback( result );
         // TODO: @ppaulweber: error handling has to be defined
     };
