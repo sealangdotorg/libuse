@@ -279,6 +279,12 @@ TEST( libstdhl_cpp_network_lsp_content, ConfigurationItem )
     EXPECT_TRUE( item.hasSection() );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, ConfigurationResult )
+{
+    auto empty = ConfigurationResult();
+    auto result = ConfigurationResult( Data::array() );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, ConfigurationParams )
 {
     auto item = ConfigurationItem( Data::object() );

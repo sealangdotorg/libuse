@@ -3125,6 +3125,27 @@ void ConfigurationItem::validate( const Data& data )
 
 //
 //
+// ConfigurationResult
+//
+ConfigurationResult::ConfigurationResult( void )
+: Data( Data::array() )
+{
+}
+
+ConfigurationResult::ConfigurationResult( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+void ConfigurationResult::validate( const Data& data )
+{
+    static const auto context = CONTENT + " ConfigurationResult:";
+    Content::validateTypeIsArray( context, data );
+}
+
+//
+//
 // ConfigurationParams
 //
 
