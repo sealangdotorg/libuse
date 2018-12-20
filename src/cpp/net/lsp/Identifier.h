@@ -304,6 +304,8 @@ namespace libstdhl
 
                 constexpr const char* options = "options";
 
+                constexpr const char* originSelectionRange = "originSelectionRange";
+
                 // P
 
                 constexpr const char* parameters = "parameters";
@@ -420,9 +422,15 @@ namespace libstdhl
 
                 // T
 
+                constexpr const char* tabSize = "tabSize";
+
                 constexpr const char* target = "target";
 
-                constexpr const char* tabSize = "tabSize";
+                constexpr const char* targetRange = "targetRange";
+
+                constexpr const char* targetSelectionRange = "targetSelectionRange";
+
+                constexpr const char* targetUri = "targetUri";
 
                 constexpr const char* telemetry_event = "telemetry/event";
 

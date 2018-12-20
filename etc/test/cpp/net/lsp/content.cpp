@@ -683,6 +683,20 @@ TEST( libstdhl_cpp_network_lsp_content, SignatureHelpResult )
     EXPECT_STREQ( test.dump().c_str(), help.dump().c_str() );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, LocationLink )
+{
+    auto link = LocationLink( uri, range );
+    LocationLink l( link );
+    EXPECT_STREQ( link.targetUri().toString().c_str(), uri.toString().c_str() );
+    EXPECT_STREQ( link.targetRange().dump().c_str(), range.dump().c_str() );
+    EXPECT_FALSE( link.hasOriginSelectionRange() );
+    EXPECT_FALSE( link.hasTargetSelectionRange() );
+    link.setOriginSelectionRange( range );
+    link.setTargetSelectionRange( range );
+    EXPECT_TRUE( link.hasOriginSelectionRange() );
+    EXPECT_TRUE( link.hasTargetSelectionRange() );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, TypeDefinitionResult )
 {
     auto result = TypeDefinitionResult( Data() );
