@@ -1162,7 +1162,19 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
-            using ShowMessageRequestResult = MessageActionItem;
+            class ShowMessageRequestResult : public Data
+            {
+              public:
+                ShowMessageRequestResult( void );
+
+                ShowMessageRequestResult( const Data& data );
+
+                ShowMessageRequestResult( const MessageActionItem& item );
+
+                ShowMessageRequestResult( const std::string& title );
+
+                static void validate( const Data& data );
+            };
 
             using MessageActionItems = std::vector< MessageActionItem >;
 

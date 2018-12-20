@@ -42,8 +42,8 @@
 
 #include <libstdhl/Test>
 
+#include <libstdhl/net/lsp/Identifier>
 #include <libstdhl/net/lsp/LSP>
-
 using namespace libstdhl;
 using namespace Network;
 using namespace LSP;
@@ -377,7 +377,7 @@ TEST( libstdhl_cpp_network_lsp, window_showMessageRequest )
     const auto params = ShowMessageRequestParams( MessageType::Info, "Info Message" );
     server.window_showMessageRequest( params, [&]( const ShowMessageRequestResult& result ) {
         processed = true;
-        EXPECT_STREQ( result.title().c_str(), "title" );
+        EXPECT_STREQ( result[ Identifier::title ].get< std::string >().c_str(), "title" );
     } );
 
     std::string id = "";
