@@ -614,6 +614,22 @@ TEST( libstdhl_cpp_network_lsp_content, CompletionList )
     EXPECT_STREQ( list.items()[ 0 ].label().c_str(), label.c_str() );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, CompletionResult )
+{
+    auto items = CompletionItems();
+    items.emplace_back( CompletionItem( label ) );
+    auto list = CompletionList( true, items );
+    auto falselist = CompletionList( false, items );
+    CompletionResult result( list );
+    CompletionResult r( items );
+    auto empty = CompletionResult();
+    CompletionResult test( r );
+    EXPECT_STREQ( result.dump().c_str(), list.dump().c_str() );
+    EXPECT_STREQ( r.dump().c_str(), falselist.dump().c_str() );
+    EXPECT_STREQ( test.dump().c_str(), r.dump().c_str() );
+    EXPECT_STREQ( empty.dump().c_str(), Data().dump().c_str() );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, ParameterInformation )
 {
     auto information = ParameterInformation( label );

@@ -4289,6 +4289,49 @@ void CompletionList::validate( const Data& data )
 }
 //
 //
+// CompletionResult
+//
+CompletionResult::CompletionResult( void )
+: Data( Data() )
+{
+}
+
+CompletionResult::CompletionResult( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+CompletionResult::CompletionResult( const CompletionList& list )
+: Data( Data::from_cbor( Data::to_cbor( list ) ) )
+{
+}
+
+CompletionResult::CompletionResult( const CompletionItems& items )
+: Data( Data::object() )
+{
+    operator[]( Identifier::isIncomplete ) = false;
+    operator[]( Identifier::items ) = Data::array();
+    for( auto item : items )
+    {
+        operator[]( Identifier::items ).push_back( item );
+    }
+}
+
+void CompletionResult::validate( const Data& data )
+{
+    if( data.is_null() )
+    {
+        // ok, do nothing.
+    }
+    else
+    {
+        CompletionList::validate( data );
+    }
+}
+
+//
+//
 // CompletionRegistrationOptions
 //
 
