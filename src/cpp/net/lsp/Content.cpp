@@ -4849,7 +4849,7 @@ TypeDefinitionResult::TypeDefinitionResult( const Data& data )
     validate( data );
 }
 
-TypeDefinitionResult::TypeDefinitionResult( const Locations locations )
+TypeDefinitionResult::TypeDefinitionResult( const Locations& locations )
 : Data( Data::array() )
 {
     for( auto location : locations )
@@ -4858,7 +4858,16 @@ TypeDefinitionResult::TypeDefinitionResult( const Locations locations )
     }
 }
 
-TypeDefinitionResult::TypeDefinitionResult( const Location location )
+TypeDefinitionResult::TypeDefinitionResult( const LocationLinks& locationlinks )
+: Data( Data::array() )
+{
+    for( auto link : locationlinks )
+    {
+        push_back( link );
+    }
+}
+
+TypeDefinitionResult::TypeDefinitionResult( const Location& location )
 {
     *this = Data::from_cbor( Data::to_cbor( location ) );
 }
@@ -4875,7 +4884,7 @@ void TypeDefinitionResult::validate( const Data& data )
     {
         if( data.is_array() )
         {
-            Content::validateTypeIsArrayOf< Location >( context, data );
+            Content::validateTypeIsArrayOf< Location, LocationLink >( context, data );
         }
         else
         {

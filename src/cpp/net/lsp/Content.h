@@ -2140,14 +2140,18 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            using LocationLinks = std::vector< LocationLink >;
+
             class TypeDefinitionResult : public Data
             {
               public:
                 TypeDefinitionResult( const Data& data );
 
-                TypeDefinitionResult( const Locations locations );
+                TypeDefinitionResult( const Locations& locations );
 
-                TypeDefinitionResult( const Location location );
+                TypeDefinitionResult( const LocationLinks& locationLinks );
+
+                TypeDefinitionResult( const Location& location );
 
                 static void validate( const Data& data );
             };
