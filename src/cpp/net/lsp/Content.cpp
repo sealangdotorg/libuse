@@ -4675,6 +4675,72 @@ void SignatureHelpResult::validate( const Data& data )
 }
 //
 //
+// LocationLink
+//
+LocationLink::LocationLink( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+LocationLink::LocationLink( const DocumentUri& targetUri, const Range& targetRange )
+: Data( Data::object() )
+{
+    operator[]( Identifier::targetUri ) = targetUri.toString();
+    operator[]( Identifier::targetRange ) = Data::from_cbor( Data::to_cbor( targetRange ) );
+}
+
+DocumentUri LocationLink::targetUri( void ) const
+{
+    return DocumentUri::fromString( operator[]( Identifier::targetUri ).get< std::string >() );
+}
+
+Range LocationLink::targetRange( void ) const
+{
+    return operator[]( Identifier::targetRange );
+}
+
+u1 LocationLink::hasOriginSelectionRange( void ) const
+{
+    return find( Identifier::originSelectionRange ) != end();
+}
+
+void LocationLink::setOriginSelectionRange( const Range& range )
+{
+    operator[]( Identifier::originSelectionRange ) = Data::from_cbor( Data::to_cbor( range ) );
+}
+
+Range LocationLink::originSelectionRange( void ) const
+{
+    return operator[]( Identifier::originSelectionRange );
+}
+
+u1 LocationLink::hasTargetSelectionRange( void ) const
+{
+    return find( Identifier::targetSelectionRange ) != end();
+}
+
+void LocationLink::setTargetSelectionRange( const Range& range )
+{
+    operator[]( Identifier::targetSelectionRange ) = Data::from_cbor( Data::to_cbor( range ) );
+}
+
+Range LocationLink::targetSelectionRange( void ) const
+{
+    return operator[]( Identifier::targetSelectionRange );
+}
+
+void LocationLink::validate( const Data& data )
+{
+    static const auto context = CONTENT + " LocationLink:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::targetUri, true );
+    Content::validatePropertyIs< Range >( context, data, Identifier::targetRange, true );
+    Content::validatePropertyIs< Range >( context, data, Identifier::originSelectionRange, false );
+    Content::validatePropertyIs< Range >( context, data, Identifier::targetSelectionRange, false );
+}
+//
+//
 // TextDocumentSaveRegistrationOptions
 //
 

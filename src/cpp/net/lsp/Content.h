@@ -2303,6 +2303,32 @@ namespace libstdhl
 
             using Locations = std::vector< Location >;
 
+            class LocationLink : public Data
+            {
+              public:
+                LocationLink( const Data& data );
+
+                LocationLink( const DocumentUri& targetUri, const Range& targetRange );
+
+                DocumentUri targetUri( void ) const;
+
+                Range targetRange( void ) const;
+
+                u1 hasOriginSelectionRange( void ) const;
+
+                void setOriginSelectionRange( const Range& range );
+
+                Range originSelectionRange( void ) const;
+
+                u1 hasTargetSelectionRange( void ) const;
+
+                void setTargetSelectionRange( const Range& range );
+
+                Range targetSelectionRange( void ) const;
+
+                static void validate( const Data& data );
+            };
+
             class TypeDefinitionResult : public Data
             {
               public:
