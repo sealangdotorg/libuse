@@ -2014,9 +2014,21 @@ namespace libstdhl
 
             using CompletionResolveResult = CompletionItem;
 
-            using CompletionResult = CompletionList;
-
             using SignatureHelpParams = TextDocumentPositionParams;
+
+            class CompletionResult : public Data
+            {
+              public:
+                CompletionResult( void );
+
+                CompletionResult( const Data& data );
+
+                CompletionResult( const CompletionList& list );
+
+                CompletionResult( const CompletionItems& items );
+
+                static void validate( const Data& data );
+            };
 
             class ParameterInformation : public Data
             {
