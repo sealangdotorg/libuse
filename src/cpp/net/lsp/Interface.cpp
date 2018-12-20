@@ -236,13 +236,18 @@ void ServerInterface::workspace_configuration(
     request( msg, responseCallback );
 }
 
-ApplyWorkspaceEditResult ServerInterface::workspace_applyEdit(
-    const ApplyWorkspaceEditParams& params )
+void ServerInterface::workspace_applyEdit(
+    const ApplyWorkspaceEditParams& params,
+    const std::function< void( const ApplyWorkspaceEditResult& ) >& callback )
 {
-    RequestMessage msg( 0 /* TODO */, std::string{ Identifier::workspace_applyEdit } );
-    // request( msg );   // TODO: FIXME: @Clasc
-    // TODO: FIXME: @Clasc: handle response
-    return ApplyWorkspaceEditResult( true );
+    RequestMessage msg( request_id++, std::string{ Identifier::workspace_applyEdit } );
+    msg.setParams( params );
+    const auto responseCallback = [&]( const ResponseMessage& response ) {
+        auto result = static_cast< const ApplyWorkspaceEditResult& >( response.result() );
+        callback( result );
+        // TODO: @ppaulweber: error handling has to be defined
+    };
+    request( msg, responseCallback );
 }
 
 void ServerInterface::textDocument_publishDiagnostics(

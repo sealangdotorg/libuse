@@ -604,10 +604,22 @@ TEST( libstdhl_cpp_network_lsp, workspace_executeCommand )
 TEST( libstdhl_cpp_network_lsp, workspace_applyEdit )
 {
     TestInterface server;
-    server.workspace_applyEdit( ApplyWorkspaceEditParams( WorkspaceEdit() ) );
-    server.flush( [&]( const Message& response ) {
-        const auto packet = libstdhl::Network::LSP::Packet( response );
+    auto processed = false;
+    std::string id = "";
+    server.workspace_applyEdit(
+        ApplyWorkspaceEditParams( WorkspaceEdit() ), [&]( const ApplyWorkspaceEditResult& result ) {
+            processed = true;
+            EXPECT_TRUE( result.applied() );
+        } );
+    server.flush( [&]( const Message& message ) {
+        const auto packet = libstdhl::Network::LSP::Packet( message );
+        id = static_cast< RequestMessage >( message ).id();
     } );
+    ResponseMessage response( id );
+    response.setResult( ApplyWorkspaceEditResult( true ) );
+    EXPECT_FALSE( processed );
+    response.process( server );
+    EXPECT_TRUE( processed );
 }
 
 TEST( libstdhl_cpp_network_lsp, textDocument_willSave )
