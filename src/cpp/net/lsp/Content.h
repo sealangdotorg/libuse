@@ -2098,7 +2098,17 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
-            using SignatureHelpResult = SignatureHelp;
+            class SignatureHelpResult : public Data
+            {
+              public:
+                SignatureHelpResult( void );
+
+                SignatureHelpResult( const Data& data );
+
+                SignatureHelpResult( const SignatureHelp& signature );
+
+                static void validate( const Data& data );
+            };
 
             using TypeDefinitionParams = TextDocumentPositionParams;
 

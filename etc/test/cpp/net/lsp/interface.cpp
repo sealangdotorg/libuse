@@ -153,7 +153,7 @@ class TestInterface final : public ServerInterface
     {
         auto info = std::vector< SignatureInformation >();
         info.push_back( SignatureInformation( std::string( "label" ) ) );
-        return SignatureHelpResult( info );
+        return SignatureHelpResult( SignatureHelp( info ) );
     }
 
     DefinitionResult textDocument_definition( const DefinitionParams& params ) override
