@@ -83,6 +83,20 @@ TEST( libstdhl_cpp_network_lsp_content, MessageActionItem )
     EXPECT_STREQ( item.title().c_str(), title.c_str() );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, ShowMessageRequestResult )
+{
+    auto item = MessageActionItem( title );
+    auto result = ShowMessageRequestResult( title );
+    auto empty = ShowMessageRequestResult();
+    Data data = Data::object();
+    data[ Identifier::title ] = title;
+    auto r = ShowMessageRequestResult( data );
+    ShowMessageRequestResult test( item );
+    EXPECT_STREQ( item.title().c_str(), result[ Identifier::title ].get< std::string >().c_str() );
+    EXPECT_STREQ( empty.dump().c_str(), Data().dump().c_str() );
+    EXPECT_STREQ( r.dump().c_str(), item.dump().c_str() );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, ShowMessageRequestParams )
 {
     auto params = ShowMessageRequestParams( MessageType::Error, message );

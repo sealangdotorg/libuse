@@ -2518,6 +2518,44 @@ void MessageActionItem::validate( const Data& data )
 
 //
 //
+// ShowMessageRequestResult
+//
+
+ShowMessageRequestResult::ShowMessageRequestResult( void )
+: Data()
+{
+}
+ShowMessageRequestResult::ShowMessageRequestResult( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+ShowMessageRequestResult::ShowMessageRequestResult( const MessageActionItem& item )
+: Data( item )
+{
+}
+
+ShowMessageRequestResult::ShowMessageRequestResult( const std::string& title )
+: Data( Data::object() )
+{
+    operator[]( Identifier::title ) = title;
+}
+
+void ShowMessageRequestResult::validate( const Data& data )
+{
+    static const auto context = CONTENT + " ShowMessageRequestResult:";
+    if( data.is_null() )
+    {
+        // ok, do nothing.
+    }
+    else
+    {
+        MessageActionItem::validate( data );
+    }
+}
+//
+//
 // ShowMessageRequestParams
 //
 
