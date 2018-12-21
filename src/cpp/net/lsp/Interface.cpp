@@ -219,16 +219,11 @@ void ServerInterface::workspace_configuration(
 
 void ServerInterface::workspace_applyEdit(
     const ApplyWorkspaceEditParams& params,
-    const std::function< void( const ApplyWorkspaceEditResult& ) >& callback )
+    const std::function< void( const ResponseMessage& ) >& callback )
 {
     RequestMessage msg( incrementID(), std::string{ Identifier::workspace_applyEdit } );
     msg.setParams( params );
-    const auto responseCallback = [&]( const ResponseMessage& response ) {
-        auto result = static_cast< const ApplyWorkspaceEditResult >( response.result() );
-        callback( result );
-        // TODO: @ppaulweber: error handling has to be defined
-    };
-    request( msg, responseCallback );
+    request( msg, callback );
 }
 
 void ServerInterface::textDocument_publishDiagnostics(
