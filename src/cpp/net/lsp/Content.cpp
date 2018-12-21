@@ -2532,7 +2532,7 @@ ShowMessageRequestResult::ShowMessageRequestResult( const Data& data )
 }
 
 ShowMessageRequestResult::ShowMessageRequestResult( const MessageActionItem& item )
-: Data( item )
+: Data( Data::from_cbor( Data::to_cbor( item ) ) )
 {
 }
 
