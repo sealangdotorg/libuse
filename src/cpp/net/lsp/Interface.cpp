@@ -162,7 +162,7 @@ void ServerInterface::window_showMessageRequest(
     msg.setParams( params );
 
     const auto responseCallback = [&]( const ResponseMessage& response ) {
-        auto result = static_cast< const ShowMessageRequestResult& >( response.result() );
+        auto result = static_cast< const ShowMessageRequestResult >( response.result() );
         callback( result );
         // TODO: @ppaulweber: error handling has to be defined
     };
@@ -215,7 +215,7 @@ void ServerInterface::workspace_workspaceFolders(
     RequestMessage msg( request_id++, std::string{ Identifier::workspace_workspaceFolders } );
     msg.setParams( Data() );
     const auto responseCallback = [&]( const ResponseMessage& response ) {
-        auto result = static_cast< const WorkspaceFoldersResult& >( response.result() );
+        auto result = static_cast< const WorkspaceFoldersResult >( response.result() );
         callback( result );
         // TODO: @ppaulweber: error handling has to be defined
     };
@@ -229,7 +229,7 @@ void ServerInterface::workspace_configuration(
     RequestMessage msg( request_id++, std::string{ Identifier::workspace_configuration } );
     msg.setParams( params );
     const auto responseCallback = [&]( const ResponseMessage& response ) {
-        auto result = static_cast< const ConfigurationResult& >( response.result() );
+        auto result = static_cast< const ConfigurationResult >( response.result() );
         callback( result );
         // TODO: @ppaulweber: error handling has to be defined
     };
@@ -243,7 +243,7 @@ void ServerInterface::workspace_applyEdit(
     RequestMessage msg( request_id++, std::string{ Identifier::workspace_applyEdit } );
     msg.setParams( params );
     const auto responseCallback = [&]( const ResponseMessage& response ) {
-        auto result = static_cast< const ApplyWorkspaceEditResult& >( response.result() );
+        auto result = static_cast< const ApplyWorkspaceEditResult >( response.result() );
         callback( result );
         // TODO: @ppaulweber: error handling has to be defined
     };
