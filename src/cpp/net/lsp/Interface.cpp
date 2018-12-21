@@ -63,6 +63,11 @@ ServerInterface::ServerInterface( void )
 {
 }
 
+std::size_t ServerInterface::incrementID( void )
+{
+    return request_id++;
+}
+
 void ServerInterface::respond( const ResponseMessage& message )
 {
     std::lock_guard< std::mutex > guard( m_responseBufferLock );
@@ -158,7 +163,7 @@ void ServerInterface::window_showMessageRequest(
     const ShowMessageRequestParams& params,
     const std::function< void( const ResponseMessage& ) >& callback )
 {
-    RequestMessage msg( request_id++, std::string{ Identifier::window_showMessageRequest } );
+    RequestMessage msg( incrementID(), std::string{ Identifier::window_showMessageRequest } );
     msg.setParams( params );
     request( msg, callback );
 }
@@ -180,7 +185,7 @@ void ServerInterface::telemetry_event( const TelemetryEventParams& params ) noex
 void ServerInterface::client_registerCapability(
     const RegistrationParams& params, const std::function< void( void ) >& callback )
 {
-    RequestMessage msg( request_id++, std::string{ Identifier::client_registerCapability } );
+    RequestMessage msg( incrementID(), std::string{ Identifier::client_registerCapability } );
     msg.setParams( params );
 
     const auto responseCallback = [&]( const ResponseMessage& response ) {
@@ -193,7 +198,7 @@ void ServerInterface::client_registerCapability(
 void ServerInterface::client_unregisterCapability(
     const UnregistrationParams& params, const std::function< void( void ) >& callback )
 {
-    RequestMessage msg( request_id++, std::string{ Identifier::client_unregisterCapability } );
+    RequestMessage msg( incrementID(), std::string{ Identifier::client_unregisterCapability } );
     msg.setParams( params );
     const auto responseCallback = [&]( const ResponseMessage& response ) {
         callback();
@@ -205,7 +210,7 @@ void ServerInterface::client_unregisterCapability(
 void ServerInterface::workspace_workspaceFolders(
     const std::function< void( const WorkspaceFoldersResult& ) >& callback )
 {
-    RequestMessage msg( request_id++, std::string{ Identifier::workspace_workspaceFolders } );
+    RequestMessage msg( incrementID(), std::string{ Identifier::workspace_workspaceFolders } );
     msg.setParams( Data() );
     const auto responseCallback = [&]( const ResponseMessage& response ) {
         auto result = static_cast< const WorkspaceFoldersResult >( response.result() );
@@ -219,7 +224,7 @@ void ServerInterface::workspace_configuration(
     const ConfigurationParams& params,
     const std::function< void( const ConfigurationResult& ) >& callback )
 {
-    RequestMessage msg( request_id++, std::string{ Identifier::workspace_configuration } );
+    RequestMessage msg( incrementID(), std::string{ Identifier::workspace_configuration } );
     msg.setParams( params );
     const auto responseCallback = [&]( const ResponseMessage& response ) {
         auto result = static_cast< const ConfigurationResult >( response.result() );
@@ -233,7 +238,7 @@ void ServerInterface::workspace_applyEdit(
     const ApplyWorkspaceEditParams& params,
     const std::function< void( const ApplyWorkspaceEditResult& ) >& callback )
 {
-    RequestMessage msg( request_id++, std::string{ Identifier::workspace_applyEdit } );
+    RequestMessage msg( incrementID(), std::string{ Identifier::workspace_applyEdit } );
     msg.setParams( params );
     const auto responseCallback = [&]( const ResponseMessage& response ) {
         auto result = static_cast< const ApplyWorkspaceEditResult >( response.result() );
