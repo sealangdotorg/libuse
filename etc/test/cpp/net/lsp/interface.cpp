@@ -492,7 +492,10 @@ TEST( libstdhl_cpp_network_lsp, client_unregisterCapability )
     Unregistration reg2( "2", "test/method" );
     auto unregistrations = std::vector< Unregistration >( { reg, reg2 } );
     server.client_unregisterCapability(
-        UnregistrationParams( unregistrations ), [&]( void ) { processed = true; } );
+        UnregistrationParams( unregistrations ), [&]( const ResponseMessage& response ) {
+            processed = true;
+            EXPECT_EQ( response.result(), Data() );
+        } );
     server.flush( [&]( const Message& message ) {
         const auto packet = libstdhl::Network::LSP::Packet( message );
         id = static_cast< const RequestMessage& >( message ).id();
