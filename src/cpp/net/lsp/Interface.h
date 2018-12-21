@@ -72,6 +72,7 @@ namespace libstdhl
 
                 virtual ~ServerInterface( void ) = default;
 
+                std::size_t incrementID( void );
                 /**
                    user interface for message interactions
                 */
