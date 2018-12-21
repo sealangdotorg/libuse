@@ -423,7 +423,10 @@ TEST( libstdhl_cpp_network_lsp, client_registerCapability )
     Registration reg2( "2", "test/method" );
     auto registrations = std::vector< Registration >( { reg, reg2 } );
     server.client_registerCapability(
-        RegistrationParams( registrations ), [&]( void ) { processed = true; } );
+        RegistrationParams( registrations ), [&]( const ResponseMessage& response ) {
+            processed = true;
+            EXPECT_EQ( Data(), response.result() );
+        } );
     Data registrationsData( Data::object() );
     registrationsData[ "registrations" ].push_back( reg );
 
@@ -433,6 +436,7 @@ TEST( libstdhl_cpp_network_lsp, client_registerCapability )
         id = static_cast< const RequestMessage& >( message ).id();
     } );
     ResponseMessage response( id );
+    response.setResult( Data() );
     EXPECT_FALSE( processed );
     response.process( server );
     EXPECT_TRUE( processed );
@@ -465,7 +469,8 @@ TEST( libstdhl_cpp_network_lsp, ID_increment )
     // make second request
     u1 registerRequestProcessed = false;
     server.client_registerCapability(
-        RegistrationParams( Registrations() ), [&]( void ) { registerRequestProcessed = true; } );
+        RegistrationParams( Registrations() ),
+        [&]( const ResponseMessage& ) { registerRequestProcessed = true; } );
     server.flush( [&]( const Message& message ) {
         const auto packet = libstdhl::Network::LSP::Packet( message );
         id = static_cast< const RequestMessage& >( message ).id();
