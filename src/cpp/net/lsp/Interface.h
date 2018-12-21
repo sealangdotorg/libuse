@@ -127,8 +127,7 @@ namespace libstdhl
                 // server to client request
                 virtual void window_showMessageRequest(
                     const ShowMessageRequestParams& params,
-                    const std::function< void( const ShowMessageRequestResult& ) >& callback )
-                    final;
+                    const std::function< void( const ResponseMessage& ) >& callback ) final;
 
                 // https://microsoft.github.io/language-server-protocol/specification#window_logMessage
                 // server to client notification

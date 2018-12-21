@@ -156,18 +156,11 @@ void ServerInterface::window_showMessage( const ShowMessageParams& params ) noex
 
 void ServerInterface::window_showMessageRequest(
     const ShowMessageRequestParams& params,
-    const std::function< void( const ShowMessageRequestResult& ) >& callback )
+    const std::function< void( const ResponseMessage& ) >& callback )
 {
     RequestMessage msg( request_id++, std::string{ Identifier::window_showMessageRequest } );
     msg.setParams( params );
-
-    const auto responseCallback = [&]( const ResponseMessage& response ) {
-        auto result = static_cast< const ShowMessageRequestResult >( response.result() );
-        callback( result );
-        // TODO: @ppaulweber: error handling has to be defined
-    };
-
-    request( msg, responseCallback );
+    request( msg, callback );
 }
 
 void ServerInterface::window_logMessage( const LogMessageParams& params ) noexcept
