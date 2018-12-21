@@ -375,20 +375,18 @@ TEST( libstdhl_cpp_network_lsp, window_showMessageRequest )
 
     u1 processed = false;
     const auto params = ShowMessageRequestParams( MessageType::Info, "Info Message" );
-    server.window_showMessageRequest( params, [&]( const ShowMessageRequestResult& result ) {
+    server.window_showMessageRequest( params, [&]( const ResponseMessage& response ) {
         processed = true;
+        ShowMessageRequestResult result( response.result() );
         EXPECT_STREQ( result[ Identifier::title ].get< std::string >().c_str(), "title" );
     } );
-
     std::string id = "";
     server.flush( [&]( const Message& message ) {
         const auto packet = libstdhl::Network::LSP::Packet( message );
         id = static_cast< const RequestMessage& >( message ).id();
     } );
-
     ResponseMessage response( id );
     response.setResult( MessageActionItem( std::string{ "title" } ) );
-
     EXPECT_FALSE( processed );
     response.process( server );
     EXPECT_TRUE( processed );
@@ -447,9 +445,11 @@ TEST( libstdhl_cpp_network_lsp, ID_increment )
     std::string id = "";
 
     // make first request
-    server.window_showMessageRequest(
-        ShowMessageRequestParams( MessageType::Info, "Message" ),
-        [&]( const ShowMessageRequestResult& result ) { messageRequestProcessed = true; } );
+    const auto params = ShowMessageRequestParams( MessageType::Info, "Info Message" );
+    server.window_showMessageRequest( params, [&]( const ResponseMessage& response ) {
+        messageRequestProcessed = true;
+        ShowMessageRequestResult result( response.result() );
+    } );
     server.flush( [&]( const Message& message ) {
         const auto packet = libstdhl::Network::LSP::Packet( message );
         id = static_cast< const RequestMessage& >( message ).id();
