@@ -210,16 +210,11 @@ void ServerInterface::workspace_workspaceFolders(
 
 void ServerInterface::workspace_configuration(
     const ConfigurationParams& params,
-    const std::function< void( const ConfigurationResult& ) >& callback )
+    const std::function< void( const ResponseMessage& ) >& callback )
 {
     RequestMessage msg( incrementID(), std::string{ Identifier::workspace_configuration } );
     msg.setParams( params );
-    const auto responseCallback = [&]( const ResponseMessage& response ) {
-        auto result = static_cast< const ConfigurationResult >( response.result() );
-        callback( result );
-        // TODO: @ppaulweber: error handling has to be defined
-    };
-    request( msg, responseCallback );
+    request( msg, callback );
 }
 
 void ServerInterface::workspace_applyEdit(

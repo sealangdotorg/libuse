@@ -184,7 +184,7 @@ namespace libstdhl
                 // server to client request
                 virtual void workspace_configuration(
                     const ConfigurationParams& params,
-                    const std::function< void( const ConfigurationResult& ) >& callback ) final;
+                    const std::function< void( const ResponseMessage& ) >& callback ) final;
 
                 // https://microsoft.github.io/language-server-protocol/specification#workspace_didChangeWatchedFiles
                 // client to server notification
