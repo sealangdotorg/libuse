@@ -158,7 +158,7 @@ namespace libstdhl
                 // server to client request
                 virtual void client_unregisterCapability(
                     const UnregistrationParams& params,
-                    const std::function< void( void ) >& callback ) final;
+                    const std::function< void( const ResponseMessage& ) >& callback ) final;
 
                 //
                 //

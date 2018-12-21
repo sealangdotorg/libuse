@@ -192,15 +192,12 @@ void ServerInterface::client_registerCapability(
 }
 
 void ServerInterface::client_unregisterCapability(
-    const UnregistrationParams& params, const std::function< void( void ) >& callback )
+    const UnregistrationParams& params,
+    const std::function< void( const ResponseMessage& ) >& callback )
 {
     RequestMessage msg( incrementID(), std::string{ Identifier::client_unregisterCapability } );
     msg.setParams( params );
-    const auto responseCallback = [&]( const ResponseMessage& response ) {
-        callback();
-        // TODO: @ppaulweber: error handling has to be defined
-    };
-    request( msg, responseCallback );
+    request( msg, callback );
 }
 
 void ServerInterface::workspace_workspaceFolders(
