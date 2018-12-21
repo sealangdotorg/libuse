@@ -560,8 +560,11 @@ TEST( libstdhl_cpp_network_lsp, workspace_configuration )
     auto items = std::vector< ConfigurationItem >();
     items.emplace_back( ConfigurationItem( "scope://Uri", "section" ) );
     server.workspace_configuration(
-        ConfigurationParams( items ),
-        [&]( const ConfigurationResult& result ) { processed = true; } );
+        ConfigurationParams( items ), [&]( const ResponseMessage& response ) {
+            processed = true;
+            ConfigurationResult result( response.result() );
+            EXPECT_EQ( result, Data::array() );
+        } );
     server.flush( [&]( const Message& message ) {
         const auto packet = libstdhl::Network::LSP::Packet( message );
         id = static_cast< RequestMessage >( message ).id();
