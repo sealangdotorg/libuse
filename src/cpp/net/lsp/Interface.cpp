@@ -201,16 +201,11 @@ void ServerInterface::client_unregisterCapability(
 }
 
 void ServerInterface::workspace_workspaceFolders(
-    const std::function< void( const WorkspaceFoldersResult& ) >& callback )
+    const std::function< void( const ResponseMessage& ) >& callback )
 {
     RequestMessage msg( incrementID(), std::string{ Identifier::workspace_workspaceFolders } );
     msg.setParams( Data() );
-    const auto responseCallback = [&]( const ResponseMessage& response ) {
-        auto result = static_cast< const WorkspaceFoldersResult >( response.result() );
-        callback( result );
-        // TODO: @ppaulweber: error handling has to be defined
-    };
-    request( msg, responseCallback );
+    request( msg, callback );
 }
 
 void ServerInterface::workspace_configuration(

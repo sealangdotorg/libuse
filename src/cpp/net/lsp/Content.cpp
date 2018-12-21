@@ -2909,11 +2909,12 @@ void WorkspaceFolder::validate( const Data& data )
 //
 
 WorkspaceFoldersResult::WorkspaceFoldersResult()
-: Data( Data::array() )
+: Data( Data() )
 {
 }
 
 WorkspaceFoldersResult::WorkspaceFoldersResult( const Data& data )
+: Data( data )
 {
     validate( data );
 }
