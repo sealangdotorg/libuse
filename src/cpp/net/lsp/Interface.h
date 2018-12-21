@@ -152,7 +152,7 @@ namespace libstdhl
                 // server to client request
                 virtual void client_registerCapability(
                     const RegistrationParams& params,
-                    const std::function< void( void ) >& callback ) final;
+                    const std::function< void( const ResponseMessage& ) >& callback ) final;
 
                 // https://microsoft.github.io/language-server-protocol/specification#client_unregisterCapability
                 // server to client request

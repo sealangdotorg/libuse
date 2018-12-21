@@ -183,16 +183,12 @@ void ServerInterface::telemetry_event( const TelemetryEventParams& params ) noex
 }
 
 void ServerInterface::client_registerCapability(
-    const RegistrationParams& params, const std::function< void( void ) >& callback )
+    const RegistrationParams& params,
+    const std::function< void( const ResponseMessage& ) >& callback )
 {
     RequestMessage msg( incrementID(), std::string{ Identifier::client_registerCapability } );
     msg.setParams( params );
-
-    const auto responseCallback = [&]( const ResponseMessage& response ) {
-        callback();
-        // TODO: @ppaulweber: error handling has to be defined
-    };
-    request( msg, responseCallback );
+    request( msg, callback );
 }
 
 void ServerInterface::client_unregisterCapability(
