@@ -513,8 +513,9 @@ TEST( libstdhl_cpp_network_lsp, workspace_workspaceFolders )
     TestInterface server;
     u1 processed = false;
     std::string id = "";
-    server.workspace_workspaceFolders( [&]( WorkspaceFoldersResult result ) {
-        EXPECT_STREQ( result.dump().c_str(), Data().dump().c_str() );
+    server.workspace_workspaceFolders( [&]( const ResponseMessage& response ) {
+        WorkspaceFoldersResult result( response.result() );
+        EXPECT_EQ( result, WorkspaceFoldersResult() );
         processed = true;
     } );
     server.flush( [&]( const Message& message ) {
