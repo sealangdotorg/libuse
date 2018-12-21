@@ -205,8 +205,7 @@ namespace libstdhl
                 // server to client request
                 virtual void workspace_applyEdit(
                     const ApplyWorkspaceEditParams& params,
-                    const std::function< void( const ApplyWorkspaceEditResult& ) >& callback )
-                    final;
+                    const std::function< void( const ResponseMessage& ) >& callback ) final;
 
                 //
                 //

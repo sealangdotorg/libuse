@@ -619,9 +619,10 @@ TEST( libstdhl_cpp_network_lsp, workspace_applyEdit )
     auto processed = false;
     std::string id = "";
     server.workspace_applyEdit(
-        ApplyWorkspaceEditParams( WorkspaceEdit() ), [&]( const ApplyWorkspaceEditResult& result ) {
+        ApplyWorkspaceEditParams( WorkspaceEdit() ), [&]( const ResponseMessage& response ) {
             processed = true;
-            EXPECT_TRUE( result.applied() );
+            ApplyWorkspaceEditResult result( response.result() );
+            EXPECT_EQ( result, ApplyWorkspaceEditResult( true ) );
         } );
     server.flush( [&]( const Message& message ) {
         const auto packet = libstdhl::Network::LSP::Packet( message );
