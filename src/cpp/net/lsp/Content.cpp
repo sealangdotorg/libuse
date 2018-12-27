@@ -793,6 +793,63 @@ void CreateFile::validate( const Data& data )
     Content::validatePropertyIsString( context, data, Identifier::uri, true );
     Content::validatePropertyIs< CreateFileOptions >( context, data, Identifier::options, false );
 }
+//
+//
+// RenameFile
+//
+
+RenameFile::RenameFile( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+RenameFile::RenameFile( const DocumentUri& oldUri, const DocumentUri& newUri )
+{
+    operator[]( Identifier::kind ) = std::string( Identifier::rename );
+    operator[]( Identifier::oldUri ) = oldUri.toString();
+    operator[]( Identifier::newUri ) = newUri.toString();
+}
+
+DocumentUri RenameFile::oldUri( void ) const
+{
+    return DocumentUri::fromString( operator[]( Identifier::oldUri ).get< std::string >() );
+}
+
+DocumentUri RenameFile::newUri( void ) const
+{
+    return DocumentUri::fromString( operator[]( Identifier::newUri ).get< std::string >() );
+}
+
+std::string RenameFile::kind( void ) const
+{
+    return operator[]( Identifier::kind ).get< std::string >();
+}
+
+u1 RenameFile::hasOptions( void ) const
+{
+    return find( Identifier::options ) != end();
+}
+
+void RenameFile::setOptions( const RenameFileOptions& options )
+{
+    operator[]( Identifier::options ) = Data::from_cbor( Data::to_cbor( options ) );
+}
+
+RenameFileOptions RenameFile::options( void ) const
+{
+    return at( Identifier::options );
+}
+
+void RenameFile::validate( const Data& data )
+{
+    static const auto context = CONTENT + " RenameFile:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::kind, true );
+    Content::validatePropertyIsString( context, data, Identifier::newUri, true );
+    Content::validatePropertyIsString( context, data, Identifier::oldUri, true );
+    Content::validatePropertyIs< CreateFileOptions >( context, data, Identifier::options, false );
+}
 
 //
 //

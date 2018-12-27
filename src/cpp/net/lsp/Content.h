@@ -475,6 +475,30 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            using RenameFileOptions = CreateFileOptions;
+
+            class RenameFile : public Data
+            {
+              public:
+                RenameFile( const Data& data );
+
+                RenameFile( const DocumentUri& oldUri, const DocumentUri& newUri );
+
+                DocumentUri newUri( void ) const;
+
+                DocumentUri oldUri( void ) const;
+
+                std::string kind( void ) const;
+
+                u1 hasOptions( void ) const;
+
+                void setOptions( const CreateFileOptions& options );
+
+                CreateFileOptions options( void ) const;
+
+                static void validate( const Data& data );
+            };
+
             class TextDocumentItem : public Data
             {
               public:
