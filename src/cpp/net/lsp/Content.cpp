@@ -5513,10 +5513,34 @@ void HoverResult::setRange( const Range& range )
 
 void HoverResult::validate( const Data& data )
 {
-    static const auto context = CONTENT + " HoverResult:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsArrayOf< MarkedString >( context, data, Identifier::contents, true );
-    Content::validatePropertyIsString( context, data, Identifier::value, true );
+    if( data.is_null() )
+    {
+        // ok, do nothing.
+    }
+    else
+    {
+        static const auto context = CONTENT + " HoverResult:";
+        Content::validateTypeIsObject( context, data );
+        try
+        {
+            Content::validatePropertyIs< MarkedString >(
+                context, data, Identifier::contents, true );
+        }
+        catch( std::invalid_argument a )
+        {
+            try
+            {
+                Content::validatePropertyIs< MarkupContent >(
+                    context, data, Identifier::contents, true );
+            }
+            catch( std::invalid_argument a )
+            {
+                Content::validatePropertyIsArrayOf< MarkedString >(
+                    context, data, Identifier::contents, true );
+            }
+        }
+        Content::validatePropertyIs< Range >( context, data, Identifier::range, false );
+    }
 }
 
 //
