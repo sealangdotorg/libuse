@@ -714,7 +714,7 @@ u1 CreateFileOptions::hasOverwrite( void ) const
 
 u1 CreateFileOptions::overwrite( void ) const
 {
-    return at( Identifier::overwrite );
+    return at( Identifier::overwrite ).get< u1 >();
 }
 
 void CreateFileOptions::setOverwrite( const u1 overwrite )
@@ -728,7 +728,7 @@ u1 CreateFileOptions::hasIgnoreIfExists( void ) const
 
 u1 CreateFileOptions::ignoreIfExists( void ) const
 {
-    return at( Identifier::ignoreIfExists );
+    return at( Identifier::ignoreIfExists ).get< u1 >();
 }
 
 void CreateFileOptions::setIgnoreIfExists( const u1 ignoreIfExists )
