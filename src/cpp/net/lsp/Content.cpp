@@ -691,6 +691,60 @@ void WorkspaceEdit::validate( const Data& data )
 
 //
 //
+// CreateFileOptions
+//
+
+CreateFileOptions::CreateFileOptions( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+CreateFileOptions::CreateFileOptions( const u1 overwrite, const u1 ignoreIfExists )
+: Data( Data::object() )
+{
+    operator[]( Identifier::overwrite ) = overwrite;
+    operator[]( Identifier::ignoreIfExists ) = ignoreIfExists;
+}
+
+u1 CreateFileOptions::hasOverwrite( void ) const
+{
+    return find( Identifier::overwrite ) != end();
+}
+
+u1 CreateFileOptions::overwrite( void ) const
+{
+    return at( Identifier::overwrite );
+}
+
+void CreateFileOptions::setOverwrite( const u1 overwrite )
+{
+    operator[]( Identifier::overwrite ) = overwrite;
+}
+u1 CreateFileOptions::hasIgnoreIfExists( void ) const
+{
+    return find( Identifier::ignoreIfExists ) != end();
+}
+
+u1 CreateFileOptions::ignoreIfExists( void ) const
+{
+    return at( Identifier::ignoreIfExists );
+}
+
+void CreateFileOptions::setIgnoreIfExists( const u1 ignoreIfExists )
+{
+    operator[]( Identifier::ignoreIfExists ) = ignoreIfExists;
+}
+void CreateFileOptions::validate( const Data& data )
+{
+    static const auto context = CONTENT + " CreateFileOptions:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsBoolean( context, data, Identifier::overwrite, false );
+    Content::validatePropertyIsBoolean( context, data, Identifier::ignoreIfExists, false );
+}
+
+//
+//
 // TextDocumentItem
 //
 
