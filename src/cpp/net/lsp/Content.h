@@ -499,6 +499,26 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            class DeleteFileOptions : public Data
+            {
+              public:
+                DeleteFileOptions( const Data& data );
+
+                u1 hasRecursive( void ) const;
+
+                u1 recursive( void ) const;
+
+                void setRecursive( const u1 recursive );
+
+                u1 hasIgnoreIfExists( void ) const;
+
+                u1 ignoreIfExists( void ) const;
+
+                void setIgnoreIfExists( const u1 ignoreIfExists );
+
+                static void validate( const Data& data );
+            };
+
             class TextDocumentItem : public Data
             {
               public:

@@ -97,6 +97,20 @@ TEST( libstdhl_cpp_network_lsp_content, RenameFile )
     EXPECT_STREQ( file.oldUri().toString().c_str(), uri.toString().c_str() );
     EXPECT_STREQ( file.kind().c_str(), Identifier::rename );
 }
+TEST( libstdhl_cpp_network_lsp_content, DeleteFileOptions )
+{
+    auto options = DeleteFileOptions( Data::object() );
+    EXPECT_FALSE( options.hasIgnoreIfExists() );
+    EXPECT_FALSE( options.hasRecursive() );
+    options.setRecursive( true );
+    options.setIgnoreIfExists( true );
+    EXPECT_TRUE( options.hasIgnoreIfExists() );
+    EXPECT_TRUE( options.hasRecursive() );
+    EXPECT_TRUE( options.ignoreIfExists() );
+    EXPECT_TRUE( options.recursive() );
+    DeleteFileOptions test = DeleteFileOptions( options );
+    EXPECT_EQ( options, test );
+}
 TEST( libstdhl_cpp_network_lsp_content, CancelParams )
 {
     auto params = CancelParams( 1 );
