@@ -111,6 +111,17 @@ TEST( libstdhl_cpp_network_lsp_content, DeleteFileOptions )
     DeleteFileOptions test = DeleteFileOptions( options );
     EXPECT_EQ( options, test );
 }
+TEST( libstdhl_cpp_network_lsp_content, DeleteFile )
+{
+    auto file = DeleteFile( uri );
+    DeleteFile test( file );
+    EXPECT_EQ( file, test );
+    EXPECT_FALSE( file.hasOptions() );
+    file.setOptions( DeleteFileOptions( Data::object() ) );
+    EXPECT_TRUE( file.hasOptions() );
+    EXPECT_STREQ( file.uri().toString().c_str(), uri.toString().c_str() );
+    EXPECT_STREQ( file.kind().c_str(), Identifier::DELETE );
+}
 TEST( libstdhl_cpp_network_lsp_content, CancelParams )
 {
     auto params = CancelParams( 1 );

@@ -805,6 +805,7 @@ RenameFile::RenameFile( const Data& data )
 }
 
 RenameFile::RenameFile( const DocumentUri& oldUri, const DocumentUri& newUri )
+: Data( Data::object() )
 {
     operator[]( Identifier::kind ) = std::string( Identifier::rename );
     operator[]( Identifier::oldUri ) = oldUri.toString();
@@ -897,6 +898,55 @@ void DeleteFileOptions::validate( const Data& data )
     Content::validateTypeIsObject( context, data );
     Content::validatePropertyIsBoolean( context, data, Identifier::recursive, false );
     Content::validatePropertyIsBoolean( context, data, Identifier::ignoreIfExists, false );
+}
+//
+//
+//  DeleteFile
+//
+DeleteFile::DeleteFile( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+DeleteFile::DeleteFile( const DocumentUri& uri )
+: Data( Data::object() )
+{
+    operator[]( Identifier::kind ) = Identifier::DELETE;
+    operator[]( Identifier::uri ) = uri.toString();
+}
+
+DocumentUri DeleteFile::uri( void ) const
+{
+    return DocumentUri::fromString( operator[]( Identifier::uri ).get< std::string >() );
+}
+
+std::string DeleteFile::kind( void ) const
+{
+    return operator[]( Identifier::kind ).get< std::string >();
+}
+
+u1 DeleteFile::hasOptions( void ) const
+{
+    return find( Identifier::options ) != end();
+}
+
+void DeleteFile::setOptions( const DeleteFileOptions& options )
+{
+    operator[]( Identifier::options ) = Data::from_cbor( Data::to_cbor( options ) );
+}
+
+DeleteFileOptions DeleteFile::options( void ) const
+{
+    return at( Identifier::options );
+}
+void DeleteFile::validate( const Data& data )
+{
+    static const auto context = CONTENT + " DeleteFile:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::kind, true );
+    Content::validatePropertyIsString( context, data, Identifier::uri, true );
+    Content::validatePropertyIs< DeleteFileOptions >( context, data, Identifier::options, false );
 }
 
 //
