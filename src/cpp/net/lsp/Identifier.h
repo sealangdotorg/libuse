@@ -352,6 +352,8 @@ namespace libstdhl
 
                 constexpr const char* reason = "reason";
 
+                constexpr const char* recursive = "recursive";
+
                 constexpr const char* red = "red";
 
                 constexpr const char* refactor = "refactor";

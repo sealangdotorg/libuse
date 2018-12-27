@@ -850,6 +850,54 @@ void RenameFile::validate( const Data& data )
     Content::validatePropertyIsString( context, data, Identifier::oldUri, true );
     Content::validatePropertyIs< CreateFileOptions >( context, data, Identifier::options, false );
 }
+//
+//
+// DeleteFileOptions
+//
+
+DeleteFileOptions::DeleteFileOptions( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+u1 DeleteFileOptions::hasRecursive( void ) const
+{
+    return find( Identifier::recursive ) != end();
+}
+
+u1 DeleteFileOptions::recursive( void ) const
+{
+    return at( Identifier::recursive ).get< u1 >();
+}
+
+void DeleteFileOptions::setRecursive( const u1 recursive )
+{
+    operator[]( Identifier::recursive ) = recursive;
+}
+
+u1 DeleteFileOptions::hasIgnoreIfExists( void ) const
+{
+    return find( Identifier::ignoreIfExists ) != end();
+}
+
+u1 DeleteFileOptions::ignoreIfExists( void ) const
+{
+    return at( Identifier::ignoreIfExists );
+}
+
+void DeleteFileOptions::setIgnoreIfExists( const u1 ignoreIfExists )
+{
+    operator[]( Identifier::ignoreIfExists ) = ignoreIfExists;
+}
+
+void DeleteFileOptions::validate( const Data& data )
+{
+    static const auto context = CONTENT + " DeleteFileOptions:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsBoolean( context, data, Identifier::recursive, false );
+    Content::validatePropertyIsBoolean( context, data, Identifier::ignoreIfExists, false );
+}
 
 //
 //
