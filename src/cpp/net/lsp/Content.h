@@ -519,6 +519,26 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            class DeleteFile : public Data
+            {
+              public:
+                DeleteFile( const Data& data );
+
+                DeleteFile( const DocumentUri& uri );
+
+                DocumentUri uri( void ) const;
+
+                std::string kind( void ) const;
+
+                u1 hasOptions( void ) const;
+
+                void setOptions( const DeleteFileOptions& options );
+
+                DeleteFileOptions options( void ) const;
+
+                static void validate( const Data& data );
+            };
+
             class TextDocumentItem : public Data
             {
               public:
