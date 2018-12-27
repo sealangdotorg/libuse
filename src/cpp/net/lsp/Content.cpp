@@ -6778,7 +6778,7 @@ RenameResult::RenameResult( const Data& data )
 }
 
 RenameResult::RenameResult( const WorkspaceEdit& edit )
-: Data( edit )
+: Data( Data::from_cbor( Data::to_cbor( edit ) ) )
 {
 }
 
