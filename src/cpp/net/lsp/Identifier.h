@@ -300,7 +300,11 @@ namespace libstdhl
 
                 constexpr const char* newText = "newText";
 
+                constexpr const char* newUri = "newUri";
+
                 // O
+
+                constexpr const char* oldUri = "oldUri";
 
                 constexpr const char* onTypeFormatting = "onTypeFormatting";
 

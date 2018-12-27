@@ -85,6 +85,18 @@ TEST( libstdhl_cpp_network_lsp_content, CreateFile )
     EXPECT_STREQ( createFile.uri().toString().c_str(), uri.toString().c_str() );
     EXPECT_STREQ( createFile.kind().c_str(), Identifier::create );
 }
+TEST( libstdhl_cpp_network_lsp_content, RenameFile )
+{
+    auto file = RenameFile( uri, uri );
+    RenameFile test( file );
+    EXPECT_EQ( file, test );
+    EXPECT_FALSE( file.hasOptions() );
+    file.setOptions( CreateFileOptions( true, true ) );
+    EXPECT_TRUE( file.hasOptions() );
+    EXPECT_STREQ( file.newUri().toString().c_str(), uri.toString().c_str() );
+    EXPECT_STREQ( file.oldUri().toString().c_str(), uri.toString().c_str() );
+    EXPECT_STREQ( file.kind().c_str(), Identifier::rename );
+}
 TEST( libstdhl_cpp_network_lsp_content, CancelParams )
 {
     auto params = CancelParams( 1 );
