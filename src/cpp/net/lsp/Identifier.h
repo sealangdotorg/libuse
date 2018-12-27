@@ -235,6 +235,8 @@ namespace libstdhl
 
                 constexpr const char* id = "id";
 
+                constexpr const char* ignoreIfExists = "ignoreIfExists";
+
                 constexpr const char* imports = "imports";
 
                 constexpr const char* includeDeclaration = "includeDeclaration";
@@ -305,6 +307,8 @@ namespace libstdhl
                 constexpr const char* options = "options";
 
                 constexpr const char* originSelectionRange = "originSelectionRange";
+
+                constexpr const char* overwrite = "overwrite";
 
                 // P
 

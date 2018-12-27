@@ -61,6 +61,19 @@ const auto method = std::string( "method" );
 const auto name = std::string( "name" );
 const auto id = std::string( "id" );
 
+TEST( libstdhl_cpp_network_lsp_content, CreateFileOptions )
+{
+    auto options = CreateFileOptions( true, false );
+    auto op = CreateFileOptions( Data::object() );
+    EXPECT_FALSE( op.hasOverwrite() );
+    EXPECT_FALSE( op.hasIgnoreIfExists() );
+    op.setOverwrite( true );
+    op.setIgnoreIfExists( true );
+    EXPECT_TRUE( op.hasOverwrite() );
+    EXPECT_TRUE( op.hasIgnoreIfExists() );
+    EXPECT_TRUE( options.overwrite() );
+    EXPECT_FALSE( options.ignoreIfExists() );
+}
 TEST( libstdhl_cpp_network_lsp_content, CancelParams )
 {
     auto params = CancelParams( 1 );

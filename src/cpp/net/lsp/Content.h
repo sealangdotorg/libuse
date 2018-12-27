@@ -433,6 +433,46 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            class CreateFileOptions : public Data
+            {
+              public:
+                CreateFileOptions( const Data& data );
+
+                CreateFileOptions( const u1 overwrite, const u1 ignoreIfExists );
+
+                u1 hasOverwrite( void ) const;
+
+                u1 overwrite( void ) const;
+
+                void setOverwrite( const u1 overwrite );
+
+                u1 hasIgnoreIfExists( void ) const;
+
+                u1 ignoreIfExists( void ) const;
+
+                void setIgnoreIfExists( const u1 ignoreIfExists );
+
+                static void validate( const Data& data );
+            };
+
+            class CreateFile : public Data
+            {
+              public:
+                CreateFile( const Data& data );
+
+                CreateFile( const DocumentUri& uri );
+
+                DocumentUri uri( void ) const;
+
+                u1 hasOptions( void ) const;
+
+                void setOptions( const CreateFileOptions& options );
+
+                CreateFileOptions options( void ) const;
+
+                static void validate( const Data& data );
+            };
+
             class TextDocumentItem : public Data
             {
               public:
