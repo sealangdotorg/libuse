@@ -6143,9 +6143,13 @@ DocumentLinkResult::DocumentLinkResult( const Data& data )
     validate( data );
 }
 
-DocumentLinkResult::DocumentLinkResult( const DocumentLink link )
-: Data( link )
+DocumentLinkResult::DocumentLinkResult( const DocumentLinks links )
+: Data( Data::array() )
 {
+    for( auto link : links )
+    {
+        push_back( link );
+    }
 }
 
 void DocumentLinkResult::validate( const Data& data )
@@ -6157,7 +6161,7 @@ void DocumentLinkResult::validate( const Data& data )
     }
     else
     {
-        DocumentLink::validate( data );
+        Content::validateTypeIsArrayOf< DocumentLink >( data, context );
     }
 }
 

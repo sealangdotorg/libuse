@@ -892,7 +892,9 @@ TEST( libstdhl_cpp_network_lsp_content, DocumentLink )
 TEST( libstdhl_cpp_network_lsp_content, DocumentLinkResult )
 {
     auto empty = DocumentLinkResult();
-    auto result = DocumentLinkResult( DocumentLink( range ) );
+    auto links = DocumentLinks();
+    links.emplace_back( DocumentLink( range ) );
+    auto result = DocumentLinkResult( links );
     auto r = DocumentLinkResult( result );
 }
 

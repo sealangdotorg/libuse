@@ -2765,7 +2765,7 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
-
+            using DocumentLinks = std::vector< DocumentLink >;
             class DocumentLinkResult : public Data
             {
               public:
@@ -2773,7 +2773,7 @@ namespace libstdhl
 
                 DocumentLinkResult( const Data& data );
 
-                DocumentLinkResult( const DocumentLink link );
+                DocumentLinkResult( const DocumentLinks links );
 
                 static void validate( const Data& data );
             };
