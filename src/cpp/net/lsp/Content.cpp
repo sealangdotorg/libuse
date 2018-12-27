@@ -3470,27 +3470,24 @@ WorkspaceSymbolResult::WorkspaceSymbolResult( const Data& data )
 }
 
 WorkspaceSymbolResult::WorkspaceSymbolResult( const SymbolInformations& symbolInformation )
-: Data( Data::object() )
+: Data( Data::array() )
 {
-    operator[]( Identifier::symbolInformation ) = Data::array();
-
     for( auto information : symbolInformation )
     {
-        operator[]( Identifier::symbolInformation ).push_back( information );
+        push_back( information );
     }
 }
 
 void WorkspaceSymbolResult::addSymbolInformation( const SymbolInformation& information )
 {
-    operator[]( Identifier::symbolInformation ).push_back( information );
+    push_back( information );
 }
 
 SymbolInformations WorkspaceSymbolResult::symbolInformation( void ) const
 {
-    auto infos = operator[]( Identifier::symbolInformation );
     auto result = SymbolInformations();
 
-    for( auto info : infos )
+    for( auto info : *this )
     {
         result.emplace_back( info );
     }
@@ -3501,8 +3498,14 @@ void WorkspaceSymbolResult::validate( const Data& data )
 {
     static const auto context = CONTENT + " workspaceSymbolResult:";
     Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsArrayOf< SymbolInformation >(
-        context, data, Identifier::symbolInformation, true );
+    if( data.is_null() )
+    {
+        // ok, do nothing
+    }
+    else
+    {
+        Content::validateTypeIsArrayOf< SymbolInformation >( context, data );
+    }
 }
 //
 //
