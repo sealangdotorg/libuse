@@ -74,6 +74,17 @@ TEST( libstdhl_cpp_network_lsp_content, CreateFileOptions )
     EXPECT_TRUE( options.overwrite() );
     EXPECT_FALSE( options.ignoreIfExists() );
 }
+TEST( libstdhl_cpp_network_lsp_content, CreateFile )
+{
+    auto createFile = CreateFile( uri );
+    CreateFile test( createFile );
+    EXPECT_EQ( createFile, test );
+    EXPECT_FALSE( createFile.hasOptions() );
+    createFile.setOptions( CreateFileOptions( true, true ) );
+    EXPECT_TRUE( createFile.hasOptions() );
+    EXPECT_STREQ( createFile.uri().toString().c_str(), uri.toString().c_str() );
+    EXPECT_STREQ( createFile.kind().c_str(), Identifier::create );
+}
 TEST( libstdhl_cpp_network_lsp_content, CancelParams )
 {
     auto params = CancelParams( 1 );

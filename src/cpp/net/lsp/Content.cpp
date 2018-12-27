@@ -742,6 +742,57 @@ void CreateFileOptions::validate( const Data& data )
     Content::validatePropertyIsBoolean( context, data, Identifier::overwrite, false );
     Content::validatePropertyIsBoolean( context, data, Identifier::ignoreIfExists, false );
 }
+//
+//
+// CreateFile
+//
+
+CreateFile::CreateFile( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+CreateFile::CreateFile( const DocumentUri& uri )
+: Data( Data::object() )
+{
+    operator[]( Identifier::kind ) = std::string( Identifier::create );
+    operator[]( Identifier::uri ) = uri.toString();
+}
+
+DocumentUri CreateFile::uri( void ) const
+{
+    return DocumentUri::fromString( operator[]( Identifier::uri ).get< std::string >() );
+}
+
+std::string CreateFile::kind( void ) const
+{
+    return operator[]( Identifier::kind ).get< std::string >();
+}
+
+u1 CreateFile::hasOptions( void ) const
+{
+    return find( Identifier::options ) != end();
+}
+
+void CreateFile::setOptions( const CreateFileOptions& options )
+{
+    operator[]( Identifier::options ) = Data::from_cbor( Data::to_cbor( options ) );
+}
+
+CreateFileOptions CreateFile::options( void ) const
+{
+    return at( Identifier::options );
+}
+
+void CreateFile::validate( const Data& data )
+{
+    static const auto context = CONTENT + " CreateFile:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::kind, true );
+    Content::validatePropertyIsString( context, data, Identifier::uri, true );
+    Content::validatePropertyIs< CreateFileOptions >( context, data, Identifier::options, false );
+}
 
 //
 //

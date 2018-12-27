@@ -464,6 +464,8 @@ namespace libstdhl
 
                 DocumentUri uri( void ) const;
 
+                std::string kind( void ) const;
+
                 u1 hasOptions( void ) const;
 
                 void setOptions( const CreateFileOptions& options );
