@@ -306,6 +306,21 @@ namespace libstdhl
                 Hint = 4,
             };
 
+            class DiagnosticRelatedInformation : public Data
+            {
+              public:
+                DiagnosticRelatedInformation( const Data& data );
+
+                DiagnosticRelatedInformation(
+                    const Location& location, const std::string& message );
+
+                Location location( void ) const;
+
+                std::string message( void ) const;
+
+                static void validate( const Data& data );
+            };
+
             class Diagnostic : public Data
             {
               public:
