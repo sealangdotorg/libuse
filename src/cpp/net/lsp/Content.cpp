@@ -2802,6 +2802,21 @@ void ServerCapabilities::setExperimental( const Data& experimental )
     operator[]( Identifier::experimental ) = Data::from_cbor( Data::to_cbor( experimental ) );
 }
 
+u1 ServerCapabilities::hasWorkspace( void ) const
+{
+    return find( Identifier::workspace ) != end();
+}
+
+void ServerCapabilities::setWorkspace( const Workspace& workspace )
+{
+    operator[]( Identifier::workspace ) = Data::from_cbor( Data::to_cbor( workspace ) );
+}
+
+Workspace ServerCapabilities::workspace( void ) const
+{
+    return at( Identifier::workspace );
+}
+
 void ServerCapabilities::validate( const Data& data )
 {
     static const auto context = CONTENT + " SignatureHelpOptions:";
@@ -2834,6 +2849,14 @@ void ServerCapabilities::validate( const Data& data )
     Content::validatePropertyIs< ExecuteCommandOptions >(
         context, data, Identifier::executeCommandProvider, false );
     Content::validatePropertyIsObject( context, data, Identifier::experimental, false );
+    Content::validatePropertyIs< Workspace >( context, data, Identifier::workspace, false );
+    Content::validatePropertyIs< ColorProvider >( context, data, Identifier::colorProvider, false );
+    Content::validatePropertyIs< FoldingRangeProvider >(
+        context, data, Identifier::foldingRangeProvider, false );
+    Content::validatePropertyIs< ImplementationProvider >(
+        context, data, Identifier::implementationProvider, false );
+    Content::validatePropertyIs< TypeDefinitionProvider >(
+        context, data, Identifier::typeDefinitionProvider, false );
 }
 
 // -----------------------------------------------------------------------------
