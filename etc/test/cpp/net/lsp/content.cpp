@@ -68,6 +68,16 @@ TEST( libstdhl_cpp_network_lsp_content, TypeDefinitionProvider )
     Data boolean = true;
     TypeDefinitionProvider test( boolean );
 }
+
+TEST( libstdhl_cpp_network_lsp_content, ColorProvider )
+{
+    ColorProvider provider = ColorProvider(
+        TextDocumentRegistrationOptions( DocumentSelector( std::vector< DocumentFilter >() ) ) );
+    Data boolean = true;
+    ColorProvider options( Data::object() );
+    ColorProvider test( boolean );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CreateFileOptions )
 {
     auto options = CreateFileOptions( true, false );

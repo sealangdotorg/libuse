@@ -2267,6 +2267,74 @@ void TypeDefinitionProvider::validate( const Data& data )
         StaticRegistrationOptions::validate( data );
     }
 }
+
+//
+//
+// ColorProviderOptions
+//
+ColorProviderOptions::ColorProviderOptions( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+void ColorProviderOptions::validate( const Data& data )
+{
+    static const auto context = CONTENT + " ColorProviderOptions:";
+    Content::validateTypeIsObject( context, data );
+}
+
+//
+//
+// ColorProvider
+//
+ColorProvider::ColorProvider( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+u1 ColorProvider::hasId( void ) const
+{
+    return find( Identifier::id ) != end();
+}
+
+std::string ColorProvider::id( void ) const
+{
+    return at( Identifier::id ).get< std::string >();
+}
+
+void ColorProvider::setId( std::string id )
+{
+    operator[]( Identifier::id ) = id;
+}
+
+DocumentSelector ColorProvider::documentSelector( void ) const
+{
+    return operator[]( Identifier::documentSelector );
+}
+
+void ColorProvider::validate( const Data& data )
+{
+    static const auto context = CONTENT + " ColorProvider:";
+    if( data.is_boolean() )
+    {
+        // ok, do nothing
+    }
+    else
+    {
+        try
+        {
+            ColorProviderOptions::validate( data );
+        }
+        catch( std::invalid_argument a )
+        {
+            TextDocumentRegistrationOptions::validate( data );
+            StaticRegistrationOptions::validate( data );
+            ColorProviderOptions::validate( data );
+        }
+    }
+}
 //
 //
 // ServerCapabilities
@@ -2566,6 +2634,37 @@ DocumentLinkOptions ServerCapabilities::documentLinkProvider( void ) const
 void ServerCapabilities::setDocumentLinkProvider( const DocumentLinkOptions& documentLinkProvider )
 {
     operator[]( Identifier::documentLinkProvider ) = documentLinkProvider;
+}
+
+u1 ServerCapabilities::hasColorProvider( void ) const
+{
+    return find( Identifier::colorProvider ) != end();
+}
+
+ColorProvider ServerCapabilities::colorProvider( void ) const
+{
+    return at( Identifier::colorProvider );
+}
+
+void ServerCapabilities::setColorProvider( const ColorProvider& colorProvider )
+{
+    operator[]( Identifier::colorProvider ) = Data::from_cbor( Data::to_cbor( colorProvider ) );
+}
+
+u1 ServerCapabilities::hasFoldingRangeProvider( void ) const
+{
+    return find( Identifier::foldingRangeProvider ) != end();
+}
+
+FoldingRangeProvider ServerCapabilities::foldingRangeProvider( void ) const
+{
+    return at( Identifier::foldingRangeProvider );
+}
+
+void ServerCapabilities::setFoldingRangeProvider( const FoldingRangeProvider& foldingRangeProvider )
+{
+    operator[]( Identifier::foldingRangeProvider ) =
+        Data::from_cbor( Data::to_cbor( foldingRangeProvider ) );
 }
 
 u1 ServerCapabilities::hasExecuteCommandProvider( void ) const

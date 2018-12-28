@@ -1081,6 +1081,34 @@ namespace libstdhl
 
             using ImplementationProvider = TypeDefinitionProvider;
 
+            class ColorProviderOptions : public Data
+            {
+              public:
+                ColorProviderOptions( const Data& data );
+
+                static void validate( const Data& data );
+            };
+
+            using FoldingRangeProviderOptions = ColorProviderOptions;
+
+            class ColorProvider : public Data
+            {
+              public:
+                ColorProvider( const Data& data );
+
+                DocumentSelector documentSelector( void ) const;
+
+                u1 hasId( void ) const;
+
+                std::string id( void ) const;
+
+                void setId( std::string id );
+
+                static void validate( const Data& data );
+            };
+
+            using FoldingRangeProvider = ColorProvider;
+
             class ServerCapabilities : public Data
             {
               public:
@@ -1200,6 +1228,18 @@ namespace libstdhl
                 DocumentLinkOptions documentLinkProvider( void ) const;
 
                 void setDocumentLinkProvider( const DocumentLinkOptions& documentLinkProvider );
+
+                u1 hasColorProvider( void ) const;
+
+                ColorProvider colorProvider( void ) const;
+
+                void setColorProvider( const ColorProvider& colorProvider );
+
+                u1 hasFoldingRangeProvider( void ) const;
+
+                FoldingRangeProvider foldingRangeProvider( void ) const;
+
+                void setFoldingRangeProvider( const FoldingRangeProvider& foldingRangeProvider );
 
                 u1 hasExecuteCommandProvider( void ) const;
 

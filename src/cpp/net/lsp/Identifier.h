@@ -117,6 +117,8 @@ namespace libstdhl
 
                 constexpr const char* color = "color";
 
+                constexpr const char* colorProvider = "colorProvider";
+
                 constexpr const char* command = "command";
 
                 constexpr const char* commands = "commands";
@@ -220,6 +222,8 @@ namespace libstdhl
                 constexpr const char* firstTriggerCharacter = "firstTriggerCharacter";
 
                 constexpr const char* filterText = "filterText";
+
+                constexpr const char* foldingRangeProvider = "foldingRangeProvider";
 
                 constexpr const char* formatting = "formatting";
 
