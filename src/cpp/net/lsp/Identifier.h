@@ -93,6 +93,8 @@ namespace libstdhl
 
                 constexpr const char* change = "change";
 
+                constexpr const char* changeNotifications = "changeNotifications";
+
                 constexpr const char* changes = "changes";
 
                 constexpr const char* character = "character";
@@ -433,6 +435,8 @@ namespace libstdhl
                 constexpr const char* startLine = "startLine";
 
                 constexpr const char* startCharacter = "startCharacter";
+
+                constexpr const char* supported = "supported";
 
                 constexpr const char* symbol = "symbol";
 

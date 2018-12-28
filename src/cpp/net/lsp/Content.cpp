@@ -2335,6 +2335,109 @@ void ColorProvider::validate( const Data& data )
         }
     }
 }
+
+//
+//
+// Workspace
+//
+
+Workspace::Workspace( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+void Workspace::validate( const Data& data )
+{
+    static const auto context = CONTENT + " Workspace:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< Workspace::WorkspaceFolders >(
+        context, data, Identifier::workspaceFolders, false );
+}
+
+Workspace::WorkspaceFolders Workspace::workspaceFolders( void ) const
+{
+    return at( Identifier::workspaceFolders );
+}
+
+u1 Workspace::hasWorkspaceFolders( void ) const
+{
+    return find( Identifier::workspaceFolders ) != end();
+}
+
+void Workspace::setWorkspaceFolders( const Workspace::WorkspaceFolders& workspaceFolders )
+{
+    operator[]( Identifier::workspaceFolders ) =
+        Data::from_cbor( Data::to_cbor( workspaceFolders ) );
+}
+
+//
+//
+// WorkspaceFolders
+//
+Workspace::WorkspaceFolders::WorkspaceFolders( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+u1 Workspace::WorkspaceFolders::supported( void ) const
+{
+    return at( Identifier::supported );
+}
+
+u1 Workspace::WorkspaceFolders::hasSupported( void ) const
+{
+    return find( Identifier::supported ) != end();
+}
+
+void Workspace::WorkspaceFolders::setSupported( const u1 supported )
+{
+    operator[]( Identifier::supported ) = supported;
+}
+
+void Workspace::WorkspaceFolders::setChangeNotifications( const std::string& changeNotifications )
+{
+    operator[]( Identifier::changeNotifications ) = changeNotifications;
+}
+
+void Workspace::WorkspaceFolders::setChangeNotifications( const u1 changeNotifications )
+{
+    operator[]( Identifier::changeNotifications ) = changeNotifications;
+}
+
+u1 Workspace::WorkspaceFolders::hasChangeNotifications( void ) const
+{
+    return find( Identifier::changeNotifications ) != end();
+}
+
+std::string Workspace::WorkspaceFolders::changeNotifications( void ) const
+{
+    if( at( Identifier::changeNotifications ).is_boolean() )
+    {
+        return std::to_string( operator[]( Identifier::changeNotifications ).get< u1 >() );
+    }
+    else
+    {
+        return operator[]( Identifier::changeNotifications ).get< std::string >();
+    }
+}
+
+void Workspace::WorkspaceFolders::validate( const Data& data )
+{
+    static const auto context = CONTENT + " Workspace::WorkspaceFolders:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsBoolean( context, data, Identifier::supported, false );
+    try
+    {
+        Content::validatePropertyIsString( context, data, Identifier::changeNotifications, false );
+    }
+    catch( std::invalid_argument a )
+    {
+        Content::validatePropertyIsBoolean( context, data, Identifier::changeNotifications, false );
+    }
+}
+
 //
 //
 // ServerCapabilities
