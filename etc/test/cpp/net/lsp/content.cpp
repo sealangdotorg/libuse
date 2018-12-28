@@ -100,6 +100,16 @@ TEST( libstdhl_cpp_network_lsp_content, Workspace )
     EXPECT_TRUE( workspace.hasWorkspaceFolders() );
     workspace.workspaceFolders();
 }
+
+TEST( libstdhl_cpp_network_lsp_content, RenameOptions )
+{
+    auto options = RenameOptions( Data::object() );
+    EXPECT_FALSE( options.hasPrepareProvider() );
+    options.setPrepareProvider( true );
+    EXPECT_TRUE( options.hasPrepareProvider() );
+    EXPECT_TRUE( options.prepareProvider() );
+}
+
 TEST( libstdhl_cpp_network_lsp_content, CreateFileOptions )
 {
     auto options = CreateFileOptions( true, false );
