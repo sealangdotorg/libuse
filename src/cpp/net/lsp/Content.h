@@ -1288,6 +1288,12 @@ namespace libstdhl
 
                 void setExperimental( const Data& experimental );
 
+                u1 hasWorkspace( void ) const;
+
+                void setWorkspace( const Workspace& workspace );
+
+                Workspace workspace( void ) const;
+
                 static void validate( const Data& data );
             };
 
