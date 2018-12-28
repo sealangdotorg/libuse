@@ -1160,6 +1160,22 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            class WorkspaceFolder : public Data
+            {
+              public:
+                WorkspaceFolder( const std::string& uri, const std::string& name );
+
+                WorkspaceFolder( const Data& data );
+
+                std::string uri( void ) const;
+
+                std::string name( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            using WorkspaceFolders = std::vector< WorkspaceFolder >;
+
             class InitializeParams : public Data
             {
               public:
@@ -1189,6 +1205,12 @@ namespace libstdhl
                 std::string trace( void ) const;
 
                 void setTrace( const std::string& trace );
+
+                WorkspaceFolders workspaceFolders( void ) const;
+
+                u1 hasWorkspaceFolders( void ) const;
+
+                void addWorkspaceFolder( WorkspaceFolder folder );
 
                 static void validate( const Data& data );
             };
@@ -1435,22 +1457,6 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
-
-            class WorkspaceFolder : public Data
-            {
-              public:
-                WorkspaceFolder( const std::string& uri, const std::string& name );
-
-                WorkspaceFolder( const Data& data );
-
-                std::string uri( void ) const;
-
-                std::string name( void ) const;
-
-                static void validate( const Data& data );
-            };
-
-            using WorkspaceFolders = std::vector< WorkspaceFolder >;
 
             class WorkspaceFoldersResult : public Data
             {
