@@ -1032,6 +1032,20 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            class RenameOptions : public Data
+            {
+              public:
+                RenameOptions( const Data& data );
+
+                u1 hasPrepareProvider( void ) const;
+
+                u1 prepareProvider( void ) const;
+
+                void setPrepareProvider( const u1 prepareProvider );
+
+                static void validate( const Data& data );
+            };
+
             using DocumentLinkOptions = CodeLensOptions;
 
             class ExecuteCommandOptions : public Data

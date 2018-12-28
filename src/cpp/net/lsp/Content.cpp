@@ -2186,6 +2186,38 @@ void DocumentOnTypeFormattingOptions::validate( const Data& data )
 
 //
 //
+// RenameOptions
+//
+RenameOptions::RenameOptions( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+u1 RenameOptions::hasPrepareProvider( void ) const
+{
+    return find( Identifier::prepareProvider ) != end();
+}
+
+u1 RenameOptions::prepareProvider( void ) const
+{
+    return at( Identifier::prepareProvider );
+}
+
+void RenameOptions::setPrepareProvider( const u1 prepareProvider )
+{
+    operator[]( Identifier::prepareProvider ) = prepareProvider;
+}
+
+void RenameOptions::validate( const Data& data )
+{
+    static const auto context = CONTENT + " RenameOptions:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsBoolean( context, data, Identifier::prepareProvider, false );
+}
+
+//
+//
 // ExecuteCommandOptions
 //
 
