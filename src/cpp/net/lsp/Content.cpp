@@ -2365,6 +2365,40 @@ void ServerCapabilities::setDefinitionProvider( const u1 definitionProvider )
     operator[]( Identifier::definitionProvider ) = definitionProvider;
 }
 
+u1 ServerCapabilities::hasTypeDefinitionProvider( void ) const
+{
+    return find( Identifier::typeDefinitionProvider ) != end();
+}
+
+TypeDefinitionProvider ServerCapabilities::typeDefinitionProvider( void ) const
+{
+    return at( Identifier::typeDefinitionProvider );
+}
+
+void ServerCapabilities::setTypeDefinitionProvider(
+    const TypeDefinitionProvider& typeDefinitionProvider )
+{
+    operator[]( Identifier::typeDefinitionProvider ) =
+        Data::from_cbor( Data::to_cbor( typeDefinitionProvider ) );
+}
+
+u1 ServerCapabilities::hasImplementationProvider( void ) const
+{
+    return find( Identifier::implementationProvider ) != end();
+}
+
+ImplementationProvider ServerCapabilities::implementationProvider( void ) const
+{
+    return at( Identifier::implementationProvider );
+}
+
+void ServerCapabilities::setImplementationProvider(
+    const ImplementationProvider& implementationProvider )
+{
+    operator[]( Identifier::implementationProvider ) =
+        Data::from_cbor( Data::to_cbor( implementationProvider ) );
+}
+
 u1 ServerCapabilities::hasReferencesProvider( void ) const
 {
     return find( Identifier::referencesProvider ) != end();
