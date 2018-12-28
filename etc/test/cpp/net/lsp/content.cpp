@@ -61,6 +61,13 @@ const auto method = std::string( "method" );
 const auto name = std::string( "name" );
 const auto id = std::string( "id" );
 
+TEST( libstdhl_cpp_network_lsp_content, TypeDefinitionProvider )
+{
+    TypeDefinitionProvider provider = TypeDefinitionProvider(
+        TextDocumentRegistrationOptions( DocumentSelector( std::vector< DocumentFilter >() ) ) );
+    Data boolean = true;
+    TypeDefinitionProvider test( boolean );
+}
 TEST( libstdhl_cpp_network_lsp_content, CreateFileOptions )
 {
     auto options = CreateFileOptions( true, false );
