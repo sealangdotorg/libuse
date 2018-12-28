@@ -1109,6 +1109,40 @@ namespace libstdhl
 
             using FoldingRangeProvider = ColorProvider;
 
+            class Workspace : public Data
+            {
+              public:
+                Workspace( const Data& data );
+
+                static void validate( const Data& data );
+
+                class WorkspaceFolders : public Data
+                {
+                  public:
+                    WorkspaceFolders( const Data& data );
+
+                    u1 supported( void ) const;
+
+                    u1 hasSupported( void ) const;
+
+                    void setSupported( const u1 supported );
+
+                    void setChangeNotifications( const std::string& changeNotifications );
+
+                    void setChangeNotifications( const u1 changeNotifications );
+
+                    u1 hasChangeNotifications( void ) const;
+
+                    std::string changeNotifications( void ) const;
+
+                    static void validate( const Data& data );
+                };
+                WorkspaceFolders workspaceFolders( void ) const;
+
+                u1 hasWorkspaceFolders( void ) const;
+
+                void setWorkspaceFolders( const WorkspaceFolders& workspaceFolders );
+            };
             class ServerCapabilities : public Data
             {
               public:

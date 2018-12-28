@@ -78,6 +78,28 @@ TEST( libstdhl_cpp_network_lsp_content, ColorProvider )
     ColorProvider test( boolean );
 }
 
+TEST( libstdhl_cpp_network_lsp_content, Workspace_WorkspaceFolders )
+{
+    auto folders = Workspace::WorkspaceFolders( Data::object() );
+    EXPECT_FALSE( folders.hasSupported() );
+    EXPECT_FALSE( folders.hasChangeNotifications() );
+    folders.setSupported( true );
+    folders.setChangeNotifications( true );
+    folders.changeNotifications();
+    folders.setChangeNotifications( text );
+    EXPECT_TRUE( folders.hasSupported() );
+    EXPECT_TRUE( folders.hasChangeNotifications() );
+    folders.supported();
+    folders.changeNotifications();
+}
+TEST( libstdhl_cpp_network_lsp_content, Workspace )
+{
+    auto workspace = Workspace( Data::object() );
+    EXPECT_FALSE( workspace.hasWorkspaceFolders() );
+    workspace.setWorkspaceFolders( Workspace::WorkspaceFolders( Data::object() ) );
+    EXPECT_TRUE( workspace.hasWorkspaceFolders() );
+    workspace.workspaceFolders();
+}
 TEST( libstdhl_cpp_network_lsp_content, CreateFileOptions )
 {
     auto options = CreateFileOptions( true, false );
