@@ -2594,6 +2594,30 @@ void InitializeParams::setTrace( const std::string& trace )
     operator[]( Identifier::trace ) = trace;
 }
 
+WorkspaceFolders InitializeParams::workspaceFolders( void ) const
+{
+    auto folders = WorkspaceFolders();
+    for( auto folder : at( Identifier::workspaceFolders ) )
+    {
+        folders.push_back( folder );
+    }
+    return folders;
+}
+
+u1 InitializeParams::hasWorkspaceFolders( void ) const
+{
+    return find( Identifier::workspaceFolders ) != end();
+}
+
+void InitializeParams::addWorkspaceFolder( WorkspaceFolder folder )
+{
+    if( not hasWorkspaceFolders() )
+    {
+        operator[]( Identifier::workspaceFolders ) = Data::array();
+    }
+    operator[]( Identifier::workspace_workspaceFolders ).push_back( folder );
+}
+
 void InitializeParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " InitializeParams:";
@@ -2605,6 +2629,16 @@ void InitializeParams::validate( const Data& data )
     Content::validatePropertyIsNumberOrNull( context, data, Identifier::processId, false );
     Content::validatePropertyIsObject( context, data, Identifier::initializationOptions, false );
     Content::validatePropertyIsString( context, data, Identifier::trace, false );
+    if( Content::hasProperty( data, Identifier::workspaceFolders ) &&
+        data[ Identifier::workspaceFolders ].is_null() )
+    {
+        // ok, do nothing
+    }
+    else
+    {
+        Content::validatePropertyIsArrayOf< WorkspaceFolder >(
+            context, data, Identifier::workspaceFolders, false );
+    }
 }
 
 //
