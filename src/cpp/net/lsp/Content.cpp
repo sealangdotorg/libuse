@@ -2194,6 +2194,81 @@ void ExecuteCommandOptions::validate( const Data& data )
 
 //
 //
+// StaticRegistrationOptions
+//
+StaticRegistrationOptions::StaticRegistrationOptions( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+u1 StaticRegistrationOptions::hasId( void ) const
+{
+    return find( Identifier::id ) != end();
+}
+
+std::string StaticRegistrationOptions::id( void ) const
+{
+    return at( Identifier::id ).get< std::string >();
+}
+
+void StaticRegistrationOptions::setId( std::string id )
+{
+    operator[]( Identifier::id ) = id;
+}
+
+void StaticRegistrationOptions::validate( const Data& data )
+{
+    static const auto context = CONTENT + " StaticRegistrationOptions:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIsString( context, data, Identifier::id, false );
+}
+
+//
+//
+// TypeDefinitionProvider
+//
+TypeDefinitionProvider::TypeDefinitionProvider( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
+
+u1 TypeDefinitionProvider::hasId( void ) const
+{
+    return find( Identifier::id ) != end();
+}
+
+std::string TypeDefinitionProvider::id( void ) const
+{
+    return at( Identifier::id ).get< std::string >();
+}
+
+void TypeDefinitionProvider::setId( std::string id )
+{
+    operator[]( Identifier::id ) = id;
+}
+
+DocumentSelector TypeDefinitionProvider::documentSelector( void ) const
+{
+    return operator[]( Identifier::documentSelector );
+}
+
+void TypeDefinitionProvider::validate( const Data& data )
+{
+    static const auto context = CONTENT + " TypeDefinitionProvider:";
+    if( data.is_boolean() )
+    {
+        // ok, do nothing
+    }
+    else
+    {
+        TextDocumentRegistrationOptions::validate( data );
+        StaticRegistrationOptions::validate( data );
+    }
+}
+//
+//
 // ServerCapabilities
 //
 

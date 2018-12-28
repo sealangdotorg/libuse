@@ -1037,6 +1037,47 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
+            class StaticRegistrationOptions : public Data
+            {
+              public:
+                StaticRegistrationOptions( const Data& data );
+
+                u1 hasId( void ) const;
+
+                std::string id( void ) const;
+
+                void setId( std::string id );
+
+                static void validate( const Data& data );
+            };
+
+            class TextDocumentRegistrationOptions : public Data
+            {
+              public:
+                TextDocumentRegistrationOptions( const Data& data );
+
+                TextDocumentRegistrationOptions( const DocumentSelector& documentSelector );
+
+                DocumentSelector documentSelector( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class TypeDefinitionProvider : Data
+            {
+              public:
+                TypeDefinitionProvider( const Data& data );
+
+                DocumentSelector documentSelector( void ) const;
+
+                u1 hasId( void ) const;
+
+                std::string id( void ) const;
+
+                void setId( std::string id );
+
+                static void validate( const Data& data );
+            };
 
             class ServerCapabilities : public Data
             {
@@ -1366,18 +1407,6 @@ namespace libstdhl
                 RegistrationParams( const Registrations& registrations );
 
                 Registrations registrations( void ) const;
-
-                static void validate( const Data& data );
-            };
-
-            class TextDocumentRegistrationOptions : public Data
-            {
-              public:
-                TextDocumentRegistrationOptions( const Data& data );
-
-                TextDocumentRegistrationOptions( const DocumentSelector& documentSelector );
-
-                DocumentSelector documentSelector( void ) const;
 
                 static void validate( const Data& data );
             };
