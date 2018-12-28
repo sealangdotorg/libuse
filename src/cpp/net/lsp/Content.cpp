@@ -368,7 +368,41 @@ void Location::validate( const Data& data )
     Content::validatePropertyIsUri( context, data, Identifier::uri, true );
     Content::validatePropertyIs< Range >( context, data, Identifier::range, false );
 }
+//
+//
+// DiagnosticRelatedInformation
+//
+DiagnosticRelatedInformation::DiagnosticRelatedInformation( const Data& data )
+: Data( data )
+{
+    validate( data );
+}
 
+DiagnosticRelatedInformation::DiagnosticRelatedInformation(
+    const Location& location, const std::string& message )
+: Data( Data::object() )
+{
+    operator[]( Identifier::location ) = Data::from_cbor( Data::to_cbor( location ) );
+    operator[]( Identifier::message ) = message;
+}
+
+Location DiagnosticRelatedInformation::location( void ) const
+{
+    return operator[]( Identifier::location );
+}
+
+std::string DiagnosticRelatedInformation::message( void ) const
+{
+    return operator[]( Identifier::message ).get< std::string >();
+}
+
+void DiagnosticRelatedInformation::validate( const Data& data )
+{
+    static const auto context = CONTENT + " DiagnosticRelatedInformation:";
+    Content::validateTypeIsObject( context, data );
+    Content::validatePropertyIs< Location >( context, data, Identifier::location, true );
+    Content::validatePropertyIsString( context, data, Identifier::message, true );
+}
 //
 //
 // Diagnostic

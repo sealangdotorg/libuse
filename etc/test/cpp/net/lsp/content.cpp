@@ -123,6 +123,13 @@ TEST( libstdhl_cpp_network_lsp_content, CreateFileOptions )
     EXPECT_TRUE( options.overwrite() );
     EXPECT_FALSE( options.ignoreIfExists() );
 }
+
+TEST( libstdhl_cpp_network_lsp_content, DiagnosticRelatedInformation )
+{
+    auto information = DiagnosticRelatedInformation( location, message );
+    EXPECT_EQ( information.location(), location );
+    EXPECT_STREQ( information.message().c_str(), message.c_str() );
+}
 TEST( libstdhl_cpp_network_lsp_content, CreateFile )
 {
     auto createFile = CreateFile( uri );
