@@ -1063,7 +1063,7 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
-            class TypeDefinitionProvider : Data
+            class TypeDefinitionProvider : public Data
             {
               public:
                 TypeDefinitionProvider( const Data& data );
@@ -1078,6 +1078,8 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
+
+            using ImplementationProvider = TypeDefinitionProvider;
 
             class ServerCapabilities : public Data
             {
@@ -1117,6 +1119,20 @@ namespace libstdhl
                 u1 definitionProvider( void ) const;
 
                 void setDefinitionProvider( const u1 definitionProvider );
+
+                u1 hasTypeDefinitionProvider( void ) const;
+
+                TypeDefinitionProvider typeDefinitionProvider( void ) const;
+
+                void setTypeDefinitionProvider(
+                    const TypeDefinitionProvider& typeDefinitionProvider );
+
+                u1 hasImplementationProvider( void ) const;
+
+                ImplementationProvider implementationProvider( void ) const;
+
+                void setImplementationProvider(
+                    const ImplementationProvider& implementationProvider );
 
                 u1 hasReferencesProvider( void ) const;
 

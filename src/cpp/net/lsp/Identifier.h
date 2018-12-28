@@ -243,6 +243,8 @@ namespace libstdhl
 
                 constexpr const char* imports = "imports";
 
+                constexpr const char* implementationProvider = "implementationProvider";
+
                 constexpr const char* includeDeclaration = "includeDeclaration";
 
                 constexpr const char* includeText = "includeText";
@@ -480,6 +482,8 @@ namespace libstdhl
                 constexpr const char* triggerKind = "triggerKind";
 
                 constexpr const char* type = "type";
+
+                constexpr const char* typeDefinitionProvider = "typeDefinitionProvider";
 
                 // U
 
