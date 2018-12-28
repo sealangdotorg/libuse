@@ -135,6 +135,8 @@ namespace libstdhl
 
                 constexpr const char* completionProvider = "completionProvider";
 
+                constexpr const char* configuration = "configuration";
+
                 constexpr const char* containerName = "containerName";
 
                 constexpr const char* contentChanges = "contentChanges";

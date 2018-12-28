@@ -1284,6 +1284,35 @@ void WorkspaceClientCapabilities::executeCommand( const DynamicRegistration& exe
 {
     operator[]( Identifier::executeCommand ) = Data::from_cbor( Data::to_cbor( executeCommand ) );
 }
+u1 WorkspaceClientCapabilities::hasWorkspaceFolders( void ) const
+{
+    return find( Identifier::workspaceFolders ) != end();
+}
+
+void WorkspaceClientCapabilities::setWorkspaceFolders( const u1 workspaceFolders )
+{
+    operator[]( Identifier::workspaceFolders ) = workspaceFolders;
+}
+
+u1 WorkspaceClientCapabilities::workspaceFolders( void ) const
+{
+    return at( Identifier::workspaceFolders ).get< u1 >();
+}
+
+u1 WorkspaceClientCapabilities::hasConfiguration( void ) const
+{
+    return find( Identifier::configuration ) != end();
+}
+
+void WorkspaceClientCapabilities::setConfiguration( const u1 configuration )
+{
+    operator[]( Identifier::configuration ) = configuration;
+}
+
+u1 WorkspaceClientCapabilities::configuration( void ) const
+{
+    return at( Identifier::configuration ).get< u1 >();
+}
 
 void WorkspaceClientCapabilities::validate( const Data& data )
 {
@@ -1299,6 +1328,8 @@ void WorkspaceClientCapabilities::validate( const Data& data )
     Content::validatePropertyIs< DynamicRegistration >( context, data, Identifier::symbol, false );
     Content::validatePropertyIs< DynamicRegistration >(
         context, data, Identifier::executeCommand, false );
+    Content::validatePropertyIsBoolean( context, data, Identifier::configuration, false );
+    Content::validatePropertyIsBoolean( context, data, Identifier::workspaceFolders, false );
 }
 
 //

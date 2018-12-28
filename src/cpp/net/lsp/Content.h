@@ -678,6 +678,18 @@ namespace libstdhl
 
                 void executeCommand( const DynamicRegistration& executeCommand );
 
+                u1 hasWorkspaceFolders( void ) const;
+
+                void setWorkspaceFolders( const u1 workspaceFolders );
+
+                u1 workspaceFolders( void ) const;
+
+                u1 hasConfiguration( void ) const;
+
+                void setConfiguration( const u1 configuration );
+
+                u1 configuration( void ) const;
+
                 static void validate( const Data& data );
             };
 
