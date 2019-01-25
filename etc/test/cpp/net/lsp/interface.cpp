@@ -454,18 +454,11 @@ TEST( libstdhl_cpp_network_lsp, ID_increment )
         messageRequestProcessed = true;
         ShowMessageRequestResult result( response.result() );
     } );
-    server.flush( [&]( const Message& message ) {
-        const auto packet = libstdhl::Network::LSP::Packet( message );
-        id = static_cast< const RequestMessage& >( message ).id();
-    } );
-
-    ResponseMessage response( id );
+    ResponseMessage response( 0 );
     response.setResult( MessageActionItem( std::string{ "title" } ) );
     EXPECT_FALSE( messageRequestProcessed );
     response.process( server );
     EXPECT_TRUE( messageRequestProcessed );
-    EXPECT_STREQ( id.c_str(), "0" );
-
     // make second request
     u1 registerRequestProcessed = false;
     server.client_registerCapability(
