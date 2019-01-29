@@ -43,8 +43,6 @@
 git:
   submodules: false
 
-sudo: required
-
 language: c++
 
 matrix:
