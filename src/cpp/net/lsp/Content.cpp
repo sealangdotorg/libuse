@@ -181,9 +181,9 @@ Position Range::end( void ) const
 void Range::validate( const Data& data )
 {
     static const auto context = CONTENT + " Range:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< Position >( context, data, Identifier::start, true );
-    Content::validatePropertyIs< Position >( context, data, Identifier::end, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< Position >( context, data, Identifier::start, true );
+    Json::validatePropertyIs< Position >( context, data, Identifier::end, true );
 }
 
 //
@@ -252,9 +252,9 @@ std::string DiagnosticRelatedInformation::message( void ) const
 void DiagnosticRelatedInformation::validate( const Data& data )
 {
     static const auto context = CONTENT + " DiagnosticRelatedInformation:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< Location >( context, data, Identifier::location, true );
-    Content::validatePropertyIsString( context, data, Identifier::message, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< Location >( context, data, Identifier::location, true );
+    Json::validatePropertyIsString( context, data, Identifier::message, true );
 }
 //
 //
@@ -625,9 +625,9 @@ void CreateFileOptions::setIgnoreIfExists( const u1 ignoreIfExists )
 void CreateFileOptions::validate( const Data& data )
 {
     static const auto context = CONTENT + " CreateFileOptions:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsBoolean( context, data, Identifier::overwrite, false );
-    Content::validatePropertyIsBoolean( context, data, Identifier::ignoreIfExists, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsBoolean( context, data, Identifier::overwrite, false );
+    Json::validatePropertyIsBoolean( context, data, Identifier::ignoreIfExists, false );
 }
 //
 //
@@ -675,10 +675,10 @@ CreateFileOptions CreateFile::options( void ) const
 void CreateFile::validate( const Data& data )
 {
     static const auto context = CONTENT + " CreateFile:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::kind, true );
-    Content::validatePropertyIsString( context, data, Identifier::uri, true );
-    Content::validatePropertyIs< CreateFileOptions >( context, data, Identifier::options, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::kind, true );
+    Json::validatePropertyIsString( context, data, Identifier::uri, true );
+    Json::validatePropertyIs< CreateFileOptions >( context, data, Identifier::options, false );
 }
 //
 //
@@ -732,11 +732,11 @@ RenameFileOptions RenameFile::options( void ) const
 void RenameFile::validate( const Data& data )
 {
     static const auto context = CONTENT + " RenameFile:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::kind, true );
-    Content::validatePropertyIsString( context, data, Identifier::newUri, true );
-    Content::validatePropertyIsString( context, data, Identifier::oldUri, true );
-    Content::validatePropertyIs< CreateFileOptions >( context, data, Identifier::options, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::kind, true );
+    Json::validatePropertyIsString( context, data, Identifier::newUri, true );
+    Json::validatePropertyIsString( context, data, Identifier::oldUri, true );
+    Json::validatePropertyIs< CreateFileOptions >( context, data, Identifier::options, false );
 }
 //
 //
@@ -782,9 +782,9 @@ void DeleteFileOptions::setIgnoreIfExists( const u1 ignoreIfExists )
 void DeleteFileOptions::validate( const Data& data )
 {
     static const auto context = CONTENT + " DeleteFileOptions:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsBoolean( context, data, Identifier::recursive, false );
-    Content::validatePropertyIsBoolean( context, data, Identifier::ignoreIfExists, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsBoolean( context, data, Identifier::recursive, false );
+    Json::validatePropertyIsBoolean( context, data, Identifier::ignoreIfExists, false );
 }
 //
 //
@@ -830,10 +830,10 @@ DeleteFileOptions DeleteFile::options( void ) const
 void DeleteFile::validate( const Data& data )
 {
     static const auto context = CONTENT + " DeleteFile:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::kind, true );
-    Content::validatePropertyIsString( context, data, Identifier::uri, true );
-    Content::validatePropertyIs< DeleteFileOptions >( context, data, Identifier::options, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::kind, true );
+    Json::validatePropertyIsString( context, data, Identifier::uri, true );
+    Json::validatePropertyIs< DeleteFileOptions >( context, data, Identifier::options, false );
 }
 
 //
@@ -1215,8 +1215,8 @@ void WorkspaceClientCapabilities::validate( const Data& data )
     Json::validatePropertyIs< DynamicRegistration >( context, data, Identifier::symbol, false );
     Json::validatePropertyIs< DynamicRegistration >(
         context, data, Identifier::executeCommand, false );
-    Content::validatePropertyIsBoolean( context, data, Identifier::configuration, false );
-    Content::validatePropertyIsBoolean( context, data, Identifier::workspaceFolders, false );
+    Json::validatePropertyIsBoolean( context, data, Identifier::configuration, false );
+    Json::validatePropertyIsBoolean( context, data, Identifier::workspaceFolders, false );
 }
 
 //
@@ -1395,9 +1395,9 @@ void TextDocumentClientCapabilities::Completion::completionItem(
 void TextDocumentClientCapabilities::Completion::validate( const Data& data )
 {
     static const auto context = CONTENT + " Completion:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsBoolean( context, data, Identifier::dynamicRegistration, false );
-    Content::validatePropertyIs< TextDocumentClientCapabilities::CompletionItem >(
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsBoolean( context, data, Identifier::dynamicRegistration, false );
+    Json::validatePropertyIs< TextDocumentClientCapabilities::CompletionItem >(
         context, data, Identifier::completionItem, false );
 }
 
@@ -2094,8 +2094,8 @@ void RenameOptions::setPrepareProvider( const u1 prepareProvider )
 void RenameOptions::validate( const Data& data )
 {
     static const auto context = CONTENT + " RenameOptions:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsBoolean( context, data, Identifier::prepareProvider, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsBoolean( context, data, Identifier::prepareProvider, false );
 }
 
 //
@@ -2165,8 +2165,8 @@ void StaticRegistrationOptions::setId( std::string id )
 void StaticRegistrationOptions::validate( const Data& data )
 {
     static const auto context = CONTENT + " StaticRegistrationOptions:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::id, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::id, false );
 }
 
 //
@@ -2226,7 +2226,7 @@ ColorProviderOptions::ColorProviderOptions( const Data& data )
 void ColorProviderOptions::validate( const Data& data )
 {
     static const auto context = CONTENT + " ColorProviderOptions:";
-    Content::validateTypeIsObject( context, data );
+    Json::validateTypeIsObject( context, data );
 }
 
 //
@@ -2295,8 +2295,8 @@ Workspace::Workspace( const Data& data )
 void Workspace::validate( const Data& data )
 {
     static const auto context = CONTENT + " Workspace:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< Workspace::WorkspaceFolders >(
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< Workspace::WorkspaceFolders >(
         context, data, Identifier::workspaceFolders, false );
 }
 
@@ -2371,15 +2371,15 @@ std::string Workspace::WorkspaceFolders::changeNotifications( void ) const
 void Workspace::WorkspaceFolders::validate( const Data& data )
 {
     static const auto context = CONTENT + " Workspace::WorkspaceFolders:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsBoolean( context, data, Identifier::supported, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsBoolean( context, data, Identifier::supported, false );
     try
     {
-        Content::validatePropertyIsString( context, data, Identifier::changeNotifications, false );
+        Json::validatePropertyIsString( context, data, Identifier::changeNotifications, false );
     }
     catch( std::invalid_argument a )
     {
-        Content::validatePropertyIsBoolean( context, data, Identifier::changeNotifications, false );
+        Json::validatePropertyIsBoolean( context, data, Identifier::changeNotifications, false );
     }
 }
 
@@ -2791,14 +2791,14 @@ void ServerCapabilities::validate( const Data& data )
         context, data, Identifier::documentLinkProvider, false );
     Json::validatePropertyIs< ExecuteCommandOptions >(
         context, data, Identifier::executeCommandProvider, false );
-    Content::validatePropertyIsObject( context, data, Identifier::experimental, false );
-    Content::validatePropertyIs< Workspace >( context, data, Identifier::workspace, false );
-    Content::validatePropertyIs< ColorProvider >( context, data, Identifier::colorProvider, false );
-    Content::validatePropertyIs< FoldingRangeProvider >(
+    Json::validatePropertyIsObject( context, data, Identifier::experimental, false );
+    Json::validatePropertyIs< Workspace >( context, data, Identifier::workspace, false );
+    Json::validatePropertyIs< ColorProvider >( context, data, Identifier::colorProvider, false );
+    Json::validatePropertyIs< FoldingRangeProvider >(
         context, data, Identifier::foldingRangeProvider, false );
-    Content::validatePropertyIs< ImplementationProvider >(
+    Json::validatePropertyIs< ImplementationProvider >(
         context, data, Identifier::implementationProvider, false );
-    Content::validatePropertyIs< TypeDefinitionProvider >(
+    Json::validatePropertyIs< TypeDefinitionProvider >(
         context, data, Identifier::typeDefinitionProvider, false );
 }
 
@@ -2902,17 +2902,17 @@ void InitializeParams::validate( const Data& data )
     Json::validatePropertyIsUriOrNull( context, data, Identifier::rootUri, true );
     Json::validatePropertyIs< ClientCapabilities >( context, data, Identifier::capabilities, true );
 
-    Content::validatePropertyIsNumberOrNull( context, data, Identifier::processId, false );
-    Content::validatePropertyIsObject( context, data, Identifier::initializationOptions, false );
-    Content::validatePropertyIsString( context, data, Identifier::trace, false );
-    if( Content::hasProperty( data, Identifier::workspaceFolders ) &&
+    Json::validatePropertyIsNumberOrNull( context, data, Identifier::processId, false );
+    Json::validatePropertyIsObject( context, data, Identifier::initializationOptions, false );
+    Json::validatePropertyIsString( context, data, Identifier::trace, false );
+    if( Json::hasProperty( data, Identifier::workspaceFolders ) &&
         data[ Identifier::workspaceFolders ].is_null() )
     {
         // ok, do nothing
     }
     else
     {
-        Content::validatePropertyIsArrayOf< WorkspaceFolder >(
+        Json::validatePropertyIsArrayOf< WorkspaceFolder >(
             context, data, Identifier::workspaceFolders, false );
     }
 }
@@ -3010,14 +3010,14 @@ std::string CancelParams::id( void ) const
 void CancelParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " CancelParams:";
-    Content::validateTypeIsObject( context, data );
+    Json::validateTypeIsObject( context, data );
     if( data[ Identifier::id ].is_number() )
     {
-        Content::validatePropertyIsNumber( context, data, Identifier::id, true );
+        Json::validatePropertyIsNumber( context, data, Identifier::id, true );
     }
     else
     {
-        Content::validatePropertyIsString( context, data, Identifier::id, true );
+        Json::validatePropertyIsString( context, data, Identifier::id, true );
     }
 }
 
@@ -3052,9 +3052,9 @@ std::string ShowMessageParams::message( void ) const
 void ShowMessageParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " ShowMessageParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::message, true );
-    Content::validatePropertyIsNumber( context, data, Identifier::type, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::message, true );
+    Json::validatePropertyIsNumber( context, data, Identifier::type, true );
 }
 
 //
@@ -3082,8 +3082,8 @@ std::string MessageActionItem::title( void ) const
 void MessageActionItem::validate( const Data& data )
 {
     static const auto context = CONTENT + " MessageActionItem:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::title, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::title, true );
 }
 
 //
@@ -3182,9 +3182,9 @@ std::string ShowMessageRequestParams::message( void ) const
 void ShowMessageRequestParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " ShowMessageRequestParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::title, true );
-    Content::validatePropertyIsArray( context, data, Identifier::actions, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::title, true );
+    Json::validatePropertyIsArray( context, data, Identifier::actions, false );
 }
 
 TelemetryEventParams::TelemetryEventParams( const Data& data )
@@ -3196,7 +3196,7 @@ TelemetryEventParams::TelemetryEventParams( const Data& data )
 void TelemetryEventParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " TelemetryEventParams:";
-    Content::validateTypeIsObject( context, data );
+    Json::validateTypeIsObject( context, data );
 }
 
 //
@@ -3249,10 +3249,10 @@ void Registration::addRegisterOption( const Data& option )
 void Registration::validate( const Data& data )
 {
     static const auto context = CONTENT + " Registration:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::id, true );
-    Content::validatePropertyIsString( context, data, Identifier::method, true );
-    Content::validatePropertyIsArray( context, data, Identifier::registerOptions, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::id, true );
+    Json::validatePropertyIsString( context, data, Identifier::method, true );
+    Json::validatePropertyIsArray( context, data, Identifier::registerOptions, false );
 }
 
 //
@@ -3289,8 +3289,8 @@ Registrations RegistrationParams::registrations( void ) const
 void RegistrationParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " RegistrationParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsArray( context, data, Identifier::registrations, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsArray( context, data, Identifier::registrations, true );
 }
 
 //
@@ -3319,7 +3319,7 @@ DocumentSelector TextDocumentRegistrationOptions::documentSelector( void ) const
 void TextDocumentRegistrationOptions::validate( const Data& data )
 {
     static const auto context = CONTENT + " TextDocumentRegistrationOptions:";
-    Content::validateTypeIsObject( context, data );
+    Json::validateTypeIsObject( context, data );
     if( data.find( Identifier::documentSelector ) != data.end() and
         data[ Identifier::documentSelector ].is_null() )
     {
@@ -3327,7 +3327,7 @@ void TextDocumentRegistrationOptions::validate( const Data& data )
     }
     else
     {
-        Content::validatePropertyIs< DocumentSelector >(
+        Json::validatePropertyIs< DocumentSelector >(
             context, data, Identifier::documentSelector, true );
     }
 }
@@ -3359,8 +3359,8 @@ TextDocumentSyncKind TextDocumentChangeRegistrationOptions::kind( void ) const
 void TextDocumentChangeRegistrationOptions::validate( const Data& data )
 {
     static const auto context = CONTENT + " TextDocumentChangeRegistrationOptions:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsNumber( context, data, Identifier::kind, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsNumber( context, data, Identifier::kind, true );
 }
 
 //
@@ -3394,9 +3394,9 @@ std::string Unregistration::method( void ) const
 void Unregistration::validate( const Data& data )
 {
     static const auto context = CONTENT + " Unregistration:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::id, true );
-    Content::validatePropertyIsString( context, data, Identifier::method, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::id, true );
+    Json::validatePropertyIsString( context, data, Identifier::method, true );
 }
 
 //
@@ -3434,8 +3434,8 @@ Unregistrations UnregistrationParams::unregistrations( void ) const
 void UnregistrationParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " UnregistrationParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsArray( context, data, Identifier::unregistrations, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsArray( context, data, Identifier::unregistrations, true );
 }
 
 //
@@ -3469,9 +3469,9 @@ std::string WorkspaceFolder::name( void ) const
 void WorkspaceFolder::validate( const Data& data )
 {
     static const auto context = CONTENT + " WorkspaceFolder:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::uri, true );
-    Content::validatePropertyIsString( context, data, Identifier::name, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::uri, true );
+    Json::validatePropertyIsString( context, data, Identifier::name, true );
 }
 
 //
@@ -3520,7 +3520,7 @@ void WorkspaceFoldersResult::validate( const Data& data )
     }
     else
     {
-        Content::validateTypeIsArrayOf< WorkspaceFolder >( context, data );
+        Json::validateTypeIsArrayOf< WorkspaceFolder >( context, data );
     }
 }
 
@@ -3579,11 +3579,10 @@ WorkspaceFolders WorkspaceFoldersChangeEvent::removed( void ) const
 void WorkspaceFoldersChangeEvent::validate( const Data& data )
 {
     static const auto context = CONTENT + " WorkspaceFoldersChangeEvent:";
-    Content::validateTypeIsObject( context, data );
+    Json::validateTypeIsObject( context, data );
 
-    Content::validatePropertyIsArrayOf< WorkspaceFolder >( context, data, Identifier::added, true );
-    Content::validatePropertyIsArrayOf< WorkspaceFolder >(
-        context, data, Identifier::removed, true );
+    Json::validatePropertyIsArrayOf< WorkspaceFolder >( context, data, Identifier::added, true );
+    Json::validatePropertyIsArrayOf< WorkspaceFolder >( context, data, Identifier::removed, true );
 }
 //
 //
@@ -3610,8 +3609,8 @@ WorkspaceFoldersChangeEvent DidChangeWorkspaceFoldersParams::event( void ) const
 void DidChangeWorkspaceFoldersParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " DidChangeWorkspaceFoldersParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< WorkspaceFoldersChangeEvent >(
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< WorkspaceFoldersChangeEvent >(
         context, data, Identifier::event, true );
 }
 
@@ -3636,7 +3635,7 @@ DidChangeConfigurationSettings DidChangeConfigurationParams::settings( void ) co
 void DidChangeConfigurationParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " DidChangeConfigurationParams:";
-    Content::validatePropertyIsObject( context, data, Identifier::settings, true );
+    Json::validatePropertyIsObject( context, data, Identifier::settings, true );
 }
 
 //
@@ -3690,9 +3689,9 @@ void ConfigurationItem::setScopeUri( const std::string& uri )
 void ConfigurationItem::validate( const Data& data )
 {
     static const auto context = CONTENT + " ConfigurationItem:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::section, false );
-    Content::validatePropertyIsString( context, data, Identifier::scopeUri, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::section, false );
+    Json::validatePropertyIsString( context, data, Identifier::scopeUri, false );
 }
 
 //
@@ -3713,7 +3712,7 @@ ConfigurationResult::ConfigurationResult( const Data& data )
 void ConfigurationResult::validate( const Data& data )
 {
     static const auto context = CONTENT + " ConfigurationResult:";
-    Content::validateTypeIsArray( context, data );
+    Json::validateTypeIsArray( context, data );
 }
 
 //
@@ -3752,9 +3751,8 @@ ConfigurationItems ConfigurationParams::items( void ) const
 void ConfigurationParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " ConfigurationParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsArrayOf< ConfigurationItem >(
-        context, data, Identifier::items, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsArrayOf< ConfigurationItem >( context, data, Identifier::items, true );
 }
 
 //
@@ -3788,9 +3786,9 @@ FileChangeType FileEvent::type( void ) const
 void FileEvent::validate( const Data& data )
 {
     static const auto context = CONTENT + " FileEvent:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsUri( context, data, Identifier::uri, true );
-    Content::validatePropertyIsNumber( context, data, Identifier::type, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsUri( context, data, Identifier::uri, true );
+    Json::validatePropertyIsNumber( context, data, Identifier::type, true );
 }
 
 //
@@ -3828,8 +3826,8 @@ FileEvents DidChangeWatchedFilesParams::changes( void ) const
 void DidChangeWatchedFilesParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " DidChangeWatchedFilesParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsArray( context, data, Identifier::changes, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsArray( context, data, Identifier::changes, true );
 }
 
 //
@@ -3878,9 +3876,9 @@ void FileSystemWatcher::setKind( const WatchKind kind )
 void FileSystemWatcher::validate( const Data& data )
 {
     static const auto context = CONTENT + " FileSystemWatchers:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::globPattern, true );
-    Content::validatePropertyIsNumber( context, data, Identifier::kind, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::globPattern, true );
+    Json::validatePropertyIsNumber( context, data, Identifier::kind, false );
 }
 
 //
@@ -3921,8 +3919,8 @@ FileSystemWatchers DidChangeWatchedFilesRegistrationOptions::watchers( void ) co
 void DidChangeWatchedFilesRegistrationOptions::validate( const Data& data )
 {
     static const auto context = CONTENT + " DidChangeWatchedFilesRegistrationOptions:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsArrayOf< FileSystemWatcher >(
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsArrayOf< FileSystemWatcher >(
         context, data, Identifier::watchers, true );
 }
 
@@ -3951,8 +3949,8 @@ std::string WorkspaceSymbolParams::query( void ) const
 void WorkspaceSymbolParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " WorkspaceSymbolParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::query, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::query, true );
 }
 
 //
@@ -4022,12 +4020,12 @@ SymbolKind SymbolInformation::kind( void ) const
 void SymbolInformation::validate( const Data& data )
 {
     static const auto context = CONTENT + " SymbolInformation:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::name, true );
-    Content::validatePropertyIsNumber( context, data, Identifier::kind, true );
-    Content::validatePropertyIs< Location >( context, data, Identifier::location, true );
-    Content::validatePropertyIsString( context, data, Identifier::containerName, false );
-    Content::validatePropertyIsBoolean( context, data, Identifier::deprecated, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::name, true );
+    Json::validatePropertyIsNumber( context, data, Identifier::kind, true );
+    Json::validatePropertyIs< Location >( context, data, Identifier::location, true );
+    Json::validatePropertyIsString( context, data, Identifier::containerName, false );
+    Json::validatePropertyIsBoolean( context, data, Identifier::deprecated, false );
 }
 
 //
@@ -4068,14 +4066,14 @@ SymbolInformations WorkspaceSymbolResult::symbolInformation( void ) const
 void WorkspaceSymbolResult::validate( const Data& data )
 {
     static const auto context = CONTENT + " workspaceSymbolResult:";
-    Content::validateTypeIsObject( context, data );
+    Json::validateTypeIsObject( context, data );
     if( data.is_null() )
     {
         // ok, do nothing
     }
     else
     {
-        Content::validateTypeIsArrayOf< SymbolInformation >( context, data );
+        Json::validateTypeIsArrayOf< SymbolInformation >( context, data );
     }
 }
 //
@@ -4118,9 +4116,9 @@ void ApplyWorkspaceEditParams::setLabel( const std::string& label )
 void ApplyWorkspaceEditParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " ApplyWorkspaceEditParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< WorkspaceEdit >( context, data, Identifier::edit, true );
-    Content::validatePropertyIsString( context, data, Identifier::label, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< WorkspaceEdit >( context, data, Identifier::edit, true );
+    Json::validatePropertyIsString( context, data, Identifier::label, false );
 }
 
 //
@@ -4147,8 +4145,8 @@ u1 ApplyWorkspaceEditResult::applied( void ) const
 void ApplyWorkspaceEditResult::validate( const Data& data )
 {
     static const auto context = CONTENT + " ApplyWorkspaceEditResult:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsBoolean( context, data, Identifier::applied, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsBoolean( context, data, Identifier::applied, true );
 }
 
 //
@@ -4176,9 +4174,8 @@ TextDocumentItem DidOpenTextDocumentParams::textDocument( void ) const
 void DidOpenTextDocumentParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " DidOpenTextDocumentParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< TextDocumentItem >(
-        context, data, Identifier::textDocument, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< TextDocumentItem >( context, data, Identifier::textDocument, false );
 }
 
 //
@@ -4236,10 +4233,10 @@ std::string TextDocumentContentChangeEvent::text( void ) const
 void TextDocumentContentChangeEvent::validate( const Data& data )
 {
     static const auto context = CONTENT + " TextDocumentContentChangeEvent:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::text, true );
-    Content::validatePropertyIs< Range >( context, data, Identifier::range, false );
-    Content::validatePropertyIsNumber( context, data, Identifier::rangeLength, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::text, true );
+    Json::validatePropertyIs< Range >( context, data, Identifier::range, false );
+    Json::validatePropertyIsNumber( context, data, Identifier::rangeLength, false );
 }
 
 //
@@ -4286,10 +4283,10 @@ TextDocumentContentChangeEvents DidChangeTextDocumentParams::contentChanges( voi
 void DidChangeTextDocumentParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " DidChangeTextDocumentParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< VersionedTextDocumentIdentifier >(
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< VersionedTextDocumentIdentifier >(
         context, data, Identifier::textDocument, true );
-    Content::validatePropertyIsArrayOf< TextDocumentContentChangeEvent >(
+    Json::validatePropertyIsArrayOf< TextDocumentContentChangeEvent >(
         context, data, Identifier::contentChanges, true );
 }
 
@@ -4326,10 +4323,10 @@ TextDocumentIdentifier WillSaveTextDocumentParams::textDocument( void ) const
 void WillSaveTextDocumentParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " WillSaveTextDocumentParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< TextDocumentIdentifier >(
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< TextDocumentIdentifier >(
         context, data, Identifier::textDocument, true );
-    Content::validatePropertyIsNumber( context, data, Identifier::reason, true );
+    Json::validatePropertyIsNumber( context, data, Identifier::reason, true );
 }
 
 //
@@ -4367,14 +4364,14 @@ TextEdits WillSaveWaitUntilResponse::textEdit( void ) const
 void WillSaveWaitUntilResponse::validate( const Data& data )
 {
     static const auto context = CONTENT + " WillSaveWaitUntilResponse:";
-    Content::validateTypeIsObject( context, data );
+    Json::validateTypeIsObject( context, data );
     if( data.find( Identifier::edit ) != data.end() and data[ Identifier::edit ].is_null() )
     {
         // ok, due to the possibility that the property can be null
     }
     else
     {
-        Content::validatePropertyIsArrayOf< TextEdit >( context, data, Identifier::edit, true );
+        Json::validatePropertyIsArrayOf< TextEdit >( context, data, Identifier::edit, true );
     }
 }
 
@@ -4418,10 +4415,10 @@ std::string DidSaveTextDocumentParams::text( void ) const
 void DidSaveTextDocumentParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " DidSaveTextDocumentParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< TextDocumentIdentifier >(
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< TextDocumentIdentifier >(
         context, data, Identifier::textDocument, true );
-    Content::validatePropertyIsString( context, data, Identifier::text, false );
+    Json::validatePropertyIsString( context, data, Identifier::text, false );
 }
 
 //
@@ -4449,8 +4446,8 @@ TextDocumentIdentifier DidCloseTextDocumentParams::textDocument( void ) const
 void DidCloseTextDocumentParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " DidCloseTextDocumentParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< TextDocumentIdentifier >(
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< TextDocumentIdentifier >(
         context, data, Identifier::textDocument, true );
 }
 
@@ -4495,9 +4492,9 @@ CompletionTriggerKind CompletionContext::triggerKind( void ) const
 void CompletionContext::validate( const Data& data )
 {
     static const auto context = CONTENT + " CompletionContext:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsNumber( context, data, Identifier::triggerKind, true );
-    Content::validatePropertyIsString( context, data, Identifier::triggerCharacter, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsNumber( context, data, Identifier::triggerKind, true );
+    Json::validatePropertyIsString( context, data, Identifier::triggerCharacter, false );
 }
 
 //
@@ -4535,8 +4532,8 @@ void CompletionParams::setContext( const CompletionContext& context )
 void CompletionParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " CompletionParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< CompletionContext >( context, data, Identifier::context, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< CompletionContext >( context, data, Identifier::context, false );
 }
 
 //
@@ -4799,23 +4796,23 @@ Data CompletionItem::data( void ) const
 void CompletionItem::validate( const Data& data )
 {
     static const auto context = CONTENT + " CompletionItem:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::label, true );
-    Content::validatePropertyIsNumber( context, data, Identifier::kind, false );
-    Content::validatePropertyIsString( context, data, Identifier::detail, false );
-    Content::validatePropertyIs< MarkupContent >( context, data, Identifier::documentation, false );
-    Content::validatePropertyIsBoolean( context, data, Identifier::deprecated, false );
-    Content::validatePropertyIsBoolean( context, data, Identifier::preselect, false );
-    Content::validatePropertyIsString( context, data, Identifier::sortText, false );
-    Content::validatePropertyIsString( context, data, Identifier::filterText, false );
-    Content::validatePropertyIsString( context, data, Identifier::insertText, false );
-    Content::validatePropertyIsNumber( context, data, Identifier::insertTextFormat, false );
-    Content::validatePropertyIs< TextEdit >( context, data, Identifier::textEdit, false );
-    Content::validatePropertyIsArrayOf< TextEdit >(
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::label, true );
+    Json::validatePropertyIsNumber( context, data, Identifier::kind, false );
+    Json::validatePropertyIsString( context, data, Identifier::detail, false );
+    Json::validatePropertyIs< MarkupContent >( context, data, Identifier::documentation, false );
+    Json::validatePropertyIsBoolean( context, data, Identifier::deprecated, false );
+    Json::validatePropertyIsBoolean( context, data, Identifier::preselect, false );
+    Json::validatePropertyIsString( context, data, Identifier::sortText, false );
+    Json::validatePropertyIsString( context, data, Identifier::filterText, false );
+    Json::validatePropertyIsString( context, data, Identifier::insertText, false );
+    Json::validatePropertyIsNumber( context, data, Identifier::insertTextFormat, false );
+    Json::validatePropertyIs< TextEdit >( context, data, Identifier::textEdit, false );
+    Json::validatePropertyIsArrayOf< TextEdit >(
         context, data, Identifier::additionalTextEdits, false );
-    Content::validatePropertyIsArrayOfString( context, data, Identifier::commitCharacters, false );
-    Content::validatePropertyIs< Command >( context, data, Identifier::command, false );
-    Content::validatePropertyIsObject( context, data, Identifier::data, false );
+    Json::validatePropertyIsArrayOfString( context, data, Identifier::commitCharacters, false );
+    Json::validatePropertyIs< Command >( context, data, Identifier::command, false );
+    Json::validatePropertyIsObject( context, data, Identifier::data, false );
 }
 
 //
@@ -4858,9 +4855,9 @@ u1 CompletionList::isIncomplete( void ) const
 void CompletionList::validate( const Data& data )
 {
     static const auto context = CONTENT + " CompletionList:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsArrayOf< CompletionItem >( context, data, Identifier::items, true );
-    Content::validatePropertyIsBoolean( context, data, Identifier::isIncomplete, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsArrayOf< CompletionItem >( context, data, Identifier::items, true );
+    Json::validatePropertyIsBoolean( context, data, Identifier::isIncomplete, true );
 }
 //
 //
@@ -4966,9 +4963,9 @@ void CompletionRegistrationOptions::setResolveProvider( const u1 resolveProvider
 void CompletionRegistrationOptions::validate( const Data& data )
 {
     static const auto context = CONTENT + " CompletionRegistrationOptions:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsArrayOfString( context, data, Identifier::triggerCharacters, false );
-    Content::validatePropertyIsBoolean( context, data, Identifier::resolveProvider, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsArrayOfString( context, data, Identifier::triggerCharacters, false );
+    Json::validatePropertyIsBoolean( context, data, Identifier::resolveProvider, false );
 }
 
 //
@@ -5021,13 +5018,13 @@ void MarkupContent::validate( const Data& data )
     static const auto context = CONTENT + " MarkupContent:";
     if( data.is_object() )
     {
-        Content::validateTypeIsObject( context, data );
-        Content::validatePropertyIsString( context, data, Identifier::value, true );
-        Content::validatePropertyIsString( context, data, Identifier::kind, true );
+        Json::validateTypeIsObject( context, data );
+        Json::validatePropertyIsString( context, data, Identifier::value, true );
+        Json::validatePropertyIsString( context, data, Identifier::kind, true );
     }
     else if( data.is_string() )
     {
-        Content::validateTypeIsString( context, data );
+        Json::validateTypeIsString( context, data );
     }
 }
 
@@ -5070,9 +5067,9 @@ void ParameterInformation::setDocumentation( const MarkupContent& doc )
 void ParameterInformation::validate( const Data& data )
 {
     static const auto context = CONTENT + " ParameterInformation:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::label, true );
-    Content::validatePropertyIsString( context, data, Identifier::documentation, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::label, true );
+    Json::validatePropertyIsString( context, data, Identifier::documentation, false );
 }
 
 //
@@ -5140,10 +5137,10 @@ void SignatureInformation::setParameters( const ParameterInformations& parameter
 void SignatureInformation::validate( const Data& data )
 {
     static const auto context = CONTENT + " SignatureInformation:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::label, true );
-    Content::validatePropertyIsString( context, data, Identifier::documentation, false );
-    Content::validatePropertyIsArrayOf< ParameterInformation >(
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::label, true );
+    Json::validatePropertyIsString( context, data, Identifier::documentation, false );
+    Json::validatePropertyIsArrayOf< ParameterInformation >(
         context, data, Identifier::parameters, false );
 }
 
@@ -5211,11 +5208,11 @@ std::size_t SignatureHelp::activeParameter( void ) const
 void SignatureHelp::validate( const Data& data )
 {
     static const auto context = CONTENT + " SignatureHelp:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsArrayOf< SignatureInformation >(
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsArrayOf< SignatureInformation >(
         context, data, Identifier::signatures, true );
-    Content::validatePropertyIsNumber( context, data, Identifier::activeSignature, false );
-    Content::validatePropertyIsNumber( context, data, Identifier::activeParameter, false );
+    Json::validatePropertyIsNumber( context, data, Identifier::activeSignature, false );
+    Json::validatePropertyIsNumber( context, data, Identifier::activeParameter, false );
 }
 //
 //
@@ -5308,11 +5305,11 @@ Range LocationLink::targetSelectionRange( void ) const
 void LocationLink::validate( const Data& data )
 {
     static const auto context = CONTENT + " LocationLink:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::targetUri, true );
-    Content::validatePropertyIs< Range >( context, data, Identifier::targetRange, true );
-    Content::validatePropertyIs< Range >( context, data, Identifier::originSelectionRange, false );
-    Content::validatePropertyIs< Range >( context, data, Identifier::targetSelectionRange, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::targetUri, true );
+    Json::validatePropertyIs< Range >( context, data, Identifier::targetRange, true );
+    Json::validatePropertyIs< Range >( context, data, Identifier::originSelectionRange, false );
+    Json::validatePropertyIs< Range >( context, data, Identifier::targetSelectionRange, false );
 }
 //
 //
@@ -5350,8 +5347,8 @@ u1 TextDocumentSaveRegistrationOptions::includeText( void ) const
 void TextDocumentSaveRegistrationOptions::validate( const Data& data )
 {
     static const auto context = CONTENT + " TextDocumentSaveRegistrationOptions:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsBoolean( context, data, Identifier::includeText, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsBoolean( context, data, Identifier::includeText, false );
 }
 
 //
@@ -5409,8 +5406,8 @@ TriggerCharacters SignatureHelpRegistrationOptions::triggerCharacters( void ) co
 void SignatureHelpRegistrationOptions::validate( const Data& data )
 {
     static const auto context = CONTENT + " SignatureHelpRegistrationOptions:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsArrayOfString( context, data, Identifier::triggerCharacters, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsArrayOfString( context, data, Identifier::triggerCharacters, false );
 }
 
 //
@@ -5459,11 +5456,11 @@ void TypeDefinitionResult::validate( const Data& data )
     {
         if( data.is_array() )
         {
-            Content::validateTypeIsArrayOf< Location, LocationLink >( context, data );
+            Json::validateTypeIsArrayOf< Location, LocationLink >( context, data );
         }
         else
         {
-            Content::validateTypeIsObject( context, data );
+            Json::validateTypeIsObject( context, data );
             Location::validate( data );
         }
     }
@@ -5494,8 +5491,8 @@ u1 ReferenceContext::includeDeclaration( void ) const
 void ReferenceContext::validate( const Data& data )
 {
     static const auto context = CONTENT + " ReferenceContext:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsBoolean( context, data, Identifier::includeDeclaration, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsBoolean( context, data, Identifier::includeDeclaration, true );
 }
 
 //
@@ -5525,8 +5522,8 @@ ReferenceContext ReferenceParams::context( void ) const
 void ReferenceParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " ReferenceParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< ReferenceContext >( context, data, Identifier::context, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< ReferenceContext >( context, data, Identifier::context, true );
 }
 
 //
@@ -5557,7 +5554,7 @@ void ReferenceResult::validate( const Data& data )
     }
     else
     {
-        Content::validateTypeIsArrayOf< Location >( context, data );
+        Json::validateTypeIsArrayOf< Location >( context, data );
     }
 }
 
@@ -5636,8 +5633,8 @@ std::vector< std::string > CodeActionOptions::codeActionKinds( void ) const
 void CodeActionOptions::validate( const Data& data )
 {
     static const auto context = CONTENT + " CodeActionOptions:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsArrayOfString( context, data, Identifier::codeActionKinds, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsArrayOfString( context, data, Identifier::codeActionKinds, false );
 }
 
 //
@@ -5727,8 +5724,8 @@ Diagnostics CodeActionContext::diagnostics( void ) const
 void CodeActionContext::validate( const Data& data )
 {
     static const auto context = CONTENT + " CodeActionContext:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsArrayOf< TextDocumentContentChangeEvent >(
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsArrayOf< TextDocumentContentChangeEvent >(
         context, data, Identifier::diagnostics, true );
 }
 
@@ -5772,11 +5769,11 @@ CodeActionContext CodeActionParams::context( void ) const
 void CodeActionParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " CodeActionParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< TextDocumentIdentifier >(
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< TextDocumentIdentifier >(
         context, data, Identifier::textDocument, true );
-    Content::validatePropertyIs< Range >( context, data, Identifier::range, true );
-    Content::validatePropertyIs< CodeActionContext >( context, data, Identifier::context, true );
+    Json::validatePropertyIs< Range >( context, data, Identifier::range, true );
+    Json::validatePropertyIs< CodeActionContext >( context, data, Identifier::context, true );
 }
 
 //
@@ -5812,7 +5809,7 @@ void CodeActionResult::addCommand( const Command& command )
 void CodeActionResult::validate( const Data& data )
 {
     static const auto context = CONTENT + " CodeActionResult:";
-    Content::validateTypeIsMixedArrayOf< Command, CodeAction >( context, data );
+    Json::validateTypeIsMixedArrayOf< Command, CodeAction >( context, data );
 }
 
 //
@@ -5942,13 +5939,12 @@ Command CodeAction::command( void ) const
 void CodeAction::validate( const Data& data )
 {
     static const auto context = CONTENT + " CodeAction:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::title, true );
-    Content::validatePropertyIsString( context, data, Identifier::kind, false );
-    Content::validatePropertyIsArrayOf< Diagnostic >(
-        context, data, Identifier::diagnostics, false );
-    Content::validatePropertyIs< WorkspaceEdit >( context, data, Identifier::edit, false );
-    Content::validatePropertyIs< Command >( context, data, Identifier::command, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::title, true );
+    Json::validatePropertyIsString( context, data, Identifier::kind, false );
+    Json::validatePropertyIsArrayOf< Diagnostic >( context, data, Identifier::diagnostics, false );
+    Json::validatePropertyIs< WorkspaceEdit >( context, data, Identifier::edit, false );
+    Json::validatePropertyIs< Command >( context, data, Identifier::command, false );
 }
 
 //
@@ -5988,10 +5984,9 @@ Data PublishDiagnosticsParams::diagnostics( void ) const
 void PublishDiagnosticsParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " PublishDiagnosticsParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsUri( context, data, Identifier::uri, true );
-    Content::validatePropertyIsArrayOf< Diagnostic >(
-        context, data, Identifier::diagnostics, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsUri( context, data, Identifier::uri, true );
+    Json::validatePropertyIsArrayOf< Diagnostic >( context, data, Identifier::diagnostics, true );
 }
 
 //
@@ -6030,9 +6025,9 @@ void MarkedString::validate( const Data& data )
     }
 
     static const auto context = CONTENT + " MarkedString:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::language, true );
-    Content::validatePropertyIsString( context, data, Identifier::value, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::language, true );
+    Json::validatePropertyIsString( context, data, Identifier::value, true );
 }
 
 //
@@ -6091,26 +6086,25 @@ void HoverResult::validate( const Data& data )
     else
     {
         static const auto context = CONTENT + " HoverResult:";
-        Content::validateTypeIsObject( context, data );
+        Json::validateTypeIsObject( context, data );
         try
         {
-            Content::validatePropertyIs< MarkedString >(
-                context, data, Identifier::contents, true );
+            Json::validatePropertyIs< MarkedString >( context, data, Identifier::contents, true );
         }
         catch( std::invalid_argument a )
         {
             try
             {
-                Content::validatePropertyIs< MarkupContent >(
+                Json::validatePropertyIs< MarkupContent >(
                     context, data, Identifier::contents, true );
             }
             catch( std::invalid_argument a )
             {
-                Content::validatePropertyIsArrayOf< MarkedString >(
+                Json::validatePropertyIsArrayOf< MarkedString >(
                     context, data, Identifier::contents, true );
             }
         }
-        Content::validatePropertyIs< Range >( context, data, Identifier::range, false );
+        Json::validatePropertyIs< Range >( context, data, Identifier::range, false );
     }
 }
 
@@ -6150,7 +6144,7 @@ Data DefinitionResult::locations( void ) const
 void DefinitionResult::validate( const Data& data )
 {
     static const auto context = CONTENT + " DefinitionResult:";
-    Content::validateTypeIsObject( context, data );
+    Json::validateTypeIsObject( context, data );
     if( data.find( Identifier::location ) != data.end() )
     {
         if( data[ Identifier::location ].is_null() )
@@ -6162,14 +6156,13 @@ void DefinitionResult::validate( const Data& data )
             if( data[ Identifier::location ].is_array() )
             {
                 // object is an Array
-                Content::validatePropertyIsArrayOf< Location >(
+                Json::validatePropertyIsArrayOf< Location >(
                     context, data, Identifier::location, true );
             }
             else
             {
                 // object is a single Location object
-                Content::validatePropertyIs< Location >(
-                    context, data, Identifier::location, true );
+                Json::validatePropertyIs< Location >( context, data, Identifier::location, true );
             }
         }
     }
@@ -6214,9 +6207,9 @@ void DocumentHighlight::setKind( const DocumentHighlightKind kind )
 void DocumentHighlight::validate( const Data& data )
 {
     static const auto context = CONTENT + " DocumentHighlight:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< Range >( context, data, Identifier::range, true );
-    Content::validatePropertyIsNumber( context, data, Identifier::kind, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< Range >( context, data, Identifier::range, true );
+    Json::validatePropertyIsNumber( context, data, Identifier::kind, false );
 }
 
 //
@@ -6247,14 +6240,14 @@ DocumentHighlightResult::DocumentHighlightResult( const DocumentHighlights& high
 void DocumentHighlightResult::validate( const Data& data )
 {
     static const auto context = CONTENT + " DefinitionResult:";
-    Content::validateTypeIsObject( context, data );
+    Json::validateTypeIsObject( context, data );
     if( data.is_null() )
     {
         // if it is null, do nothing
     }
     else
     {
-        Content::validateTypeIsArrayOf< DocumentHighlight >( context, data );
+        Json::validateTypeIsArrayOf< DocumentHighlight >( context, data );
     }
 }
 
@@ -6283,8 +6276,8 @@ TextDocumentIdentifier DocumentSymbolParams::textDocument( void ) const
 void DocumentSymbolParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " DocumentSymbolParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< TextDocumentIdentifier >(
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< TextDocumentIdentifier >(
         context, data, Identifier::textDocument, true );
 }
 
@@ -6324,7 +6317,7 @@ void DocumentSymbolResult::validate( const Data& data )
     }
     else
     {
-        Content::validateTypeIsArrayOf< DocumentSymbol, SymbolInformation >( context, data );
+        Json::validateTypeIsArrayOf< DocumentSymbol, SymbolInformation >( context, data );
     }
 }
 
@@ -6425,15 +6418,14 @@ void DocumentSymbol::addChild( const DocumentSymbol& symbol )
 void DocumentSymbol::validate( const Data& data )
 {
     static const auto context = CONTENT + "DocumentSymbol:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< Range >( context, data, Identifier::range, true );
-    Content::validatePropertyIs< Range >( context, data, Identifier::selectionRange, true );
-    Content::validatePropertyIsString( context, data, Identifier::name, true );
-    Content::validatePropertyIsNumber( context, data, Identifier::kind, true );
-    Content::validatePropertyIsArrayOf< DocumentSymbol >(
-        context, data, Identifier::children, false );
-    Content::validatePropertyIsString( context, data, Identifier::detail, false );
-    Content::validatePropertyIsBoolean( context, data, Identifier::deprecated, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< Range >( context, data, Identifier::range, true );
+    Json::validatePropertyIs< Range >( context, data, Identifier::selectionRange, true );
+    Json::validatePropertyIsString( context, data, Identifier::name, true );
+    Json::validatePropertyIsNumber( context, data, Identifier::kind, true );
+    Json::validatePropertyIsArrayOf< DocumentSymbol >( context, data, Identifier::children, false );
+    Json::validatePropertyIsString( context, data, Identifier::detail, false );
+    Json::validatePropertyIsBoolean( context, data, Identifier::deprecated, false );
 }
 
 //
@@ -6461,8 +6453,8 @@ TextDocumentIdentifier CodeLensParams::textDocument( void ) const
 void CodeLensParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " CodeLensParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< TextDocumentIdentifier >(
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< TextDocumentIdentifier >(
         context, data, Identifier::textDocument, true );
 }
 
@@ -6521,9 +6513,9 @@ void CodeLens::setData( const Data& data )
 void CodeLens::validate( const Data& data )
 {
     static const auto context = CONTENT + " CodeLens:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< Range >( context, data, Identifier::range, true );
-    Content::validatePropertyIs< Command >( context, data, Identifier::command, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< Range >( context, data, Identifier::range, true );
+    Json::validatePropertyIs< Command >( context, data, Identifier::command, false );
 }
 
 //
@@ -6560,7 +6552,7 @@ void CodeLensResult::validate( const Data& data )
     }
     else
     {
-        Content::validateTypeIsArrayOf< CodeLens >( context, data );
+        Json::validateTypeIsArrayOf< CodeLens >( context, data );
     }
 }
 
@@ -6605,9 +6597,9 @@ void ExecuteCommandParams::addArgument( const Data& argument )
 void ExecuteCommandParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " ExecuteCommandParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::command, true );
-    Content::validatePropertyIsArray( context, data, Identifier::arguments, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::command, true );
+    Json::validatePropertyIsArray( context, data, Identifier::arguments, false );
 }
 
 //
@@ -6634,8 +6626,8 @@ TextDocumentIdentifier DocumentLinkParams::textDocument( void ) const
 void DocumentLinkParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " DocumentLinkParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< TextDocumentIdentifier >(
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< TextDocumentIdentifier >(
         context, data, Identifier::textDocument, true );
 }
 
@@ -6694,9 +6686,9 @@ Data DocumentLink::data( void ) const
 void DocumentLink::validate( const Data& data )
 {
     static const auto context = CONTENT + " DocumentLink:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< Range >( context, data, Identifier::range, true );
-    Content::validatePropertyIsString( context, data, Identifier::target, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< Range >( context, data, Identifier::range, true );
+    Json::validatePropertyIsString( context, data, Identifier::target, false );
 }
 
 //
@@ -6732,7 +6724,7 @@ void DocumentLinkResult::validate( const Data& data )
     }
     else
     {
-        Content::validateTypeIsArrayOf< DocumentLink >( data, context );
+        Json::validateTypeIsArrayOf< DocumentLink >( data, context );
     }
 }
 
@@ -6761,8 +6753,8 @@ TextDocumentIdentifier DocumentColorParams::textDocument( void ) const
 void DocumentColorParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " DocumentColorParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< TextDocumentIdentifier >(
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< TextDocumentIdentifier >(
         context, data, Identifier::textDocument, true );
 }
 //
@@ -6807,11 +6799,11 @@ float Color::alpha( void ) const
 void Color::validate( const Data& data )
 {
     static const auto context = CONTENT + " Color:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsNumber( context, data, Identifier::red, true );
-    Content::validatePropertyIsNumber( context, data, Identifier::green, true );
-    Content::validatePropertyIsNumber( context, data, Identifier::blue, true );
-    Content::validatePropertyIsNumber( context, data, Identifier::alpha, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsNumber( context, data, Identifier::red, true );
+    Json::validatePropertyIsNumber( context, data, Identifier::green, true );
+    Json::validatePropertyIsNumber( context, data, Identifier::blue, true );
+    Json::validatePropertyIsNumber( context, data, Identifier::alpha, true );
 }
 //
 //
@@ -6843,9 +6835,9 @@ Color ColorInformation::color( void ) const
 void ColorInformation::validate( const Data& data )
 {
     static const auto context = CONTENT + " ColorInformation:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< Range >( context, data, Identifier::range, true );
-    Content::validatePropertyIs< Color >( context, data, Identifier::color, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< Range >( context, data, Identifier::range, true );
+    Json::validatePropertyIs< Color >( context, data, Identifier::color, true );
 }
 
 //
@@ -6870,7 +6862,7 @@ DocumentColorResult::DocumentColorResult( const ColorInformations& colorInformat
 void DocumentColorResult::validate( const Data& data )
 {
     static const auto context = CONTENT + " ColorInformation:";
-    Content::validateTypeIsArrayOf< ColorInformation >( context, data );
+    Json::validateTypeIsArrayOf< ColorInformation >( context, data );
 }
 
 //
@@ -6904,9 +6896,9 @@ Range ColorPresentationParams::range( void ) const
 void ColorPresentationParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " ColorPresentationParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< Color >( context, data, Identifier::color, true );
-    Content::validatePropertyIs< Range >( context, data, Identifier::range, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< Color >( context, data, Identifier::color, true );
+    Json::validatePropertyIs< Range >( context, data, Identifier::range, true );
 }
 
 ColorPresentation::ColorPresentation( const Data& data )
@@ -6968,10 +6960,10 @@ TextEdits ColorPresentation::additionalTextEdits( void ) const
 void ColorPresentation::validate( const Data& data )
 {
     static const auto context = CONTENT + " ColorPresentation:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::label, true );
-    Content::validatePropertyIs< TextEdit >( context, data, Identifier::textEdit, false );
-    Content::validatePropertyIsArrayOf< TextEdit >(
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::label, true );
+    Json::validatePropertyIs< TextEdit >( context, data, Identifier::textEdit, false );
+    Json::validatePropertyIsArrayOf< TextEdit >(
         context, data, Identifier::additionalTextEdits, false );
 }
 
@@ -6993,7 +6985,7 @@ ColorPresentationResult::ColorPresentationResult( ColorPresentations presentatio
 void ColorPresentationResult::validate( const Data& data )
 {
     static const auto context = CONTENT + " ColorPresentationResult:";
-    Content::validateTypeIsArrayOf< ColorPresentation >( context, data );
+    Json::validateTypeIsArrayOf< ColorPresentation >( context, data );
 }
 
 //
@@ -7027,10 +7019,10 @@ FormattingOptions DocumentFormattingParams::options( void ) const
 void DocumentFormattingParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " DocumentFormattingParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< TextDocumentIdentifier >(
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< TextDocumentIdentifier >(
         context, data, Identifier::textDocument, true );
-    Content::validatePropertyIs< FormattingOptions >( context, data, Identifier::options, true );
+    Json::validatePropertyIs< FormattingOptions >( context, data, Identifier::options, true );
 }
 
 //
@@ -7093,9 +7085,9 @@ u1 FormattingOptions::insertSpaces( void ) const
 void FormattingOptions::validate( const Data& data )
 {
     static const auto context = CONTENT + " FormattingOptions:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsNumber( context, data, Identifier::tabSize, true );
-    Content::validatePropertyIsBoolean( context, data, Identifier::insertSpaces, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsNumber( context, data, Identifier::tabSize, true );
+    Json::validatePropertyIsBoolean( context, data, Identifier::insertSpaces, true );
     validateAdditionalOptions( data );
 }
 //
@@ -7128,7 +7120,7 @@ void DocumentFormattingResult::validate( const Data& data )
     }
     else
     {
-        Content::validateTypeIsArrayOf< TextEdit >( context, data );
+        Json::validateTypeIsArrayOf< TextEdit >( context, data );
     }
 }
 
@@ -7155,8 +7147,8 @@ Range DocumentRangeFormattingParams::range( void ) const
 void DocumentRangeFormattingParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " DocumentRangeFormattingParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< Range >( context, data, Identifier::range, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< Range >( context, data, Identifier::range, true );
 }
 //
 //
@@ -7192,9 +7184,9 @@ std::string DocumentOnTypeFormattingParams::ch( void ) const
 void DocumentOnTypeFormattingParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " DocumentOnTypeFormattingParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< Position >( context, data, Identifier::position, true );
-    Content::validatePropertyIsString( context, data, Identifier::ch, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< Position >( context, data, Identifier::position, true );
+    Json::validatePropertyIsString( context, data, Identifier::ch, true );
 }
 
 //
@@ -7248,10 +7240,9 @@ std::vector< std::string > DocumentOnTypeFormattingRegistrationOptions::moreTrig
 void DocumentOnTypeFormattingRegistrationOptions::validate( const Data& data )
 {
     static const auto context = CONTENT + " DocumentOnTypeFormattingRegistrationOptions:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsString( context, data, Identifier::firstTriggerCharacter, true );
-    Content::validatePropertyIsArrayOfString(
-        context, data, Identifier::moreTriggerCharacter, true );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsString( context, data, Identifier::firstTriggerCharacter, true );
+    Json::validatePropertyIsArrayOfString( context, data, Identifier::moreTriggerCharacter, true );
 }
 
 //
@@ -7293,11 +7284,11 @@ std::string RenameParams::newName( void ) const
 void RenameParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " RenameParams:";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< TextDocumentIdentifier >(
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< TextDocumentIdentifier >(
         context, data, Identifier::textDocument, true );
-    Content::validatePropertyIs< Position >( context, data, Identifier::position, true );
-    Content::validatePropertyIsString( context, data, Identifier::newName, true );
+    Json::validatePropertyIs< Position >( context, data, Identifier::position, true );
+    Json::validatePropertyIsString( context, data, Identifier::newName, true );
 }
 
 RenameRegistrationOptions::RenameRegistrationOptions( const Data& data )
@@ -7329,8 +7320,8 @@ u1 RenameRegistrationOptions::prepareProvider( void ) const
 void RenameRegistrationOptions::validate( const Data& data )
 {
     static const auto context = CONTENT + " RenameRegistrationOptions";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsBoolean( context, data, Identifier::prepareProvider, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsBoolean( context, data, Identifier::prepareProvider, false );
 }
 
 //
@@ -7403,9 +7394,9 @@ void PrepareRenameResult::validate( const Data& data )
         }
         catch( std::invalid_argument a )
         {
-            Content::validateTypeIsObject( context, data );
-            Content::validatePropertyIs< Range >( context, data, Identifier::range, true );
-            Content::validatePropertyIsString( context, data, Identifier::placeholder, true );
+            Json::validateTypeIsObject( context, data );
+            Json::validatePropertyIs< Range >( context, data, Identifier::range, true );
+            Json::validatePropertyIsString( context, data, Identifier::placeholder, true );
         }
     }
 }
@@ -7434,8 +7425,8 @@ TextDocumentIdentifier FoldingRangeParams::textDocument( void ) const
 void FoldingRangeParams::validate( const Data& data )
 {
     static const auto context = CONTENT + " FoldingRangeParams";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIs< TextDocumentIdentifier >(
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIs< TextDocumentIdentifier >(
         context, data, Identifier::textDocument, true );
 }
 
@@ -7531,12 +7522,12 @@ std::string FoldingRange::kind( void ) const
 void FoldingRange::validate( const Data& data )
 {
     static const auto context = CONTENT + " FoldingRange";
-    Content::validateTypeIsObject( context, data );
-    Content::validatePropertyIsNumber( context, data, Identifier::startLine, true );
-    Content::validatePropertyIsNumber( context, data, Identifier::endLine, true );
-    Content::validatePropertyIsNumber( context, data, Identifier::startCharacter, false );
-    Content::validatePropertyIsNumber( context, data, Identifier::endCharacter, false );
-    Content::validatePropertyIsString( context, data, Identifier::kind, false );
+    Json::validateTypeIsObject( context, data );
+    Json::validatePropertyIsNumber( context, data, Identifier::startLine, true );
+    Json::validatePropertyIsNumber( context, data, Identifier::endLine, true );
+    Json::validatePropertyIsNumber( context, data, Identifier::startCharacter, false );
+    Json::validatePropertyIsNumber( context, data, Identifier::endCharacter, false );
+    Json::validatePropertyIsString( context, data, Identifier::kind, false );
 }
 
 //
@@ -7572,7 +7563,7 @@ void FoldingRangeResult::validate( const Data& data )
     }
     else
     {
-        Content::validateTypeIsArrayOf< FoldingRange >( context, data );
+        Json::validateTypeIsArrayOf< FoldingRange >( context, data );
     }
 }
 

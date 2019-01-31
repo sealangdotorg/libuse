@@ -66,644 +66,433 @@ namespace libstdhl
 
             using DocumentUri = libstdhl::Standard::RFC3986::URI;
 
-        }
-
-        enum class ErrorCode : i32
-        {
-            // defined by JSON RPC
-            ParseError = -32700,
-            InvalidRequest = -32600,
-            MethodNotFound = -32601,
-            InvalidParams = -32602,
-            InternalError = -32603,
-            serverErrorStart = -32099,
-            serverErrorEnd = -32000,
-            ServerNotInitialized = -32002,
-            UnknownErrorCode = -32001,
-
-            // defined by LSP
-            RequestCancelled = -32800,
-
-        };
-
-        class ResponseError final : public Data
-        {
-          public:
-            ResponseError( const Data& data );
-
-            ResponseError( const ErrorCode code, const std::string& message );
-
-            ErrorCode code( void ) const;
-
-            std::string message( void ) const;
-
-            u1 hasData( void ) const;
-
-            Data data( void ) const;
-
-            void setData( const Data& data );
-
-            static void validate( const Data& data );
-        };
-
-        namespace TextDocument
-        {
-            constexpr const std::array< const char*, 3 > EOL = { { "\n", "\r\n", "\r" } };
-        }
-
-        class Position : public Data
-        {
-          public:
-            Position( const Data& data );
-
-            Position( const std::size_t line, const std::size_t character );
-
-            std::size_t line( void ) const;
-
-            std::size_t character( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class Range : public Data
-        {
-          public:
-            Range( const Data& data );
-
-            Range( const Position& start, const Position& end );
-
-            Position start( void ) const;
-
-            Position end( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class Location : public Data
-        {
-          public:
-            Location( const Data& data );
-
-            Location( const DocumentUri& uri, const Range& range );
-
-            DocumentUri uri( void ) const;
-
-            Range range( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        enum class DiagnosticSeverity : std::size_t
-        {
-            Error = 1,
-            Warning = 2,
-            Information = 3,
-            Hint = 4,
-        };
-
-        class DiagnosticRelatedInformation : public Data
-        {
-          public:
-            DiagnosticRelatedInformation( const Data& data );
-
-            DiagnosticRelatedInformation( const Location& location, const std::string& message );
-
-            Location location( void ) const;
-
-            std::string message( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class Diagnostic : public Data
-        {
-          public:
-            Diagnostic( const Data& data );
-
-            Diagnostic( const Range& range, const std::string& message );
-
-            Range range( void ) const;
-
-            std::string message( void ) const;
-
-            u1 hasSeverity( void ) const;
-
-            DiagnosticSeverity severity( void ) const;
-
-            void setSeverity( const DiagnosticSeverity& severity );
-
-            u1 hasCode( void ) const;
-
-            std::string code( void ) const;
-
-            void setCode( const std::string& code );
-
-            void setCode( const std::size_t code );
-
-            u1 hasSource( void ) const;
-
-            std::string source( void ) const;
-
-            void setSource( const std::string& source );
-
-            static void validate( const Data& data );
-        };
-
-        class Command : public Data
-        {
-          public:
-            Command( const Data& data );
-
-            Command( const std::string& title, const std::string& command );
-
-            std::string title( void ) const;
-
-            std::string command( void ) const;
-
-            u1 hasArguments( void ) const;
-
-            Data arguments( void ) const;
-
-            void addArgument( const Data& argument );
-
-            static void validate( const Data& data );
-        };
-
-        class TextEdit : public Data
-        {
-          public:
-            TextEdit( const Data& data );
-
-            TextEdit( const Range& range, const std::string& newText );
-
-            Range range( void ) const;
-
-            std::string newText( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class TextDocumentIdentifier : public Data
-        {
-          public:
-            TextDocumentIdentifier( const Data& data );
-
-            TextDocumentIdentifier( const DocumentUri& uri );
-
-            DocumentUri uri( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class VersionedTextDocumentIdentifier : public TextDocumentIdentifier
-        {
-          public:
-            VersionedTextDocumentIdentifier( const Data& data );
-
-            VersionedTextDocumentIdentifier( const DocumentUri& uri, const std::size_t version );
-
-            std::size_t version( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class TextDocumentEdit : public Data
-        {
-          public:
-            TextDocumentEdit( const Data& data );
-
-            TextDocumentEdit(
-                const VersionedTextDocumentIdentifier& textDocument,
-                const std::vector< TextEdit >& edits );
-
-            VersionedTextDocumentIdentifier textDocument( void ) const;
-
-            Data edits( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class WorkspaceEdit : public Data
-        {
-          public:
-            WorkspaceEdit( const Data& data );
-
-            WorkspaceEdit( void );
-
-            // changes interface omitted!
-
-            u1 hasDocumentChanges( void ) const;
-
-            Data documentChanges( void ) const;
-
-            void addDocumentChange( const TextDocumentEdit& documentChange );
-
-            static void validate( const Data& data );
-        };
-
-        class CreateFileOptions : public Data
-        {
-          public:
-            CreateFileOptions( const Data& data );
-
-            CreateFileOptions( const u1 overwrite, const u1 ignoreIfExists );
-
-            u1 hasOverwrite( void ) const;
-
-            u1 overwrite( void ) const;
-
-            void setOverwrite( const u1 overwrite );
-
-            u1 hasIgnoreIfExists( void ) const;
-
-            u1 ignoreIfExists( void ) const;
-
-            void setIgnoreIfExists( const u1 ignoreIfExists );
-
-            static void validate( const Data& data );
-        };
-
-        class CreateFile : public Data
-        {
-          public:
-            CreateFile( const Data& data );
-
-            CreateFile( const DocumentUri& uri );
-
-            DocumentUri uri( void ) const;
-
-            std::string kind( void ) const;
-
-            u1 hasOptions( void ) const;
-
-            void setOptions( const CreateFileOptions& options );
-
-            CreateFileOptions options( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        using RenameFileOptions = CreateFileOptions;
-
-        class RenameFile : public Data
-        {
-          public:
-            RenameFile( const Data& data );
-
-            RenameFile( const DocumentUri& oldUri, const DocumentUri& newUri );
-
-            DocumentUri newUri( void ) const;
-
-            DocumentUri oldUri( void ) const;
-
-            std::string kind( void ) const;
-
-            u1 hasOptions( void ) const;
-
-            void setOptions( const CreateFileOptions& options );
-
-            CreateFileOptions options( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class DeleteFileOptions : public Data
-        {
-          public:
-            DeleteFileOptions( const Data& data );
-
-            u1 hasRecursive( void ) const;
-
-            u1 recursive( void ) const;
-
-            void setRecursive( const u1 recursive );
-
-            u1 hasIgnoreIfExists( void ) const;
-
-            u1 ignoreIfExists( void ) const;
-
-            void setIgnoreIfExists( const u1 ignoreIfExists );
-
-            static void validate( const Data& data );
-        };
-
-        class DeleteFile : public Data
-        {
-          public:
-            DeleteFile( const Data& data );
-
-            DeleteFile( const DocumentUri& uri );
-
-            DocumentUri uri( void ) const;
-
-            std::string kind( void ) const;
-
-            u1 hasOptions( void ) const;
-
-            void setOptions( const DeleteFileOptions& options );
-
-            DeleteFileOptions options( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class TextDocumentItem : public Data
-        {
-          public:
-            TextDocumentItem( const Data& data );
-
-            TextDocumentItem(
-                const DocumentUri& uri,
-                const std::string& languageId,
-                const std::size_t version,
-                const std::string& text );
-
-            DocumentUri uri( void ) const;
-
-            std::string languageId( void ) const;
-
-            std::size_t version( void ) const;
-
-            std::string text( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class TextDocumentPositionParams : public Data
-        {
-          public:
-            TextDocumentPositionParams( const Data& data );
-
-            TextDocumentPositionParams(
-                const TextDocumentIdentifier& textDocument, const Position& position );
-
-            TextDocumentIdentifier textDocument( void ) const;
-
-            Position position( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class DocumentFilter : public Data
-        {
-          public:
-            DocumentFilter( const Data& data );
-
-            DocumentFilter( void );
-
-            u1 hasLanguage( void ) const;
-
-            std::string language( void ) const;
-
-            void setLanguage( const std::string& language );
-
-            u1 hasScheme( void ) const;
-
-            std::string scheme( void ) const;
-
-            void setScheme( const std::string& scheme );
-
-            u1 hasPattern( void ) const;
-
-            std::string pattern( void ) const;
-
-            void setPattern( const std::string& pattern );
-
-            static void validate( const Data& data );
-        };
-
-        class DocumentSelector : public Data
-        {
-          public:
-            DocumentSelector( const Data& data );
-
-            DocumentSelector( const std::vector< DocumentFilter >& documentFilters );
-
-            static void validate( const Data& data );
-        };
-
-        //
-        //
-        // Actual Protocol
-        //
-
-        class DynamicRegistration : public Data
-        {
-          public:
-            DynamicRegistration( const Data& data );
-
-            DynamicRegistration( void );
-
-            u1 hasDynamicRegistration( void ) const;
-
-            u1 dynamicRegistration( void ) const;
-
-            void setDynamicRegistration( const u1 dynamicRegistration );
-
-            static void validate( const Data& data );
-        };
-
-        class WorkspaceClientCapabilities : public Data
-        {
-          public:
-            WorkspaceClientCapabilities( const Data& data );
-
-            WorkspaceClientCapabilities( void );
-
-            u1 hasApplyEdit( void ) const;
-
-            u1 applyEdit( void ) const;
-
-            void setApplyEdit( const u1 applyEdit );
-
-            u1 hasWorkspaceEdit( void ) const;
-
-            WorkspaceEdit workspaceEdit( void ) const;
-
-            void setWorkspaceEdit( const WorkspaceEdit& workspaceEdit );
-
-            u1 hasDidChangeConfiguration( void ) const;
-
-            DynamicRegistration didChangeConfiguration( void ) const;
-
-            void setDidChangeConfiguration( const DynamicRegistration& didChangeConfiguration );
-
-            u1 hasDidChangeWatchedFiles( void ) const;
-
-            DynamicRegistration didChangeWatchedFiles( void ) const;
-
-            void didChangeWatchedFiles( const DynamicRegistration& didChangeWatchedFiles );
-
-            u1 hasSymbol( void ) const;
-
-            DynamicRegistration symbol( void ) const;
-
-            void setSymbol( const DynamicRegistration& symbol );
-
-            u1 hasExecuteCommand( void ) const;
-
-            DynamicRegistration executeCommand( void ) const;
-
-            void executeCommand( const DynamicRegistration& executeCommand );
-
-            u1 hasWorkspaceFolders( void ) const;
-
-            void setWorkspaceFolders( const u1 workspaceFolders );
-
-            u1 workspaceFolders( void ) const;
-
-            u1 hasConfiguration( void ) const;
-
-            void setConfiguration( const u1 configuration );
-
-            u1 configuration( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class Synchronization : public Data
-        {
-          public:
-            Synchronization( const Data& data );
-
-            Synchronization( void );
-
-            u1 hasDynamicRegistration( void ) const;
-
-            u1 dynamicRegistration( void ) const;
-
-            void setDynamicRegistration( const u1 dynamicRegistration );
-
-            u1 hasWillSave( void ) const;
-
-            u1 willSave( void ) const;
-
-            void setWillSave( const u1 willSave );
-
-            u1 hasWillSaveWaitUntil( void ) const;
-
-            u1 willSaveWaitUntil( void ) const;
-
-            void setWillSaveWaitUntil( const u1 willSaveWaitUntil );
-
-            u1 hasDidSave( void ) const;
-
-            u1 didSave( void ) const;
-
-            void setDidSave( const u1 didSave );
-
-            static void validate( const Data& data );
-        };
-
-        class TextDocumentClientCapabilities : public Data
-        {
-            class CompletionItem;
-            class Completion;
-
-          public:
-            TextDocumentClientCapabilities( const Data& data );
-
-            TextDocumentClientCapabilities( void );
-
-            u1 hasSynchronization( void ) const;
-
-            Synchronization synchronization( void ) const;
-
-            void setSynchronization( const Synchronization& synchronization );
-
-            u1 hasCompletion( void ) const;
-
-            Completion completion( void ) const;
-
-            void setCompletion( const Completion& completion );
-
-            u1 hasHover( void ) const;
-
-            DynamicRegistration hover( void ) const;
-
-            void setHover( const DynamicRegistration& hover );
-
-            u1 hasSignatureHelp( void ) const;
-
-            DynamicRegistration signatureHelp( void ) const;
-
-            void setSignatureHelp( const DynamicRegistration& signatureHelp );
-
-            u1 hasReferences( void ) const;
-
-            DynamicRegistration references( void ) const;
-
-            void setReferences( const DynamicRegistration& references );
-
-            u1 hasDocumentHighlight( void ) const;
-
-            DynamicRegistration documentHighlight( void ) const;
-
-            void setDocumentHighlight( const DynamicRegistration& documentHighlight );
-
-            u1 hasDocumentSymbol( void ) const;
-
-            DynamicRegistration documentSymbol( void ) const;
-
-            void setDocumentSymbol( const DynamicRegistration& documentSymbol );
-
-            u1 hasFormatting( void ) const;
-
-            DynamicRegistration formatting( void ) const;
-
-            void setFormatting( const DynamicRegistration& formatting );
-
-            u1 hasRangeFormatting( void ) const;
-
-            DynamicRegistration rangeFormatting( void ) const;
-
-            void setRangeFormatting( const DynamicRegistration& rangeFormatting );
-
-            u1 hasOnTypeFormatting( void ) const;
-
-            DynamicRegistration onTypeFormatting( void ) const;
-
-            void setOnTypeFormatting( const DynamicRegistration& onTypeFormatting );
-
-            u1 hasDefinition( void ) const;
-
-            DynamicRegistration definition( void ) const;
-
-            void setDefinition( const DynamicRegistration& definition );
-
-            u1 hasCodeAction( void ) const;
-
-            DynamicRegistration codeAction( void ) const;
-
-            void setCodeAction( const DynamicRegistration& codeAction );
-
-            u1 hasCodeLens( void ) const;
-
-            DynamicRegistration codeLens( void ) const;
-
-            void setCodeLens( const DynamicRegistration& codeLens );
-
-            u1 hasDocumentLink( void ) const;
-
-            DynamicRegistration documentLink( void ) const;
-
-            void setDocumentLink( const DynamicRegistration& documentLink );
-
-            u1 hasRename( void ) const;
-
-            DynamicRegistration rename( void ) const;
-
-            void setRename( const DynamicRegistration& rename );
-
-            static void validate( const Data& data );
-
-          private:
-            class Completion : public Data
+            enum class ErrorCode : i32
+            {
+                // defined by JSON RPC
+                ParseError = -32700,
+                InvalidRequest = -32600,
+                MethodNotFound = -32601,
+                InvalidParams = -32602,
+                InternalError = -32603,
+                serverErrorStart = -32099,
+                serverErrorEnd = -32000,
+                ServerNotInitialized = -32002,
+                UnknownErrorCode = -32001,
+
+                // defined by LSP
+                RequestCancelled = -32800,
+
+            };
+
+            class ResponseError final : public Data
             {
               public:
-                Completion( const Data& data );
+                ResponseError( const Data& data );
 
-                Completion( void );
+                ResponseError( const ErrorCode code, const std::string& message );
+
+                ErrorCode code( void ) const;
+
+                std::string message( void ) const;
+
+                u1 hasData( void ) const;
+
+                Data data( void ) const;
+
+                void setData( const Data& data );
+
+                static void validate( const Data& data );
+            };
+
+            namespace TextDocument
+            {
+                constexpr const std::array< const char*, 3 > EOL = { { "\n", "\r\n", "\r" } };
+            }
+
+            class Position : public Data
+            {
+              public:
+                Position( const Data& data );
+
+                Position( const std::size_t line, const std::size_t character );
+
+                std::size_t line( void ) const;
+
+                std::size_t character( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class Range : public Data
+            {
+              public:
+                Range( const Data& data );
+
+                Range( const Position& start, const Position& end );
+
+                Position start( void ) const;
+
+                Position end( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class Location : public Data
+            {
+              public:
+                Location( const Data& data );
+
+                Location( const DocumentUri& uri, const Range& range );
+
+                DocumentUri uri( void ) const;
+
+                Range range( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            enum class DiagnosticSeverity : std::size_t
+            {
+                Error = 1,
+                Warning = 2,
+                Information = 3,
+                Hint = 4,
+            };
+
+            class DiagnosticRelatedInformation : public Data
+            {
+              public:
+                DiagnosticRelatedInformation( const Data& data );
+
+                DiagnosticRelatedInformation(
+                    const Location& location, const std::string& message );
+
+                Location location( void ) const;
+
+                std::string message( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class Diagnostic : public Data
+            {
+              public:
+                Diagnostic( const Data& data );
+
+                Diagnostic( const Range& range, const std::string& message );
+
+                Range range( void ) const;
+
+                std::string message( void ) const;
+
+                u1 hasSeverity( void ) const;
+
+                DiagnosticSeverity severity( void ) const;
+
+                void setSeverity( const DiagnosticSeverity& severity );
+
+                u1 hasCode( void ) const;
+
+                std::string code( void ) const;
+
+                void setCode( const std::string& code );
+
+                void setCode( const std::size_t code );
+
+                u1 hasSource( void ) const;
+
+                std::string source( void ) const;
+
+                void setSource( const std::string& source );
+
+                static void validate( const Data& data );
+            };
+
+            class Command : public Data
+            {
+              public:
+                Command( const Data& data );
+
+                Command( const std::string& title, const std::string& command );
+
+                std::string title( void ) const;
+
+                std::string command( void ) const;
+
+                u1 hasArguments( void ) const;
+
+                Data arguments( void ) const;
+
+                void addArgument( const Data& argument );
+
+                static void validate( const Data& data );
+            };
+
+            class TextEdit : public Data
+            {
+              public:
+                TextEdit( const Data& data );
+
+                TextEdit( const Range& range, const std::string& newText );
+
+                Range range( void ) const;
+
+                std::string newText( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class TextDocumentIdentifier : public Data
+            {
+              public:
+                TextDocumentIdentifier( const Data& data );
+
+                TextDocumentIdentifier( const DocumentUri& uri );
+
+                DocumentUri uri( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class VersionedTextDocumentIdentifier : public TextDocumentIdentifier
+            {
+              public:
+                VersionedTextDocumentIdentifier( const Data& data );
+
+                VersionedTextDocumentIdentifier(
+                    const DocumentUri& uri, const std::size_t version );
+
+                std::size_t version( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class TextDocumentEdit : public Data
+            {
+              public:
+                TextDocumentEdit( const Data& data );
+
+                TextDocumentEdit(
+                    const VersionedTextDocumentIdentifier& textDocument,
+                    const std::vector< TextEdit >& edits );
+
+                VersionedTextDocumentIdentifier textDocument( void ) const;
+
+                Data edits( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class WorkspaceEdit : public Data
+            {
+              public:
+                WorkspaceEdit( const Data& data );
+
+                WorkspaceEdit( void );
+
+                // changes interface omitted!
+
+                u1 hasDocumentChanges( void ) const;
+
+                Data documentChanges( void ) const;
+
+                void addDocumentChange( const TextDocumentEdit& documentChange );
+
+                static void validate( const Data& data );
+            };
+
+            class CreateFileOptions : public Data
+            {
+              public:
+                CreateFileOptions( const Data& data );
+
+                CreateFileOptions( const u1 overwrite, const u1 ignoreIfExists );
+
+                u1 hasOverwrite( void ) const;
+
+                u1 overwrite( void ) const;
+
+                void setOverwrite( const u1 overwrite );
+
+                u1 hasIgnoreIfExists( void ) const;
+
+                u1 ignoreIfExists( void ) const;
+
+                void setIgnoreIfExists( const u1 ignoreIfExists );
+
+                static void validate( const Data& data );
+            };
+
+            class CreateFile : public Data
+            {
+              public:
+                CreateFile( const Data& data );
+
+                CreateFile( const DocumentUri& uri );
+
+                DocumentUri uri( void ) const;
+
+                std::string kind( void ) const;
+
+                u1 hasOptions( void ) const;
+
+                void setOptions( const CreateFileOptions& options );
+
+                CreateFileOptions options( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            using RenameFileOptions = CreateFileOptions;
+
+            class RenameFile : public Data
+            {
+              public:
+                RenameFile( const Data& data );
+
+                RenameFile( const DocumentUri& oldUri, const DocumentUri& newUri );
+
+                DocumentUri newUri( void ) const;
+
+                DocumentUri oldUri( void ) const;
+
+                std::string kind( void ) const;
+
+                u1 hasOptions( void ) const;
+
+                void setOptions( const CreateFileOptions& options );
+
+                CreateFileOptions options( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class DeleteFileOptions : public Data
+            {
+              public:
+                DeleteFileOptions( const Data& data );
+
+                u1 hasRecursive( void ) const;
+
+                u1 recursive( void ) const;
+
+                void setRecursive( const u1 recursive );
+
+                u1 hasIgnoreIfExists( void ) const;
+
+                u1 ignoreIfExists( void ) const;
+
+                void setIgnoreIfExists( const u1 ignoreIfExists );
+
+                static void validate( const Data& data );
+            };
+
+            class DeleteFile : public Data
+            {
+              public:
+                DeleteFile( const Data& data );
+
+                DeleteFile( const DocumentUri& uri );
+
+                DocumentUri uri( void ) const;
+
+                std::string kind( void ) const;
+
+                u1 hasOptions( void ) const;
+
+                void setOptions( const DeleteFileOptions& options );
+
+                DeleteFileOptions options( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class TextDocumentItem : public Data
+            {
+              public:
+                TextDocumentItem( const Data& data );
+
+                TextDocumentItem(
+                    const DocumentUri& uri,
+                    const std::string& languageId,
+                    const std::size_t version,
+                    const std::string& text );
+
+                DocumentUri uri( void ) const;
+
+                std::string languageId( void ) const;
+
+                std::size_t version( void ) const;
+
+                std::string text( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class TextDocumentPositionParams : public Data
+            {
+              public:
+                TextDocumentPositionParams( const Data& data );
+
+                TextDocumentPositionParams(
+                    const TextDocumentIdentifier& textDocument, const Position& position );
+
+                TextDocumentIdentifier textDocument( void ) const;
+
+                Position position( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class DocumentFilter : public Data
+            {
+              public:
+                DocumentFilter( const Data& data );
+
+                DocumentFilter( void );
+
+                u1 hasLanguage( void ) const;
+
+                std::string language( void ) const;
+
+                void setLanguage( const std::string& language );
+
+                u1 hasScheme( void ) const;
+
+                std::string scheme( void ) const;
+
+                void setScheme( const std::string& scheme );
+
+                u1 hasPattern( void ) const;
+
+                std::string pattern( void ) const;
+
+                void setPattern( const std::string& pattern );
+
+                static void validate( const Data& data );
+            };
+
+            class DocumentSelector : public Data
+            {
+              public:
+                DocumentSelector( const Data& data );
+
+                DocumentSelector( const std::vector< DocumentFilter >& documentFilters );
+
+                static void validate( const Data& data );
+            };
+
+            //
+            //
+            // Actual Protocol
+            //
+
+            class DynamicRegistration : public Data
+            {
+              public:
+                DynamicRegistration( const Data& data );
+
+                DynamicRegistration( void );
 
                 u1 hasDynamicRegistration( void ) const;
 
@@ -711,2372 +500,2590 @@ namespace libstdhl
 
                 void setDynamicRegistration( const u1 dynamicRegistration );
 
-                u1 hasCompletionItem( void ) const;
+                static void validate( const Data& data );
+            };
 
-                CompletionItem completionItem( void ) const;
+            class WorkspaceClientCapabilities : public Data
+            {
+              public:
+                WorkspaceClientCapabilities( const Data& data );
 
-                void completionItem( const CompletionItem& completionItem );
+                WorkspaceClientCapabilities( void );
+
+                u1 hasApplyEdit( void ) const;
+
+                u1 applyEdit( void ) const;
+
+                void setApplyEdit( const u1 applyEdit );
+
+                u1 hasWorkspaceEdit( void ) const;
+
+                WorkspaceEdit workspaceEdit( void ) const;
+
+                void setWorkspaceEdit( const WorkspaceEdit& workspaceEdit );
+
+                u1 hasDidChangeConfiguration( void ) const;
+
+                DynamicRegistration didChangeConfiguration( void ) const;
+
+                void setDidChangeConfiguration( const DynamicRegistration& didChangeConfiguration );
+
+                u1 hasDidChangeWatchedFiles( void ) const;
+
+                DynamicRegistration didChangeWatchedFiles( void ) const;
+
+                void didChangeWatchedFiles( const DynamicRegistration& didChangeWatchedFiles );
+
+                u1 hasSymbol( void ) const;
+
+                DynamicRegistration symbol( void ) const;
+
+                void setSymbol( const DynamicRegistration& symbol );
+
+                u1 hasExecuteCommand( void ) const;
+
+                DynamicRegistration executeCommand( void ) const;
+
+                void executeCommand( const DynamicRegistration& executeCommand );
+
+                u1 hasWorkspaceFolders( void ) const;
+
+                void setWorkspaceFolders( const u1 workspaceFolders );
+
+                u1 workspaceFolders( void ) const;
+
+                u1 hasConfiguration( void ) const;
+
+                void setConfiguration( const u1 configuration );
+
+                u1 configuration( void ) const;
 
                 static void validate( const Data& data );
             };
+
+            class Synchronization : public Data
+            {
+              public:
+                Synchronization( const Data& data );
+
+                Synchronization( void );
+
+                u1 hasDynamicRegistration( void ) const;
+
+                u1 dynamicRegistration( void ) const;
+
+                void setDynamicRegistration( const u1 dynamicRegistration );
+
+                u1 hasWillSave( void ) const;
+
+                u1 willSave( void ) const;
+
+                void setWillSave( const u1 willSave );
+
+                u1 hasWillSaveWaitUntil( void ) const;
+
+                u1 willSaveWaitUntil( void ) const;
+
+                void setWillSaveWaitUntil( const u1 willSaveWaitUntil );
+
+                u1 hasDidSave( void ) const;
+
+                u1 didSave( void ) const;
+
+                void setDidSave( const u1 didSave );
+
+                static void validate( const Data& data );
+            };
+
+            class TextDocumentClientCapabilities : public Data
+            {
+                class CompletionItem;
+                class Completion;
+
+              public:
+                TextDocumentClientCapabilities( const Data& data );
+
+                TextDocumentClientCapabilities( void );
+
+                u1 hasSynchronization( void ) const;
+
+                Synchronization synchronization( void ) const;
+
+                void setSynchronization( const Synchronization& synchronization );
+
+                u1 hasCompletion( void ) const;
+
+                Completion completion( void ) const;
+
+                void setCompletion( const Completion& completion );
+
+                u1 hasHover( void ) const;
+
+                DynamicRegistration hover( void ) const;
+
+                void setHover( const DynamicRegistration& hover );
+
+                u1 hasSignatureHelp( void ) const;
+
+                DynamicRegistration signatureHelp( void ) const;
+
+                void setSignatureHelp( const DynamicRegistration& signatureHelp );
+
+                u1 hasReferences( void ) const;
+
+                DynamicRegistration references( void ) const;
+
+                void setReferences( const DynamicRegistration& references );
+
+                u1 hasDocumentHighlight( void ) const;
+
+                DynamicRegistration documentHighlight( void ) const;
+
+                void setDocumentHighlight( const DynamicRegistration& documentHighlight );
+
+                u1 hasDocumentSymbol( void ) const;
+
+                DynamicRegistration documentSymbol( void ) const;
+
+                void setDocumentSymbol( const DynamicRegistration& documentSymbol );
+
+                u1 hasFormatting( void ) const;
+
+                DynamicRegistration formatting( void ) const;
+
+                void setFormatting( const DynamicRegistration& formatting );
+
+                u1 hasRangeFormatting( void ) const;
+
+                DynamicRegistration rangeFormatting( void ) const;
+
+                void setRangeFormatting( const DynamicRegistration& rangeFormatting );
+
+                u1 hasOnTypeFormatting( void ) const;
+
+                DynamicRegistration onTypeFormatting( void ) const;
+
+                void setOnTypeFormatting( const DynamicRegistration& onTypeFormatting );
+
+                u1 hasDefinition( void ) const;
+
+                DynamicRegistration definition( void ) const;
+
+                void setDefinition( const DynamicRegistration& definition );
+
+                u1 hasCodeAction( void ) const;
+
+                DynamicRegistration codeAction( void ) const;
+
+                void setCodeAction( const DynamicRegistration& codeAction );
+
+                u1 hasCodeLens( void ) const;
+
+                DynamicRegistration codeLens( void ) const;
+
+                void setCodeLens( const DynamicRegistration& codeLens );
+
+                u1 hasDocumentLink( void ) const;
+
+                DynamicRegistration documentLink( void ) const;
+
+                void setDocumentLink( const DynamicRegistration& documentLink );
+
+                u1 hasRename( void ) const;
+
+                DynamicRegistration rename( void ) const;
+
+                void setRename( const DynamicRegistration& rename );
+
+                static void validate( const Data& data );
+
+              private:
+                class Completion : public Data
+                {
+                  public:
+                    Completion( const Data& data );
+
+                    Completion( void );
+
+                    u1 hasDynamicRegistration( void ) const;
+
+                    u1 dynamicRegistration( void ) const;
+
+                    void setDynamicRegistration( const u1 dynamicRegistration );
+
+                    u1 hasCompletionItem( void ) const;
+
+                    CompletionItem completionItem( void ) const;
+
+                    void completionItem( const CompletionItem& completionItem );
+
+                    static void validate( const Data& data );
+                };
+
+                class CompletionItem : public Data
+                {
+                  public:
+                    CompletionItem( const Data& data );
+
+                    CompletionItem( void );
+
+                    u1 hasSnippetSupport( void ) const;
+
+                    u1 snippetSupport( void ) const;
+
+                    void setSnippetSupport( const u1 snippetSupport );
+
+                    static void validate( const Data& data );
+                };
+            };
+
+            class ClientCapabilities : public Data
+            {
+              public:
+                ClientCapabilities( const Data& data );
+
+                ClientCapabilities( void );
+
+                u1 hasWorkspace( void ) const;
+
+                WorkspaceClientCapabilities workspace( void ) const;
+
+                void setWorkspace( const WorkspaceClientCapabilities& workspace );
+
+                u1 hasTextDocument( void ) const;
+
+                TextDocumentClientCapabilities textDocument( void ) const;
+
+                void setTextDocument( const TextDocumentClientCapabilities& textDocument );
+
+                u1 hasExperimental( void ) const;
+
+                Data experimental( void ) const;
+
+                void setExperimental( const Data& experimental );
+
+                static void validate( const Data& data );
+            };
+
+            class SaveOptions : public Data
+            {
+              public:
+                SaveOptions( const Data& data );
+
+                SaveOptions( void );
+
+                u1 hasIncludeText( void ) const;
+
+                u1 includeText( void ) const;
+
+                void setIncludeText( const u1 includeText );
+
+                static void validate( const Data& data );
+            };
+
+            enum class TextDocumentSyncKind
+            {
+                None = 0,
+                Full = 1,
+                Incremental = 2,
+            };
+
+            class TextDocumentSyncOptions : public Data
+            {
+              public:
+                TextDocumentSyncOptions( const Data& data );
+
+                TextDocumentSyncOptions( void );
+
+                u1 hasOpenClose( void ) const;
+
+                u1 openClose( void ) const;
+
+                void setOpenClose( const u1 openClose );
+
+                u1 hasChange( void ) const;
+
+                TextDocumentSyncKind change( void ) const;
+
+                void setChange( const TextDocumentSyncKind& change );
+
+                u1 hasWillSave( void ) const;
+
+                u1 willSave( void ) const;
+
+                void setWillSave( const u1 willSave );
+
+                u1 hasWillSaveWaitUntil( void ) const;
+
+                u1 willSaveWaitUntil( void ) const;
+
+                void setWillSaveWaitUntil( const u1 willSaveWaitUntil );
+
+                u1 hasSave( void ) const;
+
+                SaveOptions save( void ) const;
+
+                void setSave( const SaveOptions& save );
+
+                static void validate( const Data& data );
+            };
+
+            class CompletionOptions : public Data
+            {
+              public:
+                CompletionOptions( const Data& data );
+
+                CompletionOptions( void );
+
+                u1 hasResolveProvider( void ) const;
+
+                u1 resolveProvider( void ) const;
+
+                void setResolveProvider( const u1 resolveProvider );
+
+                u1 hasTriggerCharacters( void ) const;
+
+                Data triggerCharacters( void ) const;
+
+                void addTriggerCharacters( const std::string& triggerCharacter );
+
+                static void validate( const Data& data );
+            };
+
+            class SignatureHelpOptions : public Data
+            {
+              public:
+                SignatureHelpOptions( const Data& data );
+
+                SignatureHelpOptions( void );
+
+                u1 hasTriggerCharacters( void ) const;
+
+                Data triggerCharacters( void ) const;
+
+                void addTriggerCharacters( const std::string& triggerCharacter );
+
+                static void validate( const Data& data );
+            };
+
+            class CodeLensOptions : public Data
+            {
+              public:
+                CodeLensOptions( const Data& data );
+
+                CodeLensOptions( void );
+
+                u1 hasResolveProvider( void ) const;
+
+                u1 resolveProvider( void ) const;
+
+                void setResolveProvider( const u1 resolveProvider );
+
+                static void validate( const Data& data );
+            };
+
+            class DocumentOnTypeFormattingOptions : public Data
+            {
+              public:
+                DocumentOnTypeFormattingOptions( const Data& data );
+
+                DocumentOnTypeFormattingOptions( const std::string& firstTriggerCharacter );
+
+                std::string firstTriggerCharacter( void ) const;
+
+                u1 hasMoreTriggerCharacter( void ) const;
+
+                Data moreTriggerCharacter( void ) const;
+
+                void addMoreTriggerCharacter( const Data& moreTriggerCharacter );
+
+                static void validate( const Data& data );
+            };
+
+            class RenameOptions : public Data
+            {
+              public:
+                RenameOptions( const Data& data );
+
+                u1 hasPrepareProvider( void ) const;
+
+                u1 prepareProvider( void ) const;
+
+                void setPrepareProvider( const u1 prepareProvider );
+
+                static void validate( const Data& data );
+            };
+
+            using DocumentLinkOptions = CodeLensOptions;
+
+            class ExecuteCommandOptions : public Data
+            {
+              public:
+                ExecuteCommandOptions( const Data& data );
+
+                ExecuteCommandOptions( void );
+
+                u1 hasCommands( void ) const;
+
+                Data commands( void ) const;
+
+                void addCommand( const std::string& command );
+
+                static void validate( const Data& data );
+            };
+            class StaticRegistrationOptions : public Data
+            {
+              public:
+                StaticRegistrationOptions( const Data& data );
+
+                u1 hasId( void ) const;
+
+                std::string id( void ) const;
+
+                void setId( std::string id );
+
+                static void validate( const Data& data );
+            };
+
+            class TextDocumentRegistrationOptions : public Data
+            {
+              public:
+                TextDocumentRegistrationOptions( const Data& data );
+
+                TextDocumentRegistrationOptions( const DocumentSelector& documentSelector );
+
+                DocumentSelector documentSelector( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class TypeDefinitionProvider : public Data
+            {
+              public:
+                TypeDefinitionProvider( const Data& data );
+
+                DocumentSelector documentSelector( void ) const;
+
+                u1 hasId( void ) const;
+
+                std::string id( void ) const;
+
+                void setId( std::string id );
+
+                static void validate( const Data& data );
+            };
+
+            using ImplementationProvider = TypeDefinitionProvider;
+
+            class ColorProviderOptions : public Data
+            {
+              public:
+                ColorProviderOptions( const Data& data );
+
+                static void validate( const Data& data );
+            };
+
+            using FoldingRangeProviderOptions = ColorProviderOptions;
+
+            class ColorProvider : public Data
+            {
+              public:
+                ColorProvider( const Data& data );
+
+                DocumentSelector documentSelector( void ) const;
+
+                u1 hasId( void ) const;
+
+                std::string id( void ) const;
+
+                void setId( std::string id );
+
+                static void validate( const Data& data );
+            };
+
+            using FoldingRangeProvider = ColorProvider;
+
+            class Workspace : public Data
+            {
+              public:
+                Workspace( const Data& data );
+
+                static void validate( const Data& data );
+
+                class WorkspaceFolders : public Data
+                {
+                  public:
+                    WorkspaceFolders( const Data& data );
+
+                    u1 supported( void ) const;
+
+                    u1 hasSupported( void ) const;
+
+                    void setSupported( const u1 supported );
+
+                    void setChangeNotifications( const std::string& changeNotifications );
+
+                    void setChangeNotifications( const u1 changeNotifications );
+
+                    u1 hasChangeNotifications( void ) const;
+
+                    std::string changeNotifications( void ) const;
+
+                    static void validate( const Data& data );
+                };
+                WorkspaceFolders workspaceFolders( void ) const;
+
+                u1 hasWorkspaceFolders( void ) const;
+
+                void setWorkspaceFolders( const WorkspaceFolders& workspaceFolders );
+            };
+            class ServerCapabilities : public Data
+            {
+              public:
+                ServerCapabilities( const Data& data );
+
+                ServerCapabilities( void );
+
+                u1 hasTextDocumentSync( void ) const;
+
+                TextDocumentSyncOptions textDocumentSync( void ) const;
+
+                void setTextDocumentSync( const TextDocumentSyncOptions& textDocumentSync );
+
+                void setTextDocumentSync( const TextDocumentSyncKind& textDocumentSync );
+
+                u1 hasHoverProvider( void ) const;
+
+                u1 hoverProvider( void ) const;
+
+                void setHoverProvider( const u1 hoverProvider );
+
+                u1 hasCompletionProvider( void ) const;
+
+                CompletionOptions completionProvider( void ) const;
+
+                void setCompletionProvider( const CompletionOptions& completionProvider );
+
+                u1 hasSignatureHelpProvider( void ) const;
+
+                SignatureHelpOptions signatureHelpProvider( void ) const;
+
+                void setSignatureHelpProvider( const SignatureHelpOptions& signatureHelpProvider );
+
+                u1 hasDefinitionProvider( void ) const;
+
+                u1 definitionProvider( void ) const;
+
+                void setDefinitionProvider( const u1 definitionProvider );
+
+                u1 hasTypeDefinitionProvider( void ) const;
+
+                TypeDefinitionProvider typeDefinitionProvider( void ) const;
+
+                void setTypeDefinitionProvider(
+                    const TypeDefinitionProvider& typeDefinitionProvider );
+
+                u1 hasImplementationProvider( void ) const;
+
+                ImplementationProvider implementationProvider( void ) const;
+
+                void setImplementationProvider(
+                    const ImplementationProvider& implementationProvider );
+
+                u1 hasReferencesProvider( void ) const;
+
+                u1 referencesProvider( void ) const;
+
+                void setReferencesProvider( const u1 referencesProvider );
+
+                u1 hasDocumentHighlightProvider( void ) const;
+
+                u1 documentHighlightProvider( void ) const;
+
+                void setDocumentHighlightProvider( const u1 documentHighlightProvider );
+
+                u1 hasDocumentSymbolProvider( void ) const;
+
+                u1 documentSymbolProvider( void ) const;
+
+                void setDocumentSymbolProvider( const u1 documentSymbolProvider );
+
+                u1 hasWorkspaceSymbolProvider( void ) const;
+
+                u1 workspaceSymbolProvider( void ) const;
+
+                void setWorkspaceSymbolProvider( const u1 workspaceSymbolProvider );
+
+                u1 hasCodeActionProvider( void ) const;
+
+                u1 codeActionProvider( void ) const;
+
+                void setCodeActionProvider( const u1 codeActionProvider );
+
+                u1 hasCodeLensProvider( void ) const;
+
+                CodeLensOptions codeLensProvider( void ) const;
+
+                void setCodeLensProvider( const CodeLensOptions& codeLensProvider );
+
+                u1 hasDocumentFormattingProvider( void ) const;
+
+                u1 documentFormattingProvider( void ) const;
+
+                void setDocumentFormattingProvider( const u1 documentFormattingProvider );
+
+                u1 hasDocumentRangeFormattingProvider( void ) const;
+
+                u1 documentRangeFormattingProvider( void ) const;
+
+                void setDocumentRangeFormattingProvider( const u1 documentRangeFormattingProvider );
+
+                u1 hasDocumentOnTypeFormattingProvider( void ) const;
+
+                DocumentOnTypeFormattingOptions documentOnTypeFormattingProvider( void ) const;
+
+                void setDocumentOnTypeFormattingProvider(
+                    const DocumentOnTypeFormattingOptions& documentOnTypeFormattingProvider );
+
+                u1 hasRenameProvider( void ) const;
+
+                u1 renameProvider( void ) const;
+
+                void setRenameProvider( const u1 renameProvider );
+
+                u1 hasDocumentLinkProvider( void ) const;
+
+                DocumentLinkOptions documentLinkProvider( void ) const;
+
+                void setDocumentLinkProvider( const DocumentLinkOptions& documentLinkProvider );
+
+                u1 hasColorProvider( void ) const;
+
+                ColorProvider colorProvider( void ) const;
+
+                void setColorProvider( const ColorProvider& colorProvider );
+
+                u1 hasFoldingRangeProvider( void ) const;
+
+                FoldingRangeProvider foldingRangeProvider( void ) const;
+
+                void setFoldingRangeProvider( const FoldingRangeProvider& foldingRangeProvider );
+
+                u1 hasExecuteCommandProvider( void ) const;
+
+                ExecuteCommandOptions executeCommandProvider( void ) const;
+
+                void setExecuteCommandProvider(
+                    const ExecuteCommandOptions& executeCommandProvider );
+
+                u1 hasExperimental( void ) const;
+
+                Data experimental( void ) const;
+
+                void setExperimental( const Data& experimental );
+
+                u1 hasWorkspace( void ) const;
+
+                void setWorkspace( const Workspace& workspace );
+
+                Workspace workspace( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class WorkspaceFolder : public Data
+            {
+              public:
+                WorkspaceFolder( const std::string& uri, const std::string& name );
+
+                WorkspaceFolder( const Data& data );
+
+                std::string uri( void ) const;
+
+                std::string name( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            using WorkspaceFolders = std::vector< WorkspaceFolder >;
+
+            class InitializeParams : public Data
+            {
+              public:
+                InitializeParams( const Data& data );
+
+                InitializeParams(
+                    const std::size_t processId,
+                    const DocumentUri& rootUri,
+                    const ClientCapabilities& capabilities );
+
+                std::size_t processId( void ) const;
+
+                // rootPath interface omitted!
+
+                DocumentUri rootUri( void ) const;
+
+                u1 hasInitializationOptions( void ) const;
+
+                Data initializationOptions( void ) const;
+
+                void setInitializationOptions( const Data& initializationOptions );
+
+                ClientCapabilities capabilities( void ) const;
+
+                u1 hasTrace( void ) const;
+
+                std::string trace( void ) const;
+
+                void setTrace( const std::string& trace );
+
+                WorkspaceFolders workspaceFolders( void ) const;
+
+                u1 hasWorkspaceFolders( void ) const;
+
+                void addWorkspaceFolder( WorkspaceFolder folder );
+
+                static void validate( const Data& data );
+            };
+
+            class InitializeResult : public Data
+            {
+              public:
+                InitializeResult( const Data& data );
+
+                InitializeResult( const ServerCapabilities& capabilities );
+
+                ServerCapabilities capabilities( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class InitializeError : public Data
+            {
+              public:
+                InitializeError( const Data& data );
+
+                InitializeError( const u1 retry );
+
+                u1 retry( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            enum class MessageType
+            {
+                Error = 1,
+
+                Warning = 2,
+
+                Info = 3,
+
+                Log = 4
+            };
+
+            class CancelParams : public Data
+            {
+              public:
+                CancelParams( const Data& data );
+
+                CancelParams( const std::size_t& id );
+
+                CancelParams( const std::string& id );
+
+                std::string id( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class ShowMessageParams : public Data
+            {
+              public:
+                ShowMessageParams( const Data& data );
+
+                ShowMessageParams( const MessageType type, const std::string& message );
+
+                MessageType messageType( void ) const;
+
+                std::string message( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class MessageActionItem : public Data
+            {
+              public:
+                MessageActionItem( const Data& data );
+
+                MessageActionItem( const std::string& title );
+
+                std::string title( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class ShowMessageRequestResult : public Data
+            {
+              public:
+                ShowMessageRequestResult( void );
+
+                ShowMessageRequestResult( const Data& data );
+
+                ShowMessageRequestResult( const MessageActionItem& item );
+
+                ShowMessageRequestResult( const std::string& title );
+
+                static void validate( const Data& data );
+            };
+
+            using MessageActionItems = std::vector< MessageActionItem >;
+
+            class ShowMessageRequestParams : public Data
+            {
+              public:
+                ShowMessageRequestParams( const Data& data );
+
+                ShowMessageRequestParams( const MessageType type, const std::string& message );
+
+                MessageType messageType( void ) const;
+
+                u1 hasActions( void );
+
+                MessageActionItems actions( void ) const;
+
+                void addAction( const MessageActionItem& action );
+
+                std::string message( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            using LogMessageParams = ShowMessageParams;
+
+            class TelemetryEventParams : public Data
+            {
+              public:
+                TelemetryEventParams( const Data& data );
+
+                static void validate( const Data& data );
+            };
+
+            class Registration : public Data
+            {
+              public:
+                Registration( const Data& data );
+
+                Registration( const std::string& id, const std::string& method );
+
+                std::string id( void ) const;
+
+                std::string method( void ) const;
+
+                Data registerOptions( void ) const;
+
+                u1 hasRegisterOptions( void ) const;
+
+                void addRegisterOption( const Data& option );
+
+                static void validate( const Data& data );
+            };
+
+            using Registrations = std::vector< Registration >;
+
+            class RegistrationParams : public Data
+            {
+              public:
+                RegistrationParams( const Data& data );
+
+                RegistrationParams( const Registrations& registrations );
+
+                Registrations registrations( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class TextDocumentChangeRegistrationOptions : public TextDocumentRegistrationOptions
+            {
+              public:
+                TextDocumentChangeRegistrationOptions( const Data& data );
+
+                TextDocumentChangeRegistrationOptions(
+                    const DocumentSelector& documentSelector, TextDocumentSyncKind kind );
+
+                TextDocumentSyncKind kind( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class TextDocumentSaveRegistrationOptions : public TextDocumentRegistrationOptions
+            {
+              public:
+                TextDocumentSaveRegistrationOptions( const Data& data );
+
+                TextDocumentSaveRegistrationOptions( const DocumentSelector& documentSelector );
+
+                u1 hasIncludeText( void ) const;
+
+                void setIncludeText( const u1 includeText );
+
+                u1 includeText( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            using TriggerCharacters = std::vector< std::string >;
+
+            class SignatureHelpRegistrationOptions : public TextDocumentRegistrationOptions
+            {
+              public:
+                SignatureHelpRegistrationOptions( const Data& data );
+
+                SignatureHelpRegistrationOptions( const DocumentSelector& documentSelector );
+
+                u1 hasTriggerCharacters( void ) const;
+
+                void setTriggerCharacters( const TriggerCharacters& triggerCharacters );
+
+                void addTriggerCharacter( const std::string& triggerCharacter );
+
+                TriggerCharacters triggerCharacters( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class Unregistration : public Data
+            {
+              public:
+                Unregistration( const Data& data );
+
+                Unregistration( const std::string& id, const std::string& method );
+
+                std::string id( void ) const;
+
+                std::string method( void ) const;
+
+                static void validate( const Data& data );
+            };
+            using Unregistrations = std::vector< Unregistration >;
+
+            class UnregistrationParams : public Data
+            {
+              public:
+                UnregistrationParams( const std::vector< Unregistration >& unregistrations );
+
+                UnregistrationParams( const Data& data );
+
+                Unregistrations unregistrations( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class WorkspaceFoldersResult : public Data
+            {
+              public:
+                WorkspaceFoldersResult();
+
+                WorkspaceFoldersResult( const Data& data );
+
+                WorkspaceFoldersResult( const WorkspaceFolders& workspaceFolders );
+
+                WorkspaceFolders toVec( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class WorkspaceFoldersChangeEvent : public Data
+            {
+              public:
+                WorkspaceFoldersChangeEvent(
+                    const WorkspaceFolders& added, const WorkspaceFolders& removed );
+
+                WorkspaceFoldersChangeEvent( const Data& data );
+
+                WorkspaceFolders added( void ) const;
+
+                WorkspaceFolders removed( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class DidChangeWorkspaceFoldersParams : public Data
+            {
+              public:
+                DidChangeWorkspaceFoldersParams( const Data& data );
+
+                DidChangeWorkspaceFoldersParams( const WorkspaceFoldersChangeEvent& event );
+
+                WorkspaceFoldersChangeEvent event( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            using DidChangeConfigurationSettings = Data;
+
+            class DidChangeConfigurationParams : public Data
+            {
+              public:
+                DidChangeConfigurationParams( const DidChangeConfigurationSettings& settings );
+
+                DidChangeConfigurationSettings settings( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class ConfigurationItem : public Data
+            {
+              public:
+                ConfigurationItem( const Data& data );
+
+                ConfigurationItem( const std::string& scopeUri, const std::string& section );
+
+                u1 hasScopeUri( void ) const;
+
+                u1 hasSection( void ) const;
+
+                std::string scopeUri( void ) const;
+
+                std::string section( void ) const;
+
+                void setSection( const std::string& section );
+
+                void setScopeUri( const std::string& uri );
+
+                static void validate( const Data& data );
+            };
+
+            class ConfigurationResult : public Data
+            {
+              public:
+                ConfigurationResult( void );
+
+                ConfigurationResult( const Data& data );
+
+                static void validate( const Data& data );
+            };
+
+            using ConfigurationItems = std::vector< ConfigurationItem >;
+
+            class ConfigurationParams : public Data
+            {
+              public:
+                ConfigurationParams( const ConfigurationItems& items );
+
+                ConfigurationParams( const Data& data );
+
+                ConfigurationItems items( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            enum class FileChangeType
+            {
+                Created = 1,
+
+                Changed = 2,
+
+                Deleted = 3
+            };
+
+            /**
+              An event describing a file change.
+             */
+            class FileEvent : public Data
+            {
+              public:
+                FileEvent( const Data& data );
+
+                FileEvent( const DocumentUri& uri, const FileChangeType type );
+
+                DocumentUri documentUri( void ) const;
+
+                FileChangeType type( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            using FileEvents = std::vector< FileEvent >;
+
+            class DidChangeWatchedFilesParams : public Data
+            {
+              public:
+                DidChangeWatchedFilesParams( const FileEvents& changes );
+
+                DidChangeWatchedFilesParams( const Data& data );
+
+                FileEvents changes( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            enum class WatchKind
+            {
+
+                Create = 1,
+
+                Change = 2,
+
+                Delete = 4
+            };
+
+            class FileSystemWatcher : public Data
+            {
+              public:
+                FileSystemWatcher( const Data& data );
+
+                FileSystemWatcher( const std::string& globPattern );
+
+                FileSystemWatcher( const std::string& globPattern, const WatchKind kind );
+
+                std::string globPattern( void );
+
+                u1 hasKind( void ) const;
+
+                WatchKind kind( void ) const;
+
+                static void validate( const Data& data );
+
+                void setKind( const WatchKind kind );
+            };
+
+            /**
+              Describe options to be used when registering for text document change events.
+             */
+            using FileSystemWatchers = std::vector< FileSystemWatcher >;
+            class DidChangeWatchedFilesRegistrationOptions : public Data
+            {
+              public:
+                DidChangeWatchedFilesRegistrationOptions( const FileSystemWatchers& watchers );
+
+                DidChangeWatchedFilesRegistrationOptions( const Data& data );
+
+                FileSystemWatchers watchers( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class WorkspaceSymbolParams : public Data
+            {
+              public:
+                WorkspaceSymbolParams( const Data& data );
+
+                WorkspaceSymbolParams( const std::string& query );
+
+                std::string query( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            enum class SymbolKind
+            {
+                File = 1,
+                Module = 2,
+                Namespace = 3,
+                Package = 4,
+                Class = 5,
+                Method = 6,
+                Property = 7,
+                Field = 8,
+                Constructor = 9,
+                Enum = 10,
+                Interface = 11,
+                Function = 12,
+                Variable = 13,
+                Constant = 14,
+                String = 15,
+                Number = 16,
+                Boolean = 17,
+                Array = 18,
+                Object = 19,
+                Key = 20,
+                Null = 21,
+                EnumMember = 22,
+                Struct = 23,
+                Event = 24,
+                Operator = 25,
+                TypeParameter = 26
+            };
+
+            class SymbolInformation : public Data
+            {
+              public:
+                SymbolInformation(
+                    const std::string& name, const SymbolKind kind, const Location& location );
+
+                SymbolInformation( const Data& data );
+
+                u1 isDeprecated( void ) const;
+
+                u1 hasDeprecated( void ) const;
+
+                void setDeprecated( const u1 deprecated );
+
+                std::string containerName( void ) const;
+
+                u1 hasContainerName( void ) const;
+
+                void setContainerName( const std::string& containerName );
+
+                Location location( void ) const;
+
+                std::string name( void ) const;
+
+                SymbolKind kind( void ) const;
+
+                static void validate( const Data& data );
+            };
+            using SymbolInformations = std::vector< SymbolInformation >;
+            class WorkspaceSymbolResult : public Data
+            {
+              public:
+                WorkspaceSymbolResult( const Data& data );
+
+                WorkspaceSymbolResult( const std::vector< SymbolInformation >& symbolInformation );
+
+                void addSymbolInformation( const SymbolInformation& information );
+
+                SymbolInformations symbolInformation( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class ApplyWorkspaceEditParams : public Data
+            {
+              public:
+                ApplyWorkspaceEditParams( const Data& data );
+
+                ApplyWorkspaceEditParams( const WorkspaceEdit& edit );
+
+                WorkspaceEdit edit( void ) const;
+
+                u1 hasLabel( void ) const;
+
+                std::string label( void ) const;
+
+                void setLabel( const std::string& label );
+
+                static void validate( const Data& data );
+            };
+
+            class ApplyWorkspaceEditResult : public Data
+            {
+              public:
+                ApplyWorkspaceEditResult( const Data& data );
+
+                ApplyWorkspaceEditResult( const u1 applied );
+
+                u1 applied( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class DidOpenTextDocumentParams : public Data
+            {
+              public:
+                DidOpenTextDocumentParams( const Data& data );
+
+                DidOpenTextDocumentParams( const TextDocumentItem& textDocument );
+
+                TextDocumentItem textDocument( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class TextDocumentContentChangeEvent : public Data
+            {
+              public:
+                TextDocumentContentChangeEvent( const Data& data );
+
+                TextDocumentContentChangeEvent( const std::string& text );
+
+                u1 hasRange( void ) const;
+
+                Range range( void ) const;
+
+                void setRange( const Range& range );
+
+                u1 hasRangeLength( void ) const;
+
+                std::size_t rangeLength( void ) const;
+
+                void setRangeLength( const std::size_t rangeLength );
+
+                std::string text( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            using TextDocumentContentChangeEvents = std::vector< TextDocumentContentChangeEvent >;
+
+            class DidChangeTextDocumentParams : public Data
+            {
+              public:
+                DidChangeTextDocumentParams( const Data& data );
+
+                DidChangeTextDocumentParams(
+                    const VersionedTextDocumentIdentifier& textDocument,
+                    const TextDocumentContentChangeEvents& contentChanges );
+
+                VersionedTextDocumentIdentifier textDocument( void ) const;
+
+                TextDocumentContentChangeEvents contentChanges( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            enum class TextDocumentSaveReason
+            {
+                Manual = 1,  // by the user pressing save, by starting debugging, or by an API call.
+                AfterDelay = 2,  // Automatic after a delay.
+                FocusOut = 3     //  When the editor lost focus.
+            };
+
+            class WillSaveTextDocumentParams : public Data
+            {
+              public:
+                WillSaveTextDocumentParams( const Data& data );
+
+                WillSaveTextDocumentParams(
+                    const TextDocumentIdentifier& textDocument, TextDocumentSaveReason reason );
+
+                TextDocumentSaveReason reason( void ) const;
+
+                TextDocumentIdentifier textDocument( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            using TextEdits = std::vector< TextEdit >;
+
+            class WillSaveWaitUntilResponse : public Data
+            {
+              public:
+                WillSaveWaitUntilResponse( const Data& data );
+
+                WillSaveWaitUntilResponse( const std::vector< TextEdit >& textEdit );
+
+                TextEdits textEdit( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class DidSaveTextDocumentParams : public Data
+            {
+              public:
+                DidSaveTextDocumentParams( const Data& data );
+
+                DidSaveTextDocumentParams( const TextDocumentIdentifier& textDocument );
+
+                u1 hasText( void ) const;
+
+                void setText( const std::string& text );
+
+                TextDocumentIdentifier textDocument( void ) const;
+
+                std::string text( void ) const;
+
+                static void validate( const Data& data );
+            };
+            class DidCloseTextDocumentParams : public Data
+            {
+              public:
+                DidCloseTextDocumentParams( const TextDocumentIdentifier& textDocument );
+
+                DidCloseTextDocumentParams( const Data& data );
+
+                TextDocumentIdentifier textDocument( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class CompletionRegistrationOptions : public TextDocumentRegistrationOptions
+            {
+              public:
+                CompletionRegistrationOptions( const Data& data );
+
+                CompletionRegistrationOptions( const DocumentSelector& documentSelector );
+
+                u1 hasTriggerCharacters( void ) const;
+
+                TriggerCharacters triggerCharacters( void ) const;
+
+                void addTriggerCharacter( const std::string& triggerCharacter );
+
+                u1 hasResolveProvider( void ) const;
+
+                u1 resolveProvider( void ) const;
+
+                void setResolveProvider( const u1 resolveProvider );
+
+                static void validate( const Data& data );
+            };
+
+            enum class CompletionTriggerKind
+            {
+                /**
+                 * Completion was triggered by typing an identifier (24x7 code
+                 * complete), manual invocation (e.g Ctrl+Space) or via API.
+                 */
+                Invoked = 1,
+
+                /**
+                 * Completion was triggered by a trigger character specified by
+                 * the `triggerCharacters` properties of the `CompletionRegistrationOptions`.
+                 */
+                TriggerCharacter = 2,
+
+                /**
+                 * Completion was re-triggered as the current completion list is incomplete.
+                 */
+                TriggerForIncompleteCompletions = 3
+            };
+
+            class CompletionContext : public Data
+            {
+              public:
+                CompletionContext( const Data& data );
+
+                CompletionContext( const CompletionTriggerKind triggerkind );
+
+                std::string triggerCharacter( void ) const;
+
+                void setTriggerCharacter( const std::string& triggerCharacter );
+
+                u1 hasTriggerCharacter( void ) const;
+
+                CompletionTriggerKind triggerKind( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            class CompletionParams : public TextDocumentPositionParams
+            {
+              public:
+                CompletionParams( const Data& data );
+
+                CompletionParams(
+                    const TextDocumentIdentifier& textDocument, const Position& position );
+
+                CompletionContext context( void ) const;
+
+                u1 hasContext( void ) const;
+
+                void setContext( const CompletionContext& context );
+
+                static void validate( const Data& data );
+            };
+
+            enum class MarkupKind
+            {
+                PLAINTEXT,
+                MARKDOWN
+            };
+
+            class MarkupContent : public Data
+            {
+              public:
+                MarkupContent( const Data& data );
+
+                MarkupContent( const std::string& value );  // kind will be plaintext
+
+                MarkupContent( const MarkupKind kind, const std::string& value );
+
+                std::string kind( void ) const;
+
+                std::string value( void ) const;
+
+                static void validate( const Data& data );
+            };
+
+            enum class InsertTextFormat
+            {
+                PlainText = 1,
+                Snippet = 2
+            };
+
+            enum class CompletionItemKind
+            {
+                Text = 1,
+                Method = 2,
+                Function = 3,
+                Constructor = 4,
+                Field = 5,
+                Variable = 6,
+                Class = 7,
+                Interface = 8,
+                Module = 9,
+                Property = 10,
+                Unit = 11,
+                Value = 12,
+                Enum = 13,
+                Keyword = 14,
+                Snippet = 15,
+                Color = 16,
+                File = 17,
+                Reference = 18,
+                Folder = 19,
+                EnumMember = 20,
+                Constant = 21,
+                Struct = 22,
+                Event = 23,
+                Operator = 24,
+                TypeParameter = 25
+            };
+
+            using CommitCharacters = std::vector< std::string >;
 
             class CompletionItem : public Data
             {
               public:
                 CompletionItem( const Data& data );
 
-                CompletionItem( void );
+                CompletionItem( const std::string& label );
 
-                u1 hasSnippetSupport( void ) const;
+                std::string label( void ) const;
 
-                u1 snippetSupport( void ) const;
+                u1 hasKind( void ) const;
 
-                void setSnippetSupport( const u1 snippetSupport );
+                void setKind( const CompletionItemKind kind );
+
+                CompletionItemKind kind( void ) const;
+
+                u1 hasDetail( void ) const;
+
+                void setDetail( const std::string& detail );
+
+                std::string detail( void ) const;
+
+                u1 hasDocumentation( void ) const;
+
+                void setDocumentation( const MarkupContent& doc );
+
+                MarkupContent documentation( void ) const;
+
+                u1 hasDeprecated( void ) const;
+
+                void setDeprecated( const u1 deprecated );
+
+                u1 isDeprecated( void ) const;
+
+                u1 hasPreselected( void ) const;
+
+                void setPreselected( const u1 preselected );
+
+                u1 isPreselected( void ) const;
+
+                u1 hasSortText( void ) const;
+
+                void setSortText( const std::string& sortText );
+
+                std::string sortText( void ) const;
+
+                u1 hasFilterText( void ) const;
+
+                void setFilterText( const std::string& filterText );
+
+                std::string filterText( void ) const;
+
+                u1 hasInsertText( void ) const;
+
+                void setInsertText( const std::string& insertText );
+
+                std::string insertText( void ) const;
+
+                u1 hasInsertTextFormat( void ) const;
+
+                void setInsertTextFormat( const InsertTextFormat insertTextFormat );
+
+                InsertTextFormat insertTextFormat( void ) const;
+
+                u1 hasTextEdit( void ) const;
+
+                void setTextEdit( const TextEdit& textEdit );
+
+                TextEdit textEdit( void ) const;
+
+                u1 hasAdditionalTextEdits( void ) const;
+
+                void addAdditionalTextEdit( const TextEdit& textEdit );
+
+                TextEdits additionalTextEdits( void ) const;
+
+                u1 hasCommitCharacters( void ) const;
+
+                void addCommitCharacter( const std::string& commitCharacter );
+
+                CommitCharacters commitCharacters( void ) const;
+
+                u1 hasCommand( void ) const;
+
+                void setCommand( const Command& command );
+
+                Command command( void ) const;
+
+                u1 hasData( void ) const;
+
+                void setData( const Data& data );
+
+                Data data( void ) const;
 
                 static void validate( const Data& data );
             };
-        };
 
-        class ClientCapabilities : public Data
-        {
-          public:
-            ClientCapabilities( const Data& data );
-
-            ClientCapabilities( void );
-
-            u1 hasWorkspace( void ) const;
-
-            WorkspaceClientCapabilities workspace( void ) const;
-
-            void setWorkspace( const WorkspaceClientCapabilities& workspace );
-
-            u1 hasTextDocument( void ) const;
-
-            TextDocumentClientCapabilities textDocument( void ) const;
-
-            void setTextDocument( const TextDocumentClientCapabilities& textDocument );
-
-            u1 hasExperimental( void ) const;
-
-            Data experimental( void ) const;
-
-            void setExperimental( const Data& experimental );
-
-            static void validate( const Data& data );
-        };
-
-        class SaveOptions : public Data
-        {
-          public:
-            SaveOptions( const Data& data );
-
-            SaveOptions( void );
-
-            u1 hasIncludeText( void ) const;
-
-            u1 includeText( void ) const;
-
-            void setIncludeText( const u1 includeText );
-
-            static void validate( const Data& data );
-        };
-
-        enum class TextDocumentSyncKind
-        {
-            None = 0,
-            Full = 1,
-            Incremental = 2,
-        };
-
-        class TextDocumentSyncOptions : public Data
-        {
-          public:
-            TextDocumentSyncOptions( const Data& data );
-
-            TextDocumentSyncOptions( void );
-
-            u1 hasOpenClose( void ) const;
-
-            u1 openClose( void ) const;
-
-            void setOpenClose( const u1 openClose );
-
-            u1 hasChange( void ) const;
-
-            TextDocumentSyncKind change( void ) const;
-
-            void setChange( const TextDocumentSyncKind& change );
-
-            u1 hasWillSave( void ) const;
-
-            u1 willSave( void ) const;
-
-            void setWillSave( const u1 willSave );
-
-            u1 hasWillSaveWaitUntil( void ) const;
-
-            u1 willSaveWaitUntil( void ) const;
-
-            void setWillSaveWaitUntil( const u1 willSaveWaitUntil );
-
-            u1 hasSave( void ) const;
-
-            SaveOptions save( void ) const;
-
-            void setSave( const SaveOptions& save );
-
-            static void validate( const Data& data );
-        };
-
-        class CompletionOptions : public Data
-        {
-          public:
-            CompletionOptions( const Data& data );
-
-            CompletionOptions( void );
-
-            u1 hasResolveProvider( void ) const;
-
-            u1 resolveProvider( void ) const;
-
-            void setResolveProvider( const u1 resolveProvider );
-
-            u1 hasTriggerCharacters( void ) const;
-
-            Data triggerCharacters( void ) const;
-
-            void addTriggerCharacters( const std::string& triggerCharacter );
-
-            static void validate( const Data& data );
-        };
-
-        class SignatureHelpOptions : public Data
-        {
-          public:
-            SignatureHelpOptions( const Data& data );
-
-            SignatureHelpOptions( void );
-
-            u1 hasTriggerCharacters( void ) const;
-
-            Data triggerCharacters( void ) const;
-
-            void addTriggerCharacters( const std::string& triggerCharacter );
-
-            static void validate( const Data& data );
-        };
-
-        class CodeLensOptions : public Data
-        {
-          public:
-            CodeLensOptions( const Data& data );
-
-            CodeLensOptions( void );
-
-            u1 hasResolveProvider( void ) const;
-
-            u1 resolveProvider( void ) const;
-
-            void setResolveProvider( const u1 resolveProvider );
-
-            static void validate( const Data& data );
-        };
-
-        class DocumentOnTypeFormattingOptions : public Data
-        {
-          public:
-            DocumentOnTypeFormattingOptions( const Data& data );
-
-            DocumentOnTypeFormattingOptions( const std::string& firstTriggerCharacter );
-
-            std::string firstTriggerCharacter( void ) const;
-
-            u1 hasMoreTriggerCharacter( void ) const;
-
-            Data moreTriggerCharacter( void ) const;
-
-            void addMoreTriggerCharacter( const Data& moreTriggerCharacter );
-
-            static void validate( const Data& data );
-        };
-
-        class RenameOptions : public Data
-        {
-          public:
-            RenameOptions( const Data& data );
-
-            u1 hasPrepareProvider( void ) const;
-
-            u1 prepareProvider( void ) const;
-
-            void setPrepareProvider( const u1 prepareProvider );
-
-            static void validate( const Data& data );
-        };
-
-        using DocumentLinkOptions = CodeLensOptions;
-
-        class ExecuteCommandOptions : public Data
-        {
-          public:
-            ExecuteCommandOptions( const Data& data );
-
-            ExecuteCommandOptions( void );
-
-            u1 hasCommands( void ) const;
-
-            Data commands( void ) const;
-
-            void addCommand( const std::string& command );
-
-            static void validate( const Data& data );
-        };
-        class StaticRegistrationOptions : public Data
-        {
-          public:
-            StaticRegistrationOptions( const Data& data );
-
-            u1 hasId( void ) const;
-
-            std::string id( void ) const;
-
-            void setId( std::string id );
-
-            static void validate( const Data& data );
-        };
-
-        class TextDocumentRegistrationOptions : public Data
-        {
-          public:
-            TextDocumentRegistrationOptions( const Data& data );
-
-            TextDocumentRegistrationOptions( const DocumentSelector& documentSelector );
-
-            DocumentSelector documentSelector( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class TypeDefinitionProvider : public Data
-        {
-          public:
-            TypeDefinitionProvider( const Data& data );
-
-            DocumentSelector documentSelector( void ) const;
-
-            u1 hasId( void ) const;
-
-            std::string id( void ) const;
-
-            void setId( std::string id );
-
-            static void validate( const Data& data );
-        };
-
-        using ImplementationProvider = TypeDefinitionProvider;
-
-        class ColorProviderOptions : public Data
-        {
-          public:
-            ColorProviderOptions( const Data& data );
-
-            static void validate( const Data& data );
-        };
-
-        using FoldingRangeProviderOptions = ColorProviderOptions;
-
-        class ColorProvider : public Data
-        {
-          public:
-            ColorProvider( const Data& data );
-
-            DocumentSelector documentSelector( void ) const;
-
-            u1 hasId( void ) const;
-
-            std::string id( void ) const;
-
-            void setId( std::string id );
-
-            static void validate( const Data& data );
-        };
-
-        using FoldingRangeProvider = ColorProvider;
-
-        class Workspace : public Data
-        {
-          public:
-            Workspace( const Data& data );
-
-            static void validate( const Data& data );
-
-            class WorkspaceFolders : public Data
+            using CompletionItems = std::vector< CompletionItem >;
+            class CompletionList : public Data
             {
               public:
-                WorkspaceFolders( const Data& data );
+                CompletionList( const Data& data );
 
-                u1 supported( void ) const;
+                CompletionList( const u1 isIncomplete, const CompletionItems& items );
 
-                u1 hasSupported( void ) const;
+                CompletionItems items( void ) const;
 
-                void setSupported( const u1 supported );
-
-                void setChangeNotifications( const std::string& changeNotifications );
-
-                void setChangeNotifications( const u1 changeNotifications );
-
-                u1 hasChangeNotifications( void ) const;
-
-                std::string changeNotifications( void ) const;
+                u1 isIncomplete( void ) const;
 
                 static void validate( const Data& data );
             };
-            WorkspaceFolders workspaceFolders( void ) const;
 
-            u1 hasWorkspaceFolders( void ) const;
+            using CompletionResolveResult = CompletionItem;
 
-            void setWorkspaceFolders( const WorkspaceFolders& workspaceFolders );
-        };
-        class ServerCapabilities : public Data
-        {
-          public:
-            ServerCapabilities( const Data& data );
+            using SignatureHelpParams = TextDocumentPositionParams;
 
-            ServerCapabilities( void );
+            class CompletionResult : public Data
+            {
+              public:
+                CompletionResult( void );
 
-            u1 hasTextDocumentSync( void ) const;
+                CompletionResult( const Data& data );
 
-            TextDocumentSyncOptions textDocumentSync( void ) const;
+                CompletionResult( const CompletionList& list );
 
-            void setTextDocumentSync( const TextDocumentSyncOptions& textDocumentSync );
+                CompletionResult( const CompletionItems& items );
 
-            void setTextDocumentSync( const TextDocumentSyncKind& textDocumentSync );
+                static void validate( const Data& data );
+            };
 
-            u1 hasHoverProvider( void ) const;
+            class ParameterInformation : public Data
+            {
+              public:
+                ParameterInformation( const Data& data );
 
-            u1 hoverProvider( void ) const;
+                ParameterInformation( const std::string& label );
 
-            void setHoverProvider( const u1 hoverProvider );
+                std::string label( void ) const;
 
-            u1 hasCompletionProvider( void ) const;
+                MarkupContent documentation( void ) const;
 
-            CompletionOptions completionProvider( void ) const;
+                u1 hasDocumentation( void ) const;
 
-            void setCompletionProvider( const CompletionOptions& completionProvider );
+                void setDocumentation( const MarkupContent& doc );
 
-            u1 hasSignatureHelpProvider( void ) const;
+                static void validate( const Data& data );
+            };
 
-            SignatureHelpOptions signatureHelpProvider( void ) const;
+            using ParameterInformations = std::vector< ParameterInformation >;
+            class SignatureInformation : public Data
+            {
+              public:
+                SignatureInformation( const Data& data );
 
-            void setSignatureHelpProvider( const SignatureHelpOptions& signatureHelpProvider );
+                SignatureInformation( const std::string& label );
 
-            u1 hasDefinitionProvider( void ) const;
+                std::string label( void ) const;
 
-            u1 definitionProvider( void ) const;
+                MarkupContent documentation( void ) const;
 
-            void setDefinitionProvider( const u1 definitionProvider );
+                u1 hasDocumentation( void ) const;
 
-            u1 hasTypeDefinitionProvider( void ) const;
+                void setDocumentation( const MarkupContent& doc );
 
-            TypeDefinitionProvider typeDefinitionProvider( void ) const;
+                u1 hasParameters( void ) const;
 
-            void setTypeDefinitionProvider( const TypeDefinitionProvider& typeDefinitionProvider );
+                ParameterInformations parameters( void ) const;
 
-            u1 hasImplementationProvider( void ) const;
+                void setParameters( const ParameterInformations& parameters );
 
-            ImplementationProvider implementationProvider( void ) const;
+                static void validate( const Data& data );
+            };
 
-            void setImplementationProvider( const ImplementationProvider& implementationProvider );
+            using SignatureInformations = std::vector< SignatureInformation >;
+            class SignatureHelp : public Data
+            {
+              public:
+                SignatureHelp( const Data& data );
 
-            u1 hasReferencesProvider( void ) const;
+                SignatureHelp( const SignatureInformations& signatures );
 
-            u1 referencesProvider( void ) const;
+                SignatureInformations signatures( void ) const;
 
-            void setReferencesProvider( const u1 referencesProvider );
+                u1 hasActiveSignature( void ) const;
 
-            u1 hasDocumentHighlightProvider( void ) const;
+                void setActiveSignature( const std::size_t activeSignature );
 
-            u1 documentHighlightProvider( void ) const;
+                std::size_t activeSignature( void ) const;
 
-            void setDocumentHighlightProvider( const u1 documentHighlightProvider );
+                u1 hasActiveParameter( void ) const;
 
-            u1 hasDocumentSymbolProvider( void ) const;
+                void setActiveParameter( const std::size_t activeParameter );
 
-            u1 documentSymbolProvider( void ) const;
+                std::size_t activeParameter( void ) const;
 
-            void setDocumentSymbolProvider( const u1 documentSymbolProvider );
+                static void validate( const Data& data );
+            };
 
-            u1 hasWorkspaceSymbolProvider( void ) const;
+            class SignatureHelpResult : public Data
+            {
+              public:
+                SignatureHelpResult( void );
 
-            u1 workspaceSymbolProvider( void ) const;
+                SignatureHelpResult( const Data& data );
 
-            void setWorkspaceSymbolProvider( const u1 workspaceSymbolProvider );
+                SignatureHelpResult( const SignatureHelp& signature );
 
-            u1 hasCodeActionProvider( void ) const;
+                static void validate( const Data& data );
+            };
 
-            u1 codeActionProvider( void ) const;
+            using TypeDefinitionParams = TextDocumentPositionParams;
 
-            void setCodeActionProvider( const u1 codeActionProvider );
+            using Locations = std::vector< Location >;
 
-            u1 hasCodeLensProvider( void ) const;
+            class LocationLink : public Data
+            {
+              public:
+                LocationLink( const Data& data );
 
-            CodeLensOptions codeLensProvider( void ) const;
+                LocationLink( const DocumentUri& targetUri, const Range& targetRange );
 
-            void setCodeLensProvider( const CodeLensOptions& codeLensProvider );
+                DocumentUri targetUri( void ) const;
 
-            u1 hasDocumentFormattingProvider( void ) const;
+                Range targetRange( void ) const;
 
-            u1 documentFormattingProvider( void ) const;
+                u1 hasOriginSelectionRange( void ) const;
 
-            void setDocumentFormattingProvider( const u1 documentFormattingProvider );
+                void setOriginSelectionRange( const Range& range );
 
-            u1 hasDocumentRangeFormattingProvider( void ) const;
+                Range originSelectionRange( void ) const;
 
-            u1 documentRangeFormattingProvider( void ) const;
+                u1 hasTargetSelectionRange( void ) const;
 
-            void setDocumentRangeFormattingProvider( const u1 documentRangeFormattingProvider );
+                void setTargetSelectionRange( const Range& range );
 
-            u1 hasDocumentOnTypeFormattingProvider( void ) const;
+                Range targetSelectionRange( void ) const;
 
-            DocumentOnTypeFormattingOptions documentOnTypeFormattingProvider( void ) const;
+                static void validate( const Data& data );
+            };
 
-            void setDocumentOnTypeFormattingProvider(
-                const DocumentOnTypeFormattingOptions& documentOnTypeFormattingProvider );
+            using LocationLinks = std::vector< LocationLink >;
 
-            u1 hasRenameProvider( void ) const;
+            class TypeDefinitionResult : public Data
+            {
+              public:
+                TypeDefinitionResult( const Data& data );
 
-            u1 renameProvider( void ) const;
+                TypeDefinitionResult( const Locations& locations );
 
-            void setRenameProvider( const u1 renameProvider );
+                TypeDefinitionResult( const LocationLinks& locationLinks );
 
-            u1 hasDocumentLinkProvider( void ) const;
+                TypeDefinitionResult( const Location& location );
 
-            DocumentLinkOptions documentLinkProvider( void ) const;
+                static void validate( const Data& data );
+            };
 
-            void setDocumentLinkProvider( const DocumentLinkOptions& documentLinkProvider );
+            using TextDocumentImplementationResult = TypeDefinitionResult;
 
-            u1 hasColorProvider( void ) const;
+            using TextDocumentImplementationParams = TextDocumentPositionParams;
 
-            ColorProvider colorProvider( void ) const;
+            class ReferenceContext : public Data
+            {
+              public:
+                ReferenceContext( const Data& data );
 
-            void setColorProvider( const ColorProvider& colorProvider );
+                ReferenceContext( const u1 includeDeclaration );
 
-            u1 hasFoldingRangeProvider( void ) const;
+                u1 includeDeclaration( void ) const;
 
-            FoldingRangeProvider foldingRangeProvider( void ) const;
+                static void validate( const Data& data );
+            };
 
-            void setFoldingRangeProvider( const FoldingRangeProvider& foldingRangeProvider );
+            class ReferenceParams : public TextDocumentPositionParams
+            {
+              public:
+                ReferenceParams( const Data& data );
 
-            u1 hasExecuteCommandProvider( void ) const;
+                ReferenceParams(
+                    const TextDocumentIdentifier& textDocument,
+                    const Position& position,
+                    const ReferenceContext& context );
 
-            ExecuteCommandOptions executeCommandProvider( void ) const;
+                ReferenceContext context( void ) const;
 
-            void setExecuteCommandProvider( const ExecuteCommandOptions& executeCommandProvider );
+                static void validate( const Data& data );
+            };
+            class ReferenceResult : public Data
+            {
+              public:
+                ReferenceResult( const Data& data );
 
-            u1 hasExperimental( void ) const;
+                ReferenceResult( const Locations& locations );
 
-            Data experimental( void ) const;
+                static void validate( const Data& data );
+            };
 
-            void setExperimental( const Data& experimental );
+            enum class CodeActionKind
+            {
+                QuickFix,
+                Refactor,
+                RefactorExtract,
+                RefactorInline,
+                RefactorRewrite,
+                Source,
+                SourceOrganizeImports
+            };
 
-            u1 hasWorkspace( void ) const;
+            class CodeActionOptions : public Data
+            {
+              public:
+                CodeActionOptions( const Data& data );
 
-            void setWorkspace( const Workspace& workspace );
+                u1 hasCodeActionKinds( void ) const;
 
-            Workspace workspace( void ) const;
+                void addCodeActionKind( CodeActionKind kind );
 
-            static void validate( const Data& data );
-        };
+                std::vector< std::string > codeActionKinds( void ) const;
 
-        class WorkspaceFolder : public Data
-        {
-          public:
-            WorkspaceFolder( const std::string& uri, const std::string& name );
+                static void validate( const Data& data );
+            };
 
-            WorkspaceFolder( const Data& data );
+            using Diagnostics = std::vector< Diagnostic >;
 
-            std::string uri( void ) const;
+            class CodeActionContext : public Data
+            {
+              public:
+                CodeActionContext( const Data& data );
 
-            std::string name( void ) const;
+                CodeActionContext( const Diagnostics& diagnostics );
 
-            static void validate( const Data& data );
-        };
+                Diagnostics diagnostics( void ) const;
 
-        using WorkspaceFolders = std::vector< WorkspaceFolder >;
+                u1 hasKind( void ) const;
 
-        class InitializeParams : public Data
-        {
-          public:
-            InitializeParams( const Data& data );
+                void setKind( const CodeActionKind kind );
 
-            InitializeParams(
-                const std::size_t processId,
-                const DocumentUri& rootUri,
-                const ClientCapabilities& capabilities );
+                std::string kind( void ) const;
 
-            std::size_t processId( void ) const;
+                static void validate( const Data& data );
+            };
 
-            // rootPath interface omitted!
+            class CodeActionParams : public Data
+            {
+              public:
+                CodeActionParams( const Data& data );
 
-            DocumentUri rootUri( void ) const;
+                CodeActionParams(
+                    const TextDocumentIdentifier& textDocument,
+                    const Range& range,
+                    const CodeActionContext& context );
 
-            u1 hasInitializationOptions( void ) const;
+                TextDocumentIdentifier textDocument( void ) const;
 
-            Data initializationOptions( void ) const;
+                Range range( void ) const;
 
-            void setInitializationOptions( const Data& initializationOptions );
+                CodeActionContext context( void ) const;
 
-            ClientCapabilities capabilities( void ) const;
+                static void validate( const Data& data );
+            };
 
-            u1 hasTrace( void ) const;
+            class CodeAction : public Data
+            {
+              public:
+                CodeAction( const Data& data );
 
-            std::string trace( void ) const;
+                CodeAction( const std::string& title );
 
-            void setTrace( const std::string& trace );
+                std::string title( void ) const;
 
-            WorkspaceFolders workspaceFolders( void ) const;
+                u1 hasKind( void ) const;
 
-            u1 hasWorkspaceFolders( void ) const;
+                std::string kind( void ) const;
 
-            void addWorkspaceFolder( WorkspaceFolder folder );
+                void setKind( const CodeActionKind kind );
 
-            static void validate( const Data& data );
-        };
+                u1 hasDiagnostics( void ) const;
 
-        class InitializeResult : public Data
-        {
-          public:
-            InitializeResult( const Data& data );
+                Diagnostics diagnostics( void ) const;
 
-            InitializeResult( const ServerCapabilities& capabilities );
+                void addDiagnostic( const Diagnostic& diagnostic );
 
-            ServerCapabilities capabilities( void ) const;
+                u1 hasEdit( void ) const;
 
-            static void validate( const Data& data );
-        };
+                WorkspaceEdit edit( void ) const;
 
-        class InitializeError : public Data
-        {
-          public:
-            InitializeError( const Data& data );
+                void setEdit( const WorkspaceEdit& edit );
 
-            InitializeError( const u1 retry );
+                void setCommand( const Command& command );
 
-            u1 retry( void ) const;
+                u1 hasCommand( void ) const;
 
-            static void validate( const Data& data );
-        };
+                Command command( void ) const;
 
-        enum class MessageType
-        {
-            Error = 1,
+                static void validate( const Data& data );
+            };
 
-            Warning = 2,
+            class CodeActionResult : public Data
+            {
+              public:
+                CodeActionResult( const Data& data );
 
-            Info = 3,
+                CodeActionResult( const std::vector< Command >& commands );
 
-            Log = 4
-        };
+                CodeActionResult( void );
 
-        class CancelParams : public Data
-        {
-          public:
-            CancelParams( const Data& data );
+                void addCommand( const Command& command );
 
-            CancelParams( const std::size_t& id );
+                static void validate( const Data& data );
+            };
 
-            CancelParams( const std::string& id );
+            class CodeActionRegistrationOptions
+            : public TextDocumentRegistrationOptions
+            , public CodeActionOptions
+            {
+            };
 
-            std::string id( void ) const;
+            class PublishDiagnosticsParams : public Data
+            {
+              public:
+                PublishDiagnosticsParams( const Data& data );
 
-            static void validate( const Data& data );
-        };
+                PublishDiagnosticsParams(
+                    const DocumentUri& uri, const std::vector< Diagnostic >& diagnostics );
 
-        class ShowMessageParams : public Data
-        {
-          public:
-            ShowMessageParams( const Data& data );
+                DocumentUri uri( void ) const;
 
-            ShowMessageParams( const MessageType type, const std::string& message );
+                Data diagnostics( void ) const;
 
-            MessageType messageType( void ) const;
+                static void validate( const Data& data );
+            };
 
-            std::string message( void ) const;
+            using HoverParams = TextDocumentPositionParams;
 
-            static void validate( const Data& data );
-        };
+            class MarkedString : public Data
+            {
+              public:
+                MarkedString( const Data& data );
 
-        class MessageActionItem : public Data
-        {
-          public:
-            MessageActionItem( const Data& data );
+                MarkedString( const std::string& language, const std::string& value );
 
-            MessageActionItem( const std::string& title );
+                std::string language( void ) const;
 
-            std::string title( void ) const;
+                std::string value( void ) const;
 
-            static void validate( const Data& data );
-        };
+                static void validate( const Data& data );
+            };
 
-        class ShowMessageRequestResult : public Data
-        {
-          public:
-            ShowMessageRequestResult( void );
+            class HoverResult : public Data
+            {
+              public:
+                HoverResult( const Data& data );
 
-            ShowMessageRequestResult( const Data& data );
+                HoverResult( const std::vector< MarkedString >& contents = {} );
 
-            ShowMessageRequestResult( const MessageActionItem& item );
+                Data contents( void ) const;
 
-            ShowMessageRequestResult( const std::string& title );
+                void addContent( const MarkedString& content );
 
-            static void validate( const Data& data );
-        };
+                u1 hasRange( void ) const;
 
-        using MessageActionItems = std::vector< MessageActionItem >;
+                Range range( void ) const;
 
-        class ShowMessageRequestParams : public Data
-        {
-          public:
-            ShowMessageRequestParams( const Data& data );
+                void setRange( const Range& range );
 
-            ShowMessageRequestParams( const MessageType type, const std::string& message );
+                static void validate( const Data& data );
+            };
 
-            MessageType messageType( void ) const;
+            using DefinitionParams = TextDocumentPositionParams;
 
-            u1 hasActions( void );
+            class DefinitionResult : public Data
+            {
+              public:
+                DefinitionResult( const Data& data );
 
-            MessageActionItems actions( void ) const;
+                DefinitionResult( const Location& location );
 
-            void addAction( const MessageActionItem& action );
+                DefinitionResult( const std::vector< Location > locations );
 
-            std::string message( void ) const;
+                Data locations( void ) const;
 
-            static void validate( const Data& data );
-        };
+                static void validate( const Data& data );
+            };
 
-        using LogMessageParams = ShowMessageParams;
+            using DocumentHighlightParams = TextDocumentPositionParams;
 
-        class TelemetryEventParams : public Data
-        {
-          public:
-            TelemetryEventParams( const Data& data );
+            enum class DocumentHighlightKind
+            {
+                Text = 1,
+                Read = 2,
+                Write = 3
+            };
 
-            static void validate( const Data& data );
-        };
+            class DocumentHighlight : public Data
+            {
+              public:
+                DocumentHighlight( const Data& data );
 
-        class Registration : public Data
-        {
-          public:
-            Registration( const Data& data );
+                DocumentHighlight( const Range& range );
 
-            Registration( const std::string& id, const std::string& method );
+                Range range( void ) const;
 
-            std::string id( void ) const;
+                u1 hasKind( void ) const;
 
-            std::string method( void ) const;
+                DocumentHighlightKind kind( void ) const;
 
-            Data registerOptions( void ) const;
+                void setKind( const DocumentHighlightKind kind );
 
-            u1 hasRegisterOptions( void ) const;
+                static void validate( const Data& data );
+            };
+            using DocumentHighlights = std::vector< DocumentHighlight >;
 
-            void addRegisterOption( const Data& option );
+            class DocumentHighlightResult : public Data
+            {
+              public:
+                DocumentHighlightResult( void );
 
-            static void validate( const Data& data );
-        };
+                DocumentHighlightResult( const Data& data );
 
-        using Registrations = std::vector< Registration >;
+                DocumentHighlightResult( const DocumentHighlights& highlights );
 
-        class RegistrationParams : public Data
-        {
-          public:
-            RegistrationParams( const Data& data );
+                static void validate( const Data& data );
+            };
 
-            RegistrationParams( const Registrations& registrations );
+            class DocumentSymbolParams : public Data
+            {
+              public:
+                DocumentSymbolParams( const TextDocumentIdentifier& textDocument );
 
-            Registrations registrations( void ) const;
+                DocumentSymbolParams( const Data& data );
 
-            static void validate( const Data& data );
-        };
+                TextDocumentIdentifier textDocument( void ) const;
 
-        class TextDocumentChangeRegistrationOptions : public TextDocumentRegistrationOptions
-        {
-          public:
-            TextDocumentChangeRegistrationOptions( const Data& data );
+                static void validate( const Data& data );
+            };
 
-            TextDocumentChangeRegistrationOptions(
-                const DocumentSelector& documentSelector, TextDocumentSyncKind kind );
+            class DocumentSymbol;
 
-            TextDocumentSyncKind kind( void ) const;
+            using DocumentSymbols = std::vector< DocumentSymbol >;
 
-            static void validate( const Data& data );
-        };
+            class DocumentSymbol : public Data
+            {
+              public:
+                DocumentSymbol( const Data& data );
 
-        class TextDocumentSaveRegistrationOptions : public TextDocumentRegistrationOptions
-        {
-          public:
-            TextDocumentSaveRegistrationOptions( const Data& data );
+                DocumentSymbol(
+                    const std::string& name,
+                    const SymbolKind kind,
+                    Range range,
+                    Range selectionRange );
 
-            TextDocumentSaveRegistrationOptions( const DocumentSelector& documentSelector );
+                std::string name( void ) const;
 
-            u1 hasIncludeText( void ) const;
+                SymbolKind kind( void ) const;
 
-            void setIncludeText( const u1 includeText );
+                Range range( void ) const;
 
-            u1 includeText( void ) const;
+                Range selectionRange( void ) const;
 
-            static void validate( const Data& data );
-        };
+                u1 hasDetail( void ) const;
 
-        using TriggerCharacters = std::vector< std::string >;
+                void setDetail( const std::string& detail );
 
-        class SignatureHelpRegistrationOptions : public TextDocumentRegistrationOptions
-        {
-          public:
-            SignatureHelpRegistrationOptions( const Data& data );
+                std::string detail( void ) const;
 
-            SignatureHelpRegistrationOptions( const DocumentSelector& documentSelector );
+                u1 hasDeprecated( void ) const;
 
-            u1 hasTriggerCharacters( void ) const;
+                u1 deprecated( void ) const;
 
-            void setTriggerCharacters( const TriggerCharacters& triggerCharacters );
+                void setDeprecated( const u1 deprecated );
 
-            void addTriggerCharacter( const std::string& triggerCharacter );
+                u1 hasChildren( void ) const;
 
-            TriggerCharacters triggerCharacters( void ) const;
+                DocumentSymbols children( void ) const;
 
-            static void validate( const Data& data );
-        };
+                void addChild( const DocumentSymbol& symbol );
 
-        class Unregistration : public Data
-        {
-          public:
-            Unregistration( const Data& data );
+                static void validate( const Data& data );
+            };
 
-            Unregistration( const std::string& id, const std::string& method );
+            class DocumentSymbolResult : public Data
+            {
+              public:
+                DocumentSymbolResult( void );
 
-            std::string id( void ) const;
+                DocumentSymbolResult( const Data& data );
 
-            std::string method( void ) const;
+                DocumentSymbolResult( const DocumentSymbols& symbols );
 
-            static void validate( const Data& data );
-        };
-        using Unregistrations = std::vector< Unregistration >;
+                DocumentSymbolResult( const SymbolInformations& information );
 
-        class UnregistrationParams : public Data
-        {
-          public:
-            UnregistrationParams( const std::vector< Unregistration >& unregistrations );
+                static void validate( const Data& data );
+            };
 
-            UnregistrationParams( const Data& data );
+            class CodeLensParams : public Data
+            {
+              public:
+                CodeLensParams( const Data& data );
 
-            Unregistrations unregistrations( void ) const;
+                CodeLensParams( const TextDocumentIdentifier& textDocument );
 
-            static void validate( const Data& data );
-        };
+                TextDocumentIdentifier textDocument( void ) const;
 
-        class WorkspaceFoldersResult : public Data
-        {
-          public:
-            WorkspaceFoldersResult();
+                static void validate( const Data& data );
+            };
 
-            WorkspaceFoldersResult( const Data& data );
+            class CodeLens : public Data
+            {
+              public:
+                CodeLens( const Data& data );
 
-            WorkspaceFoldersResult( const WorkspaceFolders& workspaceFolders );
+                CodeLens( const Range& range );
 
-            WorkspaceFolders toVec( void ) const;
+                Range range( void ) const;
 
-            static void validate( const Data& data );
-        };
+                u1 hasCommand( void ) const;
 
-        class WorkspaceFoldersChangeEvent : public Data
-        {
-          public:
-            WorkspaceFoldersChangeEvent(
-                const WorkspaceFolders& added, const WorkspaceFolders& removed );
+                Command command( void ) const;
 
-            WorkspaceFoldersChangeEvent( const Data& data );
+                void setCommand( const Command& command );
 
-            WorkspaceFolders added( void ) const;
+                u1 hasData( void ) const;
 
-            WorkspaceFolders removed( void ) const;
+                Data data( void ) const;
 
-            static void validate( const Data& data );
-        };
+                void setData( const Data& data );
 
-        class DidChangeWorkspaceFoldersParams : public Data
-        {
-          public:
-            DidChangeWorkspaceFoldersParams( const Data& data );
+                static void validate( const Data& data );
+            };
 
-            DidChangeWorkspaceFoldersParams( const WorkspaceFoldersChangeEvent& event );
+            class CodeLensResult : public Data
+            {
+              public:
+                CodeLensResult( const Data& data );
 
-            WorkspaceFoldersChangeEvent event( void ) const;
+                CodeLensResult( const std::vector< CodeLens >& codeLens = {} );
 
-            static void validate( const Data& data );
-        };
+                void addCodeLens( const CodeLens& codeLens );
 
-        using DidChangeConfigurationSettings = Data;
+                static void validate( const Data& data );
+            };
 
-        class DidChangeConfigurationParams : public Data
-        {
-          public:
-            DidChangeConfigurationParams( const DidChangeConfigurationSettings& settings );
+            class DocumentLinkParams : public Data
+            {
+              public:
+                DocumentLinkParams( const Data& data );
 
-            DidChangeConfigurationSettings settings( void ) const;
+                DocumentLinkParams( const TextDocumentIdentifier& textDocument );
 
-            static void validate( const Data& data );
-        };
+                TextDocumentIdentifier textDocument( void ) const;
 
-        class ConfigurationItem : public Data
-        {
-          public:
-            ConfigurationItem( const Data& data );
+                static void validate( const Data& data );
+            };
 
-            ConfigurationItem( const std::string& scopeUri, const std::string& section );
+            class DocumentLink : public Data
+            {
+              public:
+                DocumentLink( const Data& data );
 
-            u1 hasScopeUri( void ) const;
+                DocumentLink( const Range& range );
 
-            u1 hasSection( void ) const;
+                Range range( void ) const;
 
-            std::string scopeUri( void ) const;
+                u1 hasTarget( void ) const;
 
-            std::string section( void ) const;
+                void setTarget( const DocumentUri& target );
 
-            void setSection( const std::string& section );
+                DocumentUri target( void ) const;
 
-            void setScopeUri( const std::string& uri );
+                u1 hasData( void ) const;
 
-            static void validate( const Data& data );
-        };
+                void setData( const Data& data );
 
-        class ConfigurationResult : public Data
-        {
-          public:
-            ConfigurationResult( void );
+                Data data( void ) const;
 
-            ConfigurationResult( const Data& data );
+                static void validate( const Data& data );
+            };
+            using DocumentLinks = std::vector< DocumentLink >;
+            class DocumentLinkResult : public Data
+            {
+              public:
+                DocumentLinkResult( void );
 
-            static void validate( const Data& data );
-        };
+                DocumentLinkResult( const Data& data );
 
-        using ConfigurationItems = std::vector< ConfigurationItem >;
+                DocumentLinkResult( const DocumentLinks links );
 
-        class ConfigurationParams : public Data
-        {
-          public:
-            ConfigurationParams( const ConfigurationItems& items );
+                static void validate( const Data& data );
+            };
 
-            ConfigurationParams( const Data& data );
+            using CodeLensResolveParams = CodeLens;
+            using CodeLensResolveResult = CodeLens;
+            using DocumentLinkResolveResult = DocumentLink;
+            using DocumentLinkResolveParams = DocumentLink;
 
-            ConfigurationItems items( void ) const;
+            class DocumentColorParams : public Data
+            {
+              public:
+                DocumentColorParams( const Data& data );
 
-            static void validate( const Data& data );
-        };
+                DocumentColorParams( const TextDocumentIdentifier& textDocument );
 
-        enum class FileChangeType
-        {
-            Created = 1,
+                TextDocumentIdentifier textDocument( void ) const;
 
-            Changed = 2,
+                static void validate( const Data& data );
+            };
 
-            Deleted = 3
-        };
+            class Color : public Data
+            {
+              public:
+                Color( const Data& data );
 
-        /**
-          An event describing a file change.
-         */
-        class FileEvent : public Data
-        {
-          public:
-            FileEvent( const Data& data );
+                Color( const float red, const float green, const float blue, const float alpha );
 
-            FileEvent( const DocumentUri& uri, const FileChangeType type );
+                float red( void ) const;
 
-            DocumentUri documentUri( void ) const;
+                float green( void ) const;
 
-            FileChangeType type( void ) const;
+                float blue( void ) const;
 
-            static void validate( const Data& data );
-        };
+                float alpha( void ) const;
 
-        using FileEvents = std::vector< FileEvent >;
+                static void validate( const Data& data );
+            };
 
-        class DidChangeWatchedFilesParams : public Data
-        {
-          public:
-            DidChangeWatchedFilesParams( const FileEvents& changes );
+            class ColorInformation : public Data
+            {
+              public:
+                ColorInformation( const Data& data );
 
-            DidChangeWatchedFilesParams( const Data& data );
+                ColorInformation( const Range& range, const Color& color );
 
-            FileEvents changes( void ) const;
+                Range range( void ) const;
 
-            static void validate( const Data& data );
-        };
+                Color color( void ) const;
 
-        enum class WatchKind
-        {
+                static void validate( const Data& data );
+            };
+            using ColorInformations = std::vector< ColorInformation >;
 
-            Create = 1,
+            class DocumentColorResult : public Data
+            {
+              public:
+                DocumentColorResult( const Data& data );
 
-            Change = 2,
+                DocumentColorResult( const ColorInformations& colorInformations );
 
-            Delete = 4
-        };
+                static void validate( const Data& data );
+            };
 
-        class FileSystemWatcher : public Data
-        {
-          public:
-            FileSystemWatcher( const Data& data );
+            class ColorPresentationParams : public DocumentColorParams
+            {
+              public:
+                ColorPresentationParams( const Data& data );
 
-            FileSystemWatcher( const std::string& globPattern );
+                ColorPresentationParams(
+                    const TextDocumentIdentifier& textDocument,
+                    const Color& color,
+                    const Range& range );
 
-            FileSystemWatcher( const std::string& globPattern, const WatchKind kind );
+                Color color( void ) const;
 
-            std::string globPattern( void );
+                Range range( void ) const;
 
-            u1 hasKind( void ) const;
+                static void validate( const Data& data );
+            };
 
-            WatchKind kind( void ) const;
+            class ColorPresentation : public Data
+            {
+              public:
+                ColorPresentation( const Data& data );
 
-            static void validate( const Data& data );
+                ColorPresentation( const std::string& label );
 
-            void setKind( const WatchKind kind );
-        };
+                std::string label( void ) const;
 
-        /**
-          Describe options to be used when registering for text document change events.
-         */
-        using FileSystemWatchers = std::vector< FileSystemWatcher >;
-        class DidChangeWatchedFilesRegistrationOptions : public Data
-        {
-          public:
-            DidChangeWatchedFilesRegistrationOptions( const FileSystemWatchers& watchers );
+                u1 hasTextEdit( void ) const;
 
-            DidChangeWatchedFilesRegistrationOptions( const Data& data );
+                void setTextEdit( const TextEdit& textEdit );
 
-            FileSystemWatchers watchers( void ) const;
+                TextEdit textEdit( void ) const;
 
-            static void validate( const Data& data );
-        };
+                u1 hasAdditionalTextEdits( void ) const;
 
-        class WorkspaceSymbolParams : public Data
-        {
-          public:
-            WorkspaceSymbolParams( const Data& data );
+                void addAdditionalTextEdit( const TextEdit& textEdit );
 
-            WorkspaceSymbolParams( const std::string& query );
+                TextEdits additionalTextEdits( void ) const;
 
-            std::string query( void ) const;
+                static void validate( const Data& data );
+            };
 
-            static void validate( const Data& data );
-        };
+            using ColorPresentations = std::vector< ColorPresentation >;
 
-        enum class SymbolKind
-        {
-            File = 1,
-            Module = 2,
-            Namespace = 3,
-            Package = 4,
-            Class = 5,
-            Method = 6,
-            Property = 7,
-            Field = 8,
-            Constructor = 9,
-            Enum = 10,
-            Interface = 11,
-            Function = 12,
-            Variable = 13,
-            Constant = 14,
-            String = 15,
-            Number = 16,
-            Boolean = 17,
-            Array = 18,
-            Object = 19,
-            Key = 20,
-            Null = 21,
-            EnumMember = 22,
-            Struct = 23,
-            Event = 24,
-            Operator = 25,
-            TypeParameter = 26
-        };
+            class ColorPresentationResult : public Data
+            {
+              public:
+                ColorPresentationResult( const Data& data );
 
-        class SymbolInformation : public Data
-        {
-          public:
-            SymbolInformation(
-                const std::string& name, const SymbolKind kind, const Location& location );
+                ColorPresentationResult( ColorPresentations presentations );
 
-            SymbolInformation( const Data& data );
+                static void validate( const Data& data );
+            };
 
-            u1 isDeprecated( void ) const;
+            class FormattingOptions : public Data
+            {
+              private:
+                static void validateAdditionalOptions( const Data& data );
 
-            u1 hasDeprecated( void ) const;
+              public:
+                FormattingOptions( const Data& data );
 
-            void setDeprecated( const u1 deprecated );
+                FormattingOptions( const std::size_t tabSize, const u1 insertSpaces );
 
-            std::string containerName( void ) const;
+                std::size_t tabSize( void ) const;
 
-            u1 hasContainerName( void ) const;
+                void addBool( const std::string& key, const u1 boolean );
 
-            void setContainerName( const std::string& containerName );
+                void addNumber( const std::string& key, const float number );
 
-            Location location( void ) const;
+                void addString( const std::string& key, const std::string& string );
 
-            std::string name( void ) const;
+                u1 insertSpaces( void ) const;
 
-            SymbolKind kind( void ) const;
+                static void validate( const Data& data );
+            };
 
-            static void validate( const Data& data );
-        };
-        using SymbolInformations = std::vector< SymbolInformation >;
-        class WorkspaceSymbolResult : public Data
-        {
-          public:
-            WorkspaceSymbolResult( const Data& data );
+            class DocumentFormattingParams : public Data
+            {
+              public:
+                DocumentFormattingParams( const Data& data );
 
-            WorkspaceSymbolResult( const std::vector< SymbolInformation >& symbolInformation );
+                DocumentFormattingParams(
+                    const TextDocumentIdentifier& textDocument, const FormattingOptions& options );
 
-            void addSymbolInformation( const SymbolInformation& information );
+                TextDocumentIdentifier textDocument( void ) const;
 
-            SymbolInformations symbolInformation( void ) const;
+                FormattingOptions options( void ) const;
 
-            static void validate( const Data& data );
-        };
+                static void validate( const Data& data );
+            };
 
-        class ApplyWorkspaceEditParams : public Data
-        {
-          public:
-            ApplyWorkspaceEditParams( const Data& data );
+            class DocumentFormattingResult : public Data
+            {
+              public:
+                DocumentFormattingResult( void );
 
-            ApplyWorkspaceEditParams( const WorkspaceEdit& edit );
+                DocumentFormattingResult( const Data& data );
 
-            WorkspaceEdit edit( void ) const;
+                DocumentFormattingResult( const TextEdits& edits );
 
-            u1 hasLabel( void ) const;
+                static void validate( const Data& data );
+            };
+            class DocumentRangeFormattingParams : public DocumentFormattingParams
+            {
+              public:
+                DocumentRangeFormattingParams( const Data& data );
 
-            std::string label( void ) const;
+                DocumentRangeFormattingParams(
+                    const TextDocumentIdentifier& textDocument,
+                    const Range& range,
+                    const FormattingOptions& options );
 
-            void setLabel( const std::string& label );
+                Range range( void ) const;
 
-            static void validate( const Data& data );
-        };
+                static void validate( const Data& data );
+            };
 
-        class ApplyWorkspaceEditResult : public Data
-        {
-          public:
-            ApplyWorkspaceEditResult( const Data& data );
+            class DocumentOnTypeFormattingParams : public DocumentFormattingParams
+            {
+              public:
+                DocumentOnTypeFormattingParams( const Data& data );
 
-            ApplyWorkspaceEditResult( const u1 applied );
+                DocumentOnTypeFormattingParams(
+                    const TextDocumentIdentifier& textDocument,
+                    const FormattingOptions& options,
+                    const Position& position,
+                    const std::string& ch );
 
-            u1 applied( void ) const;
+                Position position( void ) const;
 
-            static void validate( const Data& data );
-        };
+                std::string ch( void ) const;  // character that has been typed.
 
-        class DidOpenTextDocumentParams : public Data
-        {
-          public:
-            DidOpenTextDocumentParams( const Data& data );
+                static void validate( const Data& data );
+            };
 
-            DidOpenTextDocumentParams( const TextDocumentItem& textDocument );
+            class DocumentOnTypeFormattingRegistrationOptions
+            : public TextDocumentRegistrationOptions
+            {
+              public:
+                DocumentOnTypeFormattingRegistrationOptions( const Data& data );
 
-            TextDocumentItem textDocument( void ) const;
+                DocumentOnTypeFormattingRegistrationOptions(
+                    const DocumentSelector& documentSelector,
+                    const std::string& firstTriggerCharacter );
 
-            static void validate( const Data& data );
-        };
+                std::string firstTriggerCharacter( void ) const;
 
-        class TextDocumentContentChangeEvent : public Data
-        {
-          public:
-            TextDocumentContentChangeEvent( const Data& data );
+                u1 hasMoreTriggerCharacter( void ) const;
 
-            TextDocumentContentChangeEvent( const std::string& text );
+                void addMoreTriggerCharacter( const std::string& character );
 
-            u1 hasRange( void ) const;
+                std::vector< std::string > moreTriggerCharacter( void ) const;
 
-            Range range( void ) const;
+                static void validate( const Data& data );
+            };
 
-            void setRange( const Range& range );
+            using DocumentOnTypeFormattingResult = DocumentFormattingResult;
 
-            u1 hasRangeLength( void ) const;
+            using DocumentRangeFormattingResult = DocumentFormattingResult;
 
-            std::size_t rangeLength( void ) const;
+            class RenameParams : public Data
+            {
+              public:
+                RenameParams( const Data& data );
 
-            void setRangeLength( const std::size_t rangeLength );
+                RenameParams(
+                    const TextDocumentIdentifier& textDocument,
+                    const Position& position,
+                    const std::string& newName );
 
-            std::string text( void ) const;
+                TextDocumentIdentifier textDocument( void ) const;
 
-            static void validate( const Data& data );
-        };
+                Position position( void ) const;
 
-        using TextDocumentContentChangeEvents = std::vector< TextDocumentContentChangeEvent >;
+                std::string newName( void ) const;
 
-        class DidChangeTextDocumentParams : public Data
-        {
-          public:
-            DidChangeTextDocumentParams( const Data& data );
+                static void validate( const Data& data );
+            };
 
-            DidChangeTextDocumentParams(
-                const VersionedTextDocumentIdentifier& textDocument,
-                const TextDocumentContentChangeEvents& contentChanges );
+            class RenameRegistrationOptions : public TextDocumentRegistrationOptions
+            {
+              public:
+                RenameRegistrationOptions( const Data& data );
 
-            VersionedTextDocumentIdentifier textDocument( void ) const;
+                RenameRegistrationOptions( const DocumentSelector& selector );
 
-            TextDocumentContentChangeEvents contentChanges( void ) const;
+                u1 hasPrepareProvider( void ) const;
 
-            static void validate( const Data& data );
-        };
+                void setPrepareProvider( const u1 prepareProvider );
 
-        enum class TextDocumentSaveReason
-        {
-            Manual = 1,      // by the user pressing save, by starting debugging, or by an API call.
-            AfterDelay = 2,  // Automatic after a delay.
-            FocusOut = 3     //  When the editor lost focus.
-        };
+                u1 prepareProvider( void ) const;
 
-        class WillSaveTextDocumentParams : public Data
-        {
-          public:
-            WillSaveTextDocumentParams( const Data& data );
+                static void validate( const Data& data );
+            };
 
-            WillSaveTextDocumentParams(
-                const TextDocumentIdentifier& textDocument, TextDocumentSaveReason reason );
+            class RenameResult : public Data
+            {
+              public:
+                RenameResult( void );
 
-            TextDocumentSaveReason reason( void ) const;
+                RenameResult( const Data& data );
 
-            TextDocumentIdentifier textDocument( void ) const;
+                RenameResult( const WorkspaceEdit& edit );
 
-            static void validate( const Data& data );
-        };
+                static void validate( const Data& data );
+            };
 
-        using TextEdits = std::vector< TextEdit >;
+            using PrepareRenameParams = TextDocumentPositionParams;
 
-        class WillSaveWaitUntilResponse : public Data
-        {
-          public:
-            WillSaveWaitUntilResponse( const Data& data );
+            class PrepareRenameResult : public Data
+            {
+              public:
+                PrepareRenameResult( void );
 
-            WillSaveWaitUntilResponse( const std::vector< TextEdit >& textEdit );
+                PrepareRenameResult( const Data& data );
 
-            TextEdits textEdit( void ) const;
+                PrepareRenameResult( const Range& range, const std::string& placeholder );
 
-            static void validate( const Data& data );
-        };
+                static void validate( const Data& data );
+            };
 
-        class DidSaveTextDocumentParams : public Data
-        {
-          public:
-            DidSaveTextDocumentParams( const Data& data );
+            class FoldingRangeParams : public Data
+            {
+              public:
+                FoldingRangeParams( const Data& data );
 
-            DidSaveTextDocumentParams( const TextDocumentIdentifier& textDocument );
+                FoldingRangeParams( const TextDocumentIdentifier& textDocument );
 
-            u1 hasText( void ) const;
+                TextDocumentIdentifier textDocument( void ) const;
 
-            void setText( const std::string& text );
+                static void validate( const Data& data );
+            };
+            enum class FoldingRangeKind
+            {
+                Comment,
+                Imports,
+                Region
+            };
 
-            TextDocumentIdentifier textDocument( void ) const;
+            class FoldingRange : public Data
+            {
+              public:
+                FoldingRange( const Data& data );
 
-            std::string text( void ) const;
+                FoldingRange( const std::size_t startLine, const std::size_t endLine );
 
-            static void validate( const Data& data );
-        };
-        class DidCloseTextDocumentParams : public Data
-        {
-          public:
-            DidCloseTextDocumentParams( const TextDocumentIdentifier& textDocument );
+                std::size_t startLine( void ) const;
 
-            DidCloseTextDocumentParams( const Data& data );
+                std::size_t endLine( void ) const;
 
-            TextDocumentIdentifier textDocument( void ) const;
+                u1 hasStartCharacter( void ) const;
 
-            static void validate( const Data& data );
-        };
+                void setStartCharacter( const std::size_t startCharacter );
 
-        class CompletionRegistrationOptions : public TextDocumentRegistrationOptions
-        {
-          public:
-            CompletionRegistrationOptions( const Data& data );
+                std::size_t startCharacter( void ) const;
 
-            CompletionRegistrationOptions( const DocumentSelector& documentSelector );
+                u1 hasEndCharacter( void ) const;
 
-            u1 hasTriggerCharacters( void ) const;
+                void setEndCharacter( const std::size_t endCharacter );
 
-            TriggerCharacters triggerCharacters( void ) const;
+                std::size_t endCharacter( void ) const;
 
-            void addTriggerCharacter( const std::string& triggerCharacter );
+                u1 hasKind( void ) const;
 
-            u1 hasResolveProvider( void ) const;
+                void setKind( const FoldingRangeKind kind );
 
-            u1 resolveProvider( void ) const;
+                std::string kind( void ) const;
 
-            void setResolveProvider( const u1 resolveProvider );
+                static void validate( const Data& data );
+            };
+            using FoldingRanges = std::vector< FoldingRange >;
+            class FoldingRangeResult : public Data
+            {
+              public:
+                FoldingRangeResult( void );
 
-            static void validate( const Data& data );
-        };
+                FoldingRangeResult( const Data& data );
 
-        enum class CompletionTriggerKind
-        {
-            /**
-             * Completion was triggered by typing an identifier (24x7 code
-             * complete), manual invocation (e.g Ctrl+Space) or via API.
-             */
-            Invoked = 1,
+                FoldingRangeResult( const FoldingRanges ranges );
 
-            /**
-             * Completion was triggered by a trigger character specified by
-             * the `triggerCharacters` properties of the `CompletionRegistrationOptions`.
-             */
-            TriggerCharacter = 2,
+                static void validate( const Data& data );
+            };
 
-            /**
-             * Completion was re-triggered as the current completion list is incomplete.
-             */
-            TriggerForIncompleteCompletions = 3
-        };
+            class ExecuteCommandParams : public Data
+            {
+              public:
+                ExecuteCommandParams( const Data& data );
 
-        class CompletionContext : public Data
-        {
-          public:
-            CompletionContext( const Data& data );
+                ExecuteCommandParams( const std::string& command );
 
-            CompletionContext( const CompletionTriggerKind triggerkind );
+                std::string command( void ) const;
 
-            std::string triggerCharacter( void ) const;
+                u1 hasArguments( void ) const;
 
-            void setTriggerCharacter( const std::string& triggerCharacter );
+                Data arguments( void ) const;
 
-            u1 hasTriggerCharacter( void ) const;
+                void addArgument( const Data& argument );
 
-            CompletionTriggerKind triggerKind( void ) const;
+                static void validate( const Data& data );
+            };
 
-            static void validate( const Data& data );
-        };
-
-        class CompletionParams : public TextDocumentPositionParams
-        {
-          public:
-            CompletionParams( const Data& data );
-
-            CompletionParams(
-                const TextDocumentIdentifier& textDocument, const Position& position );
-
-            CompletionContext context( void ) const;
-
-            u1 hasContext( void ) const;
-
-            void setContext( const CompletionContext& context );
-
-            static void validate( const Data& data );
-        };
-
-        enum class MarkupKind
-        {
-            PLAINTEXT,
-            MARKDOWN
-        };
-
-        class MarkupContent : public Data
-        {
-          public:
-            MarkupContent( const Data& data );
-
-            MarkupContent( const std::string& value );  // kind will be plaintext
-
-            MarkupContent( const MarkupKind kind, const std::string& value );
-
-            std::string kind( void ) const;
-
-            std::string value( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        enum class InsertTextFormat
-        {
-            PlainText = 1,
-            Snippet = 2
-        };
-
-        enum class CompletionItemKind
-        {
-            Text = 1,
-            Method = 2,
-            Function = 3,
-            Constructor = 4,
-            Field = 5,
-            Variable = 6,
-            Class = 7,
-            Interface = 8,
-            Module = 9,
-            Property = 10,
-            Unit = 11,
-            Value = 12,
-            Enum = 13,
-            Keyword = 14,
-            Snippet = 15,
-            Color = 16,
-            File = 17,
-            Reference = 18,
-            Folder = 19,
-            EnumMember = 20,
-            Constant = 21,
-            Struct = 22,
-            Event = 23,
-            Operator = 24,
-            TypeParameter = 25
-        };
-
-        using CommitCharacters = std::vector< std::string >;
-
-        class CompletionItem : public Data
-        {
-          public:
-            CompletionItem( const Data& data );
-
-            CompletionItem( const std::string& label );
-
-            std::string label( void ) const;
-
-            u1 hasKind( void ) const;
-
-            void setKind( const CompletionItemKind kind );
-
-            CompletionItemKind kind( void ) const;
-
-            u1 hasDetail( void ) const;
-
-            void setDetail( const std::string& detail );
-
-            std::string detail( void ) const;
-
-            u1 hasDocumentation( void ) const;
-
-            void setDocumentation( const MarkupContent& doc );
-
-            MarkupContent documentation( void ) const;
-
-            u1 hasDeprecated( void ) const;
-
-            void setDeprecated( const u1 deprecated );
-
-            u1 isDeprecated( void ) const;
-
-            u1 hasPreselected( void ) const;
-
-            void setPreselected( const u1 preselected );
-
-            u1 isPreselected( void ) const;
-
-            u1 hasSortText( void ) const;
-
-            void setSortText( const std::string& sortText );
-
-            std::string sortText( void ) const;
-
-            u1 hasFilterText( void ) const;
-
-            void setFilterText( const std::string& filterText );
-
-            std::string filterText( void ) const;
-
-            u1 hasInsertText( void ) const;
-
-            void setInsertText( const std::string& insertText );
-
-            std::string insertText( void ) const;
-
-            u1 hasInsertTextFormat( void ) const;
-
-            void setInsertTextFormat( const InsertTextFormat insertTextFormat );
-
-            InsertTextFormat insertTextFormat( void ) const;
-
-            u1 hasTextEdit( void ) const;
-
-            void setTextEdit( const TextEdit& textEdit );
-
-            TextEdit textEdit( void ) const;
-
-            u1 hasAdditionalTextEdits( void ) const;
-
-            void addAdditionalTextEdit( const TextEdit& textEdit );
-
-            TextEdits additionalTextEdits( void ) const;
-
-            u1 hasCommitCharacters( void ) const;
-
-            void addCommitCharacter( const std::string& commitCharacter );
-
-            CommitCharacters commitCharacters( void ) const;
-
-            u1 hasCommand( void ) const;
-
-            void setCommand( const Command& command );
-
-            Command command( void ) const;
-
-            u1 hasData( void ) const;
-
-            void setData( const Data& data );
-
-            Data data( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        using CompletionItems = std::vector< CompletionItem >;
-        class CompletionList : public Data
-        {
-          public:
-            CompletionList( const Data& data );
-
-            CompletionList( const u1 isIncomplete, const CompletionItems& items );
-
-            CompletionItems items( void ) const;
-
-            u1 isIncomplete( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        using CompletionResolveResult = CompletionItem;
-
-        using SignatureHelpParams = TextDocumentPositionParams;
-
-        class CompletionResult : public Data
-        {
-          public:
-            CompletionResult( void );
-
-            CompletionResult( const Data& data );
-
-            CompletionResult( const CompletionList& list );
-
-            CompletionResult( const CompletionItems& items );
-
-            static void validate( const Data& data );
-        };
-
-        class ParameterInformation : public Data
-        {
-          public:
-            ParameterInformation( const Data& data );
-
-            ParameterInformation( const std::string& label );
-
-            std::string label( void ) const;
-
-            MarkupContent documentation( void ) const;
-
-            u1 hasDocumentation( void ) const;
-
-            void setDocumentation( const MarkupContent& doc );
-
-            static void validate( const Data& data );
-        };
-
-        using ParameterInformations = std::vector< ParameterInformation >;
-        class SignatureInformation : public Data
-        {
-          public:
-            SignatureInformation( const Data& data );
-
-            SignatureInformation( const std::string& label );
-
-            std::string label( void ) const;
-
-            MarkupContent documentation( void ) const;
-
-            u1 hasDocumentation( void ) const;
-
-            void setDocumentation( const MarkupContent& doc );
-
-            u1 hasParameters( void ) const;
-
-            ParameterInformations parameters( void ) const;
-
-            void setParameters( const ParameterInformations& parameters );
-
-            static void validate( const Data& data );
-        };
-
-        using SignatureInformations = std::vector< SignatureInformation >;
-        class SignatureHelp : public Data
-        {
-          public:
-            SignatureHelp( const Data& data );
-
-            SignatureHelp( const SignatureInformations& signatures );
-
-            SignatureInformations signatures( void ) const;
-
-            u1 hasActiveSignature( void ) const;
-
-            void setActiveSignature( const std::size_t activeSignature );
-
-            std::size_t activeSignature( void ) const;
-
-            u1 hasActiveParameter( void ) const;
-
-            void setActiveParameter( const std::size_t activeParameter );
-
-            std::size_t activeParameter( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class SignatureHelpResult : public Data
-        {
-          public:
-            SignatureHelpResult( void );
-
-            SignatureHelpResult( const Data& data );
-
-            SignatureHelpResult( const SignatureHelp& signature );
-
-            static void validate( const Data& data );
-        };
-
-        using TypeDefinitionParams = TextDocumentPositionParams;
-
-        using Locations = std::vector< Location >;
-
-        class LocationLink : public Data
-        {
-          public:
-            LocationLink( const Data& data );
-
-            LocationLink( const DocumentUri& targetUri, const Range& targetRange );
-
-            DocumentUri targetUri( void ) const;
-
-            Range targetRange( void ) const;
-
-            u1 hasOriginSelectionRange( void ) const;
-
-            void setOriginSelectionRange( const Range& range );
-
-            Range originSelectionRange( void ) const;
-
-            u1 hasTargetSelectionRange( void ) const;
-
-            void setTargetSelectionRange( const Range& range );
-
-            Range targetSelectionRange( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        using LocationLinks = std::vector< LocationLink >;
-
-        class TypeDefinitionResult : public Data
-        {
-          public:
-            TypeDefinitionResult( const Data& data );
-
-            TypeDefinitionResult( const Locations& locations );
-
-            TypeDefinitionResult( const LocationLinks& locationLinks );
-
-            TypeDefinitionResult( const Location& location );
-
-            static void validate( const Data& data );
-        };
-
-        using TextDocumentImplementationResult = TypeDefinitionResult;
-
-        using TextDocumentImplementationParams = TextDocumentPositionParams;
-
-        class ReferenceContext : public Data
-        {
-          public:
-            ReferenceContext( const Data& data );
-
-            ReferenceContext( const u1 includeDeclaration );
-
-            u1 includeDeclaration( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class ReferenceParams : public TextDocumentPositionParams
-        {
-          public:
-            ReferenceParams( const Data& data );
-
-            ReferenceParams(
-                const TextDocumentIdentifier& textDocument,
-                const Position& position,
-                const ReferenceContext& context );
-
-            ReferenceContext context( void ) const;
-
-            static void validate( const Data& data );
-        };
-        class ReferenceResult : public Data
-        {
-          public:
-            ReferenceResult( const Data& data );
-
-            ReferenceResult( const Locations& locations );
-
-            static void validate( const Data& data );
-        };
-
-        enum class CodeActionKind
-        {
-            QuickFix,
-            Refactor,
-            RefactorExtract,
-            RefactorInline,
-            RefactorRewrite,
-            Source,
-            SourceOrganizeImports
-        };
-
-        class CodeActionOptions : public Data
-        {
-          public:
-            CodeActionOptions( const Data& data );
-
-            u1 hasCodeActionKinds( void ) const;
-
-            void addCodeActionKind( CodeActionKind kind );
-
-            std::vector< std::string > codeActionKinds( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        using Diagnostics = std::vector< Diagnostic >;
-
-        class CodeActionContext : public Data
-        {
-          public:
-            CodeActionContext( const Data& data );
-
-            CodeActionContext( const Diagnostics& diagnostics );
-
-            Diagnostics diagnostics( void ) const;
-
-            u1 hasKind( void ) const;
-
-            void setKind( const CodeActionKind kind );
-
-            std::string kind( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class CodeActionParams : public Data
-        {
-          public:
-            CodeActionParams( const Data& data );
-
-            CodeActionParams(
-                const TextDocumentIdentifier& textDocument,
-                const Range& range,
-                const CodeActionContext& context );
-
-            TextDocumentIdentifier textDocument( void ) const;
-
-            Range range( void ) const;
-
-            CodeActionContext context( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class CodeAction : public Data
-        {
-          public:
-            CodeAction( const Data& data );
-
-            CodeAction( const std::string& title );
-
-            std::string title( void ) const;
-
-            u1 hasKind( void ) const;
-
-            std::string kind( void ) const;
-
-            void setKind( const CodeActionKind kind );
-
-            u1 hasDiagnostics( void ) const;
-
-            Diagnostics diagnostics( void ) const;
-
-            void addDiagnostic( const Diagnostic& diagnostic );
-
-            u1 hasEdit( void ) const;
-
-            WorkspaceEdit edit( void ) const;
-
-            void setEdit( const WorkspaceEdit& edit );
-
-            void setCommand( const Command& command );
-
-            u1 hasCommand( void ) const;
-
-            Command command( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class CodeActionResult : public Data
-        {
-          public:
-            CodeActionResult( const Data& data );
-
-            CodeActionResult( const std::vector< Command >& commands );
-
-            CodeActionResult( void );
-
-            void addCommand( const Command& command );
-
-            static void validate( const Data& data );
-        };
-
-        class CodeActionRegistrationOptions
-        : public TextDocumentRegistrationOptions
-        , public CodeActionOptions
-        {
-        };
-
-        class PublishDiagnosticsParams : public Data
-        {
-          public:
-            PublishDiagnosticsParams( const Data& data );
-
-            PublishDiagnosticsParams(
-                const DocumentUri& uri, const std::vector< Diagnostic >& diagnostics );
-
-            DocumentUri uri( void ) const;
-
-            Data diagnostics( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        using HoverParams = TextDocumentPositionParams;
-
-        class MarkedString : public Data
-        {
-          public:
-            MarkedString( const Data& data );
-
-            MarkedString( const std::string& language, const std::string& value );
-
-            std::string language( void ) const;
-
-            std::string value( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class HoverResult : public Data
-        {
-          public:
-            HoverResult( const Data& data );
-
-            HoverResult( const std::vector< MarkedString >& contents = {} );
-
-            Data contents( void ) const;
-
-            void addContent( const MarkedString& content );
-
-            u1 hasRange( void ) const;
-
-            Range range( void ) const;
-
-            void setRange( const Range& range );
-
-            static void validate( const Data& data );
-        };
-
-        using DefinitionParams = TextDocumentPositionParams;
-
-        class DefinitionResult : public Data
-        {
-          public:
-            DefinitionResult( const Data& data );
-
-            DefinitionResult( const Location& location );
-
-            DefinitionResult( const std::vector< Location > locations );
-
-            Data locations( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        using DocumentHighlightParams = TextDocumentPositionParams;
-
-        enum class DocumentHighlightKind
-        {
-            Text = 1,
-            Read = 2,
-            Write = 3
-        };
-
-        class DocumentHighlight : public Data
-        {
-          public:
-            DocumentHighlight( const Data& data );
-
-            DocumentHighlight( const Range& range );
-
-            Range range( void ) const;
-
-            u1 hasKind( void ) const;
-
-            DocumentHighlightKind kind( void ) const;
-
-            void setKind( const DocumentHighlightKind kind );
-
-            static void validate( const Data& data );
-        };
-        using DocumentHighlights = std::vector< DocumentHighlight >;
-
-        class DocumentHighlightResult : public Data
-        {
-          public:
-            DocumentHighlightResult( void );
-
-            DocumentHighlightResult( const Data& data );
-
-            DocumentHighlightResult( const DocumentHighlights& highlights );
-
-            static void validate( const Data& data );
-        };
-
-        class DocumentSymbolParams : public Data
-        {
-          public:
-            DocumentSymbolParams( const TextDocumentIdentifier& textDocument );
-
-            DocumentSymbolParams( const Data& data );
-
-            TextDocumentIdentifier textDocument( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class DocumentSymbol;
-
-        using DocumentSymbols = std::vector< DocumentSymbol >;
-
-        class DocumentSymbol : public Data
-        {
-          public:
-            DocumentSymbol( const Data& data );
-
-            DocumentSymbol(
-                const std::string& name, const SymbolKind kind, Range range, Range selectionRange );
-
-            std::string name( void ) const;
-
-            SymbolKind kind( void ) const;
-
-            Range range( void ) const;
-
-            Range selectionRange( void ) const;
-
-            u1 hasDetail( void ) const;
-
-            void setDetail( const std::string& detail );
-
-            std::string detail( void ) const;
-
-            u1 hasDeprecated( void ) const;
-
-            u1 deprecated( void ) const;
-
-            void setDeprecated( const u1 deprecated );
-
-            u1 hasChildren( void ) const;
-
-            DocumentSymbols children( void ) const;
-
-            void addChild( const DocumentSymbol& symbol );
-
-            static void validate( const Data& data );
-        };
-
-        class DocumentSymbolResult : public Data
-        {
-          public:
-            DocumentSymbolResult( void );
-
-            DocumentSymbolResult( const Data& data );
-
-            DocumentSymbolResult( const DocumentSymbols& symbols );
-
-            DocumentSymbolResult( const SymbolInformations& information );
-
-            static void validate( const Data& data );
-        };
-
-        class CodeLensParams : public Data
-        {
-          public:
-            CodeLensParams( const Data& data );
-
-            CodeLensParams( const TextDocumentIdentifier& textDocument );
-
-            TextDocumentIdentifier textDocument( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class CodeLens : public Data
-        {
-          public:
-            CodeLens( const Data& data );
-
-            CodeLens( const Range& range );
-
-            Range range( void ) const;
-
-            u1 hasCommand( void ) const;
-
-            Command command( void ) const;
-
-            void setCommand( const Command& command );
-
-            u1 hasData( void ) const;
-
-            Data data( void ) const;
-
-            void setData( const Data& data );
-
-            static void validate( const Data& data );
-        };
-
-        class CodeLensResult : public Data
-        {
-          public:
-            CodeLensResult( const Data& data );
-
-            CodeLensResult( const std::vector< CodeLens >& codeLens = {} );
-
-            void addCodeLens( const CodeLens& codeLens );
-
-            static void validate( const Data& data );
-        };
-
-        class DocumentLinkParams : public Data
-        {
-          public:
-            DocumentLinkParams( const Data& data );
-
-            DocumentLinkParams( const TextDocumentIdentifier& textDocument );
-
-            TextDocumentIdentifier textDocument( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class DocumentLink : public Data
-        {
-          public:
-            DocumentLink( const Data& data );
-
-            DocumentLink( const Range& range );
-
-            Range range( void ) const;
-
-            u1 hasTarget( void ) const;
-
-            void setTarget( const DocumentUri& target );
-
-            DocumentUri target( void ) const;
-
-            u1 hasData( void ) const;
-
-            void setData( const Data& data );
-
-            Data data( void ) const;
-
-            static void validate( const Data& data );
-        };
-        using DocumentLinks = std::vector< DocumentLink >;
-        class DocumentLinkResult : public Data
-        {
-          public:
-            DocumentLinkResult( void );
-
-            DocumentLinkResult( const Data& data );
-
-            DocumentLinkResult( const DocumentLinks links );
-
-            static void validate( const Data& data );
-        };
-
-        using CodeLensResolveParams = CodeLens;
-        using CodeLensResolveResult = CodeLens;
-        using DocumentLinkResolveResult = DocumentLink;
-        using DocumentLinkResolveParams = DocumentLink;
-
-        class DocumentColorParams : public Data
-        {
-          public:
-            DocumentColorParams( const Data& data );
-
-            DocumentColorParams( const TextDocumentIdentifier& textDocument );
-
-            TextDocumentIdentifier textDocument( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class Color : public Data
-        {
-          public:
-            Color( const Data& data );
-
-            Color( const float red, const float green, const float blue, const float alpha );
-
-            float red( void ) const;
-
-            float green( void ) const;
-
-            float blue( void ) const;
-
-            float alpha( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class ColorInformation : public Data
-        {
-          public:
-            ColorInformation( const Data& data );
-
-            ColorInformation( const Range& range, const Color& color );
-
-            Range range( void ) const;
-
-            Color color( void ) const;
-
-            static void validate( const Data& data );
-        };
-        using ColorInformations = std::vector< ColorInformation >;
-
-        class DocumentColorResult : public Data
-        {
-          public:
-            DocumentColorResult( const Data& data );
-
-            DocumentColorResult( const ColorInformations& colorInformations );
-
-            static void validate( const Data& data );
-        };
-
-        class ColorPresentationParams : public DocumentColorParams
-        {
-          public:
-            ColorPresentationParams( const Data& data );
-
-            ColorPresentationParams(
-                const TextDocumentIdentifier& textDocument,
-                const Color& color,
-                const Range& range );
-
-            Color color( void ) const;
-
-            Range range( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class ColorPresentation : public Data
-        {
-          public:
-            ColorPresentation( const Data& data );
-
-            ColorPresentation( const std::string& label );
-
-            std::string label( void ) const;
-
-            u1 hasTextEdit( void ) const;
-
-            void setTextEdit( const TextEdit& textEdit );
-
-            TextEdit textEdit( void ) const;
-
-            u1 hasAdditionalTextEdits( void ) const;
-
-            void addAdditionalTextEdit( const TextEdit& textEdit );
-
-            TextEdits additionalTextEdits( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        using ColorPresentations = std::vector< ColorPresentation >;
-
-        class ColorPresentationResult : public Data
-        {
-          public:
-            ColorPresentationResult( const Data& data );
-
-            ColorPresentationResult( ColorPresentations presentations );
-
-            static void validate( const Data& data );
-        };
-
-        class FormattingOptions : public Data
-        {
-          private:
-            static void validateAdditionalOptions( const Data& data );
-
-          public:
-            FormattingOptions( const Data& data );
-
-            FormattingOptions( const std::size_t tabSize, const u1 insertSpaces );
-
-            std::size_t tabSize( void ) const;
-
-            void addBool( const std::string& key, const u1 boolean );
-
-            void addNumber( const std::string& key, const float number );
-
-            void addString( const std::string& key, const std::string& string );
-
-            u1 insertSpaces( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class DocumentFormattingParams : public Data
-        {
-          public:
-            DocumentFormattingParams( const Data& data );
-
-            DocumentFormattingParams(
-                const TextDocumentIdentifier& textDocument, const FormattingOptions& options );
-
-            TextDocumentIdentifier textDocument( void ) const;
-
-            FormattingOptions options( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class DocumentFormattingResult : public Data
-        {
-          public:
-            DocumentFormattingResult( void );
-
-            DocumentFormattingResult( const Data& data );
-
-            DocumentFormattingResult( const TextEdits& edits );
-
-            static void validate( const Data& data );
-        };
-        class DocumentRangeFormattingParams : public DocumentFormattingParams
-        {
-          public:
-            DocumentRangeFormattingParams( const Data& data );
-
-            DocumentRangeFormattingParams(
-                const TextDocumentIdentifier& textDocument,
-                const Range& range,
-                const FormattingOptions& options );
-
-            Range range( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class DocumentOnTypeFormattingParams : public DocumentFormattingParams
-        {
-          public:
-            DocumentOnTypeFormattingParams( const Data& data );
-
-            DocumentOnTypeFormattingParams(
-                const TextDocumentIdentifier& textDocument,
-                const FormattingOptions& options,
-                const Position& position,
-                const std::string& ch );
-
-            Position position( void ) const;
-
-            std::string ch( void ) const;  // character that has been typed.
-
-            static void validate( const Data& data );
-        };
-
-        class DocumentOnTypeFormattingRegistrationOptions : public TextDocumentRegistrationOptions
-        {
-          public:
-            DocumentOnTypeFormattingRegistrationOptions( const Data& data );
-
-            DocumentOnTypeFormattingRegistrationOptions(
-                const DocumentSelector& documentSelector,
-                const std::string& firstTriggerCharacter );
-
-            std::string firstTriggerCharacter( void ) const;
-
-            u1 hasMoreTriggerCharacter( void ) const;
-
-            void addMoreTriggerCharacter( const std::string& character );
-
-            std::vector< std::string > moreTriggerCharacter( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        using DocumentOnTypeFormattingResult = DocumentFormattingResult;
-
-        using DocumentRangeFormattingResult = DocumentFormattingResult;
-
-        class RenameParams : public Data
-        {
-          public:
-            RenameParams( const Data& data );
-
-            RenameParams(
-                const TextDocumentIdentifier& textDocument,
-                const Position& position,
-                const std::string& newName );
-
-            TextDocumentIdentifier textDocument( void ) const;
-
-            Position position( void ) const;
-
-            std::string newName( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class RenameRegistrationOptions : public TextDocumentRegistrationOptions
-        {
-          public:
-            RenameRegistrationOptions( const Data& data );
-
-            RenameRegistrationOptions( const DocumentSelector& selector );
-
-            u1 hasPrepareProvider( void ) const;
-
-            void setPrepareProvider( const u1 prepareProvider );
-
-            u1 prepareProvider( void ) const;
-
-            static void validate( const Data& data );
-        };
-
-        class RenameResult : public Data
-        {
-          public:
-            RenameResult( void );
-
-            RenameResult( const Data& data );
-
-            RenameResult( const WorkspaceEdit& edit );
-
-            static void validate( const Data& data );
-        };
-
-        using PrepareRenameParams = TextDocumentPositionParams;
-
-        class PrepareRenameResult : public Data
-        {
-          public:
-            PrepareRenameResult( void );
-
-            PrepareRenameResult( const Data& data );
-
-            PrepareRenameResult( const Range& range, const std::string& placeholder );
-
-            static void validate( const Data& data );
-        };
-
-        class FoldingRangeParams : public Data
-        {
-          public:
-            FoldingRangeParams( const Data& data );
-
-            FoldingRangeParams( const TextDocumentIdentifier& textDocument );
-
-            TextDocumentIdentifier textDocument( void ) const;
-
-            static void validate( const Data& data );
-        };
-        enum class FoldingRangeKind
-        {
-            Comment,
-            Imports,
-            Region
-        };
-
-        class FoldingRange : public Data
-        {
-          public:
-            FoldingRange( const Data& data );
-
-            FoldingRange( const std::size_t startLine, const std::size_t endLine );
-
-            std::size_t startLine( void ) const;
-
-            std::size_t endLine( void ) const;
-
-            u1 hasStartCharacter( void ) const;
-
-            void setStartCharacter( const std::size_t startCharacter );
-
-            std::size_t startCharacter( void ) const;
-
-            u1 hasEndCharacter( void ) const;
-
-            void setEndCharacter( const std::size_t endCharacter );
-
-            std::size_t endCharacter( void ) const;
-
-            u1 hasKind( void ) const;
-
-            void setKind( const FoldingRangeKind kind );
-
-            std::string kind( void ) const;
-
-            static void validate( const Data& data );
-        };
-        using FoldingRanges = std::vector< FoldingRange >;
-        class FoldingRangeResult : public Data
-        {
-          public:
-            FoldingRangeResult( void );
-
-            FoldingRangeResult( const Data& data );
-
-            FoldingRangeResult( const FoldingRanges ranges );
-
-            static void validate( const Data& data );
-        };
-
-        class ExecuteCommandParams : public Data
-        {
-          public:
-            ExecuteCommandParams( const Data& data );
-
-            ExecuteCommandParams( const std::string& command );
-
-            std::string command( void ) const;
-
-            u1 hasArguments( void ) const;
-
-            Data arguments( void ) const;
-
-            void addArgument( const Data& argument );
-
-            static void validate( const Data& data );
-        };
-
-        using ExecuteCommandResult = Data;  // TODO: PPA: FIXME:
+            using ExecuteCommandResult = Data;  // TODO: PPA: FIXME:
+        }
     }
-}
 }
 
 #endif  // _LIBSTDHL_CPP_NETWORK_LSP_CONTENT_H_
