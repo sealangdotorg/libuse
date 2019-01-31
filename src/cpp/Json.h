@@ -180,10 +180,10 @@ namespace libstdhl
         };
 
         template < class T, class U >
-        void validateTypeIsMixedArrayOf( const std::string& context, const Data& data )
+        void validateTypeIsMixedArrayOf( const std::string& context, const Object& object )
         {
-            Content::validateTypeIsArray( context, data );
-            for( auto element : data )
+            validateTypeIsArray( context, object );
+            for( auto element : object )
             {
                 try
                 {
@@ -197,15 +197,15 @@ namespace libstdhl
         };
 
         template < class T, class U >
-        void validateTypeIsArrayOf( const std::string& context, const Data& data )
+        void validateTypeIsArrayOf( const std::string& context, const Object& object )
         {
             try
             {
-                validateTypeIsArrayOf< T >( context, data );
+                validateTypeIsArrayOf< T >( context, object );
             }
             catch( std::invalid_argument a )
             {
-                validateTypeIsArrayOf< U >( context, data );
+                validateTypeIsArrayOf< U >( context, object );
             }
         };
     };
