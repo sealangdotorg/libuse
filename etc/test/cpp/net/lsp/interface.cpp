@@ -44,6 +44,7 @@
 
 #include <libstdhl/net/lsp/Identifier>
 #include <libstdhl/net/lsp/LSP>
+
 using namespace libstdhl;
 using namespace Network;
 using namespace LSP;
@@ -54,6 +55,11 @@ class TestInterface final : public ServerInterface
     TestInterface( void )
     {
     }
+
+    //
+    //
+    // Lifetime
+    //
 
     InitializeResult initialize( const InitializeParams& params ) override
     {
@@ -72,9 +78,30 @@ class TestInterface final : public ServerInterface
     void exit( void ) noexcept override
     {
     }
+
+    //
+    //
+    // Window
+    //
+
+    //
+    //
+    // Telemetry
+    //
+
+    //
+    //
+    // Client
+    //
+
     void client_cancel( const CancelParams& params ) noexcept override
     {
     }
+
+    //
+    //
+    // Workspace
+    //
 
     ExecuteCommandResult workspace_executeCommand( const ExecuteCommandParams& params ) override
     {
@@ -106,6 +133,11 @@ class TestInterface final : public ServerInterface
         return WorkspaceSymbolResult( info );
     }
 
+    //
+    //
+    // Text Synchronization
+    //
+
     void textDocument_didOpen( const DidOpenTextDocumentParams& params ) noexcept override
     {
     }
@@ -132,6 +164,16 @@ class TestInterface final : public ServerInterface
     void textDocument_didClose( const DidCloseTextDocumentParams& params ) noexcept override
     {
     }
+
+    //
+    //
+    // Diagnostics
+    //
+
+    //
+    //
+    // Language Features
+    //
 
     CompletionResult textDocument_completion( const CompletionParams& params ) override
     {
@@ -172,6 +214,7 @@ class TestInterface final : public ServerInterface
     {
         return CodeLensResult();
     }
+
     TypeDefinitionResult textDocument_typeDefinition( const TypeDefinitionParams& params ) override
     {
         return TypeDefinitionResult( Data() );
@@ -182,29 +225,35 @@ class TestInterface final : public ServerInterface
     {
         return TextDocumentImplementationResult( Data() );
     }
+
     ReferenceResult textDocument_references( const ReferenceParams& params ) override
     {
         return ReferenceResult( Data() );
     }
+
     DocumentHighlightResult textDocument_documentHighlight(
         const DocumentHighlightParams& params ) override
     {
         return DocumentHighlightResult();
     }
+
     DocumentSymbolResult textDocument_documentSymbol( const DocumentSymbolParams& params ) override
     {
         return DocumentSymbolResult();
     }
+
     CodeLensResolveResult codeLens_resolve( const CodeLensResolveParams& params ) override
     {
         auto start = Position( 1, 1 );
         auto end = Position( 1, 10 );
         return CodeLensResolveResult( Range( start, end ) );
     }
+
     DocumentLinkResult textDocument_documentLink( const DocumentLinkParams& params ) override
     {
         return DocumentLinkResult();
     }
+
     DocumentLinkResolveResult documentLink_resolve(
         const DocumentLinkResolveParams& params ) override
     {
@@ -212,38 +261,46 @@ class TestInterface final : public ServerInterface
         auto end = Position( 1, 10 );
         return DocumentLinkResolveResult( Range( start, end ) );
     }
+
     DocumentColorResult textDocument_documentColor( const DocumentColorParams& params ) override
     {
         return DocumentColorResult( ColorInformations() );
     }
+
     ColorPresentationResult textDocument_colorPresentation(
         const ColorPresentationParams& params ) override
     {
         return ColorPresentationResult( ColorPresentations() );
     }
+
     DocumentFormattingResult textDocument_formatting(
         const DocumentFormattingParams& params ) override
     {
         return DocumentFormattingResult();
     }
+
     DocumentRangeFormattingResult textDocument_rangeFormatting(
         const DocumentRangeFormattingParams& params ) override
     {
         return DocumentRangeFormattingResult();
     }
+
     DocumentOnTypeFormattingResult textDocument_onTypeFormatting(
         const DocumentOnTypeFormattingParams& params ) override
     {
         return DocumentOnTypeFormattingResult();
     }
+
     RenameResult textDocument_rename( const RenameParams& params ) override
     {
         return RenameResult();
     }
+
     PrepareRenameResult textDocument_prepareRename( const PrepareRenameParams& params ) override
     {
         return PrepareRenameResult();
     }
+
     FoldingRangeResult textDocument_foldingRange( const FoldingRangeParams& params ) override
     {
         return FoldingRangeResult();

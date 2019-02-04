@@ -65,7 +65,7 @@ ServerInterface::ServerInterface( void )
 
 //
 //
-// ServerInterface (base)
+// ServerInterface Lifetime
 //
 
 void ServerInterface::server_cancel( const CancelParams& params ) noexcept
@@ -77,7 +77,7 @@ void ServerInterface::server_cancel( const CancelParams& params ) noexcept
 
 //
 //
-// ServerInterface (window)
+// ServerInterface Window
 //
 
 void ServerInterface::window_showMessage( const ShowMessageParams& params ) noexcept
@@ -105,7 +105,7 @@ void ServerInterface::window_logMessage( const LogMessageParams& params ) noexce
 
 //
 //
-// ServerInterface (telemetry)
+// ServerInterface Telemetry
 //
 
 void ServerInterface::telemetry_event( const TelemetryEventParams& params ) noexcept
@@ -117,7 +117,7 @@ void ServerInterface::telemetry_event( const TelemetryEventParams& params ) noex
 
 //
 //
-// ServerInterface (client)
+// ServerInterface Client
 //
 
 void ServerInterface::client_registerCapability(
@@ -140,7 +140,7 @@ void ServerInterface::client_unregisterCapability(
 
 //
 //
-// ServerInterface (workspace)
+// ServerInterface Workspace
 //
 
 void ServerInterface::workspace_workspaceFolders(
@@ -171,7 +171,17 @@ void ServerInterface::workspace_applyEdit(
 
 //
 //
-// ServerInterface (textDocument)
+// ServerInterface Workspace
+//
+
+//
+//
+// ServerInterface Text Synchronization
+//
+
+//
+//
+// ServerInterface Diagnostics
 //
 
 void ServerInterface::textDocument_publishDiagnostics(
@@ -181,6 +191,11 @@ void ServerInterface::textDocument_publishDiagnostics(
     msg.setParams( params );
     notify( msg );
 }
+
+//
+//
+// ServerInterface Language Features
+//
 
 //
 //

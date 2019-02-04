@@ -74,7 +74,7 @@ namespace libstdhl
 
                 //
                 //
-                //  Base Protocol
+                //  Lifetime
                 //
 
                 // https://microsoft.github.io/language-server-protocol/specification#initialize
@@ -193,7 +193,7 @@ namespace libstdhl
 
                 //
                 //
-                //  Text Document
+                //  Text Synchronization
                 //
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_didOpen
@@ -227,6 +227,11 @@ namespace libstdhl
                 virtual void textDocument_didClose(
                     const DidCloseTextDocumentParams& params ) noexcept = 0;
 
+                //
+                //
+                // Diagnostics
+                //
+
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_publishDiagnostics
                 // server to client notification
                 virtual void textDocument_publishDiagnostics(
@@ -255,6 +260,11 @@ namespace libstdhl
                 // client to server request
                 virtual SignatureHelpResult textDocument_signatureHelp(
                     const SignatureHelpParams& params ) = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_declaration
+                // client to server request
+                // TODO: FIXME: @ppaulweber: API introduced in version 3.14.0, as goes for
+                // LocationLink, next PR
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_definition
                 // client to server request
