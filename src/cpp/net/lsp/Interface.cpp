@@ -63,42 +63,129 @@ ServerInterface::ServerInterface( void )
 {
 }
 
-std::size_t ServerInterface::incrementID( void )
+//
+//
+// ServerInterface (base)
+//
+
+void ServerInterface::server_cancel( const CancelParams& params ) noexcept
 {
-    return request_id++;
+    NotificationMessage msg( std::string{ Identifier::cancelRequest } );
+    msg.setParams( params );
+    notify( msg );
 }
 
-void ServerInterface::respond( const ResponseMessage& message )
+//
+//
+// ServerInterface (window)
+//
+
+void ServerInterface::window_showMessage( const ShowMessageParams& params ) noexcept
 {
-    std::lock_guard< std::mutex > guard( m_responseBufferLock );
-    m_responseBuffer[ m_responseBufferSlot ].emplace_back( message );
+    NotificationMessage msg( std::string{ Identifier::window_showMessage } );
+    msg.setParams( params );
+    notify( msg );
 }
 
-void ServerInterface::notify( const NotificationMessage& message )
+void ServerInterface::window_showMessageRequest(
+    const ShowMessageRequestParams& params,
+    const std::function< void( const ResponseMessage& ) >& callback )
 {
-    std::lock_guard< std::mutex > guard( m_notificationBufferLock );
-    m_notificationBuffer[ m_notificationBufferSlot ].emplace_back( message );
+    RequestMessage msg( incrementID(), std::string{ Identifier::window_showMessageRequest } );
+    msg.setParams( params );
+    request( msg, callback );
 }
 
-void ServerInterface::request(
-    const RequestMessage& message, const std::function< void( const ResponseMessage& ) >& callback )
+void ServerInterface::window_logMessage( const LogMessageParams& params ) noexcept
 {
-    std::lock_guard< std::mutex > guard( m_requestBufferLock );
-    m_requestBuffer[ m_requestBufferSlot ].emplace_back( message );
-
-    // TODO: @ppaulweber: check for unique value (msg id) condition @Clasc
-    m_requestCallback[ message.id() ] = callback;
+    NotificationMessage msg( std::string{ Identifier::window_logMessage } );
+    msg.setParams( params );
+    notify( msg );
 }
 
-void ServerInterface::handle( const ResponseMessage& message )
+//
+//
+// ServerInterface (telemetry)
+//
+
+void ServerInterface::telemetry_event( const TelemetryEventParams& params ) noexcept
 {
-    const auto result = m_requestCallback.find( message.id() );
-    if( result != m_requestCallback.end() )
-    {
-        const std::function< void( const ResponseMessage& ) >& callback = result->second;
-        callback( message );
-    }
+    NotificationMessage msg( std::string{ Identifier::telemetry_event } );
+    msg.setParams( params );
+    notify( msg );
 }
+
+//
+//
+// ServerInterface (client)
+//
+
+void ServerInterface::client_registerCapability(
+    const RegistrationParams& params,
+    const std::function< void( const ResponseMessage& ) >& callback )
+{
+    RequestMessage msg( incrementID(), std::string{ Identifier::client_registerCapability } );
+    msg.setParams( params );
+    request( msg, callback );
+}
+
+void ServerInterface::client_unregisterCapability(
+    const UnregistrationParams& params,
+    const std::function< void( const ResponseMessage& ) >& callback )
+{
+    RequestMessage msg( incrementID(), std::string{ Identifier::client_unregisterCapability } );
+    msg.setParams( params );
+    request( msg, callback );
+}
+
+//
+//
+// ServerInterface (workspace)
+//
+
+void ServerInterface::workspace_workspaceFolders(
+    const std::function< void( const ResponseMessage& ) >& callback )
+{
+    RequestMessage msg( incrementID(), std::string{ Identifier::workspace_workspaceFolders } );
+    msg.setParams( Data() );
+    request( msg, callback );
+}
+
+void ServerInterface::workspace_configuration(
+    const ConfigurationParams& params,
+    const std::function< void( const ResponseMessage& ) >& callback )
+{
+    RequestMessage msg( incrementID(), std::string{ Identifier::workspace_configuration } );
+    msg.setParams( params );
+    request( msg, callback );
+}
+
+void ServerInterface::workspace_applyEdit(
+    const ApplyWorkspaceEditParams& params,
+    const std::function< void( const ResponseMessage& ) >& callback )
+{
+    RequestMessage msg( incrementID(), std::string{ Identifier::workspace_applyEdit } );
+    msg.setParams( params );
+    request( msg, callback );
+}
+
+//
+//
+// ServerInterface (textDocument)
+//
+
+void ServerInterface::textDocument_publishDiagnostics(
+    const PublishDiagnosticsParams& params ) noexcept
+{
+    NotificationMessage msg( std::string{ Identifier::textDocument_publishDiagnostics } );
+    msg.setParams( params );
+    notify( msg );
+}
+
+//
+//
+// ServerInterface (private)
+//
 
 void ServerInterface::flush( const std::function< void( const Message& ) >& callback )
 {
@@ -145,93 +232,42 @@ void ServerInterface::flush( const std::function< void( const Message& ) >& call
 
     m_requestBuffer[ pos ].clear();
 }
-void ServerInterface::server_cancel( const CancelParams& params ) noexcept
+
+void ServerInterface::respond( const ResponseMessage& message )
 {
-    NotificationMessage msg( std::string{ Identifier::cancelRequest } );
-    msg.setParams( params );
-    notify( msg );
+    std::lock_guard< std::mutex > guard( m_responseBufferLock );
+    m_responseBuffer[ m_responseBufferSlot ].emplace_back( message );
 }
 
-void ServerInterface::window_showMessage( const ShowMessageParams& params ) noexcept
+void ServerInterface::handle( const ResponseMessage& message )
 {
-    NotificationMessage msg( std::string{ Identifier::window_showMessage } );
-    msg.setParams( params );
-    notify( msg );
+    const auto result = m_requestCallback.find( message.id() );
+    if( result != m_requestCallback.end() )
+    {
+        const std::function< void( const ResponseMessage& ) >& callback = result->second;
+        callback( message );
+    }
 }
 
-void ServerInterface::window_showMessageRequest(
-    const ShowMessageRequestParams& params,
-    const std::function< void( const ResponseMessage& ) >& callback )
+void ServerInterface::request(
+    const RequestMessage& message, const std::function< void( const ResponseMessage& ) >& callback )
 {
-    RequestMessage msg( incrementID(), std::string{ Identifier::window_showMessageRequest } );
-    msg.setParams( params );
-    request( msg, callback );
+    std::lock_guard< std::mutex > guard( m_requestBufferLock );
+    m_requestBuffer[ m_requestBufferSlot ].emplace_back( message );
+
+    // TODO: @ppaulweber: check for unique value (msg id) condition @Clasc
+    m_requestCallback[ message.id() ] = callback;
 }
 
-void ServerInterface::window_logMessage( const LogMessageParams& params ) noexcept
+void ServerInterface::notify( const NotificationMessage& message )
 {
-    NotificationMessage msg( std::string{ Identifier::window_logMessage } );
-    msg.setParams( params );
-    notify( msg );
+    std::lock_guard< std::mutex > guard( m_notificationBufferLock );
+    m_notificationBuffer[ m_notificationBufferSlot ].emplace_back( message );
 }
 
-void ServerInterface::telemetry_event( const TelemetryEventParams& params ) noexcept
+std::size_t ServerInterface::incrementID( void )
 {
-    NotificationMessage msg( std::string{ Identifier::telemetry_event } );
-    msg.setParams( params );
-    notify( msg );
-}
-
-void ServerInterface::client_registerCapability(
-    const RegistrationParams& params,
-    const std::function< void( const ResponseMessage& ) >& callback )
-{
-    RequestMessage msg( incrementID(), std::string{ Identifier::client_registerCapability } );
-    msg.setParams( params );
-    request( msg, callback );
-}
-
-void ServerInterface::client_unregisterCapability(
-    const UnregistrationParams& params,
-    const std::function< void( const ResponseMessage& ) >& callback )
-{
-    RequestMessage msg( incrementID(), std::string{ Identifier::client_unregisterCapability } );
-    msg.setParams( params );
-    request( msg, callback );
-}
-
-void ServerInterface::workspace_workspaceFolders(
-    const std::function< void( const ResponseMessage& ) >& callback )
-{
-    RequestMessage msg( incrementID(), std::string{ Identifier::workspace_workspaceFolders } );
-    msg.setParams( Data() );
-    request( msg, callback );
-}
-
-void ServerInterface::workspace_configuration(
-    const ConfigurationParams& params,
-    const std::function< void( const ResponseMessage& ) >& callback )
-{
-    RequestMessage msg( incrementID(), std::string{ Identifier::workspace_configuration } );
-    msg.setParams( params );
-    request( msg, callback );
-}
-
-void ServerInterface::workspace_applyEdit(
-    const ApplyWorkspaceEditParams& params,
-    const std::function< void( const ResponseMessage& ) >& callback )
-{
-    RequestMessage msg( incrementID(), std::string{ Identifier::workspace_applyEdit } );
-    msg.setParams( params );
-    request( msg, callback );
-}
-
-void ServerInterface::textDocument_publishDiagnostics(
-    const PublishDiagnosticsParams& params ) noexcept
-{
-    NotificationMessage msg( std::string{ Identifier::textDocument_publishDiagnostics } );
-    msg.setParams( params );
-    notify( msg );
+    return request_id++;
 }
 
 //

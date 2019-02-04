@@ -72,23 +72,6 @@ namespace libstdhl
 
                 virtual ~ServerInterface( void ) = default;
 
-                std::size_t incrementID( void );
-                /**
-                   user interface for message interactions
-                */
-
-                void respond( const ResponseMessage& message );
-
-                void notify( const NotificationMessage& message );
-
-                void request(
-                    const RequestMessage& message,
-                    const std::function< void( const ResponseMessage& ) >& callback );
-
-                void handle( const ResponseMessage& message );
-
-                void flush( const std::function< void( const Message& ) >& callback );
-
                 //
                 //
                 //  Base Protocol
@@ -365,6 +348,21 @@ namespace libstdhl
                 // client to server request
                 virtual FoldingRangeResult textDocument_foldingRange(
                     const FoldingRangeParams& params ) = 0;
+
+                void flush( const std::function< void( const Message& ) >& callback );
+
+                void respond( const ResponseMessage& message );
+
+                void handle( const ResponseMessage& message );
+
+              private:
+                void request(
+                    const RequestMessage& message,
+                    const std::function< void( const ResponseMessage& ) >& callback );
+
+                void notify( const NotificationMessage& message );
+
+                std::size_t incrementID( void );
 
               private:
                 std::size_t request_id = 0;
