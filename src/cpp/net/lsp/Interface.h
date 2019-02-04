@@ -115,6 +115,7 @@ namespace libstdhl
                 virtual void server_cancel( const CancelParams& params ) noexcept final;
                 // client to server notification
                 virtual void client_cancel( const CancelParams& params ) noexcept = 0;
+
                 //
                 //
                 //  Window
@@ -255,56 +256,50 @@ namespace libstdhl
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_completion
                 // client to server request
-                // TODO: FIXME: @ppaulweber: provide interface @Clasc
                 virtual CompletionResult textDocument_completion(
                     const CompletionParams& params ) = 0;
+
                 // https://microsoft.github.io/language-server-protocol/specification#completionItem_resolve
                 // client to server request
-                // TODO: FIXME: @ppaulweber: provide interface @Clasc
                 virtual CompletionResolveResult completionItem_resolve(
                     const CompletionParams& params ) = 0;
+
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_hover
                 // client to server request
                 virtual HoverResult textDocument_hover( const HoverParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_signatureHelp
                 // client to server request
-                // TODO: FIXME: @ppaulweber: provide interface @Clasc
                 virtual SignatureHelpResult textDocument_signatureHelp(
                     const SignatureHelpParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_definition
                 // client to server request
-                // TODO: FIXME: @ppaulweber: provide interface @Clasc
                 virtual DefinitionResult textDocument_definition(
                     const DefinitionParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_typeDefinition
                 // client to server request
-                // TODO: FIXME: @ppaulweber: provide interface @Clasc
                 virtual TypeDefinitionResult textDocument_typeDefinition(
                     const TypeDefinitionParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_implementation
                 // client to server request
-                // TODO: FIXME: @ppaulweber: provide interface @Clasc
                 virtual TextDocumentImplementationResult textDocument_implementation(
                     const TextDocumentImplementationParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_references
                 // client to server request
-                // TODO: FIXME: @ppaulweber: provide interface @Clasc
                 virtual ReferenceResult textDocument_references(
                     const ReferenceParams& params ) = 0;
+
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_documentHighlight
                 // client to server request
-                // TODO: FIXME: @ppaulweber: provide interface @Clasc
                 virtual DocumentHighlightResult textDocument_documentHighlight(
                     const DocumentHighlightParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_documentSymbol
                 // client to server request
-                // TODO: FIXME: @ppaulweber: provide interface @Clasc
                 virtual DocumentSymbolResult textDocument_documentSymbol(
                     const DocumentSymbolParams& params ) = 0;
 
@@ -319,65 +314,55 @@ namespace libstdhl
 
                 // https://microsoft.github.io/language-server-protocol/specification#codeLens_resolve
                 // client to server request
-                // TODO: FIXME: @ppaulweber: provide interface @Clasc
                 virtual CodeLensResolveResult codeLens_resolve(
                     const CodeLensResolveParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_documentLink
                 // client to server request
-                // TODO: FIXME: @ppaulweber: provide interface @Clasc
                 virtual DocumentLinkResult textDocument_documentLink(
                     const DocumentLinkParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#documentLink_resolve
                 // client to server request
-                // TODO: FIXME: @ppaulweber: provide interface @Clasc
                 virtual DocumentLinkResolveResult documentLink_resolve(
                     const DocumentLinkResolveParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_documentColor
                 // client to server request
-                // TODO: FIXME: @ppaulweber: provide interface @Clasc
                 virtual DocumentColorResult textDocument_documentColor(
                     const DocumentColorParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_colorPresentation
                 // client to server request
-                // TODO: FIXME: @ppaulweber: provide interface @Clasc
                 virtual ColorPresentationResult textDocument_colorPresentation(
                     const ColorPresentationParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_formatting
                 // client to server request
-                // TODO: FIXME: @ppaulweber: provide interface @Clasc
                 virtual DocumentFormattingResult textDocument_formatting(
                     const DocumentFormattingParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_rangeFormatting
                 // client to server request
-                // TODO: FIXME: @ppaulweber: provide interface @Clasc
                 virtual DocumentRangeFormattingResult textDocument_rangeFormatting(
                     const DocumentRangeFormattingParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_onTypeFormatting
                 // client to server request
-                // TODO: FIXME: @ppaulweber: provide interface @Clasc
                 virtual DocumentOnTypeFormattingResult textDocument_onTypeFormatting(
                     const DocumentOnTypeFormattingParams& params ) = 0;
+
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_rename
                 // client to server request
-                // TODO: FIXME: @ppaulweber: provide interface @Clasc
                 virtual RenameResult textDocument_rename( const RenameParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_prepareRename
                 // client to server request
-                // TODO: FIXME: @ppaulweber: provide interface @Clasc
                 virtual PrepareRenameResult textDocument_prepareRename(
                     const PrepareRenameParams& params ) = 0;
 
                 // https://microsoft.github.io/language-server-protocol/specification#textDocument_foldingRange
                 // client to server request
-                // TODO: FIXME: @ppaulweber: provide interface @Clasc
                 virtual FoldingRangeResult textDocument_foldingRange(
                     const FoldingRangeParams& params ) = 0;
 
