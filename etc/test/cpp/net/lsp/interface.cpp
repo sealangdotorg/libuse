@@ -42,17 +42,16 @@
 
 #include <libstdhl/Test>
 
-#include <libstdhl/net/lsp/Identifier>
 #include <libstdhl/net/lsp/LSP>
 
 using namespace libstdhl;
 using namespace Network;
 using namespace LSP;
 
-class TestInterface final : public ServerInterface
+class TestServer final : public Server
 {
   public:
-    TestInterface( void )
+    TestServer( void )
     {
     }
 
@@ -79,6 +78,10 @@ class TestInterface final : public ServerInterface
     {
     }
 
+    void client_cancel( const CancelParams& params ) noexcept override
+    {
+    }
+
     //
     //
     // Window
@@ -94,34 +97,10 @@ class TestInterface final : public ServerInterface
     // Client
     //
 
-    void client_cancel( const CancelParams& params ) noexcept override
-    {
-    }
-
     //
     //
     // Workspace
     //
-
-    ExecuteCommandResult workspace_executeCommand( const ExecuteCommandParams& params ) override
-    {
-        return ExecuteCommandResult();
-    }
-
-    void workspace_didChangeWorkspaceFolders(
-        const DidChangeWorkspaceFoldersParams& params ) noexcept override
-    {
-    }
-
-    void workspace_didChangeConfiguration(
-        const DidChangeConfigurationParams& params ) noexcept override
-    {
-    }
-
-    void workspace_didChangeWatchedFiles(
-        const DidChangeWatchedFilesParams& params ) noexcept override
-    {
-    }
 
     WorkspaceSymbolResult workspace_symbol( const WorkspaceSymbolParams& params ) override
     {
@@ -138,31 +117,11 @@ class TestInterface final : public ServerInterface
     // Text Synchronization
     //
 
-    void textDocument_didOpen( const DidOpenTextDocumentParams& params ) noexcept override
-    {
-    }
-
-    void textDocument_didChange( const DidChangeTextDocumentParams& params ) noexcept override
-    {
-    }
-
-    void textDocument_willSave( const WillSaveTextDocumentParams& params ) noexcept override
-    {
-    }
-
     WillSaveWaitUntilResponse textDocument_willSaveWaitUntil(
         const WillSaveTextDocumentParams& params ) override
     {
         auto result = std::vector< TextEdit >();
         return WillSaveWaitUntilResponse( result );
-    }
-
-    void textDocument_didSave( const DidSaveTextDocumentParams& params ) noexcept override
-    {
-    }
-
-    void textDocument_didClose( const DidCloseTextDocumentParams& params ) noexcept override
-    {
     }
 
     //
@@ -175,20 +134,9 @@ class TestInterface final : public ServerInterface
     // Language Features
     //
 
-    CompletionResult textDocument_completion( const CompletionParams& params ) override
-    {
-        auto items = std::vector< CompletionItem >();
-        return CompletionList( true, items );
-    }
-
     CompletionResolveResult completionItem_resolve( const CompletionParams& params ) override
     {
         return CompletionResolveResult( std::string( "label" ) );
-    }
-
-    HoverResult textDocument_hover( const HoverParams& params ) override
-    {
-        return HoverResult();
     }
 
     SignatureHelpResult textDocument_signatureHelp( const SignatureHelpParams& params ) override
@@ -205,53 +153,11 @@ class TestInterface final : public ServerInterface
         return DefinitionResult( Location( uri, range ) );
     }
 
-    CodeActionResult textDocument_codeAction( const CodeActionParams& params ) override
-    {
-        return CodeActionResult();
-    }
-
-    CodeLensResult textDocument_codeLens( const CodeLensParams& params ) override
-    {
-        return CodeLensResult();
-    }
-
-    TypeDefinitionResult textDocument_typeDefinition( const TypeDefinitionParams& params ) override
-    {
-        return TypeDefinitionResult( Data() );
-    }
-
-    TextDocumentImplementationResult textDocument_implementation(
-        const TextDocumentImplementationParams& params ) override
-    {
-        return TextDocumentImplementationResult( Data() );
-    }
-
-    ReferenceResult textDocument_references( const ReferenceParams& params ) override
-    {
-        return ReferenceResult( Data() );
-    }
-
-    DocumentHighlightResult textDocument_documentHighlight(
-        const DocumentHighlightParams& params ) override
-    {
-        return DocumentHighlightResult();
-    }
-
-    DocumentSymbolResult textDocument_documentSymbol( const DocumentSymbolParams& params ) override
-    {
-        return DocumentSymbolResult();
-    }
-
     CodeLensResolveResult codeLens_resolve( const CodeLensResolveParams& params ) override
     {
         auto start = Position( 1, 1 );
         auto end = Position( 1, 10 );
         return CodeLensResolveResult( Range( start, end ) );
-    }
-
-    DocumentLinkResult textDocument_documentLink( const DocumentLinkParams& params ) override
-    {
-        return DocumentLinkResult();
     }
 
     DocumentLinkResolveResult documentLink_resolve(
@@ -260,50 +166,6 @@ class TestInterface final : public ServerInterface
         auto start = Position( 1, 1 );
         auto end = Position( 1, 10 );
         return DocumentLinkResolveResult( Range( start, end ) );
-    }
-
-    DocumentColorResult textDocument_documentColor( const DocumentColorParams& params ) override
-    {
-        return DocumentColorResult( ColorInformations() );
-    }
-
-    ColorPresentationResult textDocument_colorPresentation(
-        const ColorPresentationParams& params ) override
-    {
-        return ColorPresentationResult( ColorPresentations() );
-    }
-
-    DocumentFormattingResult textDocument_formatting(
-        const DocumentFormattingParams& params ) override
-    {
-        return DocumentFormattingResult();
-    }
-
-    DocumentRangeFormattingResult textDocument_rangeFormatting(
-        const DocumentRangeFormattingParams& params ) override
-    {
-        return DocumentRangeFormattingResult();
-    }
-
-    DocumentOnTypeFormattingResult textDocument_onTypeFormatting(
-        const DocumentOnTypeFormattingParams& params ) override
-    {
-        return DocumentOnTypeFormattingResult();
-    }
-
-    RenameResult textDocument_rename( const RenameParams& params ) override
-    {
-        return RenameResult();
-    }
-
-    PrepareRenameResult textDocument_prepareRename( const PrepareRenameParams& params ) override
-    {
-        return PrepareRenameResult();
-    }
-
-    FoldingRangeResult textDocument_foldingRange( const FoldingRangeParams& params ) override
-    {
-        return FoldingRangeResult();
     }
 };
 
@@ -335,7 +197,7 @@ TEST( libstdhl_cpp_network_lsp, parse_packet_request_initialize_monaco )
 
     const auto request = libstdhl::Network::LSP::Packet::parse( req );
 
-    TestInterface server;
+    TestServer server;
 
     request.process( server );
 
@@ -394,7 +256,7 @@ TEST( libstdhl_cpp_network_lsp, parse_packet_request_initialize_vscode )
 
     const auto request = libstdhl::Network::LSP::Packet::parse( req );
 
-    TestInterface server;
+    TestServer server;
 
     request.process( server );
 
@@ -415,7 +277,7 @@ TEST( libstdhl_cpp_network_lsp, parse_packet_request_initialize_vscode )
 
 TEST( libstdhl_cpp_network_lsp, window_showMessage )
 {
-    TestInterface server;
+    TestServer server;
     server.window_showMessage( ShowMessageParams( MessageType::Error, "Error Message" ) );
     server.window_showMessage( ShowMessageParams( MessageType::Info, "Info Message" ) );
     server.window_showMessage( ShowMessageParams( MessageType::Log, "Log Message" ) );
@@ -428,7 +290,7 @@ TEST( libstdhl_cpp_network_lsp, window_showMessage )
 
 TEST( libstdhl_cpp_network_lsp, window_showMessageRequest )
 {
-    TestInterface server;
+    TestServer server;
 
     u1 processed = false;
     const auto params = ShowMessageRequestParams( MessageType::Info, "Info Message" );
@@ -451,7 +313,7 @@ TEST( libstdhl_cpp_network_lsp, window_showMessageRequest )
 
 TEST( libstdhl_cpp_network_lsp, window_logMessage )
 {
-    TestInterface server;
+    TestServer server;
     server.window_logMessage( LogMessageParams( MessageType::Error, "Error Message" ) );
     server.window_logMessage( LogMessageParams( MessageType::Info, "Info Message" ) );
     server.window_logMessage( LogMessageParams( MessageType::Log, "Log Message" ) );
@@ -464,7 +326,7 @@ TEST( libstdhl_cpp_network_lsp, window_logMessage )
 
 TEST( libstdhl_cpp_network_lsp, telemetry_event )
 {
-    TestInterface server;
+    TestServer server;
     server.telemetry_event( TelemetryEventParams( Data::object() ) );
 
     server.flush( [&]( const Message& response ) {
@@ -474,7 +336,7 @@ TEST( libstdhl_cpp_network_lsp, telemetry_event )
 
 TEST( libstdhl_cpp_network_lsp, client_registerCapability )
 {
-    TestInterface server;
+    TestServer server;
     u1 processed = false;
     Registration reg( "1", "test/method" );
     Registration reg2( "2", "test/method" );
@@ -501,7 +363,7 @@ TEST( libstdhl_cpp_network_lsp, client_registerCapability )
 
 TEST( libstdhl_cpp_network_lsp, ID_increment )
 {
-    TestInterface server;
+    TestServer server;
     u1 messageRequestProcessed = false;
     std::string id = "";
 
@@ -535,7 +397,7 @@ TEST( libstdhl_cpp_network_lsp, ID_increment )
 
 TEST( libstdhl_cpp_network_lsp, client_unregisterCapability )
 {
-    TestInterface server;
+    TestServer server;
     u1 processed = false;
     std::string id = "";
     Unregistration reg( "1", "test/method" );
@@ -560,7 +422,7 @@ TEST( libstdhl_cpp_network_lsp, client_unregisterCapability )
 
 TEST( libstdhl_cpp_network_lsp, workspace_workspaceFolders )
 {
-    TestInterface server;
+    TestServer server;
     u1 processed = false;
     std::string id = "";
     server.workspace_workspaceFolders( [&]( const ResponseMessage& response ) {
@@ -582,7 +444,7 @@ TEST( libstdhl_cpp_network_lsp, workspace_workspaceFolders )
 
 TEST( libstdhl_cpp_network_lsp, workspace_didChangeWorkspaceFolders )
 {
-    TestInterface server;
+    TestServer server;
     auto added = std::vector< WorkspaceFolder >();
     added.emplace_back( WorkspaceFolder( "test://uri", "name" ) );
     auto removed = std::vector< WorkspaceFolder >();
@@ -595,7 +457,7 @@ TEST( libstdhl_cpp_network_lsp, workspace_didChangeWorkspaceFolders )
 
 TEST( libstdhl_cpp_network_lsp, workspace_didChangeConfiguration )
 {
-    TestInterface server;
+    TestServer server;
     server.workspace_didChangeConfiguration( DidChangeConfigurationParams( Data::object() ) );
     server.flush( [&]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
@@ -604,7 +466,7 @@ TEST( libstdhl_cpp_network_lsp, workspace_didChangeConfiguration )
 
 TEST( libstdhl_cpp_network_lsp, workspace_configuration )
 {
-    TestInterface server;
+    TestServer server;
     u1 processed = false;
     std::string id = "";
     auto items = std::vector< ConfigurationItem >();
@@ -628,7 +490,7 @@ TEST( libstdhl_cpp_network_lsp, workspace_configuration )
 
 TEST( libstdhl_cpp_network_lsp, workspace_didChangeWatchedFiles )
 {
-    TestInterface server;
+    TestServer server;
     auto events = std::vector< FileEvent >();
     auto empty = std::vector< FileEvent >();
     auto uri = DocumentUri::fromString( "file:///users/me/c-projects/" );
@@ -642,7 +504,7 @@ TEST( libstdhl_cpp_network_lsp, workspace_didChangeWatchedFiles )
 
 TEST( libstdhl_cpp_network_lsp, workspace_symbol )
 {
-    TestInterface server;
+    TestServer server;
     auto result = server.workspace_symbol( WorkspaceSymbolParams( std::string( "query" ) ) );
 
     server.flush( [&]( const Message& response ) {
@@ -652,7 +514,7 @@ TEST( libstdhl_cpp_network_lsp, workspace_symbol )
 
 TEST( libstdhl_cpp_network_lsp, workspace_executeCommand )
 {
-    TestInterface server;
+    TestServer server;
     auto params = ExecuteCommandParams( std::string( "Command" ) );
     params.addArgument( Data::object() );
     EXPECT_TRUE( params.hasArguments() );
@@ -665,7 +527,7 @@ TEST( libstdhl_cpp_network_lsp, workspace_executeCommand )
 
 TEST( libstdhl_cpp_network_lsp, workspace_applyEdit )
 {
-    TestInterface server;
+    TestServer server;
     auto processed = false;
     std::string id = "";
     server.workspace_applyEdit(
@@ -687,7 +549,7 @@ TEST( libstdhl_cpp_network_lsp, workspace_applyEdit )
 
 TEST( libstdhl_cpp_network_lsp, textDocument_willSave )
 {
-    TestInterface server;
+    TestServer server;
     auto document = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     server.textDocument_willSave(
         WillSaveTextDocumentParams( document, TextDocumentSaveReason::AfterDelay ) );
@@ -699,7 +561,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_willSave )
 
 TEST( libstdhl_cpp_network_lsp, textDocument_didSave )
 {
-    TestInterface server;
+    TestServer server;
     auto document = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto params = DidSaveTextDocumentParams( document );
     EXPECT_FALSE( params.hasText() );
@@ -714,7 +576,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_didSave )
 
 TEST( libstdhl_cpp_network_lsp, textDocument_didClose )
 {
-    TestInterface server;
+    TestServer server;
     auto document = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto params = DidCloseTextDocumentParams( document );
     server.textDocument_didClose( params );
@@ -726,7 +588,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_didClose )
 
 TEST( libstdhl_cpp_network_lsp, textDocument_signatureHelp )
 {
-    TestInterface server;
+    TestServer server;
     auto document = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto params = TextDocumentPositionParams( document, Position( 10, 10 ) );
     auto result = server.textDocument_signatureHelp( params );
@@ -737,7 +599,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_signatureHelp )
 
 TEST( libstdhl_cpp_network_lsp, textDocument_definition )
 {
-    TestInterface server;
+    TestServer server;
     auto document = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto params = TextDocumentPositionParams( document, Position( 10, 10 ) );
     auto result = server.textDocument_definition( params );
@@ -748,7 +610,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_definition )
 
 TEST( libstdhl_cpp_network_lsp, textDocument_completion )
 {
-    TestInterface server;
+    TestServer server;
     auto document = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto params = CompletionParams( document, Position( 1, 10 ) );
     auto result = server.textDocument_completion( params );
@@ -759,7 +621,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_completion )
 
 TEST( libstdhl_cpp_network_lsp, completionItem_resolve )
 {
-    TestInterface server;
+    TestServer server;
     auto document = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto params = CompletionParams( document, Position( 1, 10 ) );
     auto result = server.completionItem_resolve( params );
@@ -770,25 +632,27 @@ TEST( libstdhl_cpp_network_lsp, completionItem_resolve )
 
 TEST( libstdhl_cpp_network_lsp, textDocument_typeDefinition )
 {
-    TestInterface server;
+    TestServer server;
     auto result = server.textDocument_typeDefinition( TextDocumentPositionParams(
         TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) ), Position( 1, 1 ) ) );
     server.flush( [&]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
+
 TEST( libstdhl_cpp_network_lsp, textDocument_implementation )
 {
-    TestInterface server;
+    TestServer server;
     auto result = server.textDocument_implementation( TextDocumentPositionParams(
         TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) ), Position( 1, 1 ) ) );
     server.flush( [&]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
+
 TEST( libstdhl_cpp_network_lsp, textDocument_references )
 {
-    TestInterface server;
+    TestServer server;
     auto uri = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto pos = Position( 1, 1 );
     auto result =
@@ -800,7 +664,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_references )
 
 TEST( libstdhl_cpp_network_lsp, textDocument_documentHighlight )
 {
-    TestInterface server;
+    TestServer server;
     auto uri = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto pos = Position( 1, 1 );
     auto result = server.textDocument_documentHighlight( DocumentHighlightParams( uri, pos ) );
@@ -811,7 +675,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_documentHighlight )
 
 TEST( libstdhl_cpp_network_lsp, textDocument_documentSymbol )
 {
-    TestInterface server;
+    TestServer server;
     auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto result = server.textDocument_documentSymbol( DocumentSymbolParams( doc ) );
     server.flush( [&]( const Message& response ) {
@@ -821,7 +685,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_documentSymbol )
 
 TEST( libstdhl_cpp_network_lsp, textDocument_codeAction )
 {
-    TestInterface server;
+    TestServer server;
     auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto range = Range( Position( 10, 10 ), Position( 10, 10 ) );
     auto result = server.textDocument_codeAction(
@@ -833,7 +697,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_codeAction )
 
 TEST( libstdhl_cpp_network_lsp, textDocument_codeLens )
 {
-    TestInterface server;
+    TestServer server;
     auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto result = server.textDocument_codeLens( CodeLensParams( doc ) );
     server.flush( [&]( const Message& response ) {
@@ -843,7 +707,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_codeLens )
 
 TEST( libstdhl_cpp_network_lsp, codeLens_resolve )
 {
-    TestInterface server;
+    TestServer server;
     auto start = Position( 1, 1 );
     auto end = Position( 1, 10 );
     auto result = server.codeLens_resolve( CodeLensResolveParams( Range( start, end ) ) );
@@ -854,7 +718,7 @@ TEST( libstdhl_cpp_network_lsp, codeLens_resolve )
 
 TEST( libstdhl_cpp_network_lsp, textDocument_documentLink )
 {
-    TestInterface server;
+    TestServer server;
     auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto result = server.textDocument_documentLink( DocumentLinkParams( doc ) );
     server.flush( [&]( const Message& response ) {
@@ -864,7 +728,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_documentLink )
 
 TEST( libstdhl_cpp_network_lsp, documentLink_resolve )
 {
-    TestInterface server;
+    TestServer server;
     auto start = Position( 1, 1 );
     auto end = Position( 1, 10 );
     auto result = server.documentLink_resolve( DocumentLinkResolveParams( Range( start, end ) ) );
@@ -875,16 +739,17 @@ TEST( libstdhl_cpp_network_lsp, documentLink_resolve )
 
 TEST( libstdhl_cpp_network_lsp, textDocument_documentColor )
 {
-    TestInterface server;
+    TestServer server;
     auto result = server.textDocument_documentColor(
         DocumentColorParams( TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) ) ) );
     server.flush( [&]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
+
 TEST( libstdhl_cpp_network_lsp, textDocument_colorPresentation )
 {
-    TestInterface server;
+    TestServer server;
     auto start = Position( 1, 1 );
     auto end = Position( 1, 10 );
     auto range = Range( start, end );
@@ -896,9 +761,10 @@ TEST( libstdhl_cpp_network_lsp, textDocument_colorPresentation )
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
+
 TEST( libstdhl_cpp_network_lsp, textDocument_formatting )
 {
-    TestInterface server;
+    TestServer server;
     auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto options = FormattingOptions( 2, true );
     auto result = server.textDocument_formatting( DocumentFormattingParams( doc, options ) );
@@ -909,7 +775,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_formatting )
 
 TEST( libstdhl_cpp_network_lsp, textDocument_rangeFormatting )
 {
-    TestInterface server;
+    TestServer server;
     auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto options = FormattingOptions( 2, true );
     auto start = Position( 1, 1 );
@@ -924,7 +790,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_rangeFormatting )
 
 TEST( libstdhl_cpp_network_lsp, textDocument_onTypeFormatting )
 {
-    TestInterface server;
+    TestServer server;
     auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto options = FormattingOptions( 2, true );
     auto start = Position( 1, 1 );
@@ -937,7 +803,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_onTypeFormatting )
 
 TEST( libstdhl_cpp_network_lsp, textDocument_rename )
 {
-    TestInterface server;
+    TestServer server;
     auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto start = Position( 1, 1 );
     auto result = server.textDocument_rename( RenameParams( doc, start, "newName" ) );
@@ -948,7 +814,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_rename )
 
 TEST( libstdhl_cpp_network_lsp, textDocument_prepareRename )
 {
-    TestInterface server;
+    TestServer server;
     auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto start = Position( 1, 1 );
     auto result = server.textDocument_prepareRename( PrepareRenameParams( doc, start ) );
@@ -956,9 +822,10 @@ TEST( libstdhl_cpp_network_lsp, textDocument_prepareRename )
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
+
 TEST( libstdhl_cpp_network_lsp, textDocument_foldingRange )
 {
-    TestInterface server;
+    TestServer server;
     auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto start = Position( 1, 1 );
     auto result = server.textDocument_foldingRange( FoldingRangeParams( doc ) );
@@ -966,6 +833,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_foldingRange )
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
+
 //
 //  Local variables:
 //  mode: c++

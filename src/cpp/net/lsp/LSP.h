@@ -46,10 +46,12 @@
 
 #include <libstdhl/net/lsp/Content>
 #include <libstdhl/net/lsp/Exception>
+#include <libstdhl/net/lsp/Identifier>
 #include <libstdhl/net/lsp/Interface>
 #include <libstdhl/net/lsp/Message>
 #include <libstdhl/net/lsp/Packet>
 #include <libstdhl/net/lsp/Protocol>
+#include <libstdhl/net/lsp/Server>
 
 /**
    @brief    TBD

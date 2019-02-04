@@ -84,6 +84,7 @@ add_library( ${PROJECT}-cpp OBJECT
   net/lsp/Message.cpp
   net/lsp/Packet.cpp
   net/lsp/Protocol.cpp
+  net/lsp/Server.cpp
   net/tcp/IPv4.cpp
   net/tcp/Socket.cpp
   net/udp/IPv4.cpp
@@ -322,6 +323,7 @@ ecm_generate_headers( ${PROJECT}_NET_LSP_HEADERS_CPP
     Message
     Packet
     Protocol
+    Server
   PREFIX
     ${PROJECT}/net/lsp
   RELATIVE
