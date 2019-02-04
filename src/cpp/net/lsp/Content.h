@@ -1037,6 +1037,7 @@ namespace libstdhl
 
                 void setWorkspaceFolders( const WorkspaceFolders& workspaceFolders );
             };
+
             class ServerCapabilities : public Data
             {
               public:
@@ -1579,15 +1580,10 @@ namespace libstdhl
             enum class FileChangeType
             {
                 Created = 1,
-
                 Changed = 2,
-
                 Deleted = 3
             };
 
-            /**
-              An event describing a file change.
-             */
             class FileEvent : public Data
             {
               public:
@@ -1618,11 +1614,8 @@ namespace libstdhl
 
             enum class WatchKind
             {
-
                 Create = 1,
-
                 Change = 2,
-
                 Delete = 4
             };
 
@@ -1646,10 +1639,8 @@ namespace libstdhl
                 void setKind( const WatchKind kind );
             };
 
-            /**
-              Describe options to be used when registering for text document change events.
-             */
             using FileSystemWatchers = std::vector< FileSystemWatcher >;
+
             class DidChangeWatchedFilesRegistrationOptions : public Data
             {
               public:
@@ -1732,7 +1723,9 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
+
             using SymbolInformations = std::vector< SymbolInformation >;
+
             class WorkspaceSymbolResult : public Data
             {
               public:
@@ -1884,6 +1877,7 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
+
             class DidCloseTextDocumentParams : public Data
             {
               public:
@@ -1920,22 +1914,9 @@ namespace libstdhl
 
             enum class CompletionTriggerKind
             {
-                /**
-                 * Completion was triggered by typing an identifier (24x7 code
-                 * complete), manual invocation (e.g Ctrl+Space) or via API.
-                 */
-                Invoked = 1,
-
-                /**
-                 * Completion was triggered by a trigger character specified by
-                 * the `triggerCharacters` properties of the `CompletionRegistrationOptions`.
-                 */
-                TriggerCharacter = 2,
-
-                /**
-                 * Completion was re-triggered as the current completion list is incomplete.
-                 */
-                TriggerForIncompleteCompletions = 3
+                Invoked = 1,  // via API, Ctrl+Space, or typing identifier (24x7 code complete)
+                TriggerCharacter = 2,  // via triggerCharacters, see CompletionRegistrationOptions
+                TriggerForIncompleteCompletions = 3  // re-triggered due to current incomplete list
             };
 
             class CompletionContext : public Data
@@ -2129,6 +2110,7 @@ namespace libstdhl
             };
 
             using CompletionItems = std::vector< CompletionItem >;
+
             class CompletionList : public Data
             {
               public:
@@ -2180,6 +2162,7 @@ namespace libstdhl
             };
 
             using ParameterInformations = std::vector< ParameterInformation >;
+
             class SignatureInformation : public Data
             {
               public:
@@ -2205,6 +2188,7 @@ namespace libstdhl
             };
 
             using SignatureInformations = std::vector< SignatureInformation >;
+
             class SignatureHelp : public Data
             {
               public:
@@ -2317,6 +2301,7 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
+
             class ReferenceResult : public Data
             {
               public:
@@ -2707,7 +2692,9 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
+
             using DocumentLinks = std::vector< DocumentLink >;
+
             class DocumentLinkResult : public Data
             {
               public:
@@ -2768,6 +2755,7 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
+
             using ColorInformations = std::vector< ColorInformation >;
 
             class DocumentColorResult : public Data
@@ -2882,6 +2870,7 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
+
             class DocumentRangeFormattingParams : public DocumentFormattingParams
             {
               public:
@@ -3012,6 +3001,7 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
+
             enum class FoldingRangeKind
             {
                 Comment,
@@ -3050,7 +3040,9 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
+
             using FoldingRanges = std::vector< FoldingRange >;
+
             class FoldingRangeResult : public Data
             {
               public:
@@ -3081,7 +3073,7 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
-            using ExecuteCommandResult = Data;  // TODO: PPA: FIXME:
+            using ExecuteCommandResult = Data;  // TODO: FIXME: @ppaulweber
         }
     }
 }
