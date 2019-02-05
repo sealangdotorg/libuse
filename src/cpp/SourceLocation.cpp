@@ -42,6 +42,8 @@
 
 #include "SourceLocation.h"
 
+#include <libstdhl/File>
+
 using namespace libstdhl;
 
 static SourcePosition::value_type add_(
@@ -146,6 +148,45 @@ SourceLocation& SourceLocation::operator+=( SourcePosition::difference_type widt
 SourceLocation& SourceLocation::operator-=( SourcePosition::difference_type width )
 {
     return operator+=( -width );
+}
+
+std::string SourceLocation::read( void ) const
+{
+    std::string range = "";
+    const auto beginL = begin.line;
+    const auto endL = end.line;
+
+    if( not fileName() )
+    {
+        throw std::domain_error( "source location has no file name" );
+    }
+
+    for( auto pos = beginL; pos <= endL; pos++ )
+    {
+        auto line = libstdhl::File::readLine( *fileName(), pos );
+
+        if( pos == beginL and pos == endL )
+        {
+            line = line.substr( begin.column - 1, end.column - begin.column );
+        }
+        else if( pos == beginL )
+        {
+            line = line.substr( begin.column - 1 );
+        }
+        else if( pos == endL )
+        {
+            line = line.substr( 0, end.column - 1 );
+        }
+
+        range += line;
+
+        if( pos != endL )
+        {
+            range += "\n";
+        }
+    }
+
+    return range;
 }
 
 //

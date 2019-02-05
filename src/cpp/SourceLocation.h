@@ -162,6 +162,8 @@ namespace libstdhl
             }
         }
 
+        std::string read( void ) const;
+
       public:
         SourcePosition begin;
         SourcePosition end;

@@ -51,10 +51,12 @@ TEST( libstdhl_cpp_SourceLocation, empty )
     EXPECT_EQ( location.begin.line, 1 );
     EXPECT_EQ( location.begin.column, 1 );
     EXPECT_EQ( location.begin.fileName, nullptr );
+    EXPECT_EQ( location.begin.fileName, location.fileName() );
 
     EXPECT_EQ( location.end.line, location.begin.line );
     EXPECT_EQ( location.end.column, location.begin.column );
     EXPECT_EQ( location.end.fileName, location.begin.fileName );
+    EXPECT_EQ( location.end.fileName, location.fileName() );
 
     EXPECT_FALSE( location != SourceLocation() );
 
@@ -65,6 +67,8 @@ TEST( libstdhl_cpp_SourceLocation, empty )
     SourceLocation tmp;
     location += tmp;
     EXPECT_TRUE( location == SourceLocation() + tmp );
+
+    EXPECT_THROW( location.read(), std::domain_error );
 }
 
 TEST( libstdhl_cpp_SourceLocation, position )
@@ -75,33 +79,70 @@ TEST( libstdhl_cpp_SourceLocation, position )
     EXPECT_EQ( location.begin.line, 12 );
     EXPECT_EQ( location.begin.column, 34 );
     EXPECT_NE( location.begin.fileName, nullptr );
+    EXPECT_EQ( location.begin.fileName, location.fileName() );
     EXPECT_STREQ( location.begin.fileName->c_str(), "file.ext" );
 
     EXPECT_EQ( location.end.line, location.begin.line );
     EXPECT_EQ( location.end.column, location.begin.column );
     EXPECT_EQ( location.end.fileName, location.begin.fileName );
+    EXPECT_EQ( location.end.fileName, location.fileName() );
     EXPECT_STREQ( location.end.fileName->c_str(), location.begin.fileName->c_str() );
 
     EXPECT_TRUE( location != SourceLocation() );
+
+    const auto filename = std::make_shared< std::string >( TEST_NAME + ".txt" );
+    auto file = File::open( *filename, std::fstream::out );
+    file << "\n";
+    file << "0123456789\n";
+    file << "\n";
+    file.close();
+
+    const auto begin = SourcePosition( filename, 2, 4 );
+    const auto end = SourcePosition( filename, 2, 7 );
+    location = SourceLocation( begin, end );
+
+    const auto text = location.read();
+    EXPECT_STREQ( text.c_str(), "345" );
+
+    File::remove( *filename );
 }
 
 TEST( libstdhl_cpp_SourceLocation, range )
 {
     SourceLocation location(
         SourcePosition( std::make_shared< std::string >( "file.ext" ), 12, 34 ),
-        SourcePosition( std::make_shared< std::string >( "file.ext" ), 56, 78 ) );
+        SourcePosition( std::make_shared< std::string >( "ext.file" ), 56, 78 ) );
 
     EXPECT_EQ( location.begin.line, 12 );
     EXPECT_EQ( location.begin.column, 34 );
     EXPECT_NE( location.begin.fileName, nullptr );
+    EXPECT_EQ( location.begin.fileName, location.fileName() );
     EXPECT_STREQ( location.begin.fileName->c_str(), "file.ext" );
 
     EXPECT_EQ( location.end.line, 56 );
     EXPECT_EQ( location.end.column, 78 );
     EXPECT_NE( location.end.fileName, nullptr );
-    EXPECT_STREQ( location.end.fileName->c_str(), "file.ext" );
+    EXPECT_NE( location.end.fileName, location.fileName() );
+    EXPECT_STREQ( location.end.fileName->c_str(), "ext.file" );
 
     EXPECT_TRUE( location != SourceLocation() );
+
+    const auto filename = std::make_shared< std::string >( TEST_NAME + ".txt" );
+    auto file = File::open( *filename, std::fstream::out );
+    file << "\n";
+    file << "0123456789\n";
+    file << "abcdefghij\n";
+    file << "\n";
+    file.close();
+
+    const auto begin = SourcePosition( filename, 2, 4 );
+    const auto end = SourcePosition( filename, 3, 6 );
+    location = SourceLocation( begin, end );
+
+    const auto text = location.read();
+    EXPECT_STREQ( text.c_str(), "3456789\nabcde" );
+
+    File::remove( *filename );
 }
 
 //
