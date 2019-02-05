@@ -66,6 +66,7 @@ add_library( ${PROJECT}-test OBJECT
   cpp/memory.cpp
   cpp/net/lsp.cpp
   cpp/random.cpp
+  cpp/sourcelocation.cpp
   cpp/std/rfc3986.cpp
   cpp/string.cpp
   cpp/type.cpp

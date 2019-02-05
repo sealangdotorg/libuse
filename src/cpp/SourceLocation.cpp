@@ -40,45 +40,113 @@
 //  statement from your version.
 //
 
-#pragma once
-#ifndef _LIBSTDHL_H_
-#define _LIBSTDHL_H_
+#include "SourceLocation.h"
 
-/**
-   @brief    TODO
+using namespace libstdhl;
 
-   TODO
-*/
+static SourcePosition::value_type add_(
+    SourcePosition::value_type lhs,
+    SourcePosition::difference_type rhs,
+    SourcePosition::difference_type min )
+{
+    return ( 0 < rhs || -static_cast< SourcePosition::value_type >( rhs ) < lhs ? rhs + lhs : min );
+}
 
-#include <libstdhl/Allocator>
-#include <libstdhl/Ansi>
-#include <libstdhl/Args>
-#include <libstdhl/Binding>
-#include <libstdhl/Enum>
-#include <libstdhl/Environment>
-#include <libstdhl/Exception>
-#include <libstdhl/File>
-#include <libstdhl/Hash>
-#include <libstdhl/Json>
-#include <libstdhl/Labeling>
-#include <libstdhl/List>
-#include <libstdhl/Log>
-#include <libstdhl/Memory>
-#include <libstdhl/Network>
-#include <libstdhl/Random>
-#include <libstdhl/SourceLocation>
-#include <libstdhl/Standard>
-#include <libstdhl/String>
-#include <libstdhl/Type>
-#include <libstdhl/Variadic>
-#include <libstdhl/Version>
-#include <libstdhl/Xml>
+//
+//
+// SourcePosition
+//
 
-namespace libstdhl
+SourcePosition::SourcePosition( void )
+: SourcePosition( nullptr, 1u, 1u )
 {
 }
 
-#endif  // _LIBSTDHL_H_
+SourcePosition::SourcePosition(
+    const std::shared_ptr< std::string >& fileName, value_type line, value_type column )
+: fileName( fileName )
+, line( line )
+, column( column )
+{
+}
+
+void SourcePosition::lines( difference_type count )
+{
+    if( count != 0 )
+    {
+        column = 1u;
+        line = add_( line, count, 1 );
+    }
+}
+
+void SourcePosition::columns( difference_type count )
+{
+    column = add_( column, count, 1 );
+}
+
+SourcePosition& SourcePosition::operator+=( difference_type width )
+{
+    columns( width );
+    return *this;
+}
+
+SourcePosition& SourcePosition::operator-=( difference_type width )
+{
+    return operator+=( -width );
+}
+
+//
+//
+// SourceLocation
+//
+
+SourceLocation::SourceLocation( const SourcePosition& position )
+: SourceLocation( position, position )
+{
+}
+
+SourceLocation::SourceLocation( const SourcePosition& begin, const SourcePosition& end )
+: begin( begin )
+, end( end )
+{
+}
+
+void SourceLocation::step( void )
+{
+    begin = end;
+}
+
+void SourceLocation::columns( SourcePosition::difference_type count )
+{
+    end += count;
+}
+
+void SourceLocation::lines( SourcePosition::difference_type count )
+{
+    end.lines( count );
+}
+
+const std::shared_ptr< std::string >& SourceLocation::fileName( void ) const
+{
+    return begin.fileName;
+}
+
+SourceLocation& SourceLocation::operator+=( const SourceLocation& rhs )
+{
+    end = rhs.end;
+    return *this;
+}
+
+SourceLocation& SourceLocation::operator+=( SourcePosition::difference_type width )
+{
+    columns( width );
+    return *this;
+}
+
+SourceLocation& SourceLocation::operator-=( SourcePosition::difference_type width )
+{
+    return operator+=( -width );
+}
 
 //
 //  Local variables:

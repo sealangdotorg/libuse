@@ -40,45 +40,69 @@
 //  statement from your version.
 //
 
-#pragma once
-#ifndef _LIBSTDHL_H_
-#define _LIBSTDHL_H_
+#include <libstdhl/Test>
 
-/**
-   @brief    TODO
+using namespace libstdhl;
 
-   TODO
-*/
-
-#include <libstdhl/Allocator>
-#include <libstdhl/Ansi>
-#include <libstdhl/Args>
-#include <libstdhl/Binding>
-#include <libstdhl/Enum>
-#include <libstdhl/Environment>
-#include <libstdhl/Exception>
-#include <libstdhl/File>
-#include <libstdhl/Hash>
-#include <libstdhl/Json>
-#include <libstdhl/Labeling>
-#include <libstdhl/List>
-#include <libstdhl/Log>
-#include <libstdhl/Memory>
-#include <libstdhl/Network>
-#include <libstdhl/Random>
-#include <libstdhl/SourceLocation>
-#include <libstdhl/Standard>
-#include <libstdhl/String>
-#include <libstdhl/Type>
-#include <libstdhl/Variadic>
-#include <libstdhl/Version>
-#include <libstdhl/Xml>
-
-namespace libstdhl
+TEST( libstdhl_cpp_SourceLocation, empty )
 {
+    SourceLocation location;
+
+    EXPECT_EQ( location.begin.line, 1 );
+    EXPECT_EQ( location.begin.column, 1 );
+    EXPECT_EQ( location.begin.fileName, nullptr );
+
+    EXPECT_EQ( location.end.line, location.begin.line );
+    EXPECT_EQ( location.end.column, location.begin.column );
+    EXPECT_EQ( location.end.fileName, location.begin.fileName );
+
+    EXPECT_FALSE( location != SourceLocation() );
+
+    location = location + 10;
+    location = location - 10;
+    EXPECT_TRUE( location == SourceLocation() );
+
+    SourceLocation tmp;
+    location += tmp;
+    EXPECT_TRUE( location == SourceLocation() + tmp );
 }
 
-#endif  // _LIBSTDHL_H_
+TEST( libstdhl_cpp_SourceLocation, position )
+{
+    SourceLocation location(
+        SourcePosition( std::make_shared< std::string >( "file.ext" ), 12, 34 ) );
+
+    EXPECT_EQ( location.begin.line, 12 );
+    EXPECT_EQ( location.begin.column, 34 );
+    EXPECT_NE( location.begin.fileName, nullptr );
+    EXPECT_STREQ( location.begin.fileName->c_str(), "file.ext" );
+
+    EXPECT_EQ( location.end.line, location.begin.line );
+    EXPECT_EQ( location.end.column, location.begin.column );
+    EXPECT_EQ( location.end.fileName, location.begin.fileName );
+    EXPECT_STREQ( location.end.fileName->c_str(), location.begin.fileName->c_str() );
+
+    EXPECT_TRUE( location != SourceLocation() );
+}
+
+TEST( libstdhl_cpp_SourceLocation, range )
+{
+    SourceLocation location(
+        SourcePosition( std::make_shared< std::string >( "file.ext" ), 12, 34 ),
+        SourcePosition( std::make_shared< std::string >( "file.ext" ), 56, 78 ) );
+
+    EXPECT_EQ( location.begin.line, 12 );
+    EXPECT_EQ( location.begin.column, 34 );
+    EXPECT_NE( location.begin.fileName, nullptr );
+    EXPECT_STREQ( location.begin.fileName->c_str(), "file.ext" );
+
+    EXPECT_EQ( location.end.line, 56 );
+    EXPECT_EQ( location.end.column, 78 );
+    EXPECT_NE( location.end.fileName, nullptr );
+    EXPECT_STREQ( location.end.fileName->c_str(), "file.ext" );
+
+    EXPECT_TRUE( location != SourceLocation() );
+}
 
 //
 //  Local variables:

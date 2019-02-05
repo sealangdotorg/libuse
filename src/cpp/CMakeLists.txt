@@ -49,6 +49,7 @@ add_library( ${PROJECT}-cpp OBJECT
   Args.cpp
   Environment.cpp
   Exception.cpp
+  SourceLocation.cpp
   data/file/TextDocument.cpp
   data/log/Category.cpp
   data/log/Chronograph.cpp
@@ -133,6 +134,7 @@ ecm_generate_headers( ${PROJECT}_HEADERS_CPP
     Network
     Optional
     Random
+    SourceLocation
     Standard
     String
     Test
