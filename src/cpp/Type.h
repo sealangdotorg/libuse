@@ -45,6 +45,7 @@
 #define _LIBSTDHL_CPP_TYPE_H_
 
 #include <cstdint>
+#include <sstream>
 #include <string>
 
 /**

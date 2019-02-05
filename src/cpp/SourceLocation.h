@@ -46,7 +46,6 @@
 #include <libstdhl/Type>
 
 #include <memory>
-#include <sstream>
 
 namespace libstdhl
 {
