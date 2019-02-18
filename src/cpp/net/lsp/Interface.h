@@ -372,10 +372,9 @@ namespace libstdhl
 
                 void notify( const NotificationMessage& message );
 
-                std::size_t incrementID( void );
+                std::string nextId( void );
 
               private:
-                std::size_t request_id = 0;
                 std::vector< Message > m_responseBuffer[ 2 ];
                 std::size_t m_responseBufferSlot;
                 std::mutex m_responseBufferLock;

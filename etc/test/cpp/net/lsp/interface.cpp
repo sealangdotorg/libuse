@@ -361,7 +361,7 @@ TEST( libstdhl_cpp_network_lsp, client_registerCapability )
     EXPECT_TRUE( processed );
 }
 
-TEST( libstdhl_cpp_network_lsp, ID_increment )
+TEST( libstdhl_cpp_network_lsp, Request_callback )
 {
     TestServer server;
     u1 messageRequestProcessed = false;
@@ -372,27 +372,17 @@ TEST( libstdhl_cpp_network_lsp, ID_increment )
     server.window_showMessageRequest( params, [&]( const ResponseMessage& response ) {
         messageRequestProcessed = true;
         ShowMessageRequestResult result( response.result() );
+        EXPECT_STREQ( id.c_str(), response.id().c_str() );
     } );
-    ResponseMessage response( 0 );
-    response.setResult( MessageActionItem( std::string{ "title" } ) );
-    EXPECT_FALSE( messageRequestProcessed );
-    response.process( server );
-    EXPECT_TRUE( messageRequestProcessed );
-    // make second request
-    u1 registerRequestProcessed = false;
-    server.client_registerCapability(
-        RegistrationParams( Registrations() ),
-        [&]( const ResponseMessage& ) { registerRequestProcessed = true; } );
     server.flush( [&]( const Message& message ) {
         const auto packet = libstdhl::Network::LSP::Packet( message );
         id = static_cast< const RequestMessage& >( message ).id();
     } );
-    ResponseMessage registerResponse( id );
-    registerResponse.setResult( Data() );
-    EXPECT_FALSE( registerRequestProcessed );
-    registerResponse.process( server );
-    EXPECT_TRUE( registerRequestProcessed );
-    EXPECT_STREQ( id.c_str(), "1" );
+    ResponseMessage response( id );
+    response.setResult( MessageActionItem( std::string{ "title" } ) );
+    EXPECT_FALSE( messageRequestProcessed );
+    response.process( server );
+    EXPECT_TRUE( messageRequestProcessed );
 }
 
 TEST( libstdhl_cpp_network_lsp, client_unregisterCapability )
@@ -407,6 +397,7 @@ TEST( libstdhl_cpp_network_lsp, client_unregisterCapability )
         UnregistrationParams( unregistrations ), [&]( const ResponseMessage& response ) {
             processed = true;
             EXPECT_EQ( response.result(), Data() );
+            EXPECT_STREQ( id.c_str(), response.id().c_str() );
         } );
     server.flush( [&]( const Message& message ) {
         const auto packet = libstdhl::Network::LSP::Packet( message );
@@ -417,7 +408,6 @@ TEST( libstdhl_cpp_network_lsp, client_unregisterCapability )
     EXPECT_FALSE( processed );
     response.process( server );
     EXPECT_TRUE( processed );
-    EXPECT_STREQ( id.c_str(), "0" );
 }
 
 TEST( libstdhl_cpp_network_lsp, workspace_workspaceFolders )
@@ -428,6 +418,7 @@ TEST( libstdhl_cpp_network_lsp, workspace_workspaceFolders )
     server.workspace_workspaceFolders( [&]( const ResponseMessage& response ) {
         WorkspaceFoldersResult result( response.result() );
         EXPECT_EQ( result, WorkspaceFoldersResult() );
+        EXPECT_STREQ( id.c_str(), response.id().c_str() );
         processed = true;
     } );
     server.flush( [&]( const Message& message ) {
@@ -439,7 +430,6 @@ TEST( libstdhl_cpp_network_lsp, workspace_workspaceFolders )
     EXPECT_FALSE( processed );
     response.process( server );
     EXPECT_TRUE( processed );
-    EXPECT_STREQ( id.c_str(), "0" );
 }
 
 TEST( libstdhl_cpp_network_lsp, workspace_didChangeWorkspaceFolders )
