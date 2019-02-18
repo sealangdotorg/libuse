@@ -281,7 +281,14 @@ void RequestMessage::process( ServerInterface& interface ) const
                 response.setResult( nullptr );
                 break;
             }
-            // workspace
+                // workspace
+            case String::value( Identifier::workspace_symbol ):
+            {
+                const auto& parameters = WorkspaceSymbolParams( params() );
+                auto result = interface.workspace_symbol( parameters );
+                response.setResult( result );
+                break;
+            }
             case String::value( Identifier::workspace_executeCommand ):
             {
                 const auto& parameters = ExecuteCommandParams( params() );
@@ -289,11 +296,83 @@ void RequestMessage::process( ServerInterface& interface ) const
                 response.setResult( result );
                 break;
             }
-            // document
+                // document
+            case String::value( Identifier::textDocument_willSaveWaitUntil ):
+            {
+                const auto& parameters = WillSaveTextDocumentParams( params() );
+                const auto& result = interface.textDocument_willSaveWaitUntil( parameters );
+                response.setResult( result );
+                break;
+            }
+
+            // language features
+            case String::value( Identifier::textDocument_completion ):
+            {
+                const auto& parameters = CompletionParams( params() );
+                const auto& result = interface.textDocument_completion( parameters );
+                response.setResult( result );
+                break;
+            }
+            case String::value( Identifier::completionItem_resolve ):
+            {
+                const auto& parameters = CompletionParams( params() );
+                const auto& result = interface.completionItem_resolve( parameters );
+                response.setResult( result );
+                break;
+            }
             case String::value( Identifier::textDocument_hover ):
             {
                 const auto& parameters = HoverParams( params() );
                 const auto& result = interface.textDocument_hover( parameters );
+                response.setResult( result );
+                break;
+            }
+            case String::value( Identifier::textDocument_signatureHelp ):
+            {
+                const auto& parameters = SignatureHelpParams( params() );
+                const auto& result = interface.textDocument_signatureHelp( parameters );
+                response.setResult( result );
+                break;
+            }
+            case String::value( Identifier::textDocument_definition ):
+            {
+                const auto& parameters = DefinitionParams( params() );
+                const auto& result = interface.textDocument_definition( parameters );
+                response.setResult( result );
+                break;
+            }
+            case String::value( Identifier::textDocument_typeDefinition ):
+            {
+                const auto& parameters = TypeDefinitionParams( params() );
+                const auto& result = interface.textDocument_typeDefinition( parameters );
+                response.setResult( result );
+                break;
+            }
+            case String::value( Identifier::textDocument_implementation ):
+            {
+                const auto& parameters = TextDocumentImplementationParams( params() );
+                const auto& result = interface.textDocument_implementation( parameters );
+                response.setResult( result );
+                break;
+            }
+            case String::value( Identifier::textDocument_references ):
+            {
+                const auto& parameters = ReferenceParams( params() );
+                const auto& result = interface.textDocument_references( parameters );
+                response.setResult( result );
+                break;
+            }
+            case String::value( Identifier::textDocument_documentHighlight ):
+            {
+                const auto& parameters = DocumentHighlightParams( params() );
+                const auto& result = interface.textDocument_documentHighlight( parameters );
+                response.setResult( result );
+                break;
+            }
+            case String::value( Identifier::textDocument_documentSymbol ):
+            {
+                const auto& parameters = DocumentSymbolParams( params() );
+                const auto& result = interface.textDocument_documentSymbol( parameters );
                 response.setResult( result );
                 break;
             }
@@ -308,6 +387,83 @@ void RequestMessage::process( ServerInterface& interface ) const
             {
                 const auto& parameters = CodeLensParams( params() );
                 const auto& result = interface.textDocument_codeLens( parameters );
+                response.setResult( result );
+                break;
+            }
+            case String::value( Identifier::codeLens_resolve ):
+            {
+                const auto& parameters = CodeLensResolveParams( params() );
+                const auto& result = interface.codeLens_resolve( parameters );
+                response.setResult( result );
+                break;
+            }
+            case String::value( Identifier::textDocument_documentLink ):
+            {
+                const auto& parameters = DocumentLinkParams( params() );
+                const auto& result = interface.textDocument_documentLink( parameters );
+                response.setResult( result );
+                break;
+            }
+            case String::value( Identifier::documentLink_resolve ):
+            {
+                const auto& parameters = DocumentLinkResolveParams( params() );
+                const auto& result = interface.documentLink_resolve( parameters );
+                response.setResult( result );
+                break;
+            }
+            case String::value( Identifier::textDocument_documentColor ):
+            {
+                const auto& parameters = DocumentColorParams( params() );
+                const auto& result = interface.textDocument_documentColor( parameters );
+                response.setResult( result );
+                break;
+            }
+            case String::value( Identifier::textDocument_colorPresentation ):
+            {
+                const auto& parameters = ColorPresentationParams( params() );
+                const auto& result = interface.textDocument_colorPresentation( parameters );
+                response.setResult( result );
+                break;
+            }
+            case String::value( Identifier::textDocument_formatting ):
+            {
+                const auto& parameters = DocumentFormattingParams( params() );
+                const auto& result = interface.textDocument_formatting( parameters );
+                response.setResult( result );
+                break;
+            }
+            case String::value( Identifier::textDocument_rangeFormatting ):
+            {
+                const auto& parameters = DocumentRangeFormattingParams( params() );
+                const auto& result = interface.textDocument_rangeFormatting( parameters );
+                response.setResult( result );
+                break;
+            }
+            case String::value( Identifier::textDocument_onTypeFormatting ):
+            {
+                const auto& parameters = DocumentOnTypeFormattingParams( params() );
+                const auto& result = interface.textDocument_onTypeFormatting( parameters );
+                response.setResult( result );
+                break;
+            }
+            case String::value( Identifier::textDocument_rename ):
+            {
+                const auto& parameters = RenameParams( params() );
+                const auto& result = interface.textDocument_rename( parameters );
+                response.setResult( result );
+                break;
+            }
+            case String::value( Identifier::textDocument_prepareRename ):
+            {
+                const auto& parameters = PrepareRenameParams( params() );
+                const auto& result = interface.textDocument_prepareRename( parameters );
+                response.setResult( result );
+                break;
+            }
+            case String::value( Identifier::textDocument_foldingRange ):
+            {
+                const auto& parameters = FoldingRangeParams( params() );
+                const auto& result = interface.textDocument_foldingRange( parameters );
                 response.setResult( result );
                 break;
             }
@@ -396,9 +552,34 @@ void NotificationMessage::process( ServerInterface& interface ) const
                 interface.initialized();
                 break;
             }
+            case String::value( Identifier::cancelRequest ):
+            {
+                const auto& parameters = CancelParams( params() );
+                interface.client_cancel( parameters );
+                break;
+            }
             case String::value( Identifier::exit ):
             {
                 interface.exit();
+                break;
+            }
+            // workspace
+            case String::value( Identifier::workspace_didChangeWorkspaceFolders ):
+            {
+                const auto& parameters = DidChangeWorkspaceFoldersParams( params() );
+                interface.workspace_didChangeWorkspaceFolders( parameters );
+                break;
+            }
+            case String::value( Identifier::workspace_didChangeConfiguration ):
+            {
+                const auto& parameters = DidChangeConfigurationParams( params() );
+                interface.workspace_didChangeConfiguration( parameters );
+                break;
+            }
+            case String::value( Identifier::workspace_didChangeWatchedFiles ):
+            {
+                const auto& parameters = DidChangeWatchedFilesParams( params() );
+                interface.workspace_didChangeWatchedFiles( parameters );
                 break;
             }
             // document
@@ -412,6 +593,24 @@ void NotificationMessage::process( ServerInterface& interface ) const
             {
                 const auto& parameters = DidChangeTextDocumentParams( params() );
                 interface.textDocument_didChange( parameters );
+                break;
+            }
+            case String::value( Identifier::textDocument_willSave ):
+            {
+                const auto& parameters = WillSaveTextDocumentParams( params() );
+                interface.textDocument_willSave( parameters );
+                break;
+            }
+            case String::value( Identifier::textDocument_didSave ):
+            {
+                const auto& parameters = DidSaveTextDocumentParams( params() );
+                interface.textDocument_didSave( parameters );
+                break;
+            }
+            case String::value( Identifier::textDocument_didClose ):
+            {
+                const auto& parameters = DidCloseTextDocumentParams( params() );
+                interface.textDocument_didClose( parameters );
                 break;
             }
             default:

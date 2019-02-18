@@ -115,6 +115,8 @@ namespace libstdhl
 
                 constexpr const char* codeLens = "codeLens";
 
+                constexpr const char* codeLens_resolve = "codeLens/resolve";
+
                 constexpr const char* codeLensProvider = "codeLensProvider";
 
                 constexpr const char* color = "color";
@@ -132,6 +134,8 @@ namespace libstdhl
                 constexpr const char* completion = "completion";
 
                 constexpr const char* completionItem = "completionItem";
+
+                constexpr const char* completionItem_resolve = "completionItem/resolve";
 
                 constexpr const char* completionProvider = "completionProvider";
 
@@ -182,6 +186,8 @@ namespace libstdhl
                 constexpr const char* documentLink = "documentLink";
 
                 constexpr const char* documentLinkProvider = "documentLinkProvider";
+
+                constexpr const char* documentLink_resolve = "documentLink/resolve";
 
                 constexpr const char* documentOnTypeFormattingProvider =
                     "documentOnTypeFormattingProvider";
@@ -470,14 +476,60 @@ namespace libstdhl
 
                 constexpr const char* textDocument_codeLens = "textDocument/codeLens";
 
+                constexpr const char* textDocument_colorPresentation =
+                    "textDocument/colorPresentation";
+
+                constexpr const char* textDocument_completion = "textDocument/completion";
+
+                constexpr const char* textDocument_definition = "textDocument/definition";
+
                 constexpr const char* textDocument_didChange = "textDocument/didChange";
+
+                constexpr const char* textDocument_didClose = "textDocument/didClose";
 
                 constexpr const char* textDocument_didOpen = "textDocument/didOpen";
 
+                constexpr const char* textDocument_didSave = "textDocument/didSave";
+
+                constexpr const char* textDocument_documentColor = "textDocument/documentColor";
+
+                constexpr const char* textDocument_documentHighlight =
+                    "textDocument/documentHighlight";
+
+                constexpr const char* textDocument_documentLink = "textDocument/documentLink";
+
+                constexpr const char* textDocument_documentSymbol = "textDocument/documentSymbol";
+
+                constexpr const char* textDocument_foldingRange = "textDocument/foldingRange";
+
+                constexpr const char* textDocument_formatting = "textDocument/formatting";
+
                 constexpr const char* textDocument_hover = "textDocument/hover";
+
+                constexpr const char* textDocument_implementation = "textDocument/implementation";
+
+                constexpr const char* textDocument_onTypeFormatting =
+                    "textDocument/onTypeFormatting";
+
+                constexpr const char* textDocument_prepareRename = "textDocument/prepareRename";
 
                 constexpr const char* textDocument_publishDiagnostics =
                     "textDocument/publishDiagnostics";
+
+                constexpr const char* textDocument_rangeFormatting = "textDocument/rangeFormatting";
+
+                constexpr const char* textDocument_references = "textDocument/references";
+
+                constexpr const char* textDocument_rename = "textDocument/rename";
+
+                constexpr const char* textDocument_signatureHelp = "textDocument/signatureHelp";
+
+                constexpr const char* textDocument_typeDefinition = "textDocument/typeDefinition";
+
+                constexpr const char* textDocument_willSave = "textDocument/willSave";
+
+                constexpr const char* textDocument_willSaveWaitUntil =
+                    "textDocument/willSaveWaitUntil";
 
                 constexpr const char* textEdit = "textEdit";
 
@@ -527,6 +579,19 @@ namespace libstdhl
 
                 constexpr const char* workspace_configuration = "workspace/configuration";
 
+                constexpr const char* workspace_didChangeWorkspaceFolders =
+                    "workspace/didChangeWorkspaceFolders";
+
+                constexpr const char* workspace_didChangeConfiguration =
+                    "workspace/didChangeConfiguration";
+
+                constexpr const char* workspace_didChangeWatchedFiles =
+                    "workspace/didChangeWatchedFiles";
+
+                constexpr const char* workspace_executeCommand = "workspace/executeCommand";
+
+                constexpr const char* workspace_symbol = "workspace/symbol";
+
                 constexpr const char* workspace_workspaceFolders = "workspace/workspaceFolders";
 
                 constexpr const char* workspaceEdit = "workspaceEdit";
@@ -534,8 +599,6 @@ namespace libstdhl
                 constexpr const char* workspaceFolders = "workspaceFolders";
 
                 constexpr const char* workspaceSymbolProvider = "workspaceSymbolProvider";
-
-                constexpr const char* workspace_executeCommand = "workspace/executeCommand";
 
                 // X
 
