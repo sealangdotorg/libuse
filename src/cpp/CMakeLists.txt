@@ -49,6 +49,7 @@ add_library( ${PROJECT}-cpp OBJECT
   Args.cpp
   Environment.cpp
   Exception.cpp
+  File.cpp
   SourceLocation.cpp
   data/file/TextDocument.cpp
   data/log/Category.cpp
