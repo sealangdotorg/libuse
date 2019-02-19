@@ -45,14 +45,14 @@
 using namespace libstdhl;
 using namespace File;
 
-TextDocument::TextDocument( const Path& path, const std::string& extension )
+TextDocument::TextDocument( const TextDocument::Path& path, const std::string& extension )
 : m_path( path )
 , m_extension( extension )
 , m_data()
 {
 }
 
-const Path& TextDocument::path( void ) const
+const TextDocument::Path& TextDocument::path( void ) const
 {
     return m_path;
 }
