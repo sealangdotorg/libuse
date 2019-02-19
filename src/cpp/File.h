@@ -51,6 +51,9 @@
 #include <functional>
 #include <limits>
 
+#include <sys/stat.h>
+#include <unistd.h>
+
 /**
    @brief    TODO
 
@@ -164,6 +167,30 @@ namespace libstdhl
             std::getline( file, line );
 
             return line;
+        }
+
+        namespace Path
+        {
+            inline void create( const std::string& path )
+            {
+                if( mkdir( path.c_str(), 0755 ) != 0 )
+                {
+                    throw std::domain_error( "unable to create path '" + path + "'" );
+                }
+            }
+
+            inline u1 exists( const std::string& path )
+            {
+                return File::exists( path );
+            }
+
+            inline void remove( const std::string& path )
+            {
+                if( rmdir( path.c_str() ) != 0 )
+                {
+                    throw std::domain_error( "unable to remove path '" + path + "'" );
+                }
+            }
         }
     }
 }
