@@ -272,8 +272,6 @@ void ServerInterface::request(
 {
     std::lock_guard< std::mutex > guard( m_requestBufferLock );
     m_requestBuffer[ m_requestBufferSlot ].emplace_back( message );
-
-    // TODO: @ppaulweber: check for unique value (msg id) condition @Clasc
     m_requestCallback[ message.id() ] = callback;
 }
 
