@@ -165,7 +165,11 @@ void File::Path::create( const std::string& path )
 
 u1 File::Path::exists( const std::string& path )
 {
+#if defined( __WIN32__ ) or defined( __WIN32 ) or defined( _WIN32 )
+    return _access( path.c_str(), 0 ) == 0;
+#else
     return File::exists( path );
+#endif
 }
 
 void File::Path::remove( const std::string& path )
