@@ -81,7 +81,7 @@ darwin_task:
       B: "debug"
       C: "gcc"
   setup_script:
-    - brew unlink gcc && brew link gcc
+    - ln -sf /usr/local/bin/gcc /usr/bin/gcc
   fetch_script:
     - make ci-fetch
   deps_script:
