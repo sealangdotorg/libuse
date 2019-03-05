@@ -81,7 +81,7 @@ darwin_task:
       B: "debug"
       C: "gcc"
   setup_script:
-    - ln -sf /usr/local/bin/gcc /usr/bin/gcc
+    - export PATH=/usr/local/bin:$PATH
   fetch_script:
     - make ci-fetch
   deps_script:
