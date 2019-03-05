@@ -46,6 +46,14 @@
 
 #include <cassert>
 #include <regex>
+#if __cplusplus >= 201103L and ( not defined( __GLIBCXX__ ) or ( __cplusplus >= 201402L ) or \
+                                 ( defined( _GLIBCXX_REGEX_DFS_QUANTIFIERS_LIMIT ) or        \
+                                   defined( _GLIBCXX_REGEX_STATE_LIMIT ) or                  \
+                                   ( defined( _GLIBCXX_RELEASE ) and _GLIBCXX_RELEASE > 4 ) ) )
+static_assert( true, "std::regex is supported" );
+#else
+static_assert( false, "std::regex is NOT supported" );
+#endif
 
 /**
    @brief    TBD
