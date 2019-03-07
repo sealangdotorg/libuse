@@ -392,12 +392,6 @@ ifeq (,$(findstring Visual,$(ENV_GEN)))
     "
   endif
 
-  ifeq ($(ENV_OSYS),Mac)
-    ifeq ($(ENV_CC),clang)
-      ENV_CMAKE_FLAGS += -DCMAKE_EXE_LINKER_FLAGS=-lstdc++
-    endif
-  endif
-
   ifeq ($(ENV_OSYS),Windows)
     ifeq ($(ENV_CC),clang)
       ENV_CMAKE_FLAGS += -DCMAKE_EXE_LINKER_FLAGS="\
