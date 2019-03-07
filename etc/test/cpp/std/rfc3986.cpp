@@ -49,15 +49,16 @@ using namespace RFC3986;
 TEST( libstdhl_cpp_standard_rfc3986, https_link )
 {
     const auto uri = UniformResourceIdentifier::fromString(
-        "https://code.visualstudio.com/docs/extensions/overview#frag" );
+        "https://code.visualstudio.com/docs/extensions/overview?test=true#frag" );
 
     EXPECT_STREQ( uri.scheme().c_str(), "https" );
     EXPECT_STREQ( uri.authority().c_str(), "code.visualstudio.com" );
     EXPECT_STREQ( uri.path().c_str(), "/docs/extensions/overview" );
-    EXPECT_STREQ( uri.query().c_str(), "" );
+    EXPECT_STREQ( uri.query().c_str(), "test=true" );
     EXPECT_STREQ( uri.fragment().c_str(), "frag" );
     EXPECT_STREQ(
-        uri.toString().c_str(), "https://code.visualstudio.com/docs/extensions/overview#frag" );
+        uri.toString().c_str(),
+        "https://code.visualstudio.com/docs/extensions/overview?test=true#frag" );
 }
 
 TEST( libstdhl_cpp_standard_rfc3986, file_path_ascii_only )
