@@ -42,18 +42,10 @@
 
 #include "rfc3986.h"
 
-#include "../String.h"
+#include <libstdhl/String>
 
-#include <cassert>
-#include <regex>
-#if __cplusplus >= 201103L and ( not defined( __GLIBCXX__ ) or ( __cplusplus >= 201402L ) or \
-                                 ( defined( _GLIBCXX_REGEX_DFS_QUANTIFIERS_LIMIT ) or        \
-                                   defined( _GLIBCXX_REGEX_STATE_LIMIT ) or                  \
-                                   ( defined( _GLIBCXX_RELEASE ) and _GLIBCXX_RELEASE > 4 ) ) )
-static_assert( true, "std::regex is supported" );
-#else
-static_assert( false, "std::regex is NOT supported" );
-#endif
+#include <algorithm>
+#include <functional>
 
 /**
    @brief    TBD
@@ -130,44 +122,61 @@ std::string UniformResourceIdentifier::toString( void ) const
 
 UniformResourceIdentifier UniformResourceIdentifier::fromString( const std::string& uri )
 {
-    std::regex uri_regex(
-        // 1: scheme
-        "(?:([[:alpha:]](?:[[:alnum:]]|[\\+]|[\\-]|[\\.])*)\\:)?"
-        // 2: authority
-        "(?://([^/\\?\\#]*))?"
-        // 3: path
-        "([\\S][^\\?\\#]*)"
-        // 4: query
-        "(?:/[\\?]([^\\#]*))?"
-        // 5: fragment
-        "(?:[\\#]([\\S]*))?" );
+    const std::string delimiter( "://" );
 
-    std::sregex_iterator uri_start( uri.begin(), uri.end(), uri_regex );
-    std::sregex_iterator uri_end;
+    std::string scheme;
+    std::string authority;
+    std::string path;
+    std::string query;
+    std::string fragment;
 
-    if( uri_start == uri_end )
+    std::string::const_iterator scheme_iterator =
+        search( uri.begin(), uri.end(), delimiter.begin(), delimiter.end() );
+
+    scheme.reserve( distance( uri.begin(), scheme_iterator ) );
+
+    transform(
+        uri.begin(),
+        scheme_iterator,
+        back_inserter( scheme ),
+        std::ptr_fun< int, int >( tolower ) );
+
+    if( scheme_iterator == uri.end() )
     {
-        throw std::invalid_argument( "invalid URI to parse from string '" + uri + "'" );
+        throw std::invalid_argument( "invalid URI '" + uri + "' to parse" );
     }
 
-    auto match = *uri_start;
-    assert( match.size() >= 5 );
+    advance( scheme_iterator, delimiter.length() );
 
-    const auto& scheme = match[ 1 ].str();
-    const auto& authority = match[ 2 ].str();
-    const auto& path = match[ 3 ].str();
-    const auto& query = match[ 4 ].str();
-    const auto& fragment = match[ 5 ].str();
+    std::string::const_iterator path_iterator = find( scheme_iterator, uri.end(), '/' );
 
-    std::regex path_regex( ".*([\\s]+).*" );
-    std::sregex_iterator path_start( path.begin(), path.end(), path_regex );
-    std::sregex_iterator path_end;
+    authority.reserve( distance( scheme_iterator, path_iterator ) );
 
-    if( path_start != path_end )
+    transform(
+        scheme_iterator,
+        path_iterator,
+        back_inserter( authority ),
+        std::ptr_fun< int, int >( tolower ) );
+
+    std::string::const_iterator query_iterator = find( path_iterator, uri.end(), '?' );
+
+    path.assign( path_iterator, query_iterator );
+
+    std::string::const_iterator fragment_iterator = find( query_iterator, uri.end(), '#' );
+
+    if( query_iterator != uri.end() )
     {
-        throw std::invalid_argument(
-            "invalid URI path '" + path + "' found in string '" + uri + "'" );
+        query_iterator++;
     }
+
+    query.assign( query_iterator, fragment_iterator );
+
+    if( fragment_iterator != uri.end() )
+    {
+        fragment_iterator++;
+    }
+
+    fragment.assign( fragment_iterator, uri.end() );
 
     return UniformResourceIdentifier( scheme, authority, path, query, fragment );
 }
