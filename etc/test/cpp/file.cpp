@@ -59,6 +59,21 @@ TEST( libstdhl_cpp_File, create_and_remove )
     EXPECT_EQ( libstdhl::File::exists( filename ), false );
 }
 
+TEST( libstdhl_cpp_File_PATH, create_and_remove )
+{
+    std::string path = TEST_NAME;
+
+    EXPECT_EQ( libstdhl::File::Path::exists( path ), false );
+
+    libstdhl::File::Path::create( path );
+
+    EXPECT_EQ( libstdhl::File::Path::exists( path ), true );
+
+    libstdhl::File::Path::remove( path );
+
+    EXPECT_EQ( libstdhl::File::Path::exists( path ), false );
+}
+
 //
 //  Local variables:
 //  mode: c++

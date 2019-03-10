@@ -51,6 +51,9 @@
 #include <functional>
 #include <limits>
 
+#include <sys/stat.h>
+#include <unistd.h>
+
 /**
    @brief    TODO
 
@@ -64,106 +67,30 @@ namespace libstdhl
     */
     namespace File
     {
-        inline u1 exists( const std::fstream& file )
-        {
-            return file.is_open();
-        }
+        u1 exists( const std::fstream& file );
 
-        inline std::fstream open(
-            const std::string& filename, const std::ios_base::openmode mode = std::fstream::in )
-        {
-            std::fstream file;
+        std::fstream open(
+            const std::string& filename, const std::ios_base::openmode mode = std::fstream::in );
 
-            file.open( filename, mode );
+        u1 exists( const std::string& filename );
 
-            if( not exists( file ) )
-            {
-                throw std::invalid_argument( "filename '" + filename + "' does not exist" );
-            }
+        void remove( const std::string& filename );
 
-            return file;
-        }
-
-        inline u1 exists( const std::string& filename )
-        {
-            try
-            {
-                open( filename );
-            }
-            catch( const std::invalid_argument& e )
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        inline void remove( const std::string& filename )
-        {
-            if( not exists( filename ) )
-            {
-                throw std::invalid_argument(
-                    "removing file '" + filename + "' failed, because it does not exist" );
-            }
-
-            auto result = std::remove( filename.c_str() );
-
-            if( result != 0 )
-            {
-                throw std::invalid_argument(
-                    "removing file '" + filename + "' failed (error " + std::to_string( result ) +
-                    ")" );
-            }
-
-            assert( not exists( filename ) );
-        }
-
-        inline u8 readLines(
+        u8 readLines(
             const std::string& filename,
-            std::function< void( u32, const std::string& ) > process_line )
+            std::function< void( u32, const std::string& ) > process_line );
+
+        std::fstream& gotoLine( std::fstream& file, const std::size_t num );
+
+        std::string readLine( const std::string& filename, const u32 num );
+
+        namespace Path
         {
-            u32 cnt = 0;
-            std::string line;
-            std::fstream fd( filename );
+            void create( const std::string& path );
 
-            if( not exists( fd ) )
-            {
-                return -1;
-            }
+            u1 exists( const std::string& path );
 
-            while( std::getline( fd, line ) )
-            {
-                process_line( cnt, line );
-                cnt++;
-            }
-
-            fd.close();
-            return 0;
-        }
-
-        inline std::fstream& gotoLine( std::fstream& file, const std::size_t num )
-        {
-            file.seekg( std::ios::beg );
-
-            for( std::size_t c = 0; c < ( num - 1 ); c++ )
-            {
-                file.ignore( std::numeric_limits< std::streamsize >::max(), '\n' );
-            }
-
-            return file;
-        }
-
-        inline std::string readLine( const std::string& filename, const u32 num )
-        {
-            std::string line;
-
-            auto file = open( filename );
-
-            gotoLine( file, num );
-
-            std::getline( file, line );
-
-            return line;
+            void remove( const std::string& path );
         }
     }
 }

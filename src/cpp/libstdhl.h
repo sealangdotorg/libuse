@@ -66,6 +66,7 @@
 #include <libstdhl/Memory>
 #include <libstdhl/Network>
 #include <libstdhl/Random>
+#include <libstdhl/SourceLocation>
 #include <libstdhl/Standard>
 #include <libstdhl/String>
 #include <libstdhl/Type>

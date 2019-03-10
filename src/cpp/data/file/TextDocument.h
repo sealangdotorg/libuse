@@ -63,12 +63,12 @@ namespace libstdhl
     */
     namespace File
     {
-        using Path = Standard::RFC3986::UniformResourceIdentifier;
-
         class TextDocument
         {
           public:
             using Ptr = std::shared_ptr< TextDocument >;
+
+            using Path = Standard::RFC3986::URI;
 
             TextDocument( const Path& path, const std::string& extension );
 
