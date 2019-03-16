@@ -2895,11 +2895,11 @@ namespace libstdhl
                     const TextDocumentIdentifier& textDocument,
                     const FormattingOptions& options,
                     const Position& position,
-                    const std::string& ch );
+                    const std::string& character );
 
                 Position position( void ) const;
 
-                std::string ch( void ) const;  // character that has been typed.
+                std::string character( void ) const; 
 
                 static void validate( const Data& data );
             };
