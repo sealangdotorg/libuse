@@ -1226,6 +1226,7 @@ TEST( libstdhl_cpp_network_lsp_content, FoldingRange )
     EXPECT_EQ( foldingRange.endCharacter(), 4 );
     auto f = FoldingRange( foldingRange );
 }
+
 TEST( libstdhl_cpp_network_lsp_content, FoldingRangeResult )
 {
     auto empty = FoldingRangeResult();
