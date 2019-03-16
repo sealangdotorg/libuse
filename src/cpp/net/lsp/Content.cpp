@@ -220,11 +220,13 @@ void Location::validate( const Data& data )
     Json::validateTypeIsObject( context, data );
     Json::validatePropertyIsUri( context, data, Identifier::uri, true );
     Json::validatePropertyIs< Range >( context, data, Identifier::range, false );
-}
+} 
+
 //
 //
 // DiagnosticRelatedInformation
 //
+
 DiagnosticRelatedInformation::DiagnosticRelatedInformation( const Data& data )
 : Data( data )
 {
@@ -255,7 +257,8 @@ void DiagnosticRelatedInformation::validate( const Data& data )
     Json::validateTypeIsObject( context, data );
     Json::validatePropertyIs< Location >( context, data, Identifier::location, true );
     Json::validatePropertyIsString( context, data, Identifier::message, true );
-}
+} 
+
 //
 //
 // Diagnostic
@@ -628,7 +631,8 @@ void CreateFileOptions::validate( const Data& data )
     Json::validateTypeIsObject( context, data );
     Json::validatePropertyIsBoolean( context, data, Identifier::overwrite, false );
     Json::validatePropertyIsBoolean( context, data, Identifier::ignoreIfExists, false );
-}
+} 
+
 //
 //
 // CreateFile
@@ -738,7 +742,8 @@ void RenameFile::validate( const Data& data )
     Json::validatePropertyIsString( context, data, Identifier::newUri, true );
     Json::validatePropertyIsString( context, data, Identifier::oldUri, true );
     Json::validatePropertyIs< CreateFileOptions >( context, data, Identifier::options, false );
-}
+} 
+
 //
 //
 // DeleteFileOptions
@@ -786,11 +791,13 @@ void DeleteFileOptions::validate( const Data& data )
     Json::validateTypeIsObject( context, data );
     Json::validatePropertyIsBoolean( context, data, Identifier::recursive, false );
     Json::validatePropertyIsBoolean( context, data, Identifier::ignoreIfExists, false );
-}
+} 
+
 //
 //
 //  DeleteFile
 //
+
 DeleteFile::DeleteFile( const Data& data )
 : Data( data )
 {
@@ -2071,6 +2078,7 @@ void DocumentOnTypeFormattingOptions::validate( const Data& data )
 //
 // RenameOptions
 //
+
 RenameOptions::RenameOptions( const Data& data )
 : Data( data )
 {
@@ -2142,6 +2150,7 @@ void ExecuteCommandOptions::validate( const Data& data )
 //
 // StaticRegistrationOptions
 //
+
 StaticRegistrationOptions::StaticRegistrationOptions( const Data& data )
 : Data( data )
 {
@@ -2174,6 +2183,7 @@ void StaticRegistrationOptions::validate( const Data& data )
 //
 // TypeDefinitionProvider
 //
+
 TypeDefinitionProvider::TypeDefinitionProvider( const Data& data )
 : Data( data )
 {
@@ -2218,6 +2228,7 @@ void TypeDefinitionProvider::validate( const Data& data )
 //
 // ColorProviderOptions
 //
+
 ColorProviderOptions::ColorProviderOptions( const Data& data )
 : Data( data )
 {
@@ -2234,6 +2245,7 @@ void ColorProviderOptions::validate( const Data& data )
 //
 // ColorProvider
 //
+
 ColorProvider::ColorProvider( const Data& data )
 : Data( data )
 {
@@ -2321,6 +2333,7 @@ void Workspace::setWorkspaceFolders( const Workspace::WorkspaceFolders& workspac
 //
 // WorkspaceFolders
 //
+
 Workspace::WorkspaceFolders::WorkspaceFolders( const Data& data )
 : Data( data )
 {
@@ -2981,6 +2994,7 @@ void InitializeError::validate( const Data& data )
 //
 // CancelParams
 //
+
 CancelParams::CancelParams( const Data& data )
 : Data( data )
 {
@@ -3260,6 +3274,7 @@ void Registration::validate( const Data& data )
 //
 // RegistrationParams
 //
+
 RegistrationParams::RegistrationParams( const Data& data )
 : Data( data )
 {
@@ -3584,7 +3599,8 @@ void WorkspaceFoldersChangeEvent::validate( const Data& data )
 
     Json::validatePropertyIsArrayOf< WorkspaceFolder >( context, data, Identifier::added, true );
     Json::validatePropertyIsArrayOf< WorkspaceFolder >( context, data, Identifier::removed, true );
-}
+} 
+
 //
 //
 // DidChangeWorkspaceFoldersParams
@@ -3699,6 +3715,7 @@ void ConfigurationItem::validate( const Data& data )
 //
 // ConfigurationResult
 //
+
 ConfigurationResult::ConfigurationResult( void )
 : Data( Data::array() )
 {
@@ -3958,6 +3975,7 @@ void WorkspaceSymbolParams::validate( const Data& data )
 //
 // SymbolInformation
 //
+
 SymbolInformation::SymbolInformation(
     const std::string& name, const SymbolKind kind, const Location& location )
 : Data( Data::object() )
@@ -4033,6 +4051,7 @@ void SymbolInformation::validate( const Data& data )
 //
 // workspaceSymbolResult
 //
+
 WorkspaceSymbolResult::WorkspaceSymbolResult( const Data& data )
 : Data( data )
 {
@@ -4076,7 +4095,8 @@ void WorkspaceSymbolResult::validate( const Data& data )
     {
         Json::validateTypeIsArrayOf< SymbolInformation >( context, data );
     }
-}
+} 
+
 //
 //
 // ApplyWorkspaceEditParams
@@ -4126,6 +4146,7 @@ void ApplyWorkspaceEditParams::validate( const Data& data )
 //
 // ApplyWorkspaceEditResult
 //
+
 ApplyWorkspaceEditResult::ApplyWorkspaceEditResult( const Data& data )
 : Data( data )
 {
@@ -4541,6 +4562,7 @@ void CompletionParams::validate( const Data& data )
 //
 //  CompletionItem
 //
+
 CompletionItem::CompletionItem( const Data& data )
 : Data( data )
 {
@@ -4859,11 +4881,13 @@ void CompletionList::validate( const Data& data )
     Json::validateTypeIsObject( context, data );
     Json::validatePropertyIsArrayOf< CompletionItem >( context, data, Identifier::items, true );
     Json::validatePropertyIsBoolean( context, data, Identifier::isIncomplete, true );
-}
+} 
+
 //
 //
 // CompletionResult
 //
+
 CompletionResult::CompletionResult( void )
 : Data( Data() )
 {
@@ -5033,6 +5057,7 @@ void MarkupContent::validate( const Data& data )
 //
 // ParameterInformation
 //
+
 ParameterInformation::ParameterInformation( const Data& data )
 : Data( data )
 {
@@ -5214,11 +5239,13 @@ void SignatureHelp::validate( const Data& data )
         context, data, Identifier::signatures, true );
     Json::validatePropertyIsNumber( context, data, Identifier::activeSignature, false );
     Json::validatePropertyIsNumber( context, data, Identifier::activeParameter, false );
-}
+} 
+
 //
 //
 // SignatureHelpResult
 //
+
 SignatureHelpResult::SignatureHelpResult( void )
 : Data( Data() )
 {
@@ -5245,11 +5272,13 @@ void SignatureHelpResult::validate( const Data& data )
     {
         SignatureHelp::validate( data );
     }
-}
+} 
+
 //
 //
 // LocationLink
 //
+
 LocationLink::LocationLink( const Data& data )
 : Data( data )
 {
@@ -5311,7 +5340,8 @@ void LocationLink::validate( const Data& data )
     Json::validatePropertyIs< Range >( context, data, Identifier::targetRange, true );
     Json::validatePropertyIs< Range >( context, data, Identifier::originSelectionRange, false );
     Json::validatePropertyIs< Range >( context, data, Identifier::targetSelectionRange, false );
-}
+} 
+
 //
 //
 // TextDocumentSaveRegistrationOptions
@@ -5500,6 +5530,7 @@ void ReferenceContext::validate( const Data& data )
 //
 // ReferenceParams
 //
+
 ReferenceParams::ReferenceParams( const Data& data )
 : TextDocumentPositionParams( data )
 {
@@ -5531,6 +5562,7 @@ void ReferenceParams::validate( const Data& data )
 //
 // ReferenceResult
 //
+
 ReferenceResult::ReferenceResult( const Data& data )
 : Data( data )
 {
@@ -5563,6 +5595,7 @@ void ReferenceResult::validate( const Data& data )
 //
 // CodeActionOptions
 //
+
 CodeActionOptions::CodeActionOptions( const Data& data )
 : Data( data )
 {
@@ -6178,6 +6211,7 @@ void DefinitionResult::validate( const Data& data )
 //
 // DocumentHighlight
 //
+
 DocumentHighlight::DocumentHighlight( const Data& data )
 : Data( data )
 {
@@ -6326,6 +6360,7 @@ void DocumentSymbolResult::validate( const Data& data )
 //
 // DocumentSymbol
 //
+
 DocumentSymbol::DocumentSymbol( const Data& data )
 : Data( data )
 {
@@ -6607,6 +6642,7 @@ void ExecuteCommandParams::validate( const Data& data )
 //
 // DocumentLinkParams
 //
+
 DocumentLinkParams::DocumentLinkParams( const Data& data )
 : Data( data )
 {
@@ -6696,6 +6732,7 @@ void DocumentLink::validate( const Data& data )
 //
 // DocumentLinkResult
 //
+
 DocumentLinkResult::DocumentLinkResult( void )
 : Data()
 {
@@ -6757,7 +6794,8 @@ void DocumentColorParams::validate( const Data& data )
     Json::validateTypeIsObject( context, data );
     Json::validatePropertyIs< TextDocumentIdentifier >(
         context, data, Identifier::textDocument, true );
-}
+} 
+
 //
 // Color
 //
@@ -6805,7 +6843,8 @@ void Color::validate( const Data& data )
     Json::validatePropertyIsNumber( context, data, Identifier::green, true );
     Json::validatePropertyIsNumber( context, data, Identifier::blue, true );
     Json::validatePropertyIsNumber( context, data, Identifier::alpha, true );
-}
+} 
+
 //
 //
 // ColorInformation
@@ -6845,6 +6884,7 @@ void ColorInformation::validate( const Data& data )
 //
 // DocumentColorResult
 //
+
 DocumentColorResult::DocumentColorResult( const Data& data )
 : Data( data )
 {
@@ -6870,6 +6910,7 @@ void DocumentColorResult::validate( const Data& data )
 //
 // ColorPresentationParams
 //
+
 ColorPresentationParams::ColorPresentationParams( const Data& data )
 : DocumentColorParams( data )
 {
@@ -6993,6 +7034,7 @@ void ColorPresentationResult::validate( const Data& data )
 //
 // DocumentFormattingParams
 //
+
 DocumentFormattingParams::DocumentFormattingParams( const Data& data )
 : Data( data )
 {
@@ -7030,6 +7072,7 @@ void DocumentFormattingParams::validate( const Data& data )
 //
 // FormattingOptions
 //
+
 FormattingOptions::FormattingOptions( const Data& data )
 : Data( Data::object() )
 {
@@ -7090,11 +7133,13 @@ void FormattingOptions::validate( const Data& data )
     Json::validatePropertyIsNumber( context, data, Identifier::tabSize, true );
     Json::validatePropertyIsBoolean( context, data, Identifier::insertSpaces, true );
     validateAdditionalOptions( data );
-}
+} 
+
 //
 //
 // DocumentFormattingResult
 //
+
 DocumentFormattingResult::DocumentFormattingResult( void )
 : Data()
 {
@@ -7150,11 +7195,13 @@ void DocumentRangeFormattingParams::validate( const Data& data )
     static const auto context = CONTENT + " DocumentRangeFormattingParams:";
     Json::validateTypeIsObject( context, data );
     Json::validatePropertyIs< Range >( context, data, Identifier::range, true );
-}
+} 
+
 //
 //
 // DocumentOnTypeFormattingParams
 //
+
 DocumentOnTypeFormattingParams::DocumentOnTypeFormattingParams( const Data& data )
 : DocumentFormattingParams( data )
 {
@@ -7194,6 +7241,7 @@ void DocumentOnTypeFormattingParams::validate( const Data& data )
 //
 // DocumentOnTypeFormattingRegistrationOptions
 //
+
 DocumentOnTypeFormattingRegistrationOptions::DocumentOnTypeFormattingRegistrationOptions(
     const Data& data )
 : TextDocumentRegistrationOptions( data )
@@ -7250,6 +7298,7 @@ void DocumentOnTypeFormattingRegistrationOptions::validate( const Data& data )
 //
 // RenameParams
 //
+
 RenameParams::RenameParams( const Data& data )
 : Data( data )
 {
@@ -7329,6 +7378,7 @@ void RenameRegistrationOptions::validate( const Data& data )
 //
 // RenameResult
 //
+
 RenameResult::RenameResult( void )
 : Data()
 {
@@ -7362,6 +7412,7 @@ void RenameResult::validate( const Data& data )
 //
 // PrepareRenameResult
 //
+
 PrepareRenameResult::PrepareRenameResult( void )
 : Data()
 {
@@ -7406,6 +7457,7 @@ void PrepareRenameResult::validate( const Data& data )
 //
 // FoldingRangeParams
 //
+
 FoldingRangeParams::FoldingRangeParams( const Data& data )
 : Data( data )
 {
@@ -7435,6 +7487,7 @@ void FoldingRangeParams::validate( const Data& data )
 //
 // FoldingRange
 //
+
 FoldingRange::FoldingRange( const Data& data )
 : Data( data )
 {
@@ -7535,6 +7588,7 @@ void FoldingRange::validate( const Data& data )
 //
 // FoldingRangeResult
 //
+
 FoldingRangeResult::FoldingRangeResult( void )
 : Data()
 {
@@ -7577,3 +7631,4 @@ void FoldingRangeResult::validate( const Data& data )
 //  End:
 //  vim:noexpandtab:sw=4:ts=4:
 //
+
