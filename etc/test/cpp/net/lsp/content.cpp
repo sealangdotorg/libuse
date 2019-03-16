@@ -1236,6 +1236,7 @@ TEST( libstdhl_cpp_network_lsp_content, FoldingRangeResult )
     auto test = FoldingRangeResult( empty );
     test = FoldingRangeResult( result );
 }
+
 //
 //  Local variables:
 //  mode: c++
