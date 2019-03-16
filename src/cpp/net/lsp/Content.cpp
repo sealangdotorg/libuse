@@ -220,7 +220,7 @@ void Location::validate( const Data& data )
     Json::validateTypeIsObject( context, data );
     Json::validatePropertyIsUri( context, data, Identifier::uri, true );
     Json::validatePropertyIs< Range >( context, data, Identifier::range, false );
-} 
+}
 
 //
 //
@@ -257,7 +257,7 @@ void DiagnosticRelatedInformation::validate( const Data& data )
     Json::validateTypeIsObject( context, data );
     Json::validatePropertyIs< Location >( context, data, Identifier::location, true );
     Json::validatePropertyIsString( context, data, Identifier::message, true );
-} 
+}
 
 //
 //
@@ -631,7 +631,7 @@ void CreateFileOptions::validate( const Data& data )
     Json::validateTypeIsObject( context, data );
     Json::validatePropertyIsBoolean( context, data, Identifier::overwrite, false );
     Json::validatePropertyIsBoolean( context, data, Identifier::ignoreIfExists, false );
-} 
+}
 
 //
 //
@@ -742,7 +742,7 @@ void RenameFile::validate( const Data& data )
     Json::validatePropertyIsString( context, data, Identifier::newUri, true );
     Json::validatePropertyIsString( context, data, Identifier::oldUri, true );
     Json::validatePropertyIs< CreateFileOptions >( context, data, Identifier::options, false );
-} 
+}
 
 //
 //
@@ -791,7 +791,7 @@ void DeleteFileOptions::validate( const Data& data )
     Json::validateTypeIsObject( context, data );
     Json::validatePropertyIsBoolean( context, data, Identifier::recursive, false );
     Json::validatePropertyIsBoolean( context, data, Identifier::ignoreIfExists, false );
-} 
+}
 
 //
 //
@@ -3599,7 +3599,7 @@ void WorkspaceFoldersChangeEvent::validate( const Data& data )
 
     Json::validatePropertyIsArrayOf< WorkspaceFolder >( context, data, Identifier::added, true );
     Json::validatePropertyIsArrayOf< WorkspaceFolder >( context, data, Identifier::removed, true );
-} 
+}
 
 //
 //
@@ -4095,7 +4095,7 @@ void WorkspaceSymbolResult::validate( const Data& data )
     {
         Json::validateTypeIsArrayOf< SymbolInformation >( context, data );
     }
-} 
+}
 
 //
 //
@@ -4881,7 +4881,7 @@ void CompletionList::validate( const Data& data )
     Json::validateTypeIsObject( context, data );
     Json::validatePropertyIsArrayOf< CompletionItem >( context, data, Identifier::items, true );
     Json::validatePropertyIsBoolean( context, data, Identifier::isIncomplete, true );
-} 
+}
 
 //
 //
@@ -5239,7 +5239,7 @@ void SignatureHelp::validate( const Data& data )
         context, data, Identifier::signatures, true );
     Json::validatePropertyIsNumber( context, data, Identifier::activeSignature, false );
     Json::validatePropertyIsNumber( context, data, Identifier::activeParameter, false );
-} 
+}
 
 //
 //
@@ -5272,7 +5272,7 @@ void SignatureHelpResult::validate( const Data& data )
     {
         SignatureHelp::validate( data );
     }
-} 
+}
 
 //
 //
@@ -5340,7 +5340,7 @@ void LocationLink::validate( const Data& data )
     Json::validatePropertyIs< Range >( context, data, Identifier::targetRange, true );
     Json::validatePropertyIs< Range >( context, data, Identifier::originSelectionRange, false );
     Json::validatePropertyIs< Range >( context, data, Identifier::targetSelectionRange, false );
-} 
+}
 
 //
 //
@@ -6794,7 +6794,7 @@ void DocumentColorParams::validate( const Data& data )
     Json::validateTypeIsObject( context, data );
     Json::validatePropertyIs< TextDocumentIdentifier >(
         context, data, Identifier::textDocument, true );
-} 
+}
 
 //
 // Color
@@ -6843,7 +6843,7 @@ void Color::validate( const Data& data )
     Json::validatePropertyIsNumber( context, data, Identifier::green, true );
     Json::validatePropertyIsNumber( context, data, Identifier::blue, true );
     Json::validatePropertyIsNumber( context, data, Identifier::alpha, true );
-} 
+}
 
 //
 //
@@ -7133,7 +7133,7 @@ void FormattingOptions::validate( const Data& data )
     Json::validatePropertyIsNumber( context, data, Identifier::tabSize, true );
     Json::validatePropertyIsBoolean( context, data, Identifier::insertSpaces, true );
     validateAdditionalOptions( data );
-} 
+}
 
 //
 //
@@ -7195,7 +7195,7 @@ void DocumentRangeFormattingParams::validate( const Data& data )
     static const auto context = CONTENT + " DocumentRangeFormattingParams:";
     Json::validateTypeIsObject( context, data );
     Json::validatePropertyIs< Range >( context, data, Identifier::range, true );
-} 
+}
 
 //
 //
@@ -7631,4 +7631,3 @@ void FoldingRangeResult::validate( const Data& data )
 //  End:
 //  vim:noexpandtab:sw=4:ts=4:
 //
-

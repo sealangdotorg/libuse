@@ -2899,7 +2899,7 @@ namespace libstdhl
 
                 Position position( void ) const;
 
-                std::string character( void ) const; 
+                std::string character( void ) const;
 
                 static void validate( const Data& data );
             };
