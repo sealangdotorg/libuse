@@ -680,6 +680,7 @@ void CreateFile::validate( const Data& data )
     Json::validatePropertyIsString( context, data, Identifier::uri, true );
     Json::validatePropertyIs< CreateFileOptions >( context, data, Identifier::options, false );
 }
+
 //
 //
 // RenameFile
