@@ -1137,7 +1137,7 @@ TEST( libstdhl_cpp_network_lsp_content, DocumentOnTypeFormattingParams )
     params.textDocument();
     params.options();
     params.position();
-    EXPECT_STREQ( params.ch().c_str(), "c" );
+    EXPECT_STREQ( params.character().c_str(), "c" );
 }
 
 TEST( libstdhl_cpp_network_lsp_content, DocumentOnTypeFormattingRegistrationOptions )

@@ -7224,7 +7224,7 @@ Position DocumentOnTypeFormattingParams::position( void ) const
     return operator[]( Identifier::position );
 }
 
-std::string DocumentOnTypeFormattingParams::ch( void ) const
+std::string DocumentOnTypeFormattingParams::character( void ) const
 {
     return operator[]( Identifier::ch ).get< std::string >();
 }
