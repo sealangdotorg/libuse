@@ -151,6 +151,8 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            using Locations = std::vector< Location >;
+
             enum class DiagnosticSeverity : std::size_t
             {
                 Error = 1,
@@ -227,6 +229,8 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
+
+            using Commands = std::vector< Command >;
 
             class TextEdit : public Data
             {
@@ -931,6 +935,7 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
+
             class StaticRegistrationOptions : public Data
             {
               public:
@@ -1469,7 +1474,7 @@ namespace libstdhl
             class UnregistrationParams : public Data
             {
               public:
-                UnregistrationParams( const std::vector< Unregistration >& unregistrations );
+                UnregistrationParams( const Unregistrations& unregistrations );
 
                 UnregistrationParams( const Data& data );
 
@@ -1487,7 +1492,7 @@ namespace libstdhl
 
                 WorkspaceFoldersResult( const WorkspaceFolders& workspaceFolders );
 
-                WorkspaceFolders toVec( void ) const;
+                WorkspaceFolders workspaceFolders( void ) const;
 
                 static void validate( const Data& data );
             };
@@ -1731,7 +1736,7 @@ namespace libstdhl
               public:
                 WorkspaceSymbolResult( const Data& data );
 
-                WorkspaceSymbolResult( const std::vector< SymbolInformation >& symbolInformation );
+                WorkspaceSymbolResult( const SymbolInformations& symbolInformation );
 
                 void addSymbolInformation( const SymbolInformation& information );
 
@@ -1837,7 +1842,8 @@ namespace libstdhl
                 WillSaveTextDocumentParams( const Data& data );
 
                 WillSaveTextDocumentParams(
-                    const TextDocumentIdentifier& textDocument, TextDocumentSaveReason reason );
+                    const TextDocumentIdentifier& textDocument,
+                    const TextDocumentSaveReason reason );
 
                 TextDocumentSaveReason reason( void ) const;
 
@@ -1853,7 +1859,7 @@ namespace libstdhl
               public:
                 WillSaveWaitUntilResponse( const Data& data );
 
-                WillSaveWaitUntilResponse( const std::vector< TextEdit >& textEdit );
+                WillSaveWaitUntilResponse( const TextEdits& textEdit );
 
                 TextEdits textEdit( void ) const;
 
@@ -2330,7 +2336,7 @@ namespace libstdhl
 
                 u1 hasCodeActionKinds( void ) const;
 
-                void addCodeActionKind( CodeActionKind kind );
+                void addCodeActionKind( const CodeActionKind kind );
 
                 std::vector< std::string > codeActionKinds( void ) const;
 
@@ -2417,7 +2423,7 @@ namespace libstdhl
               public:
                 CodeActionResult( const Data& data );
 
-                CodeActionResult( const std::vector< Command >& commands );
+                CodeActionResult( const Commands& commands );
 
                 CodeActionResult( void );
 
@@ -2437,12 +2443,11 @@ namespace libstdhl
               public:
                 PublishDiagnosticsParams( const Data& data );
 
-                PublishDiagnosticsParams(
-                    const DocumentUri& uri, const std::vector< Diagnostic >& diagnostics );
+                PublishDiagnosticsParams( const DocumentUri& uri, const Diagnostics& diagnostics );
 
                 DocumentUri uri( void ) const;
 
-                Data diagnostics( void ) const;
+                Diagnostics diagnostics( void ) const;
 
                 static void validate( const Data& data );
             };
@@ -2463,14 +2468,16 @@ namespace libstdhl
                 static void validate( const Data& data );
             };
 
+            using MarkedStrings = std::vector< MarkedString >;
+
             class HoverResult : public Data
             {
               public:
                 HoverResult( const Data& data );
 
-                HoverResult( const std::vector< MarkedString >& contents = {} );
+                HoverResult( const MarkedStrings& contents = {} );
 
-                Data contents( void ) const;
+                MarkedStrings contents( void ) const;
 
                 void addContent( const MarkedString& content );
 
@@ -2492,9 +2499,9 @@ namespace libstdhl
 
                 DefinitionResult( const Location& location );
 
-                DefinitionResult( const std::vector< Location > locations );
+                DefinitionResult( const Locations& locations );
 
-                Data locations( void ) const;
+                Locations locations( void ) const;
 
                 static void validate( const Data& data );
             };
@@ -2525,16 +2532,17 @@ namespace libstdhl
 
                 static void validate( const Data& data );
             };
+
             using DocumentHighlights = std::vector< DocumentHighlight >;
 
             class DocumentHighlightResult : public Data
             {
               public:
-                DocumentHighlightResult( void );
-
                 DocumentHighlightResult( const Data& data );
 
                 DocumentHighlightResult( const DocumentHighlights& highlights );
+
+                DocumentHighlightResult( void );
 
                 static void validate( const Data& data );
             };
@@ -2542,9 +2550,9 @@ namespace libstdhl
             class DocumentSymbolParams : public Data
             {
               public:
-                DocumentSymbolParams( const TextDocumentIdentifier& textDocument );
-
                 DocumentSymbolParams( const Data& data );
+
+                DocumentSymbolParams( const TextDocumentIdentifier& textDocument );
 
                 TextDocumentIdentifier textDocument( void ) const;
 
@@ -2563,8 +2571,8 @@ namespace libstdhl
                 DocumentSymbol(
                     const std::string& name,
                     const SymbolKind kind,
-                    Range range,
-                    Range selectionRange );
+                    const Range& range,
+                    const Range& selectionRange );
 
                 std::string name( void ) const;
 
@@ -3046,11 +3054,11 @@ namespace libstdhl
             class FoldingRangeResult : public Data
             {
               public:
-                FoldingRangeResult( void );
-
                 FoldingRangeResult( const Data& data );
 
-                FoldingRangeResult( const FoldingRanges ranges );
+                FoldingRangeResult( const FoldingRanges& ranges );
+
+                FoldingRangeResult( void );
 
                 static void validate( const Data& data );
             };

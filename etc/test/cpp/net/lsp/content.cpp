@@ -176,7 +176,7 @@ TEST( libstdhl_cpp_network_lsp_content, DeleteFile )
     file.setOptions( DeleteFileOptions( Data::object() ) );
     EXPECT_TRUE( file.hasOptions() );
     EXPECT_STREQ( file.uri().toString().c_str(), uri.toString().c_str() );
-    EXPECT_STREQ( file.kind().c_str(), Identifier::DELETE );
+    EXPECT_STREQ( file.kind().c_str(), Identifier::deletion );
 }
 TEST( libstdhl_cpp_network_lsp_content, CancelParams )
 {
@@ -345,8 +345,8 @@ TEST( libstdhl_cpp_network_lsp_content, WorkspaceFoldersResult )
     vector.emplace_back( folder );
     auto result = WorkspaceFoldersResult( vector );
     result.push_back( folder );
-    EXPECT_STREQ( result.toVec()[ 0 ].uri().c_str(), "test://uri" );
-    EXPECT_STREQ( result.toVec()[ 0 ].name().c_str(), name.c_str() );
+    EXPECT_STREQ( result.workspaceFolders()[ 0 ].uri().c_str(), "test://uri" );
+    EXPECT_STREQ( result.workspaceFolders()[ 0 ].name().c_str(), name.c_str() );
     EXPECT_STREQ( result[ 1 ][ "uri" ].get< std::string >().c_str(), "test://uri" );
     EXPECT_STREQ( result[ 1 ][ name ].get< std::string >().c_str(), name.c_str() );
 }

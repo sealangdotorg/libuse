@@ -44,12 +44,6 @@
 
 #include "Identifier.h"
 
-/**
-   @brief    TBD
-
-   TBD
-*/
-
 using namespace libstdhl;
 using namespace Network;
 using namespace LSP;
@@ -807,7 +801,7 @@ DeleteFile::DeleteFile( const Data& data )
 DeleteFile::DeleteFile( const DocumentUri& uri )
 : Data( Data::object() )
 {
-    operator[]( Identifier::kind ) = Identifier::DELETE;
+    operator[]( Identifier::kind ) = Identifier::deletion;
     operator[]( Identifier::uri ) = uri.toString();
 }
 
@@ -835,6 +829,7 @@ DeleteFileOptions DeleteFile::options( void ) const
 {
     return at( Identifier::options );
 }
+
 void DeleteFile::validate( const Data& data )
 {
     static const auto context = CONTENT + " DeleteFile:";
@@ -3515,7 +3510,7 @@ WorkspaceFoldersResult::WorkspaceFoldersResult( const WorkspaceFolders& workspac
     }
 }
 
-WorkspaceFolders WorkspaceFoldersResult::toVec( void ) const
+WorkspaceFolders WorkspaceFoldersResult::workspaceFolders( void ) const
 {
     auto vector = WorkspaceFolders();
 
@@ -4324,7 +4319,7 @@ WillSaveTextDocumentParams::WillSaveTextDocumentParams( const Data& data )
 }
 
 WillSaveTextDocumentParams::WillSaveTextDocumentParams(
-    const TextDocumentIdentifier& textDocument, TextDocumentSaveReason reason )
+    const TextDocumentIdentifier& textDocument, const TextDocumentSaveReason reason )
 : Data( Data::object() )
 {
     operator[]( Identifier::textDocument ) = Data::from_cbor( Data::to_cbor( textDocument ) );
@@ -4362,7 +4357,7 @@ WillSaveWaitUntilResponse::WillSaveWaitUntilResponse( const Data& data )
     validate( data );
 }
 
-WillSaveWaitUntilResponse::WillSaveWaitUntilResponse( const std::vector< TextEdit >& textEdit )
+WillSaveWaitUntilResponse::WillSaveWaitUntilResponse( const TextEdits& textEdit )
 : Data( Data::object() )
 {
     operator[]( Identifier::textEdit ) = Data::array();
@@ -4618,7 +4613,6 @@ u1 CompletionItem::hasDocumentation( void ) const
 void CompletionItem::setDocumentation( const MarkupContent& doc )
 {
     operator[]( Identifier::documentation ) = Data::from_cbor( Data::to_cbor( doc ) );
-    ;
 }
 
 MarkupContent CompletionItem::documentation( void ) const
@@ -5266,12 +5260,10 @@ void SignatureHelpResult::validate( const Data& data )
 {
     if( data.is_null() )
     {
-        // ok, do nothing
+        return;
     }
-    else
-    {
-        SignatureHelp::validate( data );
-    }
+
+    SignatureHelp::validate( data );
 }
 
 //
@@ -5481,19 +5473,17 @@ void TypeDefinitionResult::validate( const Data& data )
 
     if( data.is_null() )
     {
-        // ok, do nothing
+        return;
+    }
+
+    if( data.is_array() )
+    {
+        Json::validateTypeIsArrayOf< Location, LocationLink >( context, data );
     }
     else
     {
-        if( data.is_array() )
-        {
-            Json::validateTypeIsArrayOf< Location, LocationLink >( context, data );
-        }
-        else
-        {
-            Json::validateTypeIsObject( context, data );
-            Location::validate( data );
-        }
+        Json::validateTypeIsObject( context, data );
+        Location::validate( data );
     }
 }
 
@@ -5580,15 +5570,13 @@ ReferenceResult::ReferenceResult( const Locations& locations )
 
 void ReferenceResult::validate( const Data& data )
 {
-    static const auto context = CONTENT + " ReferenceResult:";
     if( data.is_null() )
     {
-        // ok, do nothing
+        return;
     }
-    else
-    {
-        Json::validateTypeIsArrayOf< Location >( context, data );
-    }
+
+    static const auto context = CONTENT + " ReferenceResult:";
+    Json::validateTypeIsArrayOf< Location >( context, data );
 }
 
 //
@@ -5821,7 +5809,7 @@ CodeActionResult::CodeActionResult( const Data& data )
     validate( data );
 }
 
-CodeActionResult::CodeActionResult( const std::vector< Command >& commands )
+CodeActionResult::CodeActionResult( const Commands& commands )
 : CodeActionResult()
 {
     for( auto command : commands )
@@ -6010,9 +5998,14 @@ DocumentUri PublishDiagnosticsParams::uri( void ) const
     return DocumentUri::fromString( at( Identifier::uri ).get< std::string >() );
 }
 
-Data PublishDiagnosticsParams::diagnostics( void ) const
+Diagnostics PublishDiagnosticsParams::diagnostics( void ) const
 {
-    return at( Identifier::diagnostics );
+    Diagnostics tmp;
+    for( auto diangostic : at( Identifier::diagnostics ) )
+    {
+        tmp.emplace_back( diangostic );
+    }
+    return tmp;
 }
 
 void PublishDiagnosticsParams::validate( const Data& data )
@@ -6075,7 +6068,7 @@ HoverResult::HoverResult( const Data& data )
     validate( data );
 }
 
-HoverResult::HoverResult( const std::vector< MarkedString >& contents )
+HoverResult::HoverResult( const MarkedStrings& contents )
 : Data( Data::object() )
 {
     operator[]( Identifier::contents ) = Data::array();
@@ -6086,9 +6079,14 @@ HoverResult::HoverResult( const std::vector< MarkedString >& contents )
     }
 }
 
-Data HoverResult::contents( void ) const
+MarkedStrings HoverResult::contents( void ) const
 {
-    return at( Identifier::contents );
+    MarkedStrings tmp;
+    for( auto content : at( Identifier::contents ) )
+    {
+        tmp.emplace_back( content );
+    }
+    return tmp;
 }
 
 void HoverResult::addContent( const MarkedString& content )
@@ -6159,7 +6157,7 @@ DefinitionResult::DefinitionResult( const Location& location )
     operator[]( Identifier::location ) = location;
 }
 
-DefinitionResult::DefinitionResult( const std::vector< Location > locations )
+DefinitionResult::DefinitionResult( const Locations& locations )
 : Data( Data::object() )
 {
     operator[]( Identifier::location ) = Data::array();
@@ -6170,9 +6168,14 @@ DefinitionResult::DefinitionResult( const std::vector< Location > locations )
     }
 }
 
-Data DefinitionResult::locations( void ) const
+Locations DefinitionResult::locations( void ) const
 {
-    return operator[]( Identifier::location );
+    Locations tmp;
+    for( auto location : at( Identifier::location ) )
+    {
+        tmp.emplace_back( location );
+    }
+    return tmp;
 }
 
 void DefinitionResult::validate( const Data& data )
@@ -6368,7 +6371,10 @@ DocumentSymbol::DocumentSymbol( const Data& data )
 }
 
 DocumentSymbol::DocumentSymbol(
-    const std::string& name, const SymbolKind kind, Range range, Range selectionRange )
+    const std::string& name,
+    const SymbolKind kind,
+    const Range& range,
+    const Range& selectionRange )
 : Data( Data::object() )
 {
     operator[]( Identifier::name ) = name;
@@ -6813,6 +6819,10 @@ Color::Color( const float red, const float green, const float blue, const float 
     operator[]( Identifier::green ) = green;
     operator[]( Identifier::blue ) = blue;
     operator[]( Identifier::alpha ) = alpha;
+
+    // TODO: FIXME: @ppaulweber: added missing checks, according to the LSP specification all colors
+    // and the alpha value shall be between the range 0 and 1! see:
+    // https://microsoft.github.io/language-server-protocol/specification#textDocument_documentColor
 }
 
 float Color::red( void ) const
@@ -6843,6 +6853,9 @@ void Color::validate( const Data& data )
     Json::validatePropertyIsNumber( context, data, Identifier::green, true );
     Json::validatePropertyIsNumber( context, data, Identifier::blue, true );
     Json::validatePropertyIsNumber( context, data, Identifier::alpha, true );
+
+    // TODO: FIXME: @ppaulweber: Json::validatePropertyNumberIsInRange( context, data,
+    // Identifier::red, 0.0, 1.0 )
 }
 
 //
@@ -7144,11 +7157,13 @@ DocumentFormattingResult::DocumentFormattingResult( void )
 : Data()
 {
 }
+
 DocumentFormattingResult::DocumentFormattingResult( const Data& data )
 : Data( data )
 {
     validate( data );
 }
+
 DocumentFormattingResult::DocumentFormattingResult( const TextEdits& edits )
 : Data( Data::array() )
 {
@@ -7157,17 +7172,16 @@ DocumentFormattingResult::DocumentFormattingResult( const TextEdits& edits )
         push_back( edit );
     }
 }
+
 void DocumentFormattingResult::validate( const Data& data )
 {
-    static const auto context = CONTENT + " DocumentFormattingResult:";
     if( data.is_null() )
     {
-        // ok, do nothing
+        return;
     }
-    else
-    {
-        Json::validateTypeIsArrayOf< TextEdit >( context, data );
-    }
+
+    static const auto context = CONTENT + " DocumentFormattingResult:";
+    Json::validateTypeIsArrayOf< TextEdit >( context, data );
 }
 
 DocumentRangeFormattingParams::DocumentRangeFormattingParams( const Data& data )
@@ -7397,15 +7411,13 @@ RenameResult::RenameResult( const WorkspaceEdit& edit )
 
 void RenameResult::validate( const Data& data )
 {
-    static const auto context = CONTENT + " RenameResult";
     if( data.is_null() )
     {
-        // ok, do nothing.
+        return;
     }
-    else
-    {
-        WorkspaceEdit::validate( data );
-    }
+
+    static const auto context = CONTENT + " RenameResult";
+    WorkspaceEdit::validate( data );
 }
 
 //
@@ -7433,23 +7445,21 @@ PrepareRenameResult::PrepareRenameResult( const Range& range, const std::string&
 
 void PrepareRenameResult::validate( const Data& data )
 {
-    static const auto context = CONTENT + " RenameRegistrationOptions";
     if( data.is_null() )
     {
-        // ok, do nothing
+        return;
     }
-    else
+
+    static const auto context = CONTENT + " PrepareRenameResult";
+    try
     {
-        try
-        {
-            Range::validate( data );
-        }
-        catch( std::invalid_argument a )
-        {
-            Json::validateTypeIsObject( context, data );
-            Json::validatePropertyIs< Range >( context, data, Identifier::range, true );
-            Json::validatePropertyIsString( context, data, Identifier::placeholder, true );
-        }
+        Range::validate( data );
+    }
+    catch( std::invalid_argument a )
+    {
+        Json::validateTypeIsObject( context, data );
+        Json::validatePropertyIs< Range >( context, data, Identifier::range, true );
+        Json::validatePropertyIsString( context, data, Identifier::placeholder, true );
     }
 }
 
@@ -7600,7 +7610,7 @@ FoldingRangeResult::FoldingRangeResult( const Data& data )
     validate( data );
 }
 
-FoldingRangeResult::FoldingRangeResult( const FoldingRanges ranges )
+FoldingRangeResult::FoldingRangeResult( const FoldingRanges& ranges )
 : Data( Data::array() )
 {
     for( auto range : ranges )
@@ -7611,15 +7621,13 @@ FoldingRangeResult::FoldingRangeResult( const FoldingRanges ranges )
 
 void FoldingRangeResult::validate( const Data& data )
 {
-    static const auto context = CONTENT + " FoldingRangeResult";
     if( data.is_null() )
     {
-        // okay, do nothing
+        return;
     }
-    else
-    {
-        Json::validateTypeIsArrayOf< FoldingRange >( context, data );
-    }
+
+    static const auto context = CONTENT + " FoldingRangeResult";
+    Json::validateTypeIsArrayOf< FoldingRange >( context, data );
 }
 
 //

@@ -159,7 +159,7 @@ namespace libstdhl
 
                 constexpr const char* definitionProvider = "definitionProvider";
 
-                constexpr const char* DELETE = "delete";
+                constexpr const char* deletion = "delete";
 
                 constexpr const char* deprecated = "deprecated";
 
