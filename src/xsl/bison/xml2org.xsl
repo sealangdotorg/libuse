@@ -6,6 +6,7 @@
 
     Developed by: Philipp Paulweber
                   Emmanuel Pescosta
+                  Christian Lascsak
                   <https://github.com/casm-lang/libstdhl>
 
     This file is part of libstdhl.
