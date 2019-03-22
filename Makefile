@@ -4,6 +4,7 @@
 #
 #   Developed by: Philipp Paulweber
 #                 Emmanuel Pescosta
+#                 Christian Lascsak
 #                 <https://github.com/casm-lang/libstdhl>
 #
 #   This file is part of libstdhl.
@@ -51,6 +52,7 @@ FORMAT += src/cpp/std
 FORMAT += src/cpp/std/*
 FORMAT += etc/test/cpp
 FORMAT += etc/test/cpp/*
+FORMAT += etc/test/cpp/net/*
 
 UPDATE_ROOT = .
 

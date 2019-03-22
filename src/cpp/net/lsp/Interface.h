@@ -4,6 +4,7 @@
 //
 //  Developed by: Philipp Paulweber
 //                Emmanuel Pescosta
+//                Christian Lascsak
 //                <https://github.com/casm-lang/libstdhl>
 //
 //  This file is part of libstdhl.
@@ -47,13 +48,14 @@
 #include <libstdhl/net/lsp/Message>
 
 #include <mutex>
+#include <unordered_map>
 
 /**
    @brief    TBD
 
    TBD
 
-   https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md
+   https://microsoft.github.io/language-server-protocol/specification#version_3_13_0
 */
 
 namespace libstdhl
@@ -71,108 +73,307 @@ namespace libstdhl
 
                 virtual ~ServerInterface( void ) = default;
 
-                /**
-                   user interface for message interactions
-                */
+                //
+                //
+                //  Lifetime
+                //
 
-                void respond( const ResponseMessage& message );
-
-                void notify( const NotificationMessage& message );
-
-                void flush( const std::function< void( const Message& ) >& callback );
-
-                /**
-                   general
-                */
-
+                // https://microsoft.github.io/language-server-protocol/specification#initialize
+                // client to server request
                 virtual InitializeResult initialize( const InitializeParams& params ) = 0;
 
+                // https://microsoft.github.io/language-server-protocol/specification#initialized
+                // client to server notification
                 virtual void initialized( void ) noexcept = 0;
 
+                // https://microsoft.github.io/language-server-protocol/specification#shutdown
+                // client to server request
                 virtual void shutdown( void ) = 0;
 
+                // https://microsoft.github.io/language-server-protocol/specification#exit
+                // client to server notification
                 virtual void exit( void ) noexcept = 0;
 
-                // virtual void dollar_cancelRequest( void ) noexcept = 0;
+                // https://microsoft.github.io/language-server-protocol/specification#cancelRequest
+                // server to client notification
+                virtual void server_cancel( const CancelParams& params ) noexcept final;
+                // client to server notification
+                virtual void client_cancel( const CancelParams& params ) noexcept = 0;
 
-                /**
-                   window
-                */
+                //
+                //
+                //  Window
+                //
 
-                // :arrow_left: window/showMessage
-                // :arrow_right_hook: window/showMessageRequest
-                // :arrow_left: window/logMessage
-                // :arrow_left: telemetry/event
+                // https://microsoft.github.io/language-server-protocol/specification#window_showMessage
+                // server to client notification
+                virtual void window_showMessage( const ShowMessageParams& params ) noexcept final;
 
-                /**
-                   new client
-                */
+                // https://microsoft.github.io/language-server-protocol/specification#window_showMessageRequest
+                // server to client request
+                virtual void window_showMessageRequest(
+                    const ShowMessageRequestParams& params,
+                    const std::function< void( const ResponseMessage& ) >& callback ) final;
 
-                // :arrow_right_hook: client/registerCapability
-                // :arrow_right_hook: client/unregisterCapability
+                // https://microsoft.github.io/language-server-protocol/specification#window_logMessage
+                // server to client notification
+                virtual void window_logMessage( const LogMessageParams& params ) noexcept final;
 
-                /**
-                   workspace
-                */
+                //
+                //
+                //  Telemetry
+                //
 
-                // :arrow_right: workspace/didChangeConfiguration
-                // :arrow_right: workspace/didChangeWatchedFiles
-                // :leftwards_arrow_with_hook: workspace/symbol
+                // https://microsoft.github.io/language-server-protocol/specification#telemetry_event
+                // server to client notification
+                virtual void telemetry_event( const TelemetryEventParams& params ) noexcept final;
 
-                // New :leftwards_arrow_with_hook: workspace/executeCommand
+                //
+                //
+                //  Client
+                //
+
+                // https://microsoft.github.io/language-server-protocol/specification#client_registerCapability
+                // server to client request
+                virtual void client_registerCapability(
+                    const RegistrationParams& params,
+                    const std::function< void( const ResponseMessage& ) >& callback ) final;
+
+                // https://microsoft.github.io/language-server-protocol/specification#client_unregisterCapability
+                // server to client request
+                virtual void client_unregisterCapability(
+                    const UnregistrationParams& params,
+                    const std::function< void( const ResponseMessage& ) >& callback ) final;
+
+                //
+                //
+                //  Workspace
+                //
+
+                // https://microsoft.github.io/language-server-protocol/specification#workspace_workspaceFolders
+                // server to client request
+                virtual void workspace_workspaceFolders(
+                    const std::function< void( const ResponseMessage& ) >& callback ) final;
+
+                // https://microsoft.github.io/language-server-protocol/specification#workspace_didChangeWorkspaceFolders
+                // client to server notification
+                virtual void workspace_didChangeWorkspaceFolders(
+                    const DidChangeWorkspaceFoldersParams& params ) noexcept = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#workspace_didChangeConfiguration
+                // client to server notification
+                virtual void workspace_didChangeConfiguration(
+                    const DidChangeConfigurationParams& params ) noexcept = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#workspace_configuration
+                // server to client request
+                virtual void workspace_configuration(
+                    const ConfigurationParams& params,
+                    const std::function< void( const ResponseMessage& ) >& callback ) final;
+
+                // https://microsoft.github.io/language-server-protocol/specification#workspace_didChangeWatchedFiles
+                // client to server notification
+                virtual void workspace_didChangeWatchedFiles(
+                    const DidChangeWatchedFilesParams& params ) noexcept = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#workspace_symbol
+                // client to server request
+                virtual WorkspaceSymbolResult workspace_symbol(
+                    const WorkspaceSymbolParams& params ) = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#workspace_executeCommand
+                // client to server request
                 virtual ExecuteCommandResult workspace_executeCommand(
                     const ExecuteCommandParams& params ) = 0;
 
-                // New :arrow_right_hook: workspace/applyEdit
+                // https://microsoft.github.io/language-server-protocol/specification#workspace_applyEdit
+                // server to client request
+                virtual void workspace_applyEdit(
+                    const ApplyWorkspaceEditParams& params,
+                    const std::function< void( const ResponseMessage& ) >& callback ) final;
 
-                /**
-                    document
-                 */
+                //
+                //
+                //  Text Synchronization
+                //
 
-                // :arrow_left: textDocument/publishDiagnostics
-                virtual void textDocument_publishDiagnostics(
-                    const PublishDiagnosticsParams& params ) noexcept final;
-
-                // :arrow_right: textDocument/didOpen
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_didOpen
+                // client to server notification
                 virtual void textDocument_didOpen(
                     const DidOpenTextDocumentParams& params ) noexcept = 0;
 
-                // :arrow_right: textDocument/didChange
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_didChange
+                // client to server notification
                 virtual void textDocument_didChange(
                     const DidChangeTextDocumentParams& params ) noexcept = 0;
 
-                // :arrow_right: textDocument/willSave
-                // New :leftwards_arrow_with_hook:
-                // textDocument/willSaveWaitUntil
-                // New :arrow_right: textDocument/didSave
-                // :arrow_right: textDocument/didClose
-                // :leftwards_arrow_with_hook: textDocument/completion
-                // :leftwards_arrow_with_hook: completionItem/resolve
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_willSave
+                // client to server notification
+                virtual void textDocument_willSave(
+                    const WillSaveTextDocumentParams& params ) noexcept = 0;
 
-                // :leftwards_arrow_with_hook: textDocument/hover
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_willSaveWaitUntil
+                // New :leftwards_arrow_with_hook: textDocument/willSaveWaitUntil
+                // client to server request
+                virtual WillSaveWaitUntilResponse textDocument_willSaveWaitUntil(
+                    const WillSaveTextDocumentParams& params ) = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_didSave
+                // client to server notification
+                virtual void textDocument_didSave(
+                    const DidSaveTextDocumentParams& params ) noexcept = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_didClose
+                // client to server notification
+                virtual void textDocument_didClose(
+                    const DidCloseTextDocumentParams& params ) noexcept = 0;
+
+                //
+                //
+                // Diagnostics
+                //
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_publishDiagnostics
+                // server to client notification
+                virtual void textDocument_publishDiagnostics(
+                    const PublishDiagnosticsParams& params ) noexcept final;
+
+                //
+                //
+                //  Language Features
+                //
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_completion
+                // client to server request
+                virtual CompletionResult textDocument_completion(
+                    const CompletionParams& params ) = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#completionItem_resolve
+                // client to server request
+                virtual CompletionResolveResult completionItem_resolve(
+                    const CompletionParams& params ) = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_hover
+                // client to server request
                 virtual HoverResult textDocument_hover( const HoverParams& params ) = 0;
 
-                // :leftwards_arrow_with_hook: textDocument/signatureHelp
-                // :leftwards_arrow_with_hook: textDocument/references
-                // :leftwards_arrow_with_hook:
-                // textDocument/documentHighlight
-                // :leftwards_arrow_with_hook: textDocument/documentSymbol
-                // :leftwards_arrow_with_hook: textDocument/formatting
-                // :leftwards_arrow_with_hook: textDocument/rangeFormatting
-                // :leftwards_arrow_with_hook: textDocument/onTypeFormatting
-                // :leftwards_arrow_with_hook: textDocument/definition
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_signatureHelp
+                // client to server request
+                virtual SignatureHelpResult textDocument_signatureHelp(
+                    const SignatureHelpParams& params ) = 0;
 
-                // :leftwards_arrow_with_hook: textDocument/codeAction
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_declaration
+                // client to server request
+                // TODO: FIXME: @ppaulweber: API introduced in version 3.14.0, as goes for
+                // LocationLink, next PR
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_definition
+                // client to server request
+                virtual DefinitionResult textDocument_definition(
+                    const DefinitionParams& params ) = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_typeDefinition
+                // client to server request
+                virtual TypeDefinitionResult textDocument_typeDefinition(
+                    const TypeDefinitionParams& params ) = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_implementation
+                // client to server request
+                virtual TextDocumentImplementationResult textDocument_implementation(
+                    const TextDocumentImplementationParams& params ) = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_references
+                // client to server request
+                virtual ReferenceResult textDocument_references(
+                    const ReferenceParams& params ) = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_documentHighlight
+                // client to server request
+                virtual DocumentHighlightResult textDocument_documentHighlight(
+                    const DocumentHighlightParams& params ) = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_documentSymbol
+                // client to server request
+                virtual DocumentSymbolResult textDocument_documentSymbol(
+                    const DocumentSymbolParams& params ) = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_codeAction
+                // client to server request
                 virtual CodeActionResult textDocument_codeAction(
                     const CodeActionParams& params ) = 0;
 
-                // :leftwards_arrow_with_hook: textDocument/codeLens
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_codeLens
+                // client to server request
                 virtual CodeLensResult textDocument_codeLens( const CodeLensParams& params ) = 0;
 
-                // :leftwards_arrow_with_hook: codeLens/resolve
-                // :leftwards_arrow_with_hook: textDocument/documentLink
-                // :leftwards_arrow_with_hook: documentLink/resolve
-                // :leftwards_arrow_with_hook: textDocument/rename
+                // https://microsoft.github.io/language-server-protocol/specification#codeLens_resolve
+                // client to server request
+                virtual CodeLensResolveResult codeLens_resolve(
+                    const CodeLensResolveParams& params ) = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_documentLink
+                // client to server request
+                virtual DocumentLinkResult textDocument_documentLink(
+                    const DocumentLinkParams& params ) = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#documentLink_resolve
+                // client to server request
+                virtual DocumentLinkResolveResult documentLink_resolve(
+                    const DocumentLinkResolveParams& params ) = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_documentColor
+                // client to server request
+                virtual DocumentColorResult textDocument_documentColor(
+                    const DocumentColorParams& params ) = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_colorPresentation
+                // client to server request
+                virtual ColorPresentationResult textDocument_colorPresentation(
+                    const ColorPresentationParams& params ) = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_formatting
+                // client to server request
+                virtual DocumentFormattingResult textDocument_formatting(
+                    const DocumentFormattingParams& params ) = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_rangeFormatting
+                // client to server request
+                virtual DocumentRangeFormattingResult textDocument_rangeFormatting(
+                    const DocumentRangeFormattingParams& params ) = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_onTypeFormatting
+                // client to server request
+                virtual DocumentOnTypeFormattingResult textDocument_onTypeFormatting(
+                    const DocumentOnTypeFormattingParams& params ) = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_rename
+                // client to server request
+                virtual RenameResult textDocument_rename( const RenameParams& params ) = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_prepareRename
+                // client to server request
+                virtual PrepareRenameResult textDocument_prepareRename(
+                    const PrepareRenameParams& params ) = 0;
+
+                // https://microsoft.github.io/language-server-protocol/specification#textDocument_foldingRange
+                // client to server request
+                virtual FoldingRangeResult textDocument_foldingRange(
+                    const FoldingRangeParams& params ) = 0;
+
+                void flush( const std::function< void( const Message& ) >& callback );
+
+                void respond( const ResponseMessage& message );
+
+                void handle( const ResponseMessage& message );
+
+              private:
+                void request(
+                    const RequestMessage& message,
+                    const std::function< void( const ResponseMessage& ) >& callback );
+
+                void notify( const NotificationMessage& message );
+
+                std::string nextId( void );
 
               private:
                 std::vector< Message > m_responseBuffer[ 2 ];
@@ -182,6 +383,12 @@ namespace libstdhl
                 std::vector< Message > m_notificationBuffer[ 2 ];
                 std::size_t m_notificationBufferSlot;
                 std::mutex m_notificationBufferLock;
+
+                std::vector< Message > m_requestBuffer[ 2 ];
+                std::size_t m_requestBufferSlot;
+                std::mutex m_requestBufferLock;
+                std::unordered_map< std::string, std::function< void( const ResponseMessage& ) > >
+                    m_requestCallback;
 
                 std::mutex m_serverFlushLock;
             };

@@ -4,6 +4,7 @@
 //
 //  Developed by: Philipp Paulweber
 //                Emmanuel Pescosta
+//                Christian Lascsak
 //                <https://github.com/casm-lang/libstdhl>
 //
 //  This file is part of libstdhl.
@@ -44,6 +45,8 @@
 
 #include "Identifier.h"
 
+#include <libstdhl/data/log/Timestamp>
+
 using namespace libstdhl;
 using namespace Network;
 using namespace LSP;
@@ -56,20 +59,151 @@ ServerInterface::ServerInterface( void )
 , m_notificationBufferSlot( 0 )
 , m_notificationBufferLock()
 , m_serverFlushLock()
+, m_requestBuffer()
+, m_requestBufferSlot( 0 )
+, m_requestBufferLock()
+, m_requestCallback()
 {
 }
 
-void ServerInterface::respond( const ResponseMessage& message )
+//
+//
+// ServerInterface Lifetime
+//
+
+void ServerInterface::server_cancel( const CancelParams& params ) noexcept
 {
-    std::lock_guard< std::mutex > guard( m_responseBufferLock );
-    m_responseBuffer[ m_responseBufferSlot ].emplace_back( message );
+    NotificationMessage msg( std::string{ Identifier::cancelRequest } );
+    msg.setParams( params );
+    notify( msg );
 }
 
-void ServerInterface::notify( const NotificationMessage& message )
+//
+//
+// ServerInterface Window
+//
+
+void ServerInterface::window_showMessage( const ShowMessageParams& params ) noexcept
 {
-    std::lock_guard< std::mutex > guard( m_notificationBufferLock );
-    m_notificationBuffer[ m_notificationBufferSlot ].emplace_back( message );
+    NotificationMessage msg( std::string{ Identifier::window_showMessage } );
+    msg.setParams( params );
+    notify( msg );
 }
+
+void ServerInterface::window_showMessageRequest(
+    const ShowMessageRequestParams& params,
+    const std::function< void( const ResponseMessage& ) >& callback )
+{
+    RequestMessage msg( nextId(), std::string{ Identifier::window_showMessageRequest } );
+    msg.setParams( params );
+    request( msg, callback );
+}
+
+void ServerInterface::window_logMessage( const LogMessageParams& params ) noexcept
+{
+    NotificationMessage msg( std::string{ Identifier::window_logMessage } );
+    msg.setParams( params );
+    notify( msg );
+}
+
+//
+//
+// ServerInterface Telemetry
+//
+
+void ServerInterface::telemetry_event( const TelemetryEventParams& params ) noexcept
+{
+    NotificationMessage msg( std::string{ Identifier::telemetry_event } );
+    msg.setParams( params );
+    notify( msg );
+}
+
+//
+//
+// ServerInterface Client
+//
+
+void ServerInterface::client_registerCapability(
+    const RegistrationParams& params,
+    const std::function< void( const ResponseMessage& ) >& callback )
+{
+    RequestMessage msg( nextId(), std::string{ Identifier::client_registerCapability } );
+    msg.setParams( params );
+    request( msg, callback );
+}
+
+void ServerInterface::client_unregisterCapability(
+    const UnregistrationParams& params,
+    const std::function< void( const ResponseMessage& ) >& callback )
+{
+    RequestMessage msg( nextId(), std::string{ Identifier::client_unregisterCapability } );
+    msg.setParams( params );
+    request( msg, callback );
+}
+
+//
+//
+// ServerInterface Workspace
+//
+
+void ServerInterface::workspace_workspaceFolders(
+    const std::function< void( const ResponseMessage& ) >& callback )
+{
+    RequestMessage msg( nextId(), std::string{ Identifier::workspace_workspaceFolders } );
+    msg.setParams( Data() );
+    request( msg, callback );
+}
+
+void ServerInterface::workspace_configuration(
+    const ConfigurationParams& params,
+    const std::function< void( const ResponseMessage& ) >& callback )
+{
+    RequestMessage msg( nextId(), std::string{ Identifier::workspace_configuration } );
+    msg.setParams( params );
+    request( msg, callback );
+}
+
+void ServerInterface::workspace_applyEdit(
+    const ApplyWorkspaceEditParams& params,
+    const std::function< void( const ResponseMessage& ) >& callback )
+{
+    RequestMessage msg( nextId(), std::string{ Identifier::workspace_applyEdit } );
+    msg.setParams( params );
+    request( msg, callback );
+}
+
+//
+//
+// ServerInterface Workspace
+//
+
+//
+//
+// ServerInterface Text Synchronization
+//
+
+//
+//
+// ServerInterface Diagnostics
+//
+
+void ServerInterface::textDocument_publishDiagnostics(
+    const PublishDiagnosticsParams& params ) noexcept
+{
+    NotificationMessage msg( std::string{ Identifier::textDocument_publishDiagnostics } );
+    msg.setParams( params );
+    notify( msg );
+}
+
+//
+//
+// ServerInterface Language Features
+//
+
+//
+//
+// ServerInterface (private)
+//
 
 void ServerInterface::flush( const std::function< void( const Message& ) >& callback )
 {
@@ -102,14 +236,56 @@ void ServerInterface::flush( const std::function< void( const Message& ) >& call
     }
 
     m_notificationBuffer[ pos ].clear();
+
+    {
+        std::lock_guard< std::mutex > guard( m_requestBufferLock );
+        pos = m_requestBufferSlot;
+        m_requestBufferSlot = ( pos + 1 ) % 2;
+    }
+
+    for( auto msg : m_requestBuffer[ pos ] )
+    {
+        callback( msg );
+    }
+
+    m_requestBuffer[ pos ].clear();
 }
 
-void ServerInterface::textDocument_publishDiagnostics(
-    const PublishDiagnosticsParams& params ) noexcept
+void ServerInterface::respond( const ResponseMessage& message )
 {
-    NotificationMessage msg( std::string{ Identifier::textDocument_publishDiagnostics } );
-    msg.setParams( params );
-    notify( msg );
+    std::lock_guard< std::mutex > guard( m_responseBufferLock );
+    m_responseBuffer[ m_responseBufferSlot ].emplace_back( message );
+}
+
+void ServerInterface::handle( const ResponseMessage& message )
+{
+    const auto result = m_requestCallback.find( message.id() );
+    if( result != m_requestCallback.end() )
+    {
+        const std::function< void( const ResponseMessage& ) >& callback = result->second;
+        callback( message );
+        m_requestCallback.erase( result );
+    }
+}
+
+void ServerInterface::request(
+    const RequestMessage& message, const std::function< void( const ResponseMessage& ) >& callback )
+{
+    std::lock_guard< std::mutex > guard( m_requestBufferLock );
+    m_requestBuffer[ m_requestBufferSlot ].emplace_back( message );
+    m_requestCallback[ message.id() ] = callback;
+}
+
+void ServerInterface::notify( const NotificationMessage& message )
+{
+    std::lock_guard< std::mutex > guard( m_notificationBufferLock );
+    m_notificationBuffer[ m_notificationBufferSlot ].emplace_back( message );
+}
+
+std::string ServerInterface::nextId( void )
+{
+    auto timestamp = Log::Timestamp();
+    return timestamp.utc();
 }
 
 //
