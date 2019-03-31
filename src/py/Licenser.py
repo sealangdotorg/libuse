@@ -84,6 +84,7 @@ def relicense( filepath, comment, licensetext = licensetext ) :
 
         if line.startswith( "#!/" ) \
         or line.startswith( "CoreASM" ) \
+        or line.startswith( "%{" ) \
         :
             print "%s" % line.replace( "\n", "" )
             continue
@@ -176,6 +177,8 @@ def searcher( dirpath, rootdir = True ) :
         , ".coreasm"          # CoreASM Specification
         , ".asml"             # AsmL Specification
         , ".asmetal"          # AsmetaL Specification
+        , ".l"                # (F)Lex Scanner Generator Specification
+        , ".y"                # YACC Parser Generator Specification
         , ".p"                # PAWN Source
         , ".inc"              # PAWN Header
         , ".m2m"              # rapidM2M Map Machine Profile
