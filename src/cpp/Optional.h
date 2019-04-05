@@ -87,6 +87,11 @@ namespace libstdhl
             }
             return *( *this );
         }
+
+        constexpr bool has_value( void ) const noexcept
+        {
+            return !!( *this );
+        }
     };
 }
 
