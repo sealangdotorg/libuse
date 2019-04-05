@@ -93,6 +93,8 @@ namespace libstdhl
             return !!( *this );
         }
     };
+
+    constexpr auto nullopt = std::experimental::nullopt;
 }
 
 #endif  // _LIBSTDHL_CPP_OPTIONAL_H_
