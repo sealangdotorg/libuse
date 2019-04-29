@@ -41,46 +41,55 @@
 //  statement from your version.
 //
 
-#pragma once
-#ifndef _LIBSTDHL_H_
-#define _LIBSTDHL_H_
+#include <libstdhl/Test>
 
-/**
-   @brief    TODO
+using namespace libstdhl;
 
-   TODO
-*/
-
-#include <libstdhl/Allocator>
-#include <libstdhl/Ansi>
-#include <libstdhl/Args>
-#include <libstdhl/Binding>
-#include <libstdhl/Enum>
-#include <libstdhl/Environment>
-#include <libstdhl/Exception>
-#include <libstdhl/File>
-#include <libstdhl/Hash>
-#include <libstdhl/Json>
-#include <libstdhl/Labeling>
-#include <libstdhl/List>
-#include <libstdhl/Log>
-#include <libstdhl/Memory>
-#include <libstdhl/Network>
-#include <libstdhl/Random>
-#include <libstdhl/SourceLocation>
-#include <libstdhl/Stack>
-#include <libstdhl/Standard>
-#include <libstdhl/String>
-#include <libstdhl/Type>
-#include <libstdhl/Variadic>
-#include <libstdhl/Version>
-#include <libstdhl/Xml>
-
-namespace libstdhl
+class ValueStack : public Stack< i32 >
 {
-}
+  public:
+    using Stack::Stack;
+};
 
-#endif  // _LIBSTDHL_H_
+TEST( libstdhl_cpp_Stack, example )
+{
+    ValueStack stack;
+
+    EXPECT_TRUE( stack.empty() );
+    EXPECT_THROW( stack.top(), StackHasNoElementsException );
+    EXPECT_THROW( stack.pop(), StackHasNoElementsException );
+    EXPECT_EQ( stack.size(), 0 );
+
+    stack.push( 123 );
+    EXPECT_FALSE( stack.empty() );
+    EXPECT_EQ( stack.size(), 1 );
+    EXPECT_EQ( stack.top(), 123 );
+    {
+        stack.push( -10 );
+        EXPECT_FALSE( stack.empty() );
+        EXPECT_EQ( stack.size(), 2 );
+        EXPECT_EQ( stack.top(), -10 );
+        {
+            stack.push( 321 );
+            EXPECT_FALSE( stack.empty() );
+            EXPECT_EQ( stack.size(), 3 );
+            EXPECT_EQ( stack.top(), 321 );
+            EXPECT_EQ( stack.pop(), 321 );
+        }
+        EXPECT_EQ( stack.pop(), -10 );
+    }
+    EXPECT_EQ( stack.pop(), 123 );
+    EXPECT_EQ( stack.size(), 0 );
+    EXPECT_TRUE( stack.empty() );
+
+    stack.push( 123 );
+    EXPECT_FALSE( stack.empty() );
+    EXPECT_EQ( stack.size(), 1 );
+    EXPECT_EQ( stack.top(), 123 );
+    stack.clear();
+    EXPECT_EQ( stack.size(), 0 );
+    EXPECT_TRUE( stack.empty() );
+}
 
 //
 //  Local variables:

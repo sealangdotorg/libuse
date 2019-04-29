@@ -139,6 +139,7 @@ ecm_generate_headers( ${PROJECT}_HEADERS_CPP
     Optional
     Random
     SourceLocation
+    Stack
     Standard
     String
     Test

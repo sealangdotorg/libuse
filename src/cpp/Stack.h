@@ -41,46 +41,77 @@
 //  statement from your version.
 //
 
-#pragma once
-#ifndef _LIBSTDHL_H_
-#define _LIBSTDHL_H_
+#ifndef _LIBSTDHL_STACK_H_
+#define _LIBSTDHL_STACK_H_
 
-/**
-   @brief    TODO
-
-   TODO
-*/
-
-#include <libstdhl/Allocator>
-#include <libstdhl/Ansi>
-#include <libstdhl/Args>
-#include <libstdhl/Binding>
-#include <libstdhl/Enum>
-#include <libstdhl/Environment>
 #include <libstdhl/Exception>
-#include <libstdhl/File>
-#include <libstdhl/Hash>
-#include <libstdhl/Json>
-#include <libstdhl/Labeling>
-#include <libstdhl/List>
-#include <libstdhl/Log>
-#include <libstdhl/Memory>
-#include <libstdhl/Network>
-#include <libstdhl/Random>
-#include <libstdhl/SourceLocation>
-#include <libstdhl/Stack>
-#include <libstdhl/Standard>
-#include <libstdhl/String>
-#include <libstdhl/Type>
-#include <libstdhl/Variadic>
-#include <libstdhl/Version>
-#include <libstdhl/Xml>
+
+#include <vector>
 
 namespace libstdhl
 {
+    class StackHasNoElementsException : public Exception
+    {
+      public:
+        using Exception::Exception;
+    };
+
+    template < typename T >
+    class Stack
+    {
+      public:
+        explicit Stack( void )
+        : m_values()
+        {
+        }
+
+        void push( const T& value )
+        {
+            m_values.push_back( value );
+        }
+
+        T pop( void )
+        {
+            if( empty() )
+            {
+                throw StackHasNoElementsException(
+                    "unable to get element via pop from empty stack" );
+            }
+            const auto value = m_values.back();
+            m_values.pop_back();
+            return value;
+        }
+
+        T& top( void )
+        {
+            if( empty() )
+            {
+                throw StackHasNoElementsException( "unable to get top element from empty stack" );
+            }
+            return m_values.back();
+        }
+
+        void clear( void )
+        {
+            m_values.clear();
+        }
+
+        std::size_t size( void ) const
+        {
+            return m_values.size();
+        }
+
+        u1 empty( void ) const
+        {
+            return m_values.empty();
+        }
+
+      private:
+        std::vector< T > m_values;
+    };
 }
 
-#endif  // _LIBSTDHL_H_
+#endif  // _LIBSTDHL_STACK_H_
 
 //
 //  Local variables:
