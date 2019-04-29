@@ -47,34 +47,77 @@ using namespace libstdhl;
 
 TEST( libstdhl_cpp_File, create_exists_remove )
 {
+    // GIVEN
+    std::string filename = TEST_NAME + ".txt";
+    EXPECT_FALSE( libstdhl::File::exists( filename ) );
+
+    // WHEN
+    auto file = libstdhl::File::open( filename, std::ios::out | std::ios::trunc );
+
+    // THEN
+    EXPECT_TRUE( libstdhl::File::exists( filename ) );
+    EXPECT_TRUE( libstdhl::File::exists( file ) );
+
+    // CLEANUP
+    libstdhl::File::remove( filename );
+    EXPECT_FALSE( libstdhl::File::exists( filename ) );
+}
+
+TEST( libstdhl_cpp_File, does_not_exist_during_open_triggers_exception )
+{
+    // WHEN
     std::string filename = TEST_NAME + ".txt";
 
-    EXPECT_EQ( libstdhl::File::exists( filename ), false );
-
-    libstdhl::File::open( filename, std::ios::out | std::ios::trunc );
-
-    EXPECT_EQ( libstdhl::File::exists( filename ), true );
-    EXPECT_EQ( libstdhl::File::Path::exists( filename ), false );
-
-    libstdhl::File::remove( filename );
-
-    EXPECT_EQ( libstdhl::File::exists( filename ), false );
+    // THEN
+    EXPECT_FALSE( libstdhl::File::exists( filename ) );
+    EXPECT_THROW( libstdhl::File::open( filename ), std::invalid_argument );
 }
 
 TEST( libstdhl_cpp_File_Path, create_exists_remove )
 {
+    // GIVEN
     std::string path = TEST_NAME;
+    EXPECT_FALSE( libstdhl::File::Path::exists( path ) );
 
-    EXPECT_EQ( libstdhl::File::Path::exists( path ), false );
-
+    // WHEN
     libstdhl::File::Path::create( path );
 
-    EXPECT_EQ( libstdhl::File::Path::exists( path ), true );
-    EXPECT_EQ( libstdhl::File::exists( path ), false );
+    // THEN
+    EXPECT_TRUE( libstdhl::File::Path::exists( path ) );
 
+    // CLEANUP
     libstdhl::File::Path::remove( path );
+    EXPECT_FALSE( libstdhl::File::Path::exists( path ) );
+}
 
-    EXPECT_EQ( libstdhl::File::Path::exists( path ), false );
+TEST( libstdhl_cpp_File_Path, does_not_exist_during_remove_triggers_exception )
+{
+    // GIVEN
+    std::string path = TEST_NAME;
+
+    // WHEN
+    EXPECT_FALSE( libstdhl::File::Path::exists( path ) );
+
+    // THEN
+    EXPECT_THROW( libstdhl::File::Path::remove( path ), std::domain_error );
+}
+
+TEST( libstdhl_cpp_File_Path, redundant_creation_triggers_exception )
+{
+    // GIVEN
+    std::string path = TEST_NAME;
+
+    // WHEN
+    EXPECT_FALSE( libstdhl::File::Path::exists( path ) );
+    libstdhl::File::Path::create( path );
+    EXPECT_TRUE( libstdhl::File::Path::exists( path ) );
+
+    // THEN
+    EXPECT_THROW( libstdhl::File::Path::create( path ), std::domain_error );
+
+    // CLEANUP
+    libstdhl::File::Path::remove( path );
+    EXPECT_FALSE( libstdhl::File::Path::exists( path ) );
 }
 
 //
