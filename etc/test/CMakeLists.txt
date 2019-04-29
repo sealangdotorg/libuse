@@ -71,6 +71,7 @@ add_library( ${PROJECT}-test OBJECT
   cpp/sourcelocation.cpp
   cpp/std/rfc3986.cpp
   cpp/string.cpp
+  cpp/stack.cpp
   cpp/type.cpp
   cpp/variadic.cpp
   cpp/xml.cpp

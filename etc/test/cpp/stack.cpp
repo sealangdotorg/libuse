@@ -41,46 +41,22 @@
 //  statement from your version.
 //
 
-#pragma once
-#ifndef _LIBSTDHL_H_
-#define _LIBSTDHL_H_
+#include <libstdhl/Test>
 
-/**
-   @brief    TODO
+using namespace libstdhl;
 
-   TODO
-*/
 
-#include <libstdhl/Allocator>
-#include <libstdhl/Ansi>
-#include <libstdhl/Args>
-#include <libstdhl/Binding>
-#include <libstdhl/Enum>
-#include <libstdhl/Environment>
-#include <libstdhl/Exception>
-#include <libstdhl/File>
-#include <libstdhl/Hash>
-#include <libstdhl/Json>
-#include <libstdhl/Labeling>
-#include <libstdhl/List>
-#include <libstdhl/Log>
-#include <libstdhl/Memory>
-#include <libstdhl/Network>
-#include <libstdhl/Random>
-#include <libstdhl/SourceLocation>
-#include <libstdhl/Stack>
-#include <libstdhl/Standard>
-#include <libstdhl/String>
-#include <libstdhl/Type>
-#include <libstdhl/Variadic>
-#include <libstdhl/Version>
-#include <libstdhl/Xml>
-
-namespace libstdhl
+class ConstantStack : public Stack< u1 >
 {
-}
+  public:
+    using Stack::Stack;
+    using Stack::pop;
+};
 
-#endif  // _LIBSTDHL_H_
+TEST( libstdhl_cpp_Stack, example )
+{
+    ConstantStack cs;
+}
 
 //
 //  Local variables:
