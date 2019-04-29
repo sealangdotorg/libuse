@@ -45,7 +45,7 @@
 
 using namespace libstdhl;
 
-TEST( libstdhl_cpp_File, create_and_remove )
+TEST( libstdhl_cpp_File, create_exists_remove )
 {
     std::string filename = TEST_NAME + ".txt";
 
@@ -54,13 +54,14 @@ TEST( libstdhl_cpp_File, create_and_remove )
     libstdhl::File::open( filename, std::ios::out | std::ios::trunc );
 
     EXPECT_EQ( libstdhl::File::exists( filename ), true );
+    EXPECT_EQ( libstdhl::File::Path::exists( filename ), false );
 
     libstdhl::File::remove( filename );
 
     EXPECT_EQ( libstdhl::File::exists( filename ), false );
 }
 
-TEST( libstdhl_cpp_File_PATH, create_and_remove )
+TEST( libstdhl_cpp_File_Path, create_exists_remove )
 {
     std::string path = TEST_NAME;
 
@@ -69,6 +70,7 @@ TEST( libstdhl_cpp_File_PATH, create_and_remove )
     libstdhl::File::Path::create( path );
 
     EXPECT_EQ( libstdhl::File::Path::exists( path ), true );
+    EXPECT_EQ( libstdhl::File::exists( path ), false );
 
     libstdhl::File::Path::remove( path );
 
