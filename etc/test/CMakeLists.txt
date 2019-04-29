@@ -75,4 +75,5 @@ add_library( ${PROJECT}-test OBJECT
   cpp/type.cpp
   cpp/variadic.cpp
   cpp/xml.cpp
+  cpp/yaml.cpp
   )

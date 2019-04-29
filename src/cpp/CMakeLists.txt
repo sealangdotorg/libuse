@@ -53,6 +53,7 @@ add_library( ${PROJECT}-cpp OBJECT
   File.cpp
   Json.cpp
   SourceLocation.cpp
+  Yaml.cpp
   data/file/TextDocument.cpp
   data/log/Category.cpp
   data/log/Chronograph.cpp
@@ -146,6 +147,7 @@ ecm_generate_headers( ${PROJECT}_HEADERS_CPP
     Type
     Variadic
     Xml
+    Yaml
   PREFIX
     ${PROJECT}
   REQUIRED_HEADERS
@@ -474,4 +476,24 @@ install(
     ${${PROJECT}_VENDOR_PUGIXML_HEADERS_CPP}
   DESTINATION
     "include/${PROJECT}/vendor/pugixml"
+  )
+
+ecm_generate_headers( ${PROJECT}_VENDOR_MINI_YAML_HEADERS_CPP
+  ORIGINAL
+    CAMELCASE
+  HEADER_NAMES
+    Yaml
+  PREFIX
+    ${PROJECT}/vendor/mini-yaml
+  RELATIVE
+    vendor/mini-yaml
+  REQUIRED_HEADERS
+    ${PROJECT}_VENDOR_MINI_YAML_HEADERS
+  )
+install(
+  FILES
+    ${${PROJECT}_VENDOR_PUGIXML_HEADERS}
+    ${${PROJECT}_VENDOR_PUGIXML_HEADERS_CPP}
+  DESTINATION
+    "include/${PROJECT}/vendor/mini-yaml"
   )

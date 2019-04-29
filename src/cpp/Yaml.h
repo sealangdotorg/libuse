@@ -42,46 +42,74 @@
 //
 
 #pragma once
-#ifndef _LIBSTDHL_H_
-#define _LIBSTDHL_H_
+#ifndef _LIBSTDHL_CPP_YAML_H_
+#define _LIBSTDHL_CPP_YAML_H_
+
+#include <libstdhl/Type>
+#include <libstdhl/vendor/mini-yaml/Yaml>
+
+#include <memory>
 
 /**
-   @brief    TODO
+   @brief    C++ YAML Wrapper
 
-   TODO
+   https://github.com/jimmiebergmann/mini-yaml
 */
-
-#include <libstdhl/Allocator>
-#include <libstdhl/Ansi>
-#include <libstdhl/Args>
-#include <libstdhl/Binding>
-#include <libstdhl/Enum>
-#include <libstdhl/Environment>
-#include <libstdhl/Exception>
-#include <libstdhl/File>
-#include <libstdhl/Hash>
-#include <libstdhl/Json>
-#include <libstdhl/Labeling>
-#include <libstdhl/List>
-#include <libstdhl/Log>
-#include <libstdhl/Memory>
-#include <libstdhl/Network>
-#include <libstdhl/Random>
-#include <libstdhl/SourceLocation>
-#include <libstdhl/Stack>
-#include <libstdhl/Standard>
-#include <libstdhl/String>
-#include <libstdhl/Type>
-#include <libstdhl/Variadic>
-#include <libstdhl/Version>
-#include <libstdhl/Xml>
-#include <libstdhl/Yaml>
 
 namespace libstdhl
 {
+    /**
+       @extends Stdhl
+    */
+    namespace Yaml
+    {
+        enum class Type
+        {
+            NONE,
+            MAP,
+            SEQUENCE,
+            BOOLEAN,
+            INTEGER,
+            STRING,
+        };
+
+        class Content : private ::Yaml::Node
+        {
+          public:
+            using Ptr = std::shared_ptr< Content >;
+
+            explicit Content( void );
+
+            Content& operator[]( const std::size_t sequenceIndex );
+            Content& operator[]( const std::string& mapKey );
+
+            u1 has( const std::string& mapKey ) const;
+            u1 has( const std::size_t sequenceIndex ) const;
+
+            template < typename T >
+            T as() const
+            {
+                return As< T >();
+            }
+
+            libstdhl::Yaml::Type type( void ) const;
+
+            std::string description( void ) const;
+
+            std::size_t size( void ) const;
+
+            std::string dump( void ) const;
+
+            void dump( std::iostream& stream ) const;
+
+            static Content fromString( const std::string& text );
+
+            static Content fromStream( std::iostream& stream );
+        };
+    }
 }
 
-#endif  // _LIBSTDHL_H_
+#endif  // _LIBSTDHL_CPP_YAML_H_
 
 //
 //  Local variables:
