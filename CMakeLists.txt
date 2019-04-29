@@ -103,7 +103,6 @@ if( ${LIBGTEST_FOUND} )
     ${LIBGTEST_LIBRARY}
     ${LIBGTEST_MAIN}
     Threads::Threads
-    stdc++fs
     )
 endif()
 

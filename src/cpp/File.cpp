@@ -45,10 +45,10 @@
 
 #if defined( __WIN32__ ) or defined( __WIN32 ) or defined( _WIN32 )
 #include <direct.h>
+#include <fileapi.h>
 #else
 #include <sys/stat.h>
 #include <unistd.h>
-#include <experimental/filesystem>
 #endif
 
 using namespace libstdhl;
@@ -69,8 +69,9 @@ std::fstream File::open( const std::string& filename, const std::ios_base::openm
 
 u1 File::exists( const std::string& filename )
 {
-    if( not std::experimental::filesystem::is_regular_file( filename ) )
+    if( File::Path::exists( filename ) )
     {
+        // filename is a directory
         return false;
     }
 
@@ -171,7 +172,17 @@ void File::Path::create( const std::string& path )
 
 u1 File::Path::exists( const std::string& path )
 {
-    return std::experimental::filesystem::is_directory( path );
+#if defined( __WIN32__ ) or defined( __WIN32 ) or defined( _WIN32 )
+    const auto pathStatus = GetFileAttributesA( path.c_str() );
+    return ( pathStatus & FILE_ATTRIBUTE_DIRECTORY );
+#else
+    struct stat pathStatus;
+    if( ::stat( path.c_str(), &pathStatus ) != 0 )
+    {
+        return false;
+    }
+    return ( pathStatus.st_mode & S_IFDIR );
+#endif
 }
 
 void File::Path::remove( const std::string& path )

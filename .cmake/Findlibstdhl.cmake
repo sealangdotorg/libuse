@@ -73,6 +73,5 @@ endif()
 set( LIBSTDHL_LIBRARY
   ${LIBSTDHL_LIBRARY}
   Threads::Threads
-  stdc++fs
   PARENT_SCOPE
   )
