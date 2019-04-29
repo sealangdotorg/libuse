@@ -48,20 +48,15 @@
 #else
 #include <sys/stat.h>
 #include <unistd.h>
+#include <experimental/filesystem>
 #endif
 
 using namespace libstdhl;
 using namespace File;
 
-u1 File::exists( const std::fstream& file )
-{
-    return file.is_open();
-}
-
 std::fstream File::open( const std::string& filename, const std::ios_base::openmode mode )
 {
     std::fstream file;
-
     file.open( filename, mode );
 
     if( not exists( file ) )
@@ -74,6 +69,11 @@ std::fstream File::open( const std::string& filename, const std::ios_base::openm
 
 u1 File::exists( const std::string& filename )
 {
+    if( not std::experimental::filesystem::is_regular_file( filename ) )
+    {
+        return false;
+    }
+
     try
     {
         open( filename );
@@ -84,6 +84,11 @@ u1 File::exists( const std::string& filename )
     }
 
     return true;
+}
+
+u1 File::exists( const std::fstream& file )
+{
+    return file.is_open();
 }
 
 void File::remove( const std::string& filename )
@@ -166,11 +171,7 @@ void File::Path::create( const std::string& path )
 
 u1 File::Path::exists( const std::string& path )
 {
-#if defined( __WIN32__ ) or defined( __WIN32 ) or defined( _WIN32 )
-    return _access( path.c_str(), 0 ) == 0;
-#else
-    return File::exists( path );
-#endif
+    return std::experimental::filesystem::is_directory( path );
 }
 
 void File::Path::remove( const std::string& path )

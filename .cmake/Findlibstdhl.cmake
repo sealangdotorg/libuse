@@ -69,3 +69,10 @@ if( EXISTS "${LIBSTDHL_LIBRARY}" AND ${LIBSTDHL_LIBRARY} )
 else()
   set( LIBSTDHL_FOUND FALSE PARENT_SCOPE )
 endif()
+
+set( LIBSTDHL_LIBRARY
+  ${LIBSTDHL_LIBRARY}
+  Threads::Threads
+  stdc++fs
+  PARENT_SCOPE
+  )

@@ -68,12 +68,12 @@ namespace libstdhl
     */
     namespace File
     {
-        u1 exists( const std::fstream& file );
-
         std::fstream open(
             const std::string& filename, const std::ios_base::openmode mode = std::fstream::in );
 
         u1 exists( const std::string& filename );
+
+        u1 exists( const std::fstream& file );
 
         void remove( const std::string& filename );
 
