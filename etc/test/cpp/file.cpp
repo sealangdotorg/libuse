@@ -45,6 +45,11 @@
 
 using namespace libstdhl;
 
+//
+//
+// File
+//
+
 TEST( libstdhl_cpp_File, create_exists_remove )
 {
     // GIVEN
@@ -73,6 +78,23 @@ TEST( libstdhl_cpp_File, does_not_exist_during_open_triggers_exception )
     EXPECT_THROW( libstdhl::File::open( filename ), std::invalid_argument );
 }
 
+TEST( libstdhl_cpp_File, does_not_exist_during_remove_triggers_exception )
+{
+    // GIVEN
+    std::string filename = TEST_NAME + ".txt";
+
+    // WHEN
+    EXPECT_FALSE( libstdhl::File::exists( filename ) );
+
+    // THEN
+    EXPECT_THROW( libstdhl::File::remove( filename ), std::invalid_argument );
+}
+
+//
+//
+// File::Path
+//
+
 TEST( libstdhl_cpp_File_Path, create_exists_remove )
 {
     // GIVEN
@@ -84,6 +106,7 @@ TEST( libstdhl_cpp_File_Path, create_exists_remove )
 
     // THEN
     EXPECT_TRUE( libstdhl::File::Path::exists( path ) );
+    EXPECT_FALSE( libstdhl::File::exists( path ) );
 
     // CLEANUP
     libstdhl::File::Path::remove( path );
