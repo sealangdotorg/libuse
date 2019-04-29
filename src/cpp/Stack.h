@@ -44,10 +44,18 @@
 #ifndef _LIBSTDHL_STACK_H_
 #define _LIBSTDHL_STACK_H_
 
+#include <libstdhl/Exception>
+
 #include <vector>
 
 namespace libstdhl
 {
+    class StackHasNoElementsException : public Exception
+    {
+      public:
+        using Exception::Exception;
+    };
+
     template < typename T >
     class Stack
     {
@@ -64,8 +72,11 @@ namespace libstdhl
 
         T pop( void )
         {
-            assert( not m_values.empty() );
-
+            if( empty() )
+            {
+                throw StackHasNoElementsException(
+                    "unable to get element via pop from empty stack" );
+            }
             const auto value = m_values.back();
             m_values.pop_back();
             return value;
@@ -73,14 +84,26 @@ namespace libstdhl
 
         T& top( void )
         {
-            assert( not m_values.empty() );
-
+            if( empty() )
+            {
+                throw StackHasNoElementsException( "unable to get top element from empty stack" );
+            }
             return m_values.back();
         }
 
         void clear( void )
         {
             m_values.clear();
+        }
+
+        std::size_t size( void ) const
+        {
+            return m_values.size();
+        }
+
+        u1 empty( void ) const
+        {
+            return m_values.empty();
         }
 
       private:

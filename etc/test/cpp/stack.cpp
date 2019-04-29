@@ -45,17 +45,50 @@
 
 using namespace libstdhl;
 
-
-class ConstantStack : public Stack< u1 >
+class ValueStack : public Stack< i32 >
 {
   public:
     using Stack::Stack;
-    using Stack::pop;
 };
 
 TEST( libstdhl_cpp_Stack, example )
 {
-    ConstantStack cs;
+    ValueStack stack;
+
+    EXPECT_TRUE( stack.empty() );
+    EXPECT_THROW( stack.top(), StackHasNoElementsException );
+    EXPECT_THROW( stack.pop(), StackHasNoElementsException );
+    EXPECT_EQ( stack.size(), 0 );
+
+    stack.push( 123 );
+    EXPECT_FALSE( stack.empty() );
+    EXPECT_EQ( stack.size(), 1 );
+    EXPECT_EQ( stack.top(), 123 );
+    {
+        stack.push( -10 );
+        EXPECT_FALSE( stack.empty() );
+        EXPECT_EQ( stack.size(), 2 );
+        EXPECT_EQ( stack.top(), -10 );
+        {
+            stack.push( 321 );
+            EXPECT_FALSE( stack.empty() );
+            EXPECT_EQ( stack.size(), 3 );
+            EXPECT_EQ( stack.top(), 321 );
+            EXPECT_EQ( stack.pop(), 321 );
+        }
+        EXPECT_EQ( stack.pop(), -10 );
+    }
+    EXPECT_EQ( stack.pop(), 123 );
+    EXPECT_EQ( stack.size(), 0 );
+    EXPECT_TRUE( stack.empty() );
+
+    stack.push( 123 );
+    EXPECT_FALSE( stack.empty() );
+    EXPECT_EQ( stack.size(), 1 );
+    EXPECT_EQ( stack.top(), 123 );
+    stack.clear();
+    EXPECT_EQ( stack.size(), 0 );
+    EXPECT_TRUE( stack.empty() );
 }
 
 //
