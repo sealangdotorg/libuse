@@ -1,0 +1,9 @@
+
+* 3rd-Party C++ YAML Library
+
+The content of this directory includes a C++ YAML library, which was released under a MIT license. 
+
+** mini-yaml
+
+- url = https://github.com/jimmiebergmann/mini-yaml
+- rev = 24224c7398a8308e8204fb97170dd3382e86de2b
