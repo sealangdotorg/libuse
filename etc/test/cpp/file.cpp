@@ -90,6 +90,99 @@ TEST( libstdhl_cpp_File, does_not_exist_during_remove_triggers_exception )
     EXPECT_THROW( libstdhl::File::remove( filename ), std::invalid_argument );
 }
 
+TEST( libstdhl_cpp_File, readLines )
+{
+    // GIVEN
+    static const auto source = R"***(
+foo
+bar foo
+qux bar foo
+eof)***";
+    const std::string filename = TEST_NAME + ".txt";
+    EXPECT_FALSE( libstdhl::File::exists( filename ) );
+    auto file = libstdhl::File::open( filename, std::fstream::out );
+    file << source;
+    file.close();
+
+    // WHEN
+    EXPECT_TRUE( libstdhl::File::exists( filename ) );
+    const std::vector< std::string > sourceLineStrings = {
+        "", "foo", "bar foo", "qux bar foo", "eof"
+    };
+
+    // THEN
+    auto sourceLineCounter = 0;
+    const auto result = libstdhl::File::readLines(
+        filename, [&]( u32 readLineCounter, const std::string& readLineString ) {
+            EXPECT_EQ( readLineCounter, sourceLineCounter );
+            EXPECT_STREQ( readLineString.c_str(), sourceLineStrings[ readLineCounter ].c_str() );
+            sourceLineCounter++;
+        } );
+    EXPECT_EQ( result, 0 );
+
+    // CLEANUP
+    libstdhl::File::remove( filename );
+    EXPECT_FALSE( libstdhl::File::exists( filename ) );
+}
+
+TEST( libstdhl_cpp_File, readLine_at_specific_line_number )
+{
+    // GIVEN
+    static const auto source = R"***(
+foo
+bar foo
+qux bar foo
+eof)***";
+    const std::string filename = TEST_NAME + ".txt";
+    EXPECT_FALSE( libstdhl::File::exists( filename ) );
+    auto file = libstdhl::File::open( filename, std::fstream::out );
+    file << source;
+    file.close();
+
+    // WHEN
+    EXPECT_TRUE( libstdhl::File::exists( filename ) );
+
+    // THEN
+    EXPECT_STREQ( libstdhl::File::readLine( filename, 1 ).c_str(), "" );
+    EXPECT_STREQ( libstdhl::File::readLine( filename, 2 ).c_str(), "foo" );
+    EXPECT_STREQ( libstdhl::File::readLine( filename, 3 ).c_str(), "bar foo" );
+    EXPECT_STREQ( libstdhl::File::readLine( filename, 4 ).c_str(), "qux bar foo" );
+    EXPECT_STREQ( libstdhl::File::readLine( filename, 5 ).c_str(), "eof" );
+
+    // CLEANUP
+    libstdhl::File::remove( filename );
+    EXPECT_FALSE( libstdhl::File::exists( filename ) );
+}
+
+TEST( libstdhl_cpp_File, readLine_at_invalid_line_number_triggers_exception )
+{
+    // GIVEN
+    static const auto source = R"***(
+foo
+bar foo
+qux bar foo
+eof)***";
+    const std::string filename = TEST_NAME + ".txt";
+    EXPECT_FALSE( libstdhl::File::exists( filename ) );
+    auto file = libstdhl::File::open( filename, std::fstream::out );
+    file << source;
+    file.close();
+
+    // WHEN
+    EXPECT_TRUE( libstdhl::File::exists( filename ) );
+
+    // THEN
+    EXPECT_THROW( libstdhl::File::readLine( filename, -4321 ), FileNumberOutOfRangeException );
+    EXPECT_THROW( libstdhl::File::readLine( filename, -1 ), FileNumberOutOfRangeException );
+    EXPECT_THROW( libstdhl::File::readLine( filename, 0 ), FileNumberOutOfRangeException );
+    EXPECT_THROW( libstdhl::File::readLine( filename, 6 ), FileNumberOutOfRangeException );
+    EXPECT_THROW( libstdhl::File::readLine( filename, 1234 ), FileNumberOutOfRangeException );
+
+    // CLEANUP
+    libstdhl::File::remove( filename );
+    EXPECT_FALSE( libstdhl::File::exists( filename ) );
+}
+
 //
 //
 // File::Path
