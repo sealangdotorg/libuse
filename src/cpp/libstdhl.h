@@ -75,6 +75,7 @@
 #include <libstdhl/Variadic>
 #include <libstdhl/Version>
 #include <libstdhl/Xml>
+#include <libstdhl/Yaml>
 
 namespace libstdhl
 {
