@@ -133,29 +133,44 @@ u8 File::readLines(
     return 0;
 }
 
-std::fstream& File::gotoLine( std::fstream& file, const std::size_t num )
-{
-    file.seekg( std::ios::beg );
-
-    for( std::size_t c = 0; c < ( num - 1 ); c++ )
-    {
-        file.ignore( std::numeric_limits< std::streamsize >::max(), '\n' );
-    }
-
-    return file;
-}
-
 std::string File::readLine( const std::string& filename, const u32 num )
 {
     std::string line;
 
     auto file = open( filename );
 
-    gotoLine( file, num );
+    try
+    {
+        gotoLine( file, num );
+    }
+    catch( const FileNumberOutOfRangeException& e )
+    {
+        throw FileNumberOutOfRangeException(
+            "unable to read a line from file '" + filename + "', because the " + e.what() );
+    }
 
     std::getline( file, line );
 
     return line;
+}
+
+std::fstream& File::gotoLine( std::fstream& file, const std::size_t lineNumber )
+{
+    file.seekg( std::ios::beg );
+
+    std::size_t lineCounter = lineNumber;
+    while( lineCounter != 1 )
+    {
+        file.ignore( std::numeric_limits< std::streamsize >::max(), '\n' );
+        lineCounter--;
+        if( lineCounter < 0 or file.eof() or file.bad() )
+        {
+            throw FileNumberOutOfRangeException(
+                "file does not contain a line at '" + std::to_string( lineNumber ) + "'" );
+        }
+    }
+
+    return file;
 }
 
 void File::Path::create( const std::string& path )
