@@ -45,7 +45,6 @@
 
 #if defined( __WIN32__ ) or defined( __WIN32 ) or defined( _WIN32 )
 #include <direct.h>
-#include <fileapi.h>
 #else
 #include <sys/stat.h>
 #include <unistd.h>
@@ -188,8 +187,12 @@ void File::Path::create( const std::string& path )
 u1 File::Path::exists( const std::string& path )
 {
 #if defined( __WIN32__ ) or defined( __WIN32 ) or defined( _WIN32 )
-    const auto pathStatus = GetFileAttributesA( path.c_str() );
-    return ( pathStatus & FILE_ATTRIBUTE_DIRECTORY );
+    struct _stat pathStatus;
+    if( _stat( path.c_str(), &pathStatus ) != 0 )
+    {
+        return false;
+    }
+    return ( pathStatus.st_mode & _S_IFDIR );
 #else
     struct stat pathStatus;
     if( ::stat( path.c_str(), &pathStatus ) != 0 )

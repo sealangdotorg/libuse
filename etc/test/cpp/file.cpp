@@ -64,6 +64,7 @@ TEST( libstdhl_cpp_File, create_exists_remove )
     EXPECT_TRUE( libstdhl::File::exists( file ) );
 
     // CLEANUP
+    file.close();
     libstdhl::File::remove( filename );
     EXPECT_FALSE( libstdhl::File::exists( filename ) );
 }
