@@ -53,15 +53,9 @@
 using namespace libstdhl;
 using namespace File;
 
-u1 File::exists( const std::fstream& file )
-{
-    return file.is_open();
-}
-
 std::fstream File::open( const std::string& filename, const std::ios_base::openmode mode )
 {
     std::fstream file;
-
     file.open( filename, mode );
 
     if( not exists( file ) )
@@ -74,6 +68,12 @@ std::fstream File::open( const std::string& filename, const std::ios_base::openm
 
 u1 File::exists( const std::string& filename )
 {
+    if( File::Path::exists( filename ) )
+    {
+        // filename is a directory
+        return false;
+    }
+
     try
     {
         open( filename );
@@ -84,6 +84,11 @@ u1 File::exists( const std::string& filename )
     }
 
     return true;
+}
+
+u1 File::exists( const std::fstream& file )
+{
+    return file.is_open();
 }
 
 void File::remove( const std::string& filename )
@@ -127,63 +132,100 @@ u8 File::readLines(
     return 0;
 }
 
-std::fstream& File::gotoLine( std::fstream& file, const std::size_t num )
-{
-    file.seekg( std::ios::beg );
-
-    for( std::size_t c = 0; c < ( num - 1 ); c++ )
-    {
-        file.ignore( std::numeric_limits< std::streamsize >::max(), '\n' );
-    }
-
-    return file;
-}
-
 std::string File::readLine( const std::string& filename, const u32 num )
 {
     std::string line;
 
     auto file = open( filename );
 
-    gotoLine( file, num );
+    try
+    {
+        gotoLine( file, num );
+    }
+    catch( const FileNumberOutOfRangeException& e )
+    {
+        throw FileNumberOutOfRangeException(
+            "unable to read a line from file '" + filename + "', because the " + e.what() );
+    }
 
     std::getline( file, line );
 
     return line;
 }
 
+std::fstream& File::gotoLine( std::fstream& file, const std::size_t lineNumber )
+{
+    file.seekg( std::ios::beg );
+
+    std::size_t lineCounter = lineNumber;
+    while( lineCounter != 1 )
+    {
+        file.ignore( std::numeric_limits< std::streamsize >::max(), '\n' );
+        lineCounter--;
+        if( lineCounter < 0 or file.eof() or file.bad() )
+        {
+            throw FileNumberOutOfRangeException(
+                "file does not contain a line at '" + std::to_string( lineNumber ) + "'" );
+        }
+    }
+
+    return file;
+}
+
+#if defined( __WIN32__ ) or defined( __WIN32 ) or defined( _WIN32 )
+#define PATH_CREATE( PATH ) _mkdir( PATH.c_str() )
+#else
+#define PATH_CREATE( PATH ) mkdir( PATH.c_str(), 0755 )
+#endif
+
 void File::Path::create( const std::string& path )
 {
-#if defined( __WIN32__ ) or defined( __WIN32 ) or defined( _WIN32 )
-    if( _mkdir( path.c_str() ) != 0 )
-#else
-    if( mkdir( path.c_str(), 0755 ) != 0 )
-#endif
+    if( PATH_CREATE( path ) != 0 )
     {
         throw std::domain_error( "unable to create path '" + path + "'" );
     }
 }
 
+#undef PATH_CREATE
+
+#if defined( __WIN32__ ) or defined( __WIN32 ) or defined( _WIN32 )
+using PathStatus = struct _stat;
+#define PATH_GET_STATUS( PATH, PATH_STATUS ) _stat( PATH.c_str(), PATH_STATUS )
+#define PATH_IS_DIR( PATH_STATUS ) ( PATH_STATUS.st_mode & _S_IFDIR )
+#else
+using PathStatus = struct stat;
+#define PATH_GET_STATUS( PATH, PATH_STATUS ) stat( PATH.c_str(), PATH_STATUS )
+#define PATH_IS_DIR( PATH_STATUS ) ( PATH_STATUS.st_mode & S_IFDIR )
+#endif
+
 u1 File::Path::exists( const std::string& path )
 {
-#if defined( __WIN32__ ) or defined( __WIN32 ) or defined( _WIN32 )
-    return _access( path.c_str(), 0 ) == 0;
-#else
-    return File::exists( path );
-#endif
+    PathStatus pathStatus;
+    if( PATH_GET_STATUS( path, &pathStatus ) != 0 )
+    {
+        return false;
+    }
+    return PATH_IS_DIR( pathStatus );
 }
+
+#undef PATH_GET_STATUS
+#undef PATH_IS_DIR
+
+#if defined( __WIN32__ ) or defined( __WIN32 ) or defined( _WIN32 )
+#define PATH_REMOVE( PATH ) _rmdir( PATH.c_str() )
+#else
+#define PATH_REMOVE( PATH ) rmdir( PATH.c_str() )
+#endif
 
 void File::Path::remove( const std::string& path )
 {
-#if defined( __WIN32__ ) or defined( __WIN32 ) or defined( _WIN32 )
-    if( _rmdir( path.c_str() ) != 0 )
-#else
-    if( rmdir( path.c_str() ) != 0 )
-#endif
+    if( PATH_REMOVE( path ) != 0 )
     {
         throw std::domain_error( "unable to remove path '" + path + "'" );
     }
 }
+
+#undef PATH_REMOVE
 
 //
 //  Local variables:

@@ -45,6 +45,7 @@
 #ifndef _LIBSTDHL_CPP_FILE_H_
 #define _LIBSTDHL_CPP_FILE_H_
 
+#include <libstdhl/Exception>
 #include <libstdhl/Type>
 
 #include <cassert>
@@ -66,14 +67,21 @@ namespace libstdhl
     /**
        @extends Stdhl
     */
+
+    class FileNumberOutOfRangeException : public Exception
+    {
+      public:
+        using Exception::Exception;
+    };
+
     namespace File
     {
-        u1 exists( const std::fstream& file );
-
         std::fstream open(
             const std::string& filename, const std::ios_base::openmode mode = std::fstream::in );
 
         u1 exists( const std::string& filename );
+
+        u1 exists( const std::fstream& file );
 
         void remove( const std::string& filename );
 
@@ -81,9 +89,9 @@ namespace libstdhl
             const std::string& filename,
             std::function< void( u32, const std::string& ) > process_line );
 
-        std::fstream& gotoLine( std::fstream& file, const std::size_t num );
-
         std::string readLine( const std::string& filename, const u32 num );
+
+        std::fstream& gotoLine( std::fstream& file, const std::size_t num );
 
         namespace Path
         {
