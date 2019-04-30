@@ -60,32 +60,163 @@ libstdhl::Yaml::Content::Content( void )
 {
 }
 
+libstdhl::Yaml::Content& libstdhl::Yaml::Content::operator[]( const std::string& mapKey ) const
+{
+    if( not has( mapKey ) )
+    {
+        throw libstdhl::Yaml::Exception( "YAML map has no key '" + mapKey + "'" );
+    }
+    auto& map = ( ::Yaml::Node&)( *this );
+    auto& mapValue = map[ mapKey ];
+    return static_cast< Content& >( mapValue );
+}
+
+libstdhl::Yaml::Content& libstdhl::Yaml::Content::operator[](
+    const std::size_t sequenceIndex ) const
+{
+    if( not has( sequenceIndex ) )
+    {
+        throw libstdhl::Yaml::Exception(
+            "YAML sequence has no index '" + std::to_string( sequenceIndex ) + "'" );
+    }
+    auto& sequence = ( ::Yaml::Node&)( *this );
+    auto& sequenceValue = sequence[ sequenceIndex ];
+    return static_cast< Content& >( sequenceValue );
+}
+
 libstdhl::u1 libstdhl::Yaml::Content::has( const std::string& mapKey ) const
 {
-    if( type() != libstdhl::Yaml::Type::MAP )
+    if( type() != libstdhl::Yaml::Type::MAP and type() != libstdhl::Yaml::Type::NONE )
     {
-        return false;
+        throw libstdhl::Yaml::Exception(
+            "YAML content '" + description() + "' does not support map-based operation" );
     }
 
-    for( auto it = this->Begin(); it != this->End(); it++ )
+    if( size() > 0 )
     {
-        if( ( *it ).first == mapKey )
+        for( auto it = this->Begin(); it != this->End(); it++ )
         {
-            return true;
+            if( mapKey == ( *it ).first )
+            {
+                return true;
+            }
         }
     }
-
     return false;
 }
 
 libstdhl::u1 libstdhl::Yaml::Content::has( const std::size_t sequenceIndex ) const
 {
-    if( type() != libstdhl::Yaml::Type::SEQUENCE )
+    if( type() != libstdhl::Yaml::Type::SEQUENCE and type() != libstdhl::Yaml::Type::NONE )
     {
-        return false;
+        throw libstdhl::Yaml::Exception(
+            "YAML content '" + description() + "' does not support sequence-based operation" );
     }
 
     return sequenceIndex >= 0 and sequenceIndex < size();
+}
+
+libstdhl::Yaml::Content::Result libstdhl::Yaml::Content::find( const std::string& mapKey ) const
+{
+    if( has( mapKey ) )
+    {
+        auto& self = *const_cast< Content* >( this );
+        return Result{ &self[ mapKey ] };
+    }
+
+    return Result{ libstdhl::nullopt };
+}
+
+libstdhl::Yaml::Content::Result libstdhl::Yaml::Content::find(
+    const std::size_t sequenceIndex ) const
+{
+    if( has( sequenceIndex ) )
+    {
+        auto& self = *const_cast< Content* >( this );
+        return Result{ &self[ sequenceIndex ] };
+    }
+
+    return Result{ libstdhl::nullopt };
+}
+
+libstdhl::Yaml::Content::Value libstdhl::Yaml::Content::emplace(
+    const std::string& mapKey, const Content& mapValue )
+{
+    if( has( mapKey ) )
+    {
+        auto existingMapValue = this->operator[]( mapKey );
+        this->operator[]( mapKey ) = mapValue;
+        return Value{ existingMapValue };
+    }
+
+    auto& map = ( ::Yaml::Node&)( *this );
+    auto& content = map[ mapKey ];
+    content = mapValue;
+    return Value{ libstdhl::nullopt };
+}
+
+libstdhl::Yaml::Content::Value libstdhl::Yaml::Content::emplace(
+    const Content& sequenceValue, const std::size_t sequenceIndex )
+{
+    if( has( sequenceIndex ) )
+    {
+        auto existingSequenceValue = this->operator[]( sequenceIndex );
+        this->operator[]( sequenceIndex ) = sequenceValue;
+        return Value{ existingSequenceValue };
+    }
+
+    emplace_back( sequenceValue );
+    return Value{ libstdhl::nullopt };
+}
+
+libstdhl::Yaml::Content::Value libstdhl::Yaml::Content::emplace_front(
+    const Content& sequenceValue )
+{
+    if( type() != libstdhl::Yaml::Type::SEQUENCE and type() != libstdhl::Yaml::Type::NONE )
+    {
+        throw libstdhl::Yaml::Exception(
+            "YAML content '" + description() + "' does not support sequence-based operation" );
+    }
+
+    auto& content = static_cast< Content& >( PushFront() );
+    assert( size() > 0 and has( 0 ) );
+    content = sequenceValue;
+    return Value{ Content{ content } };
+}
+
+libstdhl::Yaml::Content::Value libstdhl::Yaml::Content::emplace_back( const Content& sequenceValue )
+{
+    if( type() != libstdhl::Yaml::Type::SEQUENCE and type() != libstdhl::Yaml::Type::NONE )
+    {
+        throw libstdhl::Yaml::Exception(
+            "YAML content '" + description() + "' does not support sequence-based operation" );
+    }
+
+    auto& content = static_cast< Content& >( PushBack() );
+    assert( size() > 0 and has( size() - 1 ) );
+    content = sequenceValue;
+    return Value{ Content{ content } };
+}
+
+void libstdhl::Yaml::Content::erase( const std::string& mapKey )
+{
+    if( not has( mapKey ) )
+    {
+        throw libstdhl::Yaml::Exception(
+            "unable to erase YAML content at map key '" + mapKey + "', does not exist" );
+    }
+    Erase( mapKey );
+}
+
+void libstdhl::Yaml::Content::erase( const std::size_t sequenceIndex )
+{
+    if( not has( sequenceIndex ) )
+    {
+        throw libstdhl::Yaml::Exception(
+            "unable to erase YAML content at sequence index '" + std::to_string( sequenceIndex ) +
+            "', does not exist" );
+    }
+    Erase( sequenceIndex );
 }
 
 libstdhl::Yaml::Type libstdhl::Yaml::Content::type( void ) const
@@ -163,18 +294,6 @@ std::size_t libstdhl::Yaml::Content::size( void ) const
     return Size();
 }
 
-libstdhl::Yaml::Content& libstdhl::Yaml::Content::operator[]( const std::size_t sequenceIndex )
-{
-    assert( has( sequenceIndex ) );
-    return static_cast< Content& >( ::Yaml::Node::operator[]( sequenceIndex ) );
-}
-
-libstdhl::Yaml::Content& libstdhl::Yaml::Content::operator[]( const std::string& mapKey )
-{
-    assert( has( mapKey ) );
-    return static_cast< Content& >( ::Yaml::Node::operator[]( mapKey ) );
-}
-
 std::string libstdhl::Yaml::Content::dump( void ) const
 {
     std::stringstream stream;
@@ -196,7 +315,14 @@ libstdhl::Yaml::Content libstdhl::Yaml::Content::fromString( const std::string& 
 libstdhl::Yaml::Content libstdhl::Yaml::Content::fromStream( std::iostream& stream )
 {
     libstdhl::Yaml::Content yaml;
-    ::Yaml::Parse( yaml, stream );
+    try
+    {
+        ::Yaml::Parse( yaml, stream );
+    }
+    catch( const ::Yaml::Exception& e )
+    {
+        throw libstdhl::Yaml::Exception( e.what() );
+    }
     return yaml;
 }
 

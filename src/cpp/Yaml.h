@@ -45,6 +45,8 @@
 #ifndef _LIBSTDHL_CPP_YAML_H_
 #define _LIBSTDHL_CPP_YAML_H_
 
+#include <libstdhl/Exception>
+#include <libstdhl/Optional>
 #include <libstdhl/Type>
 #include <libstdhl/vendor/mini-yaml/Yaml>
 
@@ -73,18 +75,63 @@ namespace libstdhl
             STRING,
         };
 
+        class Exception : public libstdhl::Exception
+        {
+          public:
+            using libstdhl::Exception::Exception;
+        };
+
+        class MapHasNoKeyException : public Exception
+        {
+          public:
+            using Exception::Exception;
+        };
+
+        class SequenceHasNoIndexException : public Exception
+        {
+          public:
+            using Exception::Exception;
+        };
+
         class Content : private ::Yaml::Node
         {
           public:
             using Ptr = std::shared_ptr< Content >;
 
+            using Result = libstdhl::Optional< Content* >;
+
+            using Value = libstdhl::Optional< Content >;
+
             explicit Content( void );
 
-            Content& operator[]( const std::size_t sequenceIndex );
-            Content& operator[]( const std::string& mapKey );
+            Content( const Content& ) = default;
+
+            Content& operator[]( const std::string& mapKey ) const;
+
+            Content& operator[]( const std::size_t sequenceIndex ) const;
 
             u1 has( const std::string& mapKey ) const;
+
             u1 has( const std::size_t sequenceIndex ) const;
+
+            Result find( const std::string& mapKey ) const;
+
+            Result find( const std::size_t sequenceIndex ) const;
+
+            Value emplace(
+                const std::string& mapKey, const Content& mapValue = libstdhl::Yaml::Content() );
+
+            Value emplace(
+                const Content& sequenceValue = libstdhl::Yaml::Content(),
+                const std::size_t sequenceIndex = 0 );
+
+            Value emplace_front( const Content& sequenceValue = libstdhl::Yaml::Content() );
+
+            Value emplace_back( const Content& sequenceValue = libstdhl::Yaml::Content() );
+
+            void erase( const std::string& mapKey );
+
+            void erase( const std::size_t sequenceIndex );
 
             template < typename T >
             T as() const
