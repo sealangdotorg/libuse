@@ -172,48 +172,60 @@ std::fstream& File::gotoLine( std::fstream& file, const std::size_t lineNumber )
     return file;
 }
 
+#if defined( __WIN32__ ) or defined( __WIN32 ) or defined( _WIN32 )
+#define PATH_CREATE( PATH ) _mkdir( PATH.c_str() )
+#else
+#define PATH_CREATE( PATH ) mkdir( PATH.c_str(), 0755 )
+#endif
+
 void File::Path::create( const std::string& path )
 {
-#if defined( __WIN32__ ) or defined( __WIN32 ) or defined( _WIN32 )
-    if( _mkdir( path.c_str() ) != 0 )
-#else
-    if( mkdir( path.c_str(), 0755 ) != 0 )
-#endif
+    if( PATH_CREATE( path ) != 0 )
     {
         throw std::domain_error( "unable to create path '" + path + "'" );
     }
 }
 
+#undef PATH_CREATE
+
+#if defined( __WIN32__ ) or defined( __WIN32 ) or defined( _WIN32 )
+using PathStatus = struct _stat;
+#define PATH_GET_STATUS( PATH, PATH_STATUS ) _stat( PATH.c_str(), PATH_STATUS )
+#define PATH_IS_DIR( PATH_STATUS ) ( PATH_STATUS.st_mode & _S_IFDIR )
+#else
+using PathStatus = struct stat;
+#define PATH_GET_STATUS( PATH, PATH_STATUS ) stat( PATH.c_str(), PATH_STATUS )
+#define PATH_IS_DIR( PATH_STATUS ) ( PATH_STATUS.st_mode & S_IFDIR )
+#endif
+
 u1 File::Path::exists( const std::string& path )
 {
-#if defined( __WIN32__ ) or defined( __WIN32 ) or defined( _WIN32 )
-    struct _stat pathStatus;
-    if( _stat( path.c_str(), &pathStatus ) != 0 )
+    PathStatus pathStatus;
+    if( PATH_GET_STATUS( path, &pathStatus ) != 0 )
     {
         return false;
     }
-    return ( pathStatus.st_mode & _S_IFDIR );
-#else
-    struct stat pathStatus;
-    if( ::stat( path.c_str(), &pathStatus ) != 0 )
-    {
-        return false;
-    }
-    return ( pathStatus.st_mode & S_IFDIR );
-#endif
+    return PATH_IS_DIR( pathStatus );
 }
+
+#undef PATH_GET_STATUS
+#undef PATH_IS_DIR
+
+#if defined( __WIN32__ ) or defined( __WIN32 ) or defined( _WIN32 )
+#define PATH_REMOVE( PATH ) _rmdir( PATH.c_str() )
+#else
+#define PATH_REMOVE( PATH ) rmdir( PATH.c_str() )
+#endif
 
 void File::Path::remove( const std::string& path )
 {
-#if defined( __WIN32__ ) or defined( __WIN32 ) or defined( _WIN32 )
-    if( _rmdir( path.c_str() ) != 0 )
-#else
-    if( rmdir( path.c_str() ) != 0 )
-#endif
+    if( PATH_REMOVE( path ) != 0 )
     {
         throw std::domain_error( "unable to remove path '" + path + "'" );
     }
 }
+
+#undef PATH_REMOVE
 
 //
 //  Local variables:
