@@ -169,22 +169,7 @@ libstdhl::Yaml::Content::Value libstdhl::Yaml::Content::emplace(
     return Value{ libstdhl::nullopt };
 }
 
-libstdhl::Yaml::Content::Value libstdhl::Yaml::Content::emplace_front(
-    const Content& sequenceValue )
-{
-    if( type() != libstdhl::Yaml::Type::SEQUENCE and type() != libstdhl::Yaml::Type::NONE )
-    {
-        throw libstdhl::Yaml::Exception(
-            "YAML content '" + description() + "' does not support sequence-based operation" );
-    }
-
-    auto& content = static_cast< Content& >( PushFront() );
-    assert( size() > 0 and has( 0 ) );
-    content = sequenceValue;
-    return Value{ Content{ content } };
-}
-
-libstdhl::Yaml::Content::Value libstdhl::Yaml::Content::emplace_back( const Content& sequenceValue )
+libstdhl::Yaml::Content& libstdhl::Yaml::Content::emplace_back( const Content& sequenceValue )
 {
     if( type() != libstdhl::Yaml::Type::SEQUENCE and type() != libstdhl::Yaml::Type::NONE )
     {
@@ -195,7 +180,7 @@ libstdhl::Yaml::Content::Value libstdhl::Yaml::Content::emplace_back( const Cont
     auto& content = static_cast< Content& >( PushBack() );
     assert( size() > 0 and has( size() - 1 ) );
     content = sequenceValue;
-    return Value{ Content{ content } };
+    return content;
 }
 
 void libstdhl::Yaml::Content::erase( const std::string& mapKey )

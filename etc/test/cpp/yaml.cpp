@@ -174,6 +174,106 @@ TEST( libstdhl_cpp_Yaml, parsing_invalid_file_triggers_exception )
 // Yaml::Sequence
 //
 
+TEST( libstdhl_cpp_Yaml, sequence_find_has_with_no_elements )
+{
+    // GIVEN
+    auto yaml = libstdhl::Yaml::Content();
+    EXPECT_EQ( yaml.size(), 0 );
+    EXPECT_EQ( yaml.type(), libstdhl::Yaml::Type::NONE );
+
+    // WHEN
+    auto hasValue = yaml.has( 123 );
+    auto findValue = yaml.find( 123 );
+
+    // THEN
+    EXPECT_EQ( yaml.size(), 0 );
+    EXPECT_EQ( yaml.type(), libstdhl::Yaml::Type::NONE );
+    EXPECT_EQ( yaml.description(), "None" );
+
+    EXPECT_THROW( yaml[ 123 ], libstdhl::Yaml::Exception );
+
+    EXPECT_FALSE( hasValue );
+    EXPECT_FALSE( findValue.has_value() );
+}
+
+TEST( libstdhl_cpp_Yaml, sequence_find_element_at_existing_index )
+{
+    // GIVEN
+    auto yaml = libstdhl::Yaml::Content();
+    EXPECT_EQ( yaml.size(), 0 );
+    EXPECT_EQ( yaml.type(), libstdhl::Yaml::Type::NONE );
+    yaml.emplace_back();
+    yaml.emplace_back();
+    yaml.emplace_back();
+    EXPECT_EQ( yaml.size(), 3 );
+    EXPECT_EQ( yaml.type(), libstdhl::Yaml::Type::SEQUENCE );
+
+    // WHEN
+    auto value = yaml.find( 2 );
+
+    // THEN
+    EXPECT_EQ( yaml.size(), 3 );
+    EXPECT_EQ( yaml.type(), libstdhl::Yaml::Type::SEQUENCE );
+
+    ASSERT_TRUE( value.has_value() );
+}
+
+TEST( libstdhl_cpp_Yaml, sequence_find_element_at_non_existing_index )
+{
+    // GIVEN
+    auto yaml = libstdhl::Yaml::Content();
+    EXPECT_EQ( yaml.size(), 0 );
+    EXPECT_EQ( yaml.type(), libstdhl::Yaml::Type::NONE );
+    yaml.emplace_back();
+    yaml.emplace_back();
+    yaml.emplace_back();
+    EXPECT_EQ( yaml.size(), 3 );
+    EXPECT_EQ( yaml.type(), libstdhl::Yaml::Type::SEQUENCE );
+
+    // WHEN
+    auto value = yaml.find( 9 );
+
+    // THEN
+    EXPECT_EQ( yaml.size(), 3 );
+    EXPECT_EQ( yaml.type(), libstdhl::Yaml::Type::SEQUENCE );
+
+    ASSERT_FALSE( value.has_value() );
+}
+
+TEST( libstdhl_cpp_Yaml, sequence_emplace_back )
+{
+    // GIVEN
+    auto yaml = libstdhl::Yaml::Content();
+    EXPECT_EQ( yaml.size(), 0 );
+    EXPECT_EQ( yaml.type(), libstdhl::Yaml::Type::NONE );
+
+    // WHEN
+    yaml.emplace_back();  // 0
+    yaml.emplace_back();  // 1
+    yaml.emplace_back();  // 2
+
+    // THEN
+    EXPECT_EQ( yaml.size(), 3 );
+    EXPECT_EQ( yaml.type(), libstdhl::Yaml::Type::SEQUENCE );
+}
+
+TEST( libstdhl_cpp_Yaml, sequence_emplace_front )
+{
+    // GIVEN
+    auto yaml = libstdhl::Yaml::Content();
+    EXPECT_EQ( yaml.size(), 0 );
+    EXPECT_EQ( yaml.type(), libstdhl::Yaml::Type::NONE );
+
+    // WHEN
+    yaml.emplace_front();
+    yaml.emplace_front();
+    yaml.emplace_front();
+
+    // THEN
+    EXPECT_EQ( yaml.size(), 3 );
+    EXPECT_EQ( yaml.type(), libstdhl::Yaml::Type::SEQUENCE );
+}
+
 TEST( libstdhl_cpp_Yaml, sequence_emplace_in_empty_index )
 {
     // GIVEN
@@ -340,6 +440,72 @@ TEST( libstdhl_cpp_Yaml, sequence_erase_non_existing_index_triggers_exception )
 //
 // Yaml::Map
 //
+
+TEST( libstdhl_cpp_Yaml, map_find_has_with_no_elements )
+{
+    // GIVEN
+    auto yaml = libstdhl::Yaml::Content();
+    EXPECT_EQ( yaml.size(), 0 );
+    EXPECT_EQ( yaml.type(), libstdhl::Yaml::Type::NONE );
+
+    // WHEN
+    auto hasValue = yaml.has( "key" );
+    auto findValue = yaml.find( "key" );
+
+    // THEN
+    EXPECT_EQ( yaml.size(), 0 );
+    EXPECT_EQ( yaml.type(), libstdhl::Yaml::Type::NONE );
+    EXPECT_EQ( yaml.description(), "None" );
+
+    EXPECT_THROW( yaml[ "key" ], libstdhl::Yaml::Exception );
+
+    EXPECT_FALSE( hasValue );
+    EXPECT_FALSE( findValue.has_value() );
+}
+
+TEST( libstdhl_cpp_Yaml, map_find_element_at_existing_key )
+{
+    // GIVEN
+    auto yaml = libstdhl::Yaml::Content();
+    EXPECT_EQ( yaml.size(), 0 );
+    EXPECT_EQ( yaml.type(), libstdhl::Yaml::Type::NONE );
+    yaml.emplace( "foo" );
+    yaml.emplace( "bar" );
+    yaml.emplace( "qux" );
+    EXPECT_EQ( yaml.size(), 3 );
+    EXPECT_EQ( yaml.type(), libstdhl::Yaml::Type::MAP );
+
+    // WHEN
+    auto value = yaml.find( "foo" );
+
+    // THEN
+    EXPECT_EQ( yaml.size(), 3 );
+    EXPECT_EQ( yaml.type(), libstdhl::Yaml::Type::MAP );
+
+    ASSERT_TRUE( value.has_value() );
+}
+
+TEST( libstdhl_cpp_Yaml, map_find_element_at_non_existing_key )
+{
+    // GIVEN
+    auto yaml = libstdhl::Yaml::Content();
+    EXPECT_EQ( yaml.size(), 0 );
+    EXPECT_EQ( yaml.type(), libstdhl::Yaml::Type::NONE );
+    yaml.emplace( "foo" );
+    yaml.emplace( "bar" );
+    yaml.emplace( "qux" );
+    EXPECT_EQ( yaml.size(), 3 );
+    EXPECT_EQ( yaml.type(), libstdhl::Yaml::Type::MAP );
+
+    // WHEN
+    auto value = yaml.find( "foobarqux" );
+
+    // THEN
+    EXPECT_EQ( yaml.size(), 3 );
+    EXPECT_EQ( yaml.type(), libstdhl::Yaml::Type::MAP );
+
+    ASSERT_FALSE( value.has_value() );
+}
 
 TEST( libstdhl_cpp_Yaml, map_emplace_in_empty_map )
 {

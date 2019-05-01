@@ -125,9 +125,7 @@ namespace libstdhl
                 const Content& sequenceValue = libstdhl::Yaml::Content(),
                 const std::size_t sequenceIndex = 0 );
 
-            Value emplace_front( const Content& sequenceValue = libstdhl::Yaml::Content() );
-
-            Value emplace_back( const Content& sequenceValue = libstdhl::Yaml::Content() );
+            Content& emplace_back( const Content& sequenceValue = libstdhl::Yaml::Content() );
 
             void erase( const std::string& mapKey );
 
