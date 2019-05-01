@@ -257,23 +257,6 @@ TEST( libstdhl_cpp_Yaml, sequence_emplace_back )
     EXPECT_EQ( yaml.type(), libstdhl::Yaml::Type::SEQUENCE );
 }
 
-TEST( libstdhl_cpp_Yaml, sequence_emplace_front )
-{
-    // GIVEN
-    auto yaml = libstdhl::Yaml::Content();
-    EXPECT_EQ( yaml.size(), 0 );
-    EXPECT_EQ( yaml.type(), libstdhl::Yaml::Type::NONE );
-
-    // WHEN
-    yaml.emplace_front();
-    yaml.emplace_front();
-    yaml.emplace_front();
-
-    // THEN
-    EXPECT_EQ( yaml.size(), 3 );
-    EXPECT_EQ( yaml.type(), libstdhl::Yaml::Type::SEQUENCE );
-}
-
 TEST( libstdhl_cpp_Yaml, sequence_emplace_in_empty_index )
 {
     // GIVEN
