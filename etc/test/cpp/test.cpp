@@ -41,55 +41,36 @@
 //  statement from your version.
 //
 
-#pragma once
-#ifndef _LIBSTDHL_TEST_H_
-#define _LIBSTDHL_TEST_H_
+#include <libstdhl/Test>
 
-#include <gtest/gtest.h>
-#include <libstdhl/libstdhl>
+using namespace libstdhl;
 
-#define TEST_CASE \
-    std::string( ::testing::UnitTest::GetInstance()->current_test_info()->test_case_name() )
+TEST( libstdhl_cpp_Test, test_case )
+{
+    EXPECT_STREQ( TEST_CASE.c_str(), "libstdhl_cpp_Test" );
+}
 
-#define TEST_UNIT std::string( ::testing::UnitTest::GetInstance()->current_test_info()->name() )
+TEST( libstdhl_cpp_Test, test_unit )
+{
+    EXPECT_STREQ( TEST_UNIT.c_str(), "test_unit" );
+}
 
-#define TEST_NAME ( TEST_CASE + "." + TEST_UNIT )
+TEST( libstdhl_cpp_Test, test_name )
+{
+    EXPECT_STREQ( TEST_NAME.c_str(), "libstdhl_cpp_Test.test_name" );
+}
 
-#define TEST_FILE_CREATE( FILENAME, CONTENT )                            \
-    {                                                                    \
-        const auto filePath = FILENAME;                                  \
-        ASSERT_FALSE( libstdhl::File::exists( filePath ) );              \
-        auto file = libstdhl::File::open( filePath, std::fstream::out ); \
-        file << CONTENT;                                                 \
-        file.close();                                                    \
-        ASSERT_TRUE( libstdhl::File::exists( filePath ) );               \
-    }
+TEST( libstdhl_cpp_Test, file_create_and_remove )
+{
+    TEST_FILE_CREATE( TEST_NAME, TEST_UNIT );
+    TEST_FILE_REMOVE( TEST_NAME );
+}
 
-#define TEST_FILE_REMOVE( FILENAME )                        \
-    {                                                       \
-        const auto filePath = FILENAME;                     \
-        ASSERT_TRUE( libstdhl::File::exists( filePath ) );  \
-        libstdhl::File::remove( filePath );                 \
-        ASSERT_FALSE( libstdhl::File::exists( filePath ) ); \
-    }
-
-#define TEST_PATH_CREATE( PATHNAME )                              \
-    {                                                             \
-        const auto filePath = PATHNAME;                           \
-        ASSERT_FALSE( libstdhl::File::Path::exists( filePath ) ); \
-        libstdhl::File::Path::create( filePath );                 \
-        ASSERT_TRUE( libstdhl::File::Path::exists( filePath ) );  \
-    }
-
-#define TEST_PATH_REMOVE( PATHNAME )                              \
-    {                                                             \
-        const auto filePath = PATHNAME;                           \
-        ASSERT_TRUE( libstdhl::File::Path::exists( filePath ) );  \
-        libstdhl::File::Path::remove( filePath );                 \
-        ASSERT_FALSE( libstdhl::File::Path::exists( filePath ) ); \
-    }
-
-#endif  // _LIBSTDHL_TEST_H_
+TEST( libstdhl_cpp_Test, path_create_and_remove )
+{
+    TEST_PATH_CREATE( TEST_CASE );
+    TEST_PATH_REMOVE( TEST_CASE );
+}
 
 //
 //  Local variables:
