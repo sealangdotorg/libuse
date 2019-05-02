@@ -62,7 +62,7 @@ TEST( libstdhl_cpp_standard_rfc3986, https_link )
         "https://code.visualstudio.com/docs/extensions/overview?test=true#frag" );
 }
 
-TEST( libstdhl_cpp_standard_rfc3986, file_path_ascii_only )
+TEST( libstdhl_cpp_standard_rfc3986, file_path_absolute_ascii_only )
 {
     const auto uri = UniformResourceIdentifier::fromString( "file:///users/me/c-projects/" );
 
@@ -72,6 +72,18 @@ TEST( libstdhl_cpp_standard_rfc3986, file_path_ascii_only )
     EXPECT_STREQ( uri.query().c_str(), "" );
     EXPECT_STREQ( uri.fragment().c_str(), "" );
     EXPECT_STREQ( uri.toString().c_str(), "file:///users/me/c-projects/" );
+}
+
+TEST( libstdhl_cpp_standard_rfc3986, file_path_relative_ascii_only )
+{
+    const auto uri = UniformResourceIdentifier::fromString( "file:///./users/me/c-projects/" );
+
+    EXPECT_STREQ( uri.scheme().c_str(), "file" );
+    EXPECT_STREQ( uri.authority().c_str(), "" );
+    EXPECT_STREQ( uri.path().c_str(), "/./users/me/c-projects/" );
+    EXPECT_STREQ( uri.query().c_str(), "" );
+    EXPECT_STREQ( uri.fragment().c_str(), "" );
+    EXPECT_STREQ( uri.toString().c_str(), "file:///./users/me/c-projects/" );
 }
 
 TEST( libstdhl_cpp_standard_rfc3986, invalid_uri_path )
