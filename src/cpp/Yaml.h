@@ -50,6 +50,7 @@
 #include <libstdhl/Type>
 #include <libstdhl/vendor/mini-yaml/Yaml>
 
+#include <functional>
 #include <memory>
 
 /**
@@ -102,6 +103,10 @@ namespace libstdhl
 
             using Value = libstdhl::Optional< Content >;
 
+            using iterator = ::Yaml::Iterator;
+
+            using const_iterator = ::Yaml::ConstIterator;
+
             explicit Content( void );
 
             Content( const Content& ) = default;
@@ -131,11 +136,27 @@ namespace libstdhl
 
             void erase( const std::size_t sequenceIndex );
 
+            void foreach( const std::function<
+                          void( const std::string& mapKey, const Content& mapValue, u1& abort ) >
+                              process ) const;
+
             template < typename T >
             T as() const
             {
                 return As< T >();
             }
+
+            iterator begin( void );
+
+            const_iterator begin( void ) const;
+
+            const_iterator cbegin( void ) const;
+
+            iterator end( void );
+
+            const_iterator end( void ) const;
+
+            const_iterator cend( void ) const;
 
             libstdhl::Yaml::Type type( void ) const;
 

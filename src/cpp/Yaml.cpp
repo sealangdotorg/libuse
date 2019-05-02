@@ -92,17 +92,16 @@ libstdhl::u1 libstdhl::Yaml::Content::has( const std::string& mapKey ) const
             "YAML content '" + description() + "' does not support map-based operation" );
     }
 
-    if( size() > 0 )
-    {
-        for( auto it = this->Begin(); it != this->End(); it++ )
+    u1 found = false;
+    foreach( [&]( const std::string& key, const Content&, u1& abort ) {
+        if( mapKey == key )
         {
-            if( mapKey == ( *it ).first )
-            {
-                return true;
-            }
+            found = true;
+            abort = true;
         }
-    }
-    return false;
+    } )
+        ;
+    return found;
 }
 
 libstdhl::u1 libstdhl::Yaml::Content::has( const std::size_t sequenceIndex ) const
@@ -202,6 +201,62 @@ void libstdhl::Yaml::Content::erase( const std::size_t sequenceIndex )
             "', does not exist" );
     }
     Erase( sequenceIndex );
+}
+
+libstdhl::Yaml::Content::iterator libstdhl::Yaml::Content::begin( void )
+{
+    return Begin();
+}
+
+libstdhl::Yaml::Content::const_iterator libstdhl::Yaml::Content::begin( void ) const
+{
+    return Begin();
+}
+
+libstdhl::Yaml::Content::const_iterator libstdhl::Yaml::Content::cbegin( void ) const
+{
+    return begin();
+}
+
+libstdhl::Yaml::Content::iterator libstdhl::Yaml::Content::end( void )
+{
+    return End();
+}
+
+libstdhl::Yaml::Content::const_iterator libstdhl::Yaml::Content::end( void ) const
+{
+    return End();
+}
+
+libstdhl::Yaml::Content::const_iterator libstdhl::Yaml::Content::cend( void ) const
+{
+    return end();
+}
+
+void libstdhl::Yaml::Content::foreach(
+    const std::function< void( const std::string& mapKey, const Content& mapValue, u1& abort ) >
+        process ) const
+{
+    if( type() != libstdhl::Yaml::Type::MAP and type() != libstdhl::Yaml::Type::NONE )
+    {
+        throw libstdhl::Yaml::Exception(
+            "YAML content '" + description() + "' does not support map-based operation" );
+    }
+
+    if( size() > 0 )
+    {
+        for( auto it = begin(); it != end(); it++ )
+        {
+            const auto& mapKey = ( *it ).first;
+            const auto& mapValue = static_cast< const Content& >( ( *it ).second );
+            u1 abort = false;
+            process( mapKey, mapValue, abort );
+            if( abort )
+            {
+                break;
+            }
+        }
+    }
 }
 
 libstdhl::Yaml::Type libstdhl::Yaml::Content::type( void ) const
