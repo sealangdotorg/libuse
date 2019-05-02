@@ -65,7 +65,7 @@ namespace libstdhl
       public:
         Exception( const std::string& message );
 
-        const char* what( void ) const noexcept;
+        const char* what( void ) const noexcept override final;
 
       private:
         const std::string m_message;
