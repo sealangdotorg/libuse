@@ -1,0 +1,25 @@
+name: CI
+
+on: [push]
+
+jobs:
+  task:
+    runs-on: [ubuntu-latest, windows-latest, macOS-latest]
+    steps:
+    - uses: actions/checkout@v1
+    - name: fetch
+      run:  make ci-fetch
+    - name: deps
+      run:  make ci-deps
+    - name: build
+      run:  make ci-build
+    - name: test
+      run:  make ci-test
+    - name: benchmark
+      run:  make ci-benchmark
+    - name: coverage
+      run:  |
+        if [ "$C" == "gcc" ]; then
+          wget https://codecov.io/bash;
+          sh bash -f "!*#usr#include*" 2> /dev/null;
+        fi
