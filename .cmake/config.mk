@@ -708,59 +708,18 @@ info-generators:
 
 ENV_CMAKE_FLAGS += -DCMAKE_INSTALL_PREFIX=$(I)
 
-# https://cirrus-ci.org/guide/writing-tasks/#environment-variables
-ENV_CI_BRANCH         := $(shell git rev-parse --abbrev-ref HEAD)
-ENV_CI_BRANCH_BASE    := "n.a."
-ENV_CI_BRANCH_DEFAULT := "n.a."
 ENV_CI_BUILD          := "n.a."
-ENV_CI_BUILD_PATH     := "n.a."
+ENV_CI_BRANCH         := $(shell git rev-parse --abbrev-ref HEAD)
 ENV_CI_COMMIT         := $(shell git rev-parse HEAD)
-ENV_CI_COMMIT_BASE    := "n.a."
-ENV_CI_DEPTH          := "n.a."
-ENV_CI_HTTP           := "n.a."
-ENV_CI_OS             := "n.a."
-ENV_CI_PR             := "n.a."
-ENV_CI_REPO           := "n.a."
-ENV_CI_REPO_NAME      := "n.a."
-ENV_CI_REPO_OWNER     := "n.a."
-ENV_CI_REPO_URL       := "n.a."
-ENV_CI_SHELL          := "n.a."
-ENV_CI_TAG            := "n.a."
-ENV_CI_TASK_NAME      := "n.a."
-ENV_CI_TASK_ID        := "n.a."
 
 ifdef CIRRUS_CI
   # https://cirrus-ci.org/guide/writing-tasks/#environment-variables
-  ENV_CI_BRANCH         := $(CIRRUS_BRANCH)
-  ENV_CI_BRANCH_BASE    := $(CIRRUS_BASE_BRANCH)
-  ENV_CI_BRANCH_DEFAULT := $(CIRRUS_DEFAULT_BRANCH)
   ENV_CI_BUILD          := $(CIRRUS_BUILD_ID)
-  ENV_CI_BUILD_PATH     := $(CIRRUS_WORKING_DIR)
-  ENV_CI_BUILD_INDEX    := $(CI_NODE_INDEX)
-  ENV_CI_BUILD_TOTAL    := $(CI_NODE_TOTAL)
-  ENV_CI_COMMIT         := $(CIRRUS_CHANGE_IN_REPO)
-  ENV_CI_COMMIT_BASE    := $(CIRRUS_BASE_SHA)
-  ENV_CI_DEPTH          := $(CIRRUS_CLONE_DEPTH)
-  ENV_CI_HTTP           := $(CIRRUS_HTTP_CACHE_HOST)
-  ENV_CI_OS             := $(CIRRUS_OS)
-  ENV_CI_PR             := $(CIRRUS_PR)
-  ENV_CI_REPO           := $(CIRRUS_REPO_FULL_NAME)
-  ENV_CI_REPO_NAME      := $(CIRRUS_REPO_NAME)
-  ENV_CI_REPO_OWNER     := $(CIRRUS_REPO_OWNER)
-  ENV_CI_REPO_URL       := $(CIRRUS_REPO_CLONE_URL)
-  ENV_CI_SHELL          := $(CIRRUS_SHELL)
-  ENV_CI_TAG            := $(CIRRUS_TAG)
-  ENV_CI_TASK_NAME      := $(CIRRUS_TASK_NAME)
-  ENV_CI_TASK_ID        := $(CIRRUS_TASK_ID)
 endif
 
 ifdef GITHUB_WORKFLOW
   # https://help.github.com/en/articles/virtual-environments-for-github-actions#environment-variables
-  ENV_CI_BRANCH         := $(GITHUB_HEAD_REF)
-  ENV_CI_BRANCH_BASE    := $(GITHUB_BASE_REF)
   ENV_CI_BUILD          := $(GITHUB_WORKFLOW)-$(GITHUB_ACTION)-$(GITHUB_EVENT_NAME)
-  ENV_CI_COMMIT         := $(GITHUB_SHA)
-  ENV_CI_TAG            := $(GITHUB_REF)
 endif
 
 
