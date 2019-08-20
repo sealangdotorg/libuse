@@ -9,7 +9,10 @@ jobs:
       matrix:
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
-    container: casmlang/container.linux
+    container:
+      image: docker://casmlang/container.linux:latest
+      volumes:
+        - /workspace:/github/workspace
     steps:
     - uses: actions/checkout@v1
     - name: Fetching
