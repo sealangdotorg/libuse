@@ -3,7 +3,7 @@ name: CI
 on: [push]
 
 jobs:
-  task:
+  linux:
     name: Linux
     strategy:
       matrix:
@@ -31,7 +31,7 @@ jobs:
           sh bash -f "!*#usr#include*" 2> /dev/null;
         fi
 
-  task:
+  darwin:
     name: Darwin
     strategy:
       matrix:
@@ -63,7 +63,7 @@ jobs:
           sh bash -f "!*#usr#include*" 2> /dev/null;
         fi
 
-  task:
+  windows:
     name: Windows
     strategy:
       matrix:
