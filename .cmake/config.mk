@@ -92,6 +92,10 @@ ifneq (,$(findstring MSYS,$(ENV_PLAT)))
   ENV_OSYS := Windows
   $(eval ENV_PLAT="$(shell uname -vnsmo)")
 endif
+ifneq (,$(findstring MINGW,$(ENV_PLAT)))
+  ENV_OSYS := Windows
+  $(eval ENV_PLAT="$(shell uname -vnsmo)")
+endif
 ifneq (,$(findstring CYGWIN,$(ENV_PLAT)))
   ENV_OSYS := Windows
   $(eval ENV_PLAT="$(shell uname -vnsmo)")

@@ -9,6 +9,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
+    container: casmlang/container.linux
     steps:
     - uses: actions/checkout@v1
     - name: Fetching
