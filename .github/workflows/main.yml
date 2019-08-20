@@ -3,27 +3,74 @@ name: CI
 on: [push]
 
 jobs:
-  env:
-    name: Environment
+  task:
+    name: Linux
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest]
+        env:
+          B: "debug"
+          C: "clang"
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
     - name: Fetching
+      run:  make ci-fetch
+    - name: Dependencies
+      run:  make ci-deps
+    - name: Building
+      run:  make ci-build
+    - name: Tests
+      run:  make ci-test
+    - name: Benchmark
+      run:  make ci-benchmark
+    - name: Coverage
       run:  |
-        gcc --version
-        clang --version
-        make --version
-        cmake --version
-        bash --version
+        if [ "$C" == "gcc" ]; then
+          wget https://codecov.io/bash;
+          sh bash -f "!*#usr#include*" 2> /dev/null;
+        fi
 
   task:
-    name: task
+    name: Darwin
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [macOS-latest]
+        env:
+          B: "debug"
+          C: "clang"
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup
+      run:  |
+        brew --version
+        brew install gcc
+    - name: Fetching
+      run:  make ci-fetch
+    - name: Dependencies
+      run:  make ci-deps
+    - name: Building
+      run:  make ci-build
+    - name: Tests
+      run:  make ci-test
+    - name: Benchmark
+      run:  make ci-benchmark
+    - name: Coverage
+      run:  |
+        if [ "$C" == "gcc" ]; then
+          wget https://codecov.io/bash;
+          sh bash -f "!*#usr#include*" 2> /dev/null;
+        fi
+
+  task:
+    name: Windows
+    strategy:
+      matrix:
+        os: [windows-latest]
+        env:
+          B: "debug"
+          C: "clang"
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
