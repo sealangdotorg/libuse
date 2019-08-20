@@ -3,6 +3,22 @@ name: CI
 on: [push]
 
 jobs:
+  env:
+    name: Environment
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v1
+    - name: Fetching
+      run:  |
+        gcc --version
+        clang --version
+        make --version
+        cmake --version
+        bash --version
+
   task:
     name: task
     strategy:
@@ -11,17 +27,17 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
-    - name: fetch
+    - name: Fetching
       run:  make ci-fetch
-    - name: deps
+    - name: Dependencies
       run:  make ci-deps
-    - name: build
+    - name: Building
       run:  make ci-build
-    - name: test
+    - name: Tests
       run:  make ci-test
-    - name: benchmark
+    - name: Benchmark
       run:  make ci-benchmark
-    - name: coverage
+    - name: Coverage
       run:  |
         if [ "$C" == "gcc" ]; then
           wget https://codecov.io/bash;
