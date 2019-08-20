@@ -8,13 +8,13 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        env:
-          B: "debug"
-          C: "clang"
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
     - name: Fetching
+      env:
+        B: "debug"
+        C: "clang"
       run:  make ci-fetch
     - name: Dependencies
       run:  make ci-deps
@@ -36,9 +36,6 @@ jobs:
     strategy:
       matrix:
         os: [macOS-latest]
-        env:
-          B: "debug"
-          C: "clang"
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
@@ -47,6 +44,9 @@ jobs:
         brew --version
         brew install gcc
     - name: Fetching
+      env:
+        B: "debug"
+        C: "clang"
       run:  make ci-fetch
     - name: Dependencies
       run:  make ci-deps
@@ -68,13 +68,13 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest]
-        env:
-          B: "debug"
-          C: "clang"
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
     - name: Fetching
+      env:
+        B: "debug"
+        C: "clang"
       run:  make ci-fetch
     - name: Dependencies
       run:  make ci-deps
