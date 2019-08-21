@@ -19,15 +19,15 @@ jobs:
       env:
         B:  "debug"
         C:  "clang"
-      run:  sh -c "make ci-fetch"
+      run:  make ci-fetch
     - name: Dependencies
-      run:  sh -c "make ci-deps"
+      run:  make deps
     - name: Building
-      run:  sh -c "make ci-build"
+      run:  make build
     - name: Tests
-      run:  sh -c "make ci-test"
+      run:  make test
     - name: Benchmark
-      run:  sh -c "make ci-benchmark"
+      run:  make benchmark
     - name: Coverage
       run:  |
         if [ "$C" == "gcc" ]; then
