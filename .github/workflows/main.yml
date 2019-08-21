@@ -14,13 +14,13 @@ jobs:
     - name: Fetching
       run:  make ci-fetch
     - name: Dependencies
-      run:  make C=clang deps
+      run:  make C=clang debug-deps
     - name: Building
-      run:  make C=clang
+      run:  make C=clang debug
     - name: Tests
-      run:  make C=clang test
+      run:  make C=clang debug-test
     - name: Benchmark
-      run:  make C=clang benchmark
+      run:  make C=clang debug-benchmark
 
   linux-gcc:
     name: Linux GCC
@@ -33,7 +33,7 @@ jobs:
     - name: Fetching
       run:  make ci-fetch
     - name: Dependencies
-      run:  make C=gcc deps
+      run:  make C=gcc coverage-deps
     - name: Building
       run:  make C=gcc coverage
     - name: Tests
@@ -55,20 +55,16 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
-    - name: Setup
-      run:  |
-        brew --version
-        brew install gcc
     - name: Fetching
       run:  make C=clang ci-fetch
     - name: Dependencies
-      run:  make C=clang deps
+      run:  make C=clang debug-deps
     - name: Building
-      run:  make C=clang
+      run:  make C=clang debug
     - name: Tests
-      run:  make C=clang test
+      run:  make C=clang debug-test
     - name: Benchmark
-      run:  make C=clang benchmark
+      run:  make C=clang debug-benchmark
 
   darwin-gcc:
     name: Darwin GCC
@@ -82,16 +78,18 @@ jobs:
       run:  |
         brew --version
         brew install gcc
+        ln -s /usr/local/bin/gcc-8 /usr/local/bin/gcc
+        ln -s /usr/local/bin/g++-8 /usr/local/bin/g++
     - name: Fetching
       run:  make ci-fetch
     - name: Dependencies
-      run:  make C=gcc deps
+      run:  make C=gcc debug-deps
     - name: Building
-      run:  make C=gcc
+      run:  make C=gcc debug
     - name: Tests
-      run:  make C=gcc test
+      run:  make C=gcc debug-test
     - name: Benchmark
-      run:  make C=gcc benchmark
+      run:  make C=gcc debug-benchmark
 
   windows-clang:
     name: Windows Clang
@@ -101,16 +99,19 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
+    - name: Setup
+      run:  |
+        choco install llvm
     - name: Fetching
       run:  make C=clang ci-fetch
     - name: Dependencies
-      run:  make C=clang deps
+      run:  make C=clang debug-deps
     - name: Building
-      run:  make C=clang
+      run:  make C=clang debug
     - name: Tests
-      run:  make C=clang test
+      run:  make C=clang debug-test
     - name: Benchmark
-      run:  make C=clang benchmark
+      run:  make C=clang debug-benchmark
 
   windows-gcc:
     name: Windows GCC
@@ -123,10 +124,10 @@ jobs:
     - name: Fetching
       run:  make ci-fetch
     - name: Dependencies
-      run:  make C=gcc deps
+      run:  make C=gcc debug-deps
     - name: Building
-      run:  make C=gcc
+      run:  make C=gcc debug
     - name: Tests
-      run:  make C=gcc test
+      run:  make C=gcc debug-test
     - name: Benchmark
-      run:  make C=gcc benchmark
+      run:  make C=gcc debug-benchmark
