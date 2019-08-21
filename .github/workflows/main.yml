@@ -9,25 +9,25 @@ jobs:
       matrix:
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
-    container:
-      image: docker://casmlang/container.linux:latest
-      volumes:
-        - /workspace:/github/workspace
+#    container:
+#      image: docker://casmlang/container.linux:latest
+#      volumes:
+#        - /workspace:/github/workspace
     steps:
     - uses: actions/checkout@v1
     - name: Fetching
       env:
-        B: "debug"
-        C: "clang"
-      run: sh -c make ci-fetch
+        B:  "debug"
+        C:  "clang"
+      run:  sh -c "make ci-fetch"
     - name: Dependencies
-      run: sh -c make ci-deps
+      run:  sh -c "make ci-deps"
     - name: Building
-      run:  make ci-build
+      run:  sh -c "make ci-build"
     - name: Tests
-      run:  make ci-test
+      run:  sh -c "make ci-test"
     - name: Benchmark
-      run:  make ci-benchmark
+      run:  sh -c "make ci-benchmark"
     - name: Coverage
       run:  |
         if [ "$C" == "gcc" ]; then
