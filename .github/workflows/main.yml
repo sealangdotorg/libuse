@@ -3,24 +3,43 @@ name: CI
 on: [push]
 
 jobs:
-  linux:
-    name: Linux
+  linux-clang:
+    name: Linux Clang
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ ubuntu-latest ]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
     - name: Fetching
       run:  make ci-fetch
     - name: Dependencies
-      run:  make deps
+      run:  make C=clang deps
     - name: Building
-      run:  make
+      run:  make C=clang
     - name: Tests
-      run:  make test
+      run:  make C=clang test
     - name: Benchmark
-      run:  make benchmark
+      run:  make C=clang benchmark
+
+  linux-gcc:
+    name: Linux GCC
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v1
+    - name: Fetching
+      run:  make ci-fetch
+    - name: Dependencies
+      run:  make C=gcc deps
+    - name: Building
+      run:  make C=gcc coverage
+    - name: Tests
+      run:  make C=gcc coverage-test
+    - name: Benchmark
+      run:  make C=gcc coverage-benchmark
     - name: Coverage
       run:  |
         if [ "$C" == "gcc" ]; then
@@ -28,11 +47,11 @@ jobs:
           sh bash -f "!*#usr#include*" 2> /dev/null;
         fi
 
-  darwin:
-    name: Darwin
+  darwin-clang:
+    name: Darwin Clang
     strategy:
       matrix:
-        os: [macOS-latest]
+        os: [ macOS-latest ]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
@@ -41,49 +60,73 @@ jobs:
         brew --version
         brew install gcc
     - name: Fetching
-      env:
-        B: "debug"
-        C: "clang"
-      run:  make ci-fetch
+      run:  make C=clang ci-fetch
     - name: Dependencies
-      run:  make ci-deps
+      run:  make C=clang deps
     - name: Building
-      run:  make ci-build
+      run:  make C=clang
     - name: Tests
-      run:  make ci-test
+      run:  make C=clang test
     - name: Benchmark
-      run:  make ci-benchmark
-    - name: Coverage
-      run:  |
-        if [ "$C" == "gcc" ]; then
-          wget https://codecov.io/bash;
-          sh bash -f "!*#usr#include*" 2> /dev/null;
-        fi
+      run:  make C=clang benchmark
 
-  windows:
-    name: Windows
+  darwin-gcc:
+    name: Darwin GCC
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [ macOS-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup
+      run:  |
+        brew --version
+        brew install gcc
+    - name: Fetching
+      run:  make ci-fetch
+    - name: Dependencies
+      run:  make C=gcc deps
+    - name: Building
+      run:  make C=gcc
+    - name: Tests
+      run:  make C=gcc test
+    - name: Benchmark
+      run:  make C=gcc benchmark
+
+  windows-clang:
+    name: Windows Clang
+    strategy:
+      matrix:
+        os: [ windows-latest ]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
     - name: Fetching
-      env:
-        B: "debug"
-        C: "clang"
+      run:  make C=clang ci-fetch
+    - name: Dependencies
+      run:  make C=clang deps
+    - name: Building
+      run:  make C=clang
+    - name: Tests
+      run:  make C=clang test
+    - name: Benchmark
+      run:  make C=clang benchmark
+
+  windows-gcc:
+    name: Windows GCC
+    strategy:
+      matrix:
+        os: [ windows-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v1
+    - name: Fetching
       run:  make ci-fetch
     - name: Dependencies
-      run:  make ci-deps
+      run:  make C=gcc deps
     - name: Building
-      run:  make ci-build
+      run:  make C=gcc
     - name: Tests
-      run:  make ci-test
+      run:  make C=gcc test
     - name: Benchmark
-      run:  make ci-benchmark
-    - name: Coverage
-      run:  |
-        if [ "$C" == "gcc" ]; then
-          wget https://codecov.io/bash;
-          sh bash -f "!*#usr#include*" 2> /dev/null;
-        fi
+      run:  make C=gcc benchmark
