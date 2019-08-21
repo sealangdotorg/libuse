@@ -722,7 +722,6 @@ ifdef GITHUB_WORKFLOW
   ENV_CI_BUILD          := $(GITHUB_WORKFLOW)-$(GITHUB_ACTION)-$(GITHUB_EVENT_NAME)
 endif
 
-
 ci-check:
 ifeq ($(CI),true)
   ifndef C
@@ -740,20 +739,22 @@ ci-info: ci-check info
 	@echo ""
 
 ci-fetch: ci-info
+	@git branch -a
+	@echo ""
 	@git submodule update --init
 	@echo ""
 	@git submodule foreach \
 	'git branch --remotes | grep $(ENV_CI_BRANCH) && git checkout $(ENV_CI_BRANCH) || git checkout master; echo ""'
-	@make --no-print-directory info-repo
+	@$(MAKE) --no-print-directory info-repo
 
 ci-deps: ci-check
-	@make --no-print-directory C=$(C) $(B)-deps
+	@$(MAKE) --no-print-directory C=$(C) $(B)-deps
 
 ci-build: ci-check
-	@make --no-print-directory C=$(C) $(B)
+	@$(MAKE) --no-print-directory C=$(C) $(B)
 
 ci-test: ci-check
-	@make --no-print-directory C=$(C) $(B)-test
+	@$(MAKE) --no-print-directory C=$(C) $(B)-test
 
 ci-benchmark: ci-check
-	@make --no-print-directory C=$(C) $(B)-benchmark
+	@$(MAKE) --no-print-directory C=$(C) $(B)-benchmark

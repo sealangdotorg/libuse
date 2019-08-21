@@ -9,21 +9,14 @@ jobs:
       matrix:
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
-#    container:
-#      image: docker://casmlang/container.linux:latest
-#      volumes:
-#        - /workspace:/github/workspace
     steps:
     - uses: actions/checkout@v1
     - name: Fetching
-      env:
-        B:  "debug"
-        C:  "clang"
       run:  make ci-fetch
     - name: Dependencies
       run:  make deps
     - name: Building
-      run:  make build
+      run:  make
     - name: Tests
       run:  make test
     - name: Benchmark
