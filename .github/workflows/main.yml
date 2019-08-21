@@ -19,15 +19,9 @@ jobs:
       env:
         B: "debug"
         C: "clang"
-      uses: actions/bin/sh@master
-      with:
-        args:
-          make ci-fetch
+      run: sh -c make ci-fetch
     - name: Dependencies
-      uses: actions/bin/sh@master
-      with:
-        args:
-          make ci-deps
+      run: sh -c make ci-deps
     - name: Building
       run:  make ci-build
     - name: Tests
