@@ -20,12 +20,14 @@ jobs:
         B: "debug"
         C: "clang"
       uses: actions/bin/sh@master
-      args:
-        make ci-fetch
+      with:
+        args:
+          make ci-fetch
     - name: Dependencies
       uses: actions/bin/sh@master
-      args:
-        make ci-deps
+      with:
+        args:
+          make ci-deps
     - name: Building
       run:  make ci-build
     - name: Tests
