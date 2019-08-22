@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   linux-clang:
-    name: Clang [debug]
+    name: linux-clang-debug
     strategy:
       matrix:
         os: [ ubuntu-latest ]
@@ -12,18 +12,23 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Fetching
-      run:  make ci-fetch
+      run:  |
+        make ci-fetch
     - name: Dependencies
-      run:  make C=clang debug-deps
+      run:  |
+        make C=clang debug-deps
     - name: Building
-      run:  make C=clang debug
+      run:  |
+        make C=clang debug
     - name: Tests
-      run:  make C=clang debug-test
+      run:  |
+        make C=clang debug-test
     - name: Benchmark
-      run:  make C=clang debug-benchmark
+      run:  |
+        make C=clang debug-benchmark
 
   linux-gcc:
-    name: GCC [coverage]
+    name: linux-gcc-coverage
     strategy:
       matrix:
         os: [ ubuntu-latest ]
@@ -31,24 +36,27 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Fetching
-      run:  make ci-fetch
+      run:  |
+        make ci-fetch
     - name: Dependencies
-      run:  make C=gcc coverage-deps
+      run:  |
+        make C=gcc coverage-deps
     - name: Building
-      run:  make C=gcc coverage
+      run:  |
+        make C=gcc coverage
     - name: Tests
-      run:  make C=gcc coverage-test
+      run:  |
+        make C=gcc coverage-test
     - name: Benchmark
-      run:  make C=gcc coverage-benchmark
+      run:  |
+        make C=gcc coverage-benchmark
     - name: Coverage
       run:  |
-        if [ "$C" == "gcc" ]; then
-          wget https://codecov.io/bash;
-          sh bash -f "!*#usr#include*" 2> /dev/null;
-        fi
+        wget https://codecov.io/bash
+        sh bash -f "!*#usr#include*" 2> /dev/null
 
   darwin-clang:
-    name: Clang [debug]
+    name: darwin-clang-debug
     strategy:
       matrix:
         os: [ macOS-latest ]
@@ -61,18 +69,23 @@ jobs:
         brew install llvm@8
         find /usr/local/ | grep clang
     - name: Fetching
-      run:  make C=clang ci-fetch
+      run:  |
+        make C=clang ci-fetch
     - name: Dependencies
-      run:  make C=clang debug-deps
+      run:  |
+        make C=clang debug-deps
     - name: Building
-      run:  make C=clang debug
+      run:  |
+        make C=clang debug
     - name: Tests
-      run:  make C=clang debug-test
+      run:  |
+        make C=clang debug-test
     - name: Benchmark
-      run:  make C=clang debug-benchmark
+      run:  |
+        make C=clang debug-benchmark
 
   darwin-gcc:
-    name: GCC [debug]
+    name: darwin-gcc-debug
     strategy:
       matrix:
         os: [ macOS-latest ]
@@ -86,18 +99,23 @@ jobs:
         ln -s /usr/local/bin/gcc-9 /usr/local/bin/gcc
         ln -s /usr/local/bin/g++-9 /usr/local/bin/g++
     - name: Fetching
-      run:  make ci-fetch
+      run:  |
+        make ci-fetch
     - name: Dependencies
-      run:  make C=gcc debug-deps
+      run:  |
+        make C=gcc debug-deps
     - name: Building
-      run:  make C=gcc debug
+      run:  |
+        make C=gcc debug
     - name: Tests
-      run:  make C=gcc debug-test
+      run:  |
+        make C=gcc debug-test
     - name: Benchmark
-      run:  make C=gcc debug-benchmark
+      run:  |
+        make C=gcc debug-benchmark
 
   windows-clang:
-    name: Clang [debug]
+    name: windows-clang-debug
     strategy:
       matrix:
         os: [ windows-latest ]
@@ -128,7 +146,7 @@ jobs:
         make C=clang debug-benchmark
 
   windows-gcc:
-    name: GCC [debug]
+    name: windows-gcc-debug
     strategy:
       matrix:
         os: [ windows-latest ]
@@ -136,12 +154,17 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Fetching
-      run:  make ci-fetch
+      run:  |
+        make ci-fetch
     - name: Dependencies
-      run:  make C=gcc debug-deps
+      run:  |
+        make C=gcc debug-deps
     - name: Building
-      run:  make C=gcc debug
+      run:  |
+        make C=gcc debug
     - name: Tests
-      run:  make C=gcc debug-test
+      run:  |
+        make C=gcc debug-test
     - name: Benchmark
-      run:  make C=gcc debug-benchmark
+      run:  |
+        make C=gcc debug-benchmark
