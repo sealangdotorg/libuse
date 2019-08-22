@@ -1,0 +1,170 @@
+name: GitHub Actions
+
+on: [push]
+
+jobs:
+  linux-clang:
+    name: linux-clang-debug
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v1
+    - name: Fetching
+      run:  |
+        make ci-fetch
+    - name: Dependencies
+      run:  |
+        make C=clang debug-deps
+    - name: Building
+      run:  |
+        make C=clang debug
+    - name: Tests
+      run:  |
+        make C=clang debug-test
+    - name: Benchmark
+      run:  |
+        make C=clang debug-benchmark
+
+  linux-gcc:
+    name: linux-gcc-coverage
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v1
+    - name: Fetching
+      run:  |
+        make ci-fetch
+    - name: Dependencies
+      run:  |
+        make C=gcc coverage-deps
+    - name: Building
+      run:  |
+        make C=gcc coverage
+    - name: Tests
+      run:  |
+        make C=gcc coverage-test
+    - name: Benchmark
+      run:  |
+        make C=gcc coverage-benchmark
+    - name: Coverage
+      run:  |
+        wget https://codecov.io/bash
+        sh bash -f "!*#usr#include*" 2> /dev/null
+
+  darwin-clang:
+    name: darwin-clang-debug
+    strategy:
+      matrix:
+        os: [ macOS-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup
+      run:  |
+        brew --version
+        brew install llvm@8
+        find /usr/local/ | grep clang
+    - name: Fetching
+      run:  |
+        make C=clang ci-fetch
+    - name: Dependencies
+      run:  |
+        make C=clang debug-deps
+    - name: Building
+      run:  |
+        make C=clang debug
+    - name: Tests
+      run:  |
+        make C=clang debug-test
+    - name: Benchmark
+      run:  |
+        make C=clang debug-benchmark
+
+  darwin-gcc:
+    name: darwin-gcc-debug
+    strategy:
+      matrix:
+        os: [ macOS-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup
+      run:  |
+        brew --version
+        brew install gcc@9
+        ln -s /usr/local/bin/gcc-9 /usr/local/bin/gcc
+        ln -s /usr/local/bin/g++-9 /usr/local/bin/g++
+    - name: Fetching
+      run:  |
+        make ci-fetch
+    - name: Dependencies
+      run:  |
+        make C=gcc debug-deps
+    - name: Building
+      run:  |
+        make C=gcc debug
+    - name: Tests
+      run:  |
+        make C=gcc debug-test
+    - name: Benchmark
+      run:  |
+        make C=gcc debug-benchmark
+
+  windows-clang:
+    name: windows-clang-debug
+    strategy:
+      matrix:
+        os: [ windows-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup
+      run:  |
+        choco install llvm
+    - name: Fetching
+      run:  |
+        make C=clang ci-fetch
+    - name: Dependencies
+      run:  |
+        refreshenv
+        make C=clang debug-deps
+    - name: Building
+      run:  |
+        refreshenv
+        make C=clang debug
+    - name: Tests
+      run:  |
+        refreshenv
+        make C=clang debug-test
+    - name: Benchmark
+      run:  |
+        refreshenv
+        make C=clang debug-benchmark
+
+  windows-gcc:
+    name: windows-gcc-debug
+    strategy:
+      matrix:
+        os: [ windows-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v1
+    - name: Fetching
+      run:  |
+        make ci-fetch
+    - name: Dependencies
+      run:  |
+        make C=gcc debug-deps
+    - name: Building
+      run:  |
+        make C=gcc debug
+    - name: Tests
+      run:  |
+        make C=gcc debug-test
+    - name: Benchmark
+      run:  |
+        make C=gcc debug-benchmark
