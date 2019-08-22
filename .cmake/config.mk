@@ -708,18 +708,19 @@ info-generators:
 
 ENV_CMAKE_FLAGS += -DCMAKE_INSTALL_PREFIX=$(I)
 
-ENV_CI_BUILD          := "n.a."
-ENV_CI_BRANCH         := $(shell git rev-parse --abbrev-ref HEAD)
-ENV_CI_COMMIT         := $(shell git rev-parse HEAD)
+ENV_CI_BUILD  := "n.a."
+ENV_CI_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+ENV_CI_COMMIT := $(shell git rev-parse HEAD)
 
 ifdef CIRRUS_CI
   # https://cirrus-ci.org/guide/writing-tasks/#environment-variables
-  ENV_CI_BUILD          := $(CIRRUS_BUILD_ID)
+  ENV_CI_BUILD := $(CIRRUS_BUILD_ID)
 endif
 
 ifdef GITHUB_WORKFLOW
   # https://help.github.com/en/articles/virtual-environments-for-github-actions#environment-variables
-  ENV_CI_BUILD          := $(GITHUB_WORKFLOW)-$(GITHUB_ACTION)-$(GITHUB_EVENT_NAME)
+  ENV_CI_BUILD  := $(GITHUB_WORKFLOW)-$(GITHUB_ACTION)-$(GITHUB_EVENT_NAME)
+  ENV_CI_BRANCH := $(GITHUB_REF)
 endif
 
 ci-check:

@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   linux-clang:
-    name: Linux Clang
+    name: Clang [debug]
     strategy:
       matrix:
         os: [ ubuntu-latest ]
@@ -23,7 +23,7 @@ jobs:
       run:  make C=clang debug-benchmark
 
   linux-gcc:
-    name: Linux GCC
+    name: GCC [coverage]
     strategy:
       matrix:
         os: [ ubuntu-latest ]
@@ -48,13 +48,18 @@ jobs:
         fi
 
   darwin-clang:
-    name: Darwin Clang
+    name: Clang [debug]
     strategy:
       matrix:
         os: [ macOS-latest ]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
+    - name: Setup
+      run:  |
+        brew --version
+        brew install llvm@8
+        find /usr/local/ | grep clang
     - name: Fetching
       run:  make C=clang ci-fetch
     - name: Dependencies
@@ -67,7 +72,7 @@ jobs:
       run:  make C=clang debug-benchmark
 
   darwin-gcc:
-    name: Darwin GCC
+    name: GCC [debug]
     strategy:
       matrix:
         os: [ macOS-latest ]
@@ -77,9 +82,7 @@ jobs:
     - name: Setup
       run:  |
         brew --version
-        brew install gcc
-        echo $PATH
-        ls -al /usr/local/bin/gcc*
+        brew install gcc@9
         ln -s /usr/local/bin/gcc-9 /usr/local/bin/gcc
         ln -s /usr/local/bin/g++-9 /usr/local/bin/g++
     - name: Fetching
@@ -94,7 +97,7 @@ jobs:
       run:  make C=gcc debug-benchmark
 
   windows-clang:
-    name: Windows Clang
+    name: Clang [debug]
     strategy:
       matrix:
         os: [ windows-latest ]
@@ -106,18 +109,28 @@ jobs:
         choco install llvm
         refreshenv
     - name: Fetching
-      run:  make C=clang ci-fetch
+      run:  |
+        refreshenv
+        make C=clang ci-fetch
     - name: Dependencies
-      run:  make C=clang debug-deps
+      run:  |
+        refreshenv
+        make C=clang debug-deps
     - name: Building
-      run:  make C=clang debug
+      run:  |
+        refreshenv
+        make C=clang debug
     - name: Tests
-      run:  make C=clang debug-test
+      run:  |
+        refreshenv
+        make C=clang debug-test
     - name: Benchmark
-      run:  make C=clang debug-benchmark
+      run:  |
+        refreshenv
+        make C=clang debug-benchmark
 
   windows-gcc:
-    name: Windows GCC
+    name: GCC [debug]
     strategy:
       matrix:
         os: [ windows-latest ]
