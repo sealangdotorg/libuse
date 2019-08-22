@@ -107,10 +107,8 @@ jobs:
     - name: Setup
       run:  |
         choco install llvm
-        refreshenv
     - name: Fetching
       run:  |
-        refreshenv
         make C=clang ci-fetch
     - name: Dependencies
       run:  |
