@@ -51,7 +51,8 @@ jobs:
     - name: Coverage
       run:  |
         wget https://codecov.io/bash
-        sh ./bash
+        chmod 755 bash
+        ./bash
 
   darwin-clang-debug:
     strategy:
