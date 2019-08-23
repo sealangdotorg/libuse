@@ -69,8 +69,7 @@ jobs:
         brew install llvm@8
         ln -s /usr/local/opt/llvm/bin/clang   /usr/local/bin/clang
         ln -s /usr/local/opt/llvm/bin/clang++ /usr/local/bin/clang++
-        ls -al /Library/Developer/CommandLineTools/Packages/
-        installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
+        sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
     - name: Fetching
       run:  |
         make C=clang ci-fetch
