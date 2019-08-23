@@ -366,6 +366,7 @@ SYNCS = $(TYPES:%=%-sync)
 TESTS = $(TYPES:%=%-test)
 BENCH = $(TYPES:%=%-benchmark)
 INSTA = $(TYPES:%=%-install)
+BUILD = $(TYPES:%=%-build)
 DEPS  = $(TYPES:%=%-deps)
 ANALY = $(TYPES:%=%-analyze)
 ALL   = $(TYPES:%=%-all)
@@ -498,6 +499,10 @@ install-all: $(TYPES:%=%-install)
 $(INSTA):%-install: %
 	@cmake --build $(OBJ) --config $(patsubst %-install,%,$@) --target install -- $(ENV_BUILD_FLAGS)
 
+
+build: debug
+
+$(BUILD):%-build: %-sync
 
 
 deps: debug-deps
@@ -723,24 +728,12 @@ ifdef GITHUB_WORKFLOW
   ENV_CI_BRANCH := $(GITHUB_REF)
 endif
 
-ci-check:
-ifeq ($(CI),true)
-  ifndef C
-    $(error no compiler selected)
-  endif
-  ifndef B
-    $(error no build type selected)
-  endif
-endif
+fetch: ci-fetch
 
-ci-info: ci-check info
+ci-fetch: info
 	@echo "   I = $(ENV_CI_BUILD)"
 	@echo "   B = $(ENV_CI_BRANCH)"
 	@echo "   # = $(ENV_CI_COMMIT)"
-	@echo ""
-
-ci-fetch: ci-info
-	@git branch -a
 	@echo ""
 	@git submodule update --init
 	@echo ""
@@ -752,7 +745,7 @@ ci-deps: ci-check
 	@$(MAKE) --no-print-directory C=$(C) $(B)-deps
 
 ci-build: ci-check
-	@$(MAKE) --no-print-directory C=$(C) $(B)
+	@$(MAKE) --no-print-directory C=$(C) $(B)-build
 
 ci-test: ci-check
 	@$(MAKE) --no-print-directory C=$(C) $(B)-test
