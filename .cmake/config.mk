@@ -375,6 +375,10 @@ ALL   = $(TYPES:%=%-all)
 ENV_CMAKE_FLAGS  = -G$(ENV_GEN)
 ENV_CMAKE_FLAGS += -DCMAKE_BUILD_TYPE=$(TYPE)
 
+# generates ${CMAKE_BINARY_DIR}/compile_commands.json
+ENV_CMAKE_FLAGS += -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+
 ifndef I
   I = $(BIN)
 endif
