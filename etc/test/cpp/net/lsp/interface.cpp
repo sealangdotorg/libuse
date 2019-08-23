@@ -588,7 +588,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_signatureHelp )
     } );
 }
 
-TEST( libstdhl_cpp_network_lsp, textDocument_definition )
+DISABLED_TEST( libstdhl_cpp_network_lsp, textDocument_definition )
 {
     TestServer server;
     auto document = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
