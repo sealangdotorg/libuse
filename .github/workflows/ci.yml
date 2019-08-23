@@ -81,7 +81,7 @@ jobs:
   linux-gcc-coverage:
     strategy:
       matrix:
-        os: [ ubuntu-18.04, ubuntu-16.04 ]
+        os: [ ubuntu-18.04 ]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
@@ -193,7 +193,7 @@ jobs:
   windows-gcc-debug:
     strategy:
       matrix:
-        os: [ windows-2019, windows-2016 ]
+        os: [ windows-2019 ]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
