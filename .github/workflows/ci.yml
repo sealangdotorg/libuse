@@ -54,7 +54,7 @@ jobs:
       run:  |
         wget https://codecov.io/bash
         chmod 755 bash
-        ./bash -g /usr/include
+        ./bash
 
   darwin-clang-debug:
     strategy:
@@ -69,7 +69,7 @@ jobs:
         brew install llvm@8
         ln -s /usr/local/opt/llvm/bin/clang   /usr/local/bin/clang
         ln -s /usr/local/opt/llvm/bin/clang++ /usr/local/bin/clang++
-        sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
+        cp -rf /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/* /usr/local/include/
     - name: Fetching
       run:  |
         make C=clang ci-fetch
