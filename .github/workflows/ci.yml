@@ -65,9 +65,8 @@ jobs:
     - uses: actions/checkout@v1
     - name: Setup
       run:  |
-        sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
         brew --version
-        brew install llvm@8
+        brew install llvm@8 libc++
         ln -s /usr/local/opt/llvm/bin/clang   /usr/local/bin/clang
         ln -s /usr/local/opt/llvm/bin/clang++ /usr/local/bin/clang++
     - name: Fetching
