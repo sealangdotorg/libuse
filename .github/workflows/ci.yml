@@ -51,7 +51,7 @@ jobs:
     - name: Coverage
       run:  |
         wget https://codecov.io/bash
-        sh bash -g \'#usr#include\' 2> /dev/null
+        sh ./bash
 
   darwin-clang-debug:
     strategy:
@@ -64,8 +64,8 @@ jobs:
       run:  |
         brew --version
         brew install llvm@8
-        ln -s /usr/local/Cellar/llvm/8.0.0_1/bin/clang   /usr/local/bin/clang
-        ln -s /usr/local/Cellar/llvm/8.0.0_1/bin/clang++ /usr/local/bin/clang++
+        ln -s /usr/local/opt/llvm/bin/clang   /usr/local/bin/clang
+        ln -s /usr/local/opt/llvm/bin/clang++ /usr/local/bin/clang++
     - name: Fetching
       run:  |
         make C=clang ci-fetch
