@@ -62,7 +62,7 @@ const auto method = std::string( "method" );
 const auto name = std::string( "name" );
 const auto id = std::string( "id" );
 
-DISABLED_TEST( libstdhl_cpp_network_lsp_content, TypeDefinitionProvider )
+TEST( DISABLED_libstdhl_cpp_network_lsp_content, TypeDefinitionProvider )
 {
     TypeDefinitionProvider provider = TypeDefinitionProvider(
         TextDocumentRegistrationOptions( DocumentSelector( std::vector< DocumentFilter >() ) ) );
@@ -70,7 +70,7 @@ DISABLED_TEST( libstdhl_cpp_network_lsp_content, TypeDefinitionProvider )
     TypeDefinitionProvider test( boolean );
 }
 
-DISABLED_TEST( libstdhl_cpp_network_lsp_content, ColorProvider )
+TEST( DISABLED_libstdhl_cpp_network_lsp_content, ColorProvider )
 {
     ColorProvider provider = ColorProvider(
         TextDocumentRegistrationOptions( DocumentSelector( std::vector< DocumentFilter >() ) ) );
@@ -257,7 +257,7 @@ TEST( libstdhl_cpp_network_lsp_content, RegistrationParams )
     EXPECT_STREQ( params.registrations()[ 1 ].method().c_str(), method.c_str() );
 }
 
-DISABLED_TEST( libstdhl_cpp_network_lsp_content, TextDocumentRegistrationOptions )
+TEST( DISABLED_libstdhl_cpp_network_lsp_content, TextDocumentRegistrationOptions )
 {
     auto filter = DocumentFilter();
     auto filters = std::vector< DocumentFilter >();
@@ -267,7 +267,7 @@ DISABLED_TEST( libstdhl_cpp_network_lsp_content, TextDocumentRegistrationOptions
     EXPECT_STREQ( selector.dump().c_str(), DocumentSelector( filters ).dump().c_str() );
 }
 
-DISABLED_TEST( libstdhl_cpp_network_lsp_content, TextDocumentChangeRegistrationOptions )
+TEST( DISABLED_libstdhl_cpp_network_lsp_content, TextDocumentChangeRegistrationOptions )
 {
     auto filter = DocumentFilter();
     auto filters = std::vector< DocumentFilter >();
@@ -277,7 +277,7 @@ DISABLED_TEST( libstdhl_cpp_network_lsp_content, TextDocumentChangeRegistrationO
     EXPECT_STREQ( selector.dump().c_str(), DocumentSelector( filters ).dump().c_str() );
 }
 
-DISABLED_TEST( libstdhl_cpp_network_lsp_content, TextDocumentSaveRegistrationOptions )
+TEST( DISABLED_libstdhl_cpp_network_lsp_content, TextDocumentSaveRegistrationOptions )
 {
     auto filter = DocumentFilter();
     auto filters = std::vector< DocumentFilter >();
@@ -292,7 +292,7 @@ DISABLED_TEST( libstdhl_cpp_network_lsp_content, TextDocumentSaveRegistrationOpt
     EXPECT_TRUE( options.hasIncludeText() );
 }
 
-DISABLED_TEST( libstdhl_cpp_network_lsp_content, SignatureHelpRegistrationOptions )
+TEST( DISABLED_libstdhl_cpp_network_lsp_content, SignatureHelpRegistrationOptions )
 {
     auto filter = DocumentFilter();
     auto filters = std::vector< DocumentFilter >();
@@ -582,7 +582,7 @@ TEST( libstdhl_cpp_network_lsp_content, DidCloseTextDocumentParams )
     EXPECT_STREQ( params.textDocument().uri().toString().c_str(), uri.toString().c_str() );
 }
 
-DISABLED_TEST( libstdhl_cpp_network_lsp_content, CompletionRegistrationOptions )
+TEST( DISABLED_libstdhl_cpp_network_lsp_content, CompletionRegistrationOptions )
 {
     auto filters = std::vector< DocumentFilter >();
     filters.push_back( DocumentFilter() );
@@ -1141,7 +1141,7 @@ TEST( libstdhl_cpp_network_lsp_content, DocumentOnTypeFormattingParams )
     EXPECT_STREQ( params.character().c_str(), "c" );
 }
 
-DISABLED_TEST( libstdhl_cpp_network_lsp_content, DocumentOnTypeFormattingRegistrationOptions )
+TEST( DISABLED_libstdhl_cpp_network_lsp_content, DocumentOnTypeFormattingRegistrationOptions )
 {
     auto filter = DocumentFilter();
     auto filters = std::vector< DocumentFilter >();
@@ -1165,7 +1165,7 @@ TEST( libstdhl_cpp_network_lsp_content, RenameParams )
     auto p = RenameParams( params );
 }
 
-DISABLED_TEST( libstdhl_cpp_network_lsp_content, RenameRegistrationOptions )
+TEST( DISABLED_libstdhl_cpp_network_lsp_content, RenameRegistrationOptions )
 {
     auto filter = DocumentFilter();
     auto filters = std::vector< DocumentFilter >();
