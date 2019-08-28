@@ -65,6 +65,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Fetching
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run:  |
         make C=clang fetch
     - name: Dependencies
@@ -88,6 +90,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Fetching
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run:  |
         make C=gcc fetch
     - name: Dependencies
@@ -118,6 +122,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Fetching
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run:  |
         make C=clang fetch
     - name: Dependencies
@@ -147,6 +153,8 @@ jobs:
         ln -s /usr/local/bin/gcc-9 /usr/local/bin/gcc
         ln -s /usr/local/bin/g++-9 /usr/local/bin/g++
     - name: Fetching
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run:  |
         make C=gcc fetch
     - name: Dependencies
@@ -173,6 +181,8 @@ jobs:
       run:  |
         choco install llvm
     - name: Fetching
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run:  |
         make C=clang fetch
     - name: Dependencies
@@ -200,6 +210,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Fetching
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run:  |
         make C=gcc fetch
     - name: Dependencies
