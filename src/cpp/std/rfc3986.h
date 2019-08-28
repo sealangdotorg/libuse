@@ -47,6 +47,8 @@
 
 #include <libstdhl/Type>
 
+#include <memory>
+
 /**
    @brief    TBD
 
@@ -86,6 +88,8 @@ namespace libstdhl
             class UniformResourceIdentifier
             {
               public:
+                using Ptr = std::shared_ptr< UniformResourceIdentifier >;
+
                 UniformResourceIdentifier(
                     const std::string& scheme,
                     const std::string& m_authority,
