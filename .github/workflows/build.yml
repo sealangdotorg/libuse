@@ -50,9 +50,11 @@
 # | MacOSX  | macOS-10.14 (macOS-latest)                  |
 # | Windows | windows-2019 (windows-latest), windows-2016 |
 
-name: CI
+name: build
 
 on: [push]
+
+
 
 jobs:
   linux-clang-debug:

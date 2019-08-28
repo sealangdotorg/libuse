@@ -732,14 +732,21 @@ ifdef GITHUB_WORKFLOW
   ENV_CI_BRANCH := $(GITHUB_REF)
 endif
 
-fetch: ci-fetch
-
-ci-fetch: info
+ci-info: info
 	@echo "   I = $(ENV_CI_BUILD)"
 	@echo "   B = $(ENV_CI_BRANCH)"
 	@echo "   # = $(ENV_CI_COMMIT)"
+
+fetch-deps: ci-info
+	@echo ""
+	@echo "-- Submodules"
+	@git submodule
 	@echo ""
 	@git submodule update --init
+
+fetch: ci-fetch
+
+ci-fetch: fetch-deps
 	@echo ""
 	@git submodule foreach \
 	'git branch --remotes | grep $(ENV_CI_BRANCH) && git checkout $(ENV_CI_BRANCH) || git checkout master; echo ""'
