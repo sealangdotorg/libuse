@@ -43,10 +43,8 @@
 
 #include "rfc3629.h"
 
-// #include <libstdhl/String>
-
-// #include <algorithm>
-// #include <functional>
+#include <libstdhl/Type>
+#include <libstdhl/data/type/Integer>
 
 /**
    @brief    TBD
@@ -66,6 +64,12 @@ UTF8::UTF8( const u32 code )
 const u32 UTF8::code( void ) const
 {
     return m_code;
+}
+
+std::string UTF8::description( void ) const
+{
+    const auto value = Type::createInteger( (u64)code() );
+    return value.to< Type::Radix::HEXADECIMAL, Type::Literal::NONE >();
 }
 
 std::string UTF8::toString( void ) const
