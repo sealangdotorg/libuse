@@ -91,6 +91,7 @@ add_library( ${PROJECT}-cpp OBJECT
   net/tcp/Socket.cpp
   net/udp/IPv4.cpp
   net/udp/Socket.cpp
+  std/rfc3629.cpp
   std/rfc3986.cpp
   vendor/pugixml/pugixml.cpp
   vendor/getopt/getopt.cpp
@@ -398,6 +399,7 @@ ecm_generate_headers( ${PROJECT}_STD_HEADERS_CPP
     CAMELCASE
   HEADER_NAMES
     ieee802
+    rfc3629
     rfc3986
   PREFIX
     ${PROJECT}/std

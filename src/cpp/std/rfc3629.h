@@ -42,31 +42,56 @@
 //
 
 #pragma once
-#ifndef _LIBSTDHL_CPP_STANDARD_H_
-#define _LIBSTDHL_CPP_STANDARD_H_
+#ifndef _LIBSTDHL_CPP_STANDARD_RFC3629_H_
+#define _LIBSTDHL_CPP_STANDARD_RFC3629_H_
 
-#include <libstdhl/std/ieee802>
-#include <libstdhl/std/rfc3629>
-#include <libstdhl/std/rfc3986>
+#include <libstdhl/Type>
+
+#include <memory>
 
 /**
-   @brief    TBD
-
+   @brief    UTF-8, a transformation format of ISO 10646
 
    TBD
+
+   https://tools.ietf.org/html/rfc3629
 */
 
 namespace libstdhl
 {
-    /**
-       @extends Stdhl
-    */
     namespace Standard
     {
+        /**
+           @extends Standard
+        */
+        namespace RFC3629
+        {
+            /**
+               @extends RFC3629
+            */
+            class UTF8
+            {
+              public:
+                using Ptr = std::shared_ptr< UTF8 >;
+
+                UTF8( const u32 code );
+
+                const u32 code( void ) const;
+
+                std::string description( void ) const;
+
+                std::string toString( void ) const;
+
+                static UTF8 fromString( const std::string& byteSequence );
+
+              private:
+                u32 m_code;
+            };
+        }
     }
 }
 
-#endif  // _LIBSTDHL_CPP_STANDARD_H_
+#endif  // _LIBSTDHL_CPP_STANDARD_RFC3629_H_
 
 //
 //  Local variables:

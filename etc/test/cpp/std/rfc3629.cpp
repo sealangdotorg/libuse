@@ -41,32 +41,34 @@
 //  statement from your version.
 //
 
-#pragma once
-#ifndef _LIBSTDHL_CPP_STANDARD_H_
-#define _LIBSTDHL_CPP_STANDARD_H_
+#include <libstdhl/Test>
 
-#include <libstdhl/std/ieee802>
-#include <libstdhl/std/rfc3629>
-#include <libstdhl/std/rfc3986>
+using namespace libstdhl;
+using namespace Standard;
+using namespace RFC3629;
 
-/**
-   @brief    TBD
-
-
-   TBD
-*/
-
-namespace libstdhl
+TEST( libstdhl_cpp_standard_rfc3629, fromString )
 {
-    /**
-       @extends Stdhl
-    */
-    namespace Standard
-    {
-    }
+    // GIVEN
+    const auto byteSequence = "\xf0\x9f\x8d\x8e";  // RED APPLE
+
+    // WHEN
+    const auto utf8 = UTF8::fromString( byteSequence );
+
+    // THEN
+    EXPECT_EQ( utf8.code(), 0xf09f8d8e );
+    EXPECT_STREQ( utf8.toString().c_str(), "🍎" );
+    EXPECT_STREQ( utf8.toString().c_str(), byteSequence );
 }
 
-#endif  // _LIBSTDHL_CPP_STANDARD_H_
+TEST( libstdhl_cpp_standard_rfc3629, invalidUTF8byteSequence )
+{
+    // GIVEN
+    const auto byteSequence = "\xf0\x01\x02\x03";  // invalid UTF-8 sequence
+
+    // WHEN & THEN
+    EXPECT_THROW( UTF8::fromString( byteSequence ), std::domain_error );
+}
 
 //
 //  Local variables:
