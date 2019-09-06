@@ -44,7 +44,7 @@
 #include "SourceLocation.h"
 
 #include <libstdhl/File>
-#include <libstdhl/std/rfc3629>
+#include <libstdhl/Unicode>
 
 using namespace libstdhl;
 
@@ -155,24 +155,37 @@ SourceLocation& SourceLocation::operator-=( SourcePosition::difference_type widt
 static inline std::string slice(
     const std::string& line, const std::size_t start, const std::size_t length )
 {
-    std::size_t bound = start + length;
-    for( auto position = start; position < bound; position++ )
+    auto begin = start;
+
+    for( auto position = 0; position < begin; position++ )
     {
         const auto character = line[ position ];
-        const auto utf8Length =
-            libstdhl::Standard::RFC3629::UTF8::byteSequenceLengthIndication( character );
-        if( utf8Length > 1 )
+        const auto utf8 = Standard::RFC3629::UTF8::byteSequenceLengthIndication( character );
+
+        if( utf8 > 1 )
         {
-            const auto delta = ( utf8Length - 1 );
-            bound += delta;
-            position += delta;
+            position += utf8 - 1;
+            begin += utf8 - 1;
         }
-        else if( utf8Length == 0 )
+    }
+
+    auto end = begin + length;
+    for( auto position = begin; position < end; position++ )
+    {
+        const auto character = line[ position ];
+        const auto utf8 = libstdhl::Unicode::UTF8::byteSequenceLengthIndication( character );
+        if( utf8 > 1 )
+        {
+            const auto delta = ( utf8 - 1 );
+            position += delta;
+            end += delta;
+        }
+        else if( utf8 == 0 )
         {
             throw std::domain_error( "string contains invalid UTF-8 character" );
         }
     }
-    return line.substr( start, bound - start );
+    return line.substr( begin, end - begin );
 }
 
 std::string SourceLocation::read( void ) const
