@@ -58,6 +58,11 @@ using namespace libstdhl;
 using namespace Standard;
 using namespace RFC3629;
 
+//
+//
+// UTF8
+//
+
 UTF8::UTF8( const u32 code, const u32 point )
 : m_code( code )
 , m_point( point )
@@ -103,6 +108,11 @@ std::string UTF8::toString( void ) const
     }
     return byteSequence;
 }
+
+//
+//
+// UTF8 (static)
+//
 
 std::size_t UTF8::byteSequenceLengthIndication( const u8 byte )
 {
