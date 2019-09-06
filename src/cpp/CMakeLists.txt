@@ -53,6 +53,7 @@ add_library( ${PROJECT}-cpp OBJECT
   File.cpp
   Json.cpp
   SourceLocation.cpp
+  String.cpp
   Yaml.cpp
   data/file/TextDocument.cpp
   data/log/Category.cpp
