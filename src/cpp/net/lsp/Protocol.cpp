@@ -45,6 +45,7 @@
 
 #include <libstdhl/String>
 
+#include <cstring>
 #include <vector>
 
 using namespace libstdhl;
