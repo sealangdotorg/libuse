@@ -43,14 +43,10 @@
 
 #include "String.h"
 
-#include <libstdhl/Type>
-#include <libstdhl/std/rfc3629>
+#include <libstdhl/Unicode>
 
 #include <cstring>
-#include <memory>
 #include <sstream>
-#include <string>
-#include <vector>
 
 using namespace libstdhl;
 

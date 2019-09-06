@@ -46,11 +46,8 @@
 #define _LIBSTDHL_CPP_STRING_H_
 
 #include <libstdhl/Type>
-#include <libstdhl/std/rfc3629>
 
-#include <cstring>
 #include <memory>
-#include <sstream>
 #include <string>
 #include <vector>
 
