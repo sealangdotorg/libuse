@@ -210,7 +210,7 @@ TEST( libstdhl_cpp_String, replaceAll )
     EXPECT_STREQ( "fbazbarfbazbaz", String::replaceAll( "foobarfoobaz", "oo", "baz" ).c_str() );
 }
 
-TEST( libstdhl_cpp_String, expansion )
+TEST( libstdhl_cpp_String, expansion_ascii )
 {
     //                 0-------------1-----------2-
     //                 0123456 7 8 9 0 1 2345678901
@@ -218,6 +218,17 @@ TEST( libstdhl_cpp_String, expansion )
     EXPECT_STREQ( String::expansion( str, 0, 3, 8, '.' ).c_str(), "..." );
     EXPECT_STREQ( String::expansion( str, 5, 6, 8, '.' ).c_str(), "...................." );
     EXPECT_STREQ( String::expansion( str, 7, 6, 4, '+' ).c_str(), "++++++++++++" );
+}
+
+TEST( libstdhl_cpp_String, expansion_utf8 )
+{
+    std::string str = "/* foo 😆😆 */ bar 😆 = baz";
+    EXPECT_STREQ(
+        String::expansion( str, 0, 24, 4, '.', ":-" ).c_str(), ".......:-:-........:-......" );
+    EXPECT_STREQ(
+        String::expansion( str, 2, 20, 4, '.', ":-" ).c_str(), ".....:-:-........:-...." );
+    EXPECT_STREQ( String::expansion( str, 0, 12, 4, '.', ":-" ).c_str(), ".......:-:-..." );
+    EXPECT_STREQ( String::expansion( str, 22, 2, 4, '.', ":-" ).c_str(), ".." );
 }
 
 //
