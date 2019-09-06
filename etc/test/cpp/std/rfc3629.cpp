@@ -57,9 +57,11 @@ TEST( libstdhl_cpp_standard_rfc3629, fromString )
 
     // THEN
     EXPECT_EQ( utf8.code(), 0xf09f8d8e );
-    EXPECT_STREQ( utf8.toString().c_str(), "🍎" );
-    EXPECT_STREQ( utf8.toString().c_str(), byteSequence );
+    EXPECT_EQ( utf8.point(), 0x1f34e );
+    EXPECT_STREQ( utf8.unicode().c_str(), "U+1F34E" );
     EXPECT_STREQ( utf8.description().c_str(), "f09f8d8e" );
+    EXPECT_STREQ( utf8.toString().c_str(), byteSequence );
+    EXPECT_STREQ( utf8.toString().c_str(), "🍎" );
 }
 
 TEST( libstdhl_cpp_standard_rfc3629, invalidUTF8byteSequence )

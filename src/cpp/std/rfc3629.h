@@ -74,9 +74,13 @@ namespace libstdhl
               public:
                 using Ptr = std::shared_ptr< UTF8 >;
 
-                UTF8( const u32 code );
+                UTF8( const u32 code, const u32 point );
 
                 const u32 code( void ) const;
+
+                const u32 point( void ) const;
+
+                std::string unicode( void ) const;
 
                 std::string description( void ) const;
 
@@ -88,6 +92,7 @@ namespace libstdhl
 
               private:
                 u32 m_code;
+                u32 m_point;
             };
         }
     }

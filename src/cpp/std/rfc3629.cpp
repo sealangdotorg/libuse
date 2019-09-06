@@ -46,6 +46,8 @@
 #include <libstdhl/Type>
 #include <libstdhl/data/type/Integer>
 
+#include <algorithm>
+
 /**
    @brief    TBD
 
@@ -56,8 +58,9 @@ using namespace libstdhl;
 using namespace Standard;
 using namespace RFC3629;
 
-UTF8::UTF8( const u32 code )
+UTF8::UTF8( const u32 code, const u32 point )
 : m_code( code )
+, m_point( point )
 {
 }
 
@@ -66,10 +69,27 @@ const u32 UTF8::code( void ) const
     return m_code;
 }
 
+const u32 UTF8::point( void ) const
+{
+    return m_point;
+}
+
 std::string UTF8::description( void ) const
 {
     const auto value = Type::createInteger( (u64)code() );
     return value.to< Type::Radix::HEXADECIMAL, Type::Literal::NONE >();
+}
+
+std::string UTF8::unicode( void ) const
+{
+    const auto value = Type::createInteger( (u64)point() );
+    auto hexPoint = value.to< Type::Radix::HEXADECIMAL, Type::Literal::NONE >();
+
+    for_each( hexPoint.begin(), hexPoint.end(), []( char& character ) {
+        character = ::toupper( static_cast< unsigned char >( character ) );
+    } );
+
+    return "U+" + hexPoint;
 }
 
 std::string UTF8::toString( void ) const
@@ -124,7 +144,8 @@ UTF8 UTF8::fromString( const std::string& byteSequence )
     u1 valid = true;
     u8 startByte = byteSequence[ 0 ];
     u32 code = startByte;
-    auto length = byteSequenceLengthIndication( startByte );
+    u32 point = startByte;
+    const auto length = byteSequenceLengthIndication( startByte );
 
     if( size != length or length == 0 )
     {
@@ -132,6 +153,19 @@ UTF8 UTF8::fromString( const std::string& byteSequence )
     }
     else
     {
+        if( size == 2 )
+        {
+            point = ( point & 0x1f );
+        }
+        else if( size == 3 )
+        {
+            point = ( point & 0x0f );
+        }
+        else if( size == 4 )
+        {
+            point = ( point & 0x07 );
+        }
+
         for( auto position = 1; position < size; position++ )
         {
             const auto byteElement = ( u8 )( byteSequence[ position ] );
@@ -141,6 +175,7 @@ UTF8 UTF8::fromString( const std::string& byteSequence )
                 break;
             }
             code = ( code << 8 ) | byteElement;
+            point = ( point << 6 ) | ( byteElement & 0x3f );
         }
     }
 
@@ -154,7 +189,7 @@ UTF8 UTF8::fromString( const std::string& byteSequence )
         throw std::domain_error( "invalid UTF-8 character '" + stream.str() + "'" );
     }
 
-    return UTF8( code );
+    return UTF8( code, point );
 }
 
 //
