@@ -44,6 +44,7 @@
 #include "SourceLocation.h"
 
 #include <libstdhl/File>
+#include <libstdhl/std/rfc3629>
 
 using namespace libstdhl;
 
@@ -151,6 +152,29 @@ SourceLocation& SourceLocation::operator-=( SourcePosition::difference_type widt
     return operator+=( -width );
 }
 
+static inline std::string slice(
+    const std::string& line, const std::size_t start, const std::size_t length )
+{
+    std::size_t bound = start + length;
+    for( auto position = start; position < bound; position++ )
+    {
+        const auto character = line[ position ];
+        const auto utf8Length =
+            libstdhl::Standard::RFC3629::UTF8::byteSequenceLengthIndication( character );
+        if( utf8Length > 1 )
+        {
+            const auto delta = ( utf8Length - 1 );
+            bound += delta;
+            position += delta;
+        }
+        else if( utf8Length == 0 )
+        {
+            throw std::domain_error( "string contains invalid UTF-8 character" );
+        }
+    }
+    return line.substr( start, bound - start );
+}
+
 std::string SourceLocation::read( void ) const
 {
     std::string range = "";
@@ -168,15 +192,15 @@ std::string SourceLocation::read( void ) const
 
         if( pos == beginL and pos == endL )
         {
-            line = line.substr( begin.column - 1, end.column - begin.column );
+            line = slice( line, begin.column - 1, end.column - begin.column );
         }
         else if( pos == beginL )
         {
-            line = line.substr( begin.column - 1 );
+            line = slice( line, begin.column - 1, line.size() - ( begin.column - 1 ) );
         }
         else if( pos == endL )
         {
-            line = line.substr( 0, end.column - 1 );
+            line = slice( line, 0, end.column - 1 );
         }
 
         range += line;
