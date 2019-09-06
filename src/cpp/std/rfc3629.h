@@ -82,6 +82,8 @@ namespace libstdhl
 
                 std::string toString( void ) const;
 
+                static std::size_t byteSequenceLengthIndication( const u8 byte );
+
                 static UTF8 fromString( const std::string& byteSequence );
 
               private:

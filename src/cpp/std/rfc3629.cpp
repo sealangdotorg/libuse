@@ -84,62 +84,63 @@ std::string UTF8::toString( void ) const
     return byteSequence;
 }
 
+std::size_t UTF8::byteSequenceLengthIndication( const u8 byte )
+{
+    if( byte >= 0x00 and byte <= 0x7f )
+    {
+        return 1;
+    }
+    else if( byte >= 0xc0 and byte <= 0xdf )
+    {
+        return 2;
+    }
+    else if( byte >= 0xe0 and byte <= 0xef )
+    {
+        return 3;
+    }
+    else if( byte >= 0xf0 and byte <= 0xf7 )
+    {
+        return 4;
+    }
+
+    return 0;
+}
+
+// | Bytes | Size | From    | To       |   Byte 1 |   Byte 2 |   Byte 3 |   Byte 4 |
+// |-------+------+---------+----------+----------+----------+----------+----------|
+// |     1 |    7 | U+0000  | U+007F   | 0xxxxxxx |          |          |          |
+// |     2 |   11 | U+0080  | U+07FF   | 110xxxxx | 10xxxxxx |          |          |
+// |     3 |   16 | U+0800  | U+FFFF   | 1110xxxx | 10xxxxxx | 10xxxxxx |          |
+// |     4 |   21 | U+10000 | U+10FFFF | 11110xxx | 10xxxxxx | 10xxxxxx | 10xxxxxx |
+
 UTF8 UTF8::fromString( const std::string& byteSequence )
 {
     const auto size = byteSequence.size();
     if( size > 4 )
     {
-        throw std::domain_error( "UTF-8 character byte size bigger than 4 is not supported" );
+        throw std::domain_error( "invalid UTF-8 character byte sequence length is larger than 4" );
     }
 
-    u32 code = 0;
-    for( const auto byteElement : byteSequence )
+    u1 valid = true;
+    u8 startByte = byteSequence[ 0 ];
+    u32 code = startByte;
+    auto length = byteSequenceLengthIndication( startByte );
+
+    if( size != length or length == 0 )
     {
-        code = ( code << 8 ) | ( u8 )( byteElement );
+        valid = false;
     }
-
-    // | Bytes | Size | From    | To       |   Byte 1 |   Byte 2 |   Byte 3 |   Byte 4 |
-    // |-------+------+---------+----------+----------+----------+----------+----------|
-    // |     1 |    7 | U+0000  | U+007F   | 0xxxxxxx |          |          |          |
-    // |     2 |   11 | U+0080  | U+07FF   | 110xxxxx | 10xxxxxx |          |          |
-    // |     3 |   16 | U+0800  | U+FFFF   | 1110xxxx | 10xxxxxx | 10xxxxxx |          |
-    // |     4 |   21 | U+10000 | U+10FFFF | 11110xxx | 10xxxxxx | 10xxxxxx | 10xxxxxx |
-
-    u1 valid = false;
-    switch( size )
+    else
     {
-        case 1:
+        for( auto position = 1; position < size; position++ )
         {
-            if( code >= 0x00 and code <= 0x7f )
+            const auto byteElement = ( u8 )( byteSequence[ position ] );
+            if( byteElement < 0x80 or byteElement > 0xbf )
             {
-                valid = true;
+                valid = false;
+                break;
             }
-            break;
-        }
-        case 2:
-        {
-            if( code >= 0xc080 and code <= 0xdfbf )
-            {
-                valid = true;
-            }
-            break;
-        }
-        case 3:
-        {
-            if( code >= 0xe08080 and code <= 0xefbfbf )
-            {
-                valid = true;
-            }
-            break;
-        }
-        case 4:  // [[fallthrough]]
-        default:
-        {
-            if( code >= 0xf0808080 and code <= 0xf7bfbfbf )
-            {
-                valid = true;
-            }
-            break;
+            code = ( code << 8 ) | byteElement;
         }
     }
 
