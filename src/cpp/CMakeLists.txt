@@ -54,6 +54,7 @@ add_library( ${PROJECT}-cpp OBJECT
   Json.cpp
   SourceLocation.cpp
   String.cpp
+  Unicode.cpp
   Yaml.cpp
   data/file/TextDocument.cpp
   data/log/Category.cpp
@@ -147,6 +148,7 @@ ecm_generate_headers( ${PROJECT}_HEADERS_CPP
     String
     Test
     Type
+    Unicode
     Variadic
     Xml
     Yaml
