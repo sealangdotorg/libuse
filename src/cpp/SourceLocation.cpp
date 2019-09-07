@@ -153,9 +153,10 @@ SourceLocation& SourceLocation::operator-=( SourcePosition::difference_type widt
 }
 
 static inline std::string slice(
-    const std::string& line, const std::size_t start, const std::size_t length )
+    const std::string& line, const std::size_t start, const std::size_t stop )
 {
     auto begin = start;
+    auto end = stop;
 
     for( auto position = 0; position < begin; position++ )
     {
@@ -164,13 +165,14 @@ static inline std::string slice(
 
         if( utf8 > 1 )
         {
-            position += utf8 - 1;
-            begin += utf8 - 1;
+            const auto delta = ( utf8 - 1 );
+            position += delta;
+            begin += delta;
+            end += delta;
         }
     }
 
-    auto end = begin + length;
-    for( auto position = begin; position < end; position++ )
+    for( auto position = begin; position <= end; position++ )
     {
         const auto character = line[ position ];
         const auto utf8 = libstdhl::Unicode::UTF8::byteSequenceLengthIndication( character );
@@ -180,11 +182,14 @@ static inline std::string slice(
             position += delta;
             end += delta;
         }
-        else if( utf8 == 0 )
-        {
-            throw std::domain_error( "string contains invalid UTF-8 character" );
-        }
     }
+
+    if( stop == -1 )
+    {
+        end = line.size();
+    }
+
+    assert( end <= line.size() );
     return line.substr( begin, end - begin );
 }
 
@@ -205,11 +210,11 @@ std::string SourceLocation::read( void ) const
 
         if( pos == beginL and pos == endL )
         {
-            line = slice( line, begin.column - 1, end.column - begin.column );
+            line = slice( line, begin.column - 1, end.column - 1 );
         }
         else if( pos == beginL )
         {
-            line = slice( line, begin.column - 1, line.size() - ( begin.column - 1 ) );
+            line = slice( line, begin.column - 1, -1 );
         }
         else if( pos == endL )
         {
