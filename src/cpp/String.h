@@ -47,9 +47,7 @@
 
 #include <libstdhl/Type>
 
-#include <cstring>
 #include <memory>
-#include <sstream>
 #include <string>
 #include <vector>
 
@@ -66,158 +64,41 @@ namespace libstdhl
     */
     namespace String
     {
-        inline void split(
+        void split(
             const std::string& str,
             const std::string& delimiter,
-            std::vector< std::string >& result )
-        {
-            std::size_t start = 0;
-            std::size_t end = std::string::npos;
-            while( ( end = str.find( delimiter, start ) ) != std::string::npos )
-            {
-                result.emplace_back( str.substr( start, end - start ) );
-                start = end + delimiter.length();
-            }
-            result.emplace_back( str.substr( start, end ) );
-        }
+            std::vector< std::string >& result );
 
-        inline std::vector< std::string > split(
-            const std::string& str, const std::string& delimiter )
-        {
-            std::vector< std::string > result;
+        std::vector< std::string > split( const std::string& str, const std::string& delimiter );
 
-            split( str, delimiter, result );
+        std::string join(
+            const std::vector< std::string >& elements, const std::string& delimiter );
 
-            return result;
-        }
+        u1 startsWith( const std::string& str, const std::string& pattern );
 
-        inline std::string join(
-            const std::vector< std::string >& elements, const std::string& delimiter )
-        {
-            std::stringstream result;
-
-            u1 first = true;
-            for( const auto& element : elements )
-            {
-                result << ( first ? "" : delimiter ) << element;
-                first = false;
-            }
-
-            return result.str();
-        }
-
-        inline u1 startsWith( const std::string& str, const std::string& pattern )
-        {
-            if( strncmp( str.c_str(), pattern.c_str(), pattern.size() ) == 0 )
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        inline u1 endsWith( const std::string& str, const std::string& pattern )
-        {
-            const i64 pos = str.size() - pattern.size();
-
-            if( pos < 0 )
-            {
-                return false;
-            }
-
-            if( strcmp( &str.c_str()[ pos ], pattern.c_str() ) == 0 )
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+        u1 endsWith( const std::string& str, const std::string& pattern );
 
         /**
            adopted from:
            https://stackoverflow.com/questions/2896600/how-to-replace-all-occurrences-of-a-character-in-string#answer-24315631
         */
 
-        inline std::string replaceAll(
-            const std::string& str, const std::string& from, const std::string& to )
-        {
-            auto tmp = str;
-            size_t start_pos = 0;
-            while( ( start_pos = tmp.find( from, start_pos ) ) != std::string::npos )
-            {
-                tmp.replace( start_pos, from.length(), to );
-                start_pos += to.length();
-            }
-            return tmp;
-        }
+        std::string replaceAll(
+            const std::string& str, const std::string& from, const std::string& to );
 
-        inline std::string expansion(
+        std::string expansion(
             const std::string& str,
             const std::size_t start,
             const std::size_t length,
             const std::size_t tabSize,
-            const char symbol )
-        {
-            std::string tmp = "";
-            const std::size_t bound = start + length;
-
-            for( auto c = start; c < bound; c++ )
-            {
-                if( c < str.size() and str[ c ] == '\t' )
-                {
-                    tmp += std::string( tabSize, symbol );
-                }
-                else
-                {
-                    tmp += symbol;
-                }
-            }
-
-            return tmp;
-        }
+            const char asciiSymbol,
+            std::string utf8Symbol = "" );
 
         /**
            adopted from: https://stackoverflow.com/a/29962178
         */
 
-        inline std::string urlEncode( std::string str )
-        {
-            std::string new_str = "";
-            char c;
-            int ic;
-            const char* chars = str.c_str();
-            char bufHex[ 10 ];
-            int len = strlen( chars );
-
-            for( int i = 0; i < len; i++ )
-            {
-                c = chars[ i ];
-                ic = c;
-
-                if( isalnum( c ) or c == '-' or c == '_' or c == '.' or c == '~' )
-                {
-                    new_str += c;
-                }
-                else
-                {
-                    sprintf( bufHex, "%X", c );
-                    if( ic < 16 )
-                    {
-                        new_str += "%0";
-                    }
-                    else
-                    {
-                        new_str += "%";
-                    }
-                    new_str += bufHex;
-                }
-            }
-            return new_str;
-        }
+        std::string urlEncode( std::string str );
 
         /**
            adopted from https://stackoverflow.com/a/16388610

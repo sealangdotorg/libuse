@@ -146,6 +146,33 @@ TEST( libstdhl_cpp_SourceLocation, range )
     File::remove( *filename );
 }
 
+TEST( libstdhl_cpp_SourceLocation, read_utf8 )
+{
+    SourceLocation location;
+    const auto filename = std::make_shared< std::string >( TEST_NAME + ".txt" );
+    auto file = File::open( *filename, std::fstream::out );
+    file << "\n";
+    file << "01234😀😀789\n";
+    file << "abc😀😀fghij\n";
+    file << "\n";
+    file.close();
+
+    location = SourceLocation( SourcePosition( filename, 2, 4 ), SourcePosition( filename, 2, 9 ) );
+    EXPECT_STREQ( location.read().c_str(), "34😀😀7" );
+
+    location = SourceLocation( SourcePosition( filename, 2, 4 ), SourcePosition( filename, 3, 2 ) );
+    EXPECT_STREQ( location.read().c_str(), "34😀😀789\na" );
+
+    location = SourceLocation( SourcePosition( filename, 2, 4 ), SourcePosition( filename, 3, 9 ) );
+    EXPECT_STREQ( location.read().c_str(), "34😀😀789\nabc😀😀fgh" );
+
+    location =
+        SourceLocation( SourcePosition( filename, 3, 8 ), SourcePosition( filename, 3, 10 ) );
+    EXPECT_STREQ( location.read().c_str(), "hi" );
+
+    File::remove( *filename );
+}
+
 //
 //  Local variables:
 //  mode: c++

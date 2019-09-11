@@ -72,6 +72,7 @@
 #include <libstdhl/Standard>
 #include <libstdhl/String>
 #include <libstdhl/Type>
+#include <libstdhl/Unicode>
 #include <libstdhl/Variadic>
 #include <libstdhl/Version>
 #include <libstdhl/Xml>

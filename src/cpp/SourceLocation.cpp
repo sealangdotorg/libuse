@@ -44,6 +44,7 @@
 #include "SourceLocation.h"
 
 #include <libstdhl/File>
+#include <libstdhl/Unicode>
 
 using namespace libstdhl;
 
@@ -151,6 +152,47 @@ SourceLocation& SourceLocation::operator-=( SourcePosition::difference_type widt
     return operator+=( -width );
 }
 
+static inline std::string slice(
+    const std::string& line, const std::size_t start, const std::size_t stop )
+{
+    auto begin = start;
+    auto end = stop;
+
+    for( auto position = 0; position < begin; position++ )
+    {
+        const auto character = line[ position ];
+        const auto utf8 = Standard::RFC3629::UTF8::byteSequenceLengthIndication( character );
+
+        if( utf8 > 1 )
+        {
+            const auto delta = ( utf8 - 1 );
+            position += delta;
+            begin += delta;
+            end += delta;
+        }
+    }
+
+    for( auto position = begin; position <= end; position++ )
+    {
+        const auto character = line[ position ];
+        const auto utf8 = libstdhl::Unicode::UTF8::byteSequenceLengthIndication( character );
+        if( utf8 > 1 )
+        {
+            const auto delta = ( utf8 - 1 );
+            position += delta;
+            end += delta;
+        }
+    }
+
+    if( stop == -1 )
+    {
+        end = line.size();
+    }
+
+    assert( end <= line.size() );
+    return line.substr( begin, end - begin );
+}
+
 std::string SourceLocation::read( void ) const
 {
     std::string range = "";
@@ -168,15 +210,15 @@ std::string SourceLocation::read( void ) const
 
         if( pos == beginL and pos == endL )
         {
-            line = line.substr( begin.column - 1, end.column - begin.column );
+            line = slice( line, begin.column - 1, end.column - 1 );
         }
         else if( pos == beginL )
         {
-            line = line.substr( begin.column - 1 );
+            line = slice( line, begin.column - 1, -1 );
         }
         else if( pos == endL )
         {
-            line = line.substr( 0, end.column - 1 );
+            line = slice( line, 0, end.column - 1 );
         }
 
         range += line;

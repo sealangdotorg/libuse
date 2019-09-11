@@ -41,77 +41,66 @@
 //  statement from your version.
 //
 
-#include "Protocol.h"
+#pragma once
+#ifndef _LIBSTDHL_CPP_STANDARD_RFC3629_H_
+#define _LIBSTDHL_CPP_STANDARD_RFC3629_H_
 
-#include <libstdhl/String>
+#include <libstdhl/Type>
 
-#include <cstring>
+#include <memory>
 #include <vector>
 
-using namespace libstdhl;
-using namespace Network;
-using namespace LSP;
+/**
+   @brief    UTF-8, a transformation format of ISO 10646
 
-LSP::Protocol::Protocol( const u64 length )
-: m_length( length )
+   TBD
+
+   https://tools.ietf.org/html/rfc3629
+*/
+
+namespace libstdhl
 {
-}
-
-std::string LSP::Protocol::data( void ) const
-{
-    return CL + ": " + std::to_string( length() ) + NL + CT + ": " + TYPE + NL;
-}
-
-const u8* LSP::Protocol::buffer( void ) const
-{
-    return 0;
-}
-
-std::size_t LSP::Protocol::size( void ) const
-{
-    return 0;
-}
-
-u64 LSP::Protocol::length( void ) const
-{
-    return m_length;
-}
-
-std::string LSP::Protocol::type( void ) const
-{
-    return m_type;
-}
-
-LSP::Protocol LSP::Protocol::parse( const std::string& data )
-{
-    std::vector< std::string > parts;
-    String::split( data, "\r\n", parts );
-
-    u64 length = 0;
-    for( auto p : parts )
+    namespace Standard
     {
-        // check for content length field
-        if( strncmp( p.c_str(), CL.c_str(), CL.size() ) == 0 )
+        /**
+           @extends Standard
+        */
+        namespace RFC3629
         {
-            length = std::stoull( p.substr( CL.size() + 1 ) );
-            if( length == 0 )
+            /**
+               @extends RFC3629
+            */
+            class UTF8
             {
-                throw std::domain_error( "LSP: invalid content length '" + p + "'" );
-            }
-        }
-        // check for content type field
-        else if( strncmp( p.c_str(), CT.c_str(), CT.size() ) == 0 )
-        {
-            const auto type = String::trim( p.substr( CL.size() ) );
-            if( type.compare( TYPE ) != 0 )
-            {
-                throw std::domain_error( "LSP: invalid content type '" + type + "'" );
-            }
+              public:
+                using Ptr = std::shared_ptr< UTF8 >;
+
+                UTF8( const u32 code, const u32 point );
+
+                const u32 code( void ) const;
+
+                const u32 point( void ) const;
+
+                std::string unicode( void ) const;
+
+                std::string description( void ) const;
+
+                std::string toString( void ) const;
+
+              private:
+                u32 m_code;
+                u32 m_point;
+
+              public:
+                static std::size_t byteSequenceLengthIndication( const u8 byte );
+
+                static UTF8 fromString( const std::string& byteSequence );
+            };
         }
     }
-
-    return Protocol( length );
 }
+
+#endif  // _LIBSTDHL_CPP_STANDARD_RFC3629_H_
 
 //
 //  Local variables:

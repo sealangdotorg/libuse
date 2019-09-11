@@ -41,76 +41,36 @@
 //  statement from your version.
 //
 
-#include "Protocol.h"
-
-#include <libstdhl/String>
-
-#include <cstring>
-#include <vector>
+#include <libstdhl/Test>
 
 using namespace libstdhl;
-using namespace Network;
-using namespace LSP;
+using namespace Standard;
+using namespace RFC3629;
 
-LSP::Protocol::Protocol( const u64 length )
-: m_length( length )
+TEST( libstdhl_cpp_standard_rfc3629, fromString )
 {
+    // GIVEN
+    const auto byteSequence = "\xf0\x9f\x8d\x8e";  // RED APPLE
+
+    // WHEN
+    const auto utf8 = UTF8::fromString( byteSequence );
+
+    // THEN
+    EXPECT_EQ( utf8.code(), 0xf09f8d8e );
+    EXPECT_EQ( utf8.point(), 0x1f34e );
+    EXPECT_STREQ( utf8.unicode().c_str(), "U+1F34E" );
+    EXPECT_STREQ( utf8.description().c_str(), "f09f8d8e" );
+    EXPECT_STREQ( utf8.toString().c_str(), byteSequence );
+    EXPECT_STREQ( utf8.toString().c_str(), "🍎" );
 }
 
-std::string LSP::Protocol::data( void ) const
+TEST( libstdhl_cpp_standard_rfc3629, invalidUTF8byteSequence )
 {
-    return CL + ": " + std::to_string( length() ) + NL + CT + ": " + TYPE + NL;
-}
+    // GIVEN
+    const auto byteSequence = "\xf0\x01\x02\x03";  // invalid UTF-8 sequence
 
-const u8* LSP::Protocol::buffer( void ) const
-{
-    return 0;
-}
-
-std::size_t LSP::Protocol::size( void ) const
-{
-    return 0;
-}
-
-u64 LSP::Protocol::length( void ) const
-{
-    return m_length;
-}
-
-std::string LSP::Protocol::type( void ) const
-{
-    return m_type;
-}
-
-LSP::Protocol LSP::Protocol::parse( const std::string& data )
-{
-    std::vector< std::string > parts;
-    String::split( data, "\r\n", parts );
-
-    u64 length = 0;
-    for( auto p : parts )
-    {
-        // check for content length field
-        if( strncmp( p.c_str(), CL.c_str(), CL.size() ) == 0 )
-        {
-            length = std::stoull( p.substr( CL.size() + 1 ) );
-            if( length == 0 )
-            {
-                throw std::domain_error( "LSP: invalid content length '" + p + "'" );
-            }
-        }
-        // check for content type field
-        else if( strncmp( p.c_str(), CT.c_str(), CT.size() ) == 0 )
-        {
-            const auto type = String::trim( p.substr( CL.size() ) );
-            if( type.compare( TYPE ) != 0 )
-            {
-                throw std::domain_error( "LSP: invalid content type '" + type + "'" );
-            }
-        }
-    }
-
-    return Protocol( length );
+    // WHEN & THEN
+    EXPECT_THROW( UTF8::fromString( byteSequence ), std::domain_error );
 }
 
 //

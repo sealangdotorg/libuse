@@ -46,6 +46,7 @@
 #define _LIBSTDHL_CPP_STANDARD_H_
 
 #include <libstdhl/std/ieee802>
+#include <libstdhl/std/rfc3629>
 #include <libstdhl/std/rfc3986>
 
 /**
