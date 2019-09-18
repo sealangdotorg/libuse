@@ -167,6 +167,10 @@ TEST( libstdhl_cpp_SourceLocation, read_utf8 )
     EXPECT_STREQ( location.read().c_str(), "34😀😀789\nabc😀😀fgh" );
 
     location =
+        SourceLocation( SourcePosition( filename, 2, 1 ), SourcePosition( filename, 2, 11 ) );
+    EXPECT_STREQ( location.read().c_str(), "01234😀😀789" );
+
+    location =
         SourceLocation( SourcePosition( filename, 3, 8 ), SourcePosition( filename, 3, 10 ) );
     EXPECT_STREQ( location.read().c_str(), "hi" );
 

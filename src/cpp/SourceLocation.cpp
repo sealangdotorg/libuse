@@ -153,11 +153,9 @@ SourceLocation& SourceLocation::operator-=( SourcePosition::difference_type widt
 }
 
 static inline std::string slice(
-    const std::string& line, const std::size_t start, const std::size_t stop )
+    const std::string& line, const std::size_t index, const std::size_t length )
 {
-    auto begin = start;
-    auto end = stop;
-
+    auto begin = index;
     for( auto position = 0; position < begin; position++ )
     {
         const auto character = line[ position ];
@@ -168,12 +166,18 @@ static inline std::string slice(
             const auto delta = ( utf8 - 1 );
             position += delta;
             begin += delta;
-            end += delta;
         }
     }
 
-    for( auto position = begin; position <= end; position++ )
+    if( length == 0 )
     {
+        return line.substr( begin );
+    }
+
+    auto end = begin + length;
+    for( auto position = begin; position < end; position++ )
+    {
+        assert( position < line.size() );
         const auto character = line[ position ];
         const auto utf8 = libstdhl::Unicode::UTF8::byteSequenceLengthIndication( character );
         if( utf8 > 1 )
@@ -182,11 +186,6 @@ static inline std::string slice(
             position += delta;
             end += delta;
         }
-    }
-
-    if( stop == -1 )
-    {
-        end = line.size();
     }
 
     assert( end <= line.size() );
@@ -210,15 +209,22 @@ std::string SourceLocation::read( void ) const
 
         if( pos == beginL and pos == endL )
         {
-            line = slice( line, begin.column - 1, end.column - 1 );
+            line = slice( line, begin.column - 1, end.column - begin.column );
         }
         else if( pos == beginL )
         {
-            line = slice( line, begin.column - 1, -1 );
+            line = slice( line, begin.column - 1, 0 );
         }
         else if( pos == endL )
         {
-            line = slice( line, 0, end.column - 1 );
+            if( end.column != 1 )
+            {
+                line = slice( line, 0, end.column - 1 );
+            }
+            else
+            {
+                line = "";
+            }
         }
 
         range += line;
