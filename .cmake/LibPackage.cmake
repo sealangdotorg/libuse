@@ -429,7 +429,6 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
     if( EXISTS ${${PREFIX}_REPO_DIR} )
       if( NOT EXISTS ${${PREFIX}_REPO_DIR}/.git )
 	continue()
-	#message( FATAL_ERROR "package '${PREFIX}' is not a 'git' repository" )
       endif()
 
       execute_process(
