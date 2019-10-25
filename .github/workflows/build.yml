@@ -200,17 +200,13 @@ jobs:
         make C=msvc G=vs19 debug-fetch
     - name: Dependencies
       run:  |
-        refreshenv
         make C=msvc G=vs19 debug-deps
     - name: Building
       run:  |
-        refreshenv
         make C=msvc G=vs19 debug-build
     - name: Tests
       run:  |
-        refreshenv
         make C=msvc G=vs19 debug-test
     - name: Benchmark
       run:  |
-        refreshenv
         make C=msvc G=vs19 debug-benchmark
