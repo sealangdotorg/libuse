@@ -269,6 +269,17 @@ ifeq ($(G),ninja-e4)
   $(eval ENV_GEN="Eclipse CDT4 - Ninja")
 endif
 
+# Visual Studio 2019 (Version 16)
+ifeq ($(G),vs19)
+  $(eval ENV_GEN="Visual Studio 16 2019")
+endif
+ifeq ($(G),vs19w64)
+  $(eval ENV_GEN="Visual Studio 16 2019 Win64")
+endif
+ifeq ($(G),vs19arm)
+  $(eval ENV_GEN="Visual Studio 16 2019 ARM")
+endif
+
 # Visual Studio 2017 (Version 15)
 ifeq ($(G),vs17)
   $(eval ENV_GEN="Visual Studio 15 2017")
