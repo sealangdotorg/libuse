@@ -41,12 +41,12 @@
 #   statement from your version.
 #
 
-[submodule "lib/gtest"]
+[submodule "lib/gtest"] # external
 	path = lib/gtest
 	url = https://github.com/casm-lang/libgtest
 	branch = master
 
-[submodule "lib/hayai"]
+[submodule "lib/hayai"] # external
 	path = lib/hayai
 	url = https://github.com/casm-lang/libhayai
 	branch = master
