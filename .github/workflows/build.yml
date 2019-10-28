@@ -42,13 +42,6 @@
 #
 
 # https://help.github.com/en/articles/virtual-environments-for-github-actions#supported-virtual-environments
-#
-# |---------+----------------------------------------------|
-# | OS      | Version                                      |
-# |---------+----------------------------------------------|
-# | Linux   |  ubuntu-18.04 (ubuntu-latest), ubuntu-16.04  |
-# | MacOSX  |   macOS-10.14 (macOS-latest)                 |
-# | Windows | windows-2019  (windows-latest), windows-2016 |
 
 name: build
 
@@ -58,7 +51,7 @@ jobs:
   linux-clang-debug:
     strategy:
       matrix:
-        os: [ ubuntu-18.04, ubuntu-16.04 ]
+        os: [ ubuntu-18.04 ]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
@@ -66,7 +59,7 @@ jobs:
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
       run:  |
-        make C=clang fetch
+        make C=clang debug-fetch
     - name: Dependencies
       run:  |
         make C=clang debug-deps
@@ -91,7 +84,7 @@ jobs:
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
       run:  |
-        make C=gcc fetch
+        make C=gcc debug-fetch
     - name: Dependencies
       run:  |
         make C=gcc coverage-deps
@@ -123,7 +116,7 @@ jobs:
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
       run:  |
-        make C=clang fetch
+        make C=clang debug-fetch
     - name: Dependencies
       run:  |
         make C=clang debug-deps
@@ -154,7 +147,7 @@ jobs:
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
       run:  |
-        make C=gcc fetch
+        make C=gcc debug-fetch
     - name: Dependencies
       run:  |
         make C=gcc debug-deps
@@ -168,38 +161,6 @@ jobs:
       run:  |
         make C=gcc debug-benchmark
 
-  windows-clang-debug:
-    strategy:
-      matrix:
-        os: [ windows-2019, windows-2016 ]
-    runs-on: ${{ matrix.os }}
-    steps:
-    - uses: actions/checkout@v1
-    - name: Setup
-      run:  |
-        choco install llvm
-    - name: Fetching
-      env:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-      run:  |
-        make C=clang fetch
-    - name: Dependencies
-      run:  |
-        refreshenv
-        make C=clang debug-deps
-    - name: Building
-      run:  |
-        refreshenv
-        make C=clang debug-build
-    - name: Tests
-      run:  |
-        refreshenv
-        make C=clang debug-test
-    - name: Benchmark
-      run:  |
-        refreshenv
-        make C=clang debug-benchmark
-
   windows-gcc-debug:
     strategy:
       matrix:
@@ -211,7 +172,7 @@ jobs:
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
       run:  |
-        make C=gcc fetch
+        make C=gcc debug-fetch
     - name: Dependencies
       run:  |
         make C=gcc debug-deps
