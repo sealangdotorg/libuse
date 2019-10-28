@@ -161,38 +161,6 @@ jobs:
       run:  |
         make C=gcc debug-benchmark
 
-  windows-clang-debug:
-    strategy:
-      matrix:
-        os: [ windows-2019 ]
-    runs-on: ${{ matrix.os }}
-    steps:
-    - uses: actions/checkout@v1
-    - name: Setup
-      run:  |
-        choco install llvm
-    - name: Fetching
-      env:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-      run:  |
-        make C=clang debug-fetch
-    - name: Dependencies
-      run:  |
-        refreshenv
-        make C=clang debug-deps
-    - name: Building
-      run:  |
-        refreshenv
-        make C=clang debug-build
-    - name: Tests
-      run:  |
-        refreshenv
-        make C=clang debug-test
-    - name: Benchmark
-      run:  |
-        refreshenv
-        make C=clang debug-benchmark
-
   windows-gcc-debug:
     strategy:
       matrix:
