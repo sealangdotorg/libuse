@@ -46,14 +46,7 @@
 #define _LIBSTDHL_CPP_OPTIONAL_H_
 
 #include <exception>
-
-#if defined( __clang__ ) and defined( __apple_build_version__ )
-#include <optional>
-namespace StdOptional = std;
-#else
 #include <experimental/optional>
-namespace StdOptional = std::experimental;
-#endif
 
 /**
    @brief    TODO
@@ -68,12 +61,12 @@ namespace libstdhl
        @class Optional
      */
     template < typename T >
-    class Optional : public StdOptional::optional< T >
+    class Optional : public std::experimental::optional< T >
     {
       public:
         template < typename... Args >
         Optional( Args&&... args )
-        : StdOptional::optional< T >{ std::forward< Args >( args )... }
+        : std::experimental::optional< T >{ std::forward< Args >( args )... }
         {
         }
 
@@ -101,7 +94,7 @@ namespace libstdhl
         }
     };
 
-    constexpr auto nullopt = StdOptional::nullopt;
+    constexpr auto nullopt = std::experimental::nullopt;
 }
 
 #endif  // _LIBSTDHL_CPP_OPTIONAL_H_
