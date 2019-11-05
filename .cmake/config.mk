@@ -535,7 +535,7 @@ $(INSTA):%-install: %
 
 build: debug
 
-$(BUILD):%-build: %-sync
+$(BUILD):%-build: %
 
 
 deps: debug-deps
