@@ -115,10 +115,10 @@ jobs:
         chmod 755 bash
         ./bash
 
-  darwin-clang-debug:
+  darwin-appleclang10-debug:
     strategy:
       matrix:
-        os: [ macOS-10.14 ]
+        os: [ macOS-latest ]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
@@ -126,7 +126,7 @@ jobs:
       run: |
         make info
         ls -n /Applications/ | grep Xcode*
-        sudo xcode-select -s /Applications/Xcode_10.3.app/Contents/Developer
+        sudo xcode-select -s /Applications/Xcode_10.3.app
         brew install z3
         make C=clang info-tools
     - name: Fetching
@@ -150,7 +150,7 @@ jobs:
   darwin-gcc-debug:
     strategy:
       matrix:
-        os: [ macOS-10.14 ]
+        os: [ macOS-latest ]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
