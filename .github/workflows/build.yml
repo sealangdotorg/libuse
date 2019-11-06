@@ -55,6 +55,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
+    - name: Setup
+      run: |
+        make C=gcc info-tools
     - name: Fetching
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
@@ -80,6 +83,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
+    - name: Setup
+      run: |
+        make C=gcc info-tools
     - name: Fetching
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
@@ -112,6 +118,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
+    - name: Setup
+      run: |
+        xcode-select -s /Applications/Xcode_10.3.app
+        make C=clang info-tools
     - name: Fetching
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
@@ -139,10 +149,12 @@ jobs:
     - uses: actions/checkout@v1
     - name: Setup
       run:  |
+        xcode-select -s /Applications/Xcode_10.3.app
         sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
         brew install gcc@9
         ln -s /usr/local/bin/gcc-9 /usr/local/bin/gcc
         ln -s /usr/local/bin/g++-9 /usr/local/bin/g++
+        make C=gcc info-tools
     - name: Fetching
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
@@ -168,6 +180,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
+    - name: Setup
+      run: |
+        make C=gcc info-tools
     - name: Fetching
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
