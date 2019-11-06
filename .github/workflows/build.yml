@@ -115,70 +115,34 @@ jobs:
         chmod 755 bash
         ./bash
 
-  darwin-appleclang10-debug:
+  darwin-x86_64:
     strategy:
       matrix:
-        os: [ macOS-10.14 ]
-    runs-on: ${{ matrix.os }}
+        build: [ debug ]
+        compiler: [ clang, gcc ]
+    runs-on: [ self-hosted, macos ]
+    env:
+      B: ${{ matrix.build }}
+      C: ${{ matrix.compiler }}
     steps:
     - uses: actions/checkout@v1
-    - name: Setup
-      run: |
-        make info
-        sudo xcode-select -s /Applications/Xcode_10.3.app
-        brew install z3
-        make C=clang info-tools
     - name: Fetching
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
       run: |
-        make C=clang debug-fetch
+        make ci-fetch
     - name: Dependencies
       run: |
-        make C=clang debug-deps
+        make ci-deps
     - name: Building
       run: |
-        make C=clang debug-build
+        make ci-build
     - name: Tests
       run: |
-        make C=clang debug-test
+        make ci-test
     - name: Benchmark
       run: |
-        make C=clang debug-benchmark
-
-  darwin-gcc9-debug:
-    strategy:
-      matrix:
-        os: [ macOS-10.14 ]
-    runs-on: ${{ matrix.os }}
-    steps:
-    - uses: actions/checkout@v1
-    - name: Setup
-      run: |
-        make info
-        sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
-        brew install gcc@9
-        ln -s /usr/local/bin/gcc-9 /usr/local/bin/gcc
-        ln -s /usr/local/bin/g++-9 /usr/local/bin/g++
-        brew install z3
-        make C=gcc info-tools
-    - name: Fetching
-      env:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-      run: |
-        make C=gcc debug-fetch
-    - name: Dependencies
-      run: |
-        make C=gcc debug-deps
-    - name: Building
-      run: |
-        make C=gcc debug-build
-    - name: Tests
-      run: |
-        make C=gcc debug-test
-    - name: Benchmark
-      run: |
-        make C=gcc debug-benchmark
+        make ci-benchmark
 
   windows-gcc8-debug:
     strategy:
