@@ -48,7 +48,7 @@ name: build
 on: [push]
 
 jobs:
-  linux-clang-debug:
+  linux-clang6-debug:
     strategy:
       matrix:
         os: [ ubuntu-18.04 ]
@@ -59,7 +59,7 @@ jobs:
       run: |
         make info
         sudo apt-get install -y libz3-dev
-        make C=gcc info-tools
+        make C=clang info-tools
     - name: Fetching
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
@@ -78,7 +78,7 @@ jobs:
       run: |
         make C=clang debug-benchmark
 
-  linux-gcc-coverage:
+  linux-gcc7-coverage:
     strategy:
       matrix:
         os: [ ubuntu-18.04 ]
@@ -118,14 +118,13 @@ jobs:
   darwin-appleclang10-debug:
     strategy:
       matrix:
-        os: [ macOS-latest ]
+        os: [ macOS-10.14 ]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
     - name: Setup
       run: |
         make info
-        ls -n /Applications/ | grep Xcode*
         sudo xcode-select -s /Applications/Xcode_10.3.app
         brew install z3
         make C=clang info-tools
@@ -147,17 +146,16 @@ jobs:
       run: |
         make C=clang debug-benchmark
 
-  darwin-gcc-debug:
+  darwin-gcc9-debug:
     strategy:
       matrix:
-        os: [ macOS-latest ]
+        os: [ macOS-10.14 ]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v1
     - name: Setup
       run: |
         make info
-        ls -n /Library/ | grep macOS_SDK*
         sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
         brew install gcc@9
         ln -s /usr/local/bin/gcc-9 /usr/local/bin/gcc
@@ -182,7 +180,7 @@ jobs:
       run: |
         make C=gcc debug-benchmark
 
-  windows-gcc-debug:
+  windows-gcc8-debug:
     strategy:
       matrix:
         os: [ windows-2019 ]
