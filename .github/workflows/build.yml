@@ -54,7 +54,7 @@ jobs:
         build: [ debug, coverage ]
         compiler: [ clang, gcc ]
     runs-on: ubuntu-18.04
-    if: ( ${{ matrix.build }} == 'debug' && ${{ matrix.compiler }} == 'clang') || ( ${{ matrix.build }} == 'coverage' && ${{ matrix.compiler }} == 'gcc')
+    if: matrix.build == 'debug' && matrix.compiler == 'clang' || matrix.build == 'coverage' && matrix.compiler == 'gcc'
     env:
       B: ${{ matrix.build }}
       C: ${{ matrix.compiler }}
@@ -78,7 +78,7 @@ jobs:
       run: |
         make ci-benchmark
     - name: Coverage
-      if: ${{ matrix.build }} == 'coverage'
+      if: matrix.build == 'coverage'
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: |
