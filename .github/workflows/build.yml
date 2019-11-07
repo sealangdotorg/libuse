@@ -99,8 +99,6 @@ jobs:
       matrix:
         tool:
         - build: debug
-          chain: clang
-        - build: debug
           chain: gcc
     env:
       B: ${{ matrix.tool.build }}
@@ -110,7 +108,6 @@ jobs:
     - name: Setup
       run: |
         make info
-        brew install llvm@9
         brew install gcc@9
         ln -s /usr/local/bin/gcc-9 /usr/local/bin/gcc
         ln -s /usr/local/bin/g++-9 /usr/local/bin/g++
