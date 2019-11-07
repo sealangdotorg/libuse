@@ -51,13 +51,15 @@ jobs:
   linux-x86_64:
     strategy:
       matrix:
-        build: [ debug, coverage ]
-        compiler: [ clang, gcc ]
+        setup:
+        - compiler: clang
+          build:    debug
+        - compiler: gcc
+          build:    coverage
     runs-on: ubuntu-18.04
-    if: ( strategy.matrix.build == 'debug' && strategy.matrix.compiler == 'clang' ) || ( strategy.matrix.build == 'coverage' && strategy.matrix.compiler == 'gcc' )
     env:
-      B: ${{ matrix.build }}
-      C: ${{ matrix.compiler }}
+      B: ${{ matrix.setup.build }}
+      C: ${{ matrix.setup.compiler }}
     steps:
     - uses: actions/checkout@v1
     - name: Fetching
@@ -80,7 +82,7 @@ jobs:
     - name: Coverage
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      if: matrix.build == 'coverage'
+      if: matrix.setup.build == 'coverage'
       run: |
         wget https://codecov.io/bash
         chmod 755 bash
