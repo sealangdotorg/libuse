@@ -48,8 +48,8 @@
 * libstdhl: General Purpose High-level Library
 
 [[https://gitter.im/casm-lang/libstdhl][https://img.shields.io/badge/gitter-chat-darkcyan.svg?logo=gitter]]
-[[https://github.com/casm-lang/libstdhl/actions][https://github.com/casm-lang/libstdhl/workflows/build/badge.svg]]
-[[https://ci.casm-lang.org/teams/main/pipelines/development/jobs/libstdhl-master][ @@html:<img src="https://ci.casm-lang.org/api/v1/teams/main/pipelines/development/jobs/libstdhl-master/badge">@@ ]]
+[[https://github.com/casm-lang/libstdhl/actions?query=workflow%3Abuild][https://github.com/casm-lang/libstdhl/workflows/build/badge.svg]]
+[[https://github.com/casm-lang/libstdhl/actions?query=workflow%3Anightly][https://github.com/casm-lang/libstdhl/workflows/nightly/badge.svg]]
 [[https://codecov.io/gh/casm-lang/libstdhl][https://codecov.io/gh/casm-lang/libstdhl/badge.svg]]
 [[https://github.com/casm-lang/libstdhl/tags][https://img.shields.io/github/tag/casm-lang/libstdhl.svg?logo=github&sort=semver]]
 [[https://github.com/casm-lang/libstdhl/blob/master/LICENSE.txt][https://img.shields.io/badge/license-GPLv3%2BLE-blue.svg?logo=gnu]]
