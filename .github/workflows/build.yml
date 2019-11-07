@@ -49,17 +49,17 @@ on: [push]
 
 jobs:
   linux-x86_64:
+    runs-on: ubuntu-18.04
     strategy:
       matrix:
-        setup:
-        - compiler: clang
-          build:    debug
-        - compiler: gcc
-          build:    coverage
-    runs-on: ubuntu-18.04
+        tool:
+        - build: debug
+          chain: clang
+        - build: coverage
+          chain: gcc
     env:
-      B: ${{ matrix.setup.build }}
-      C: ${{ matrix.setup.compiler }}
+      B: ${{ matrix.tool.build }}
+      C: ${{ matrix.tool.chain }}
     steps:
     - uses: actions/checkout@v1
     - name: Fetching
@@ -82,21 +82,24 @@ jobs:
     - name: Coverage
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      if: matrix.setup.build == 'coverage'
+      if: matrix.tool.build == 'coverage' && matrix.tool.chain == 'gcc'
       run: |
         wget https://codecov.io/bash
         chmod 755 bash
         ./bash
 
   darwin-x86_64:
+    runs-on: macOS-10.15
     strategy:
       matrix:
-        build: [ debug ]
-        compiler: [ clang, gcc ]
-    runs-on: [ self-hosted, macos ]
+        tool:
+        - build: debug
+          chain: clang
+        - build: debug
+          chain: gcc
     env:
-      B: ${{ matrix.build }}
-      C: ${{ matrix.compiler }}
+      B: ${{ matrix.tool.build }}
+      C: ${{ matrix.tool.chain }}
     steps:
     - uses: actions/checkout@v1
     - name: Fetching
@@ -118,14 +121,15 @@ jobs:
         make ci-benchmark
 
   windows-x86_64:
+    runs-on: windows-2019
     strategy:
       matrix:
-        build: [ debug ]
-        compiler: [ gcc ]
-    runs-on: windows-2019
+        tool:
+        - build: debug
+          chain: gcc
     env:
-      B: ${{ matrix.build }}
-      C: ${{ matrix.compiler }}
+      B: ${{ matrix.tool.build }}
+      C: ${{ matrix.tool.chain }}
     steps:
     - uses: actions/checkout@v1
     - name: Setup
