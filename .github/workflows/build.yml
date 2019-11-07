@@ -54,11 +54,11 @@ jobs:
         build: [ debug, coverage ]
         compiler: [ clang, gcc ]
     runs-on: ubuntu-18.04
-    if: matrix.build == 'debug' && matrix.compiler == 'clang' || matrix.build == 'coverage' && matrix.compiler == 'gcc'
     env:
       B: ${{ matrix.build }}
       C: ${{ matrix.compiler }}
     steps:
+    - if: ( matrix.build == 'debug' && matrix.compiler == 'clang' ) || ( matrix.build == 'coverage' && matrix.compiler == 'gcc' )
     - uses: actions/checkout@v1
     - name: Fetching
       env:
@@ -78,9 +78,9 @@ jobs:
       run: |
         make ci-benchmark
     - name: Coverage
-      if: matrix.build == 'coverage'
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      if: matrix.build == 'coverage'
       run: |
         wget https://codecov.io/bash
         chmod 755 bash
