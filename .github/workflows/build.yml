@@ -58,8 +58,8 @@ jobs:
       B: ${{ matrix.build }}
       C: ${{ matrix.compiler }}
     steps:
-    - if: ( matrix.build == 'debug' && matrix.compiler == 'clang' ) || ( matrix.build == 'coverage' && matrix.compiler == 'gcc' )
     - uses: actions/checkout@v1
+      if: ( matrix.build == 'debug' && matrix.compiler == 'clang' ) || ( matrix.build == 'coverage' && matrix.compiler == 'gcc' )
     - name: Fetching
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
