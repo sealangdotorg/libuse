@@ -89,7 +89,7 @@ jobs:
         ./bash
 
   darwin-x86_64:
-    runs-on: macOS-10.15
+    runs-on: macos-latest
     strategy:
       matrix:
         tool:
