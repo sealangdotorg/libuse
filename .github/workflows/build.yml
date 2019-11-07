@@ -54,12 +54,12 @@ jobs:
         build: [ debug, coverage ]
         compiler: [ clang, gcc ]
     runs-on: ubuntu-18.04
+    if: ( strategy.matrix.build == 'debug' && strategy.matrix.compiler == 'clang' ) || ( strategy.matrix.build == 'coverage' && strategy.matrix.compiler == 'gcc' )
     env:
       B: ${{ matrix.build }}
       C: ${{ matrix.compiler }}
     steps:
     - uses: actions/checkout@v1
-      if: ( matrix.build == 'debug' && matrix.compiler == 'clang' ) || ( matrix.build == 'coverage' && matrix.compiler == 'gcc' )
     - name: Fetching
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
