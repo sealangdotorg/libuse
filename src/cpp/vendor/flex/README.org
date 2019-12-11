@@ -1,0 +1,9 @@
+
+* 3rd-Party C++ Flex Library
+
+The content of this directory includes a C++ header file of the C++ Flex library, which was released under a modified BSD license. 
+
+** flex
+
+- url = https://github.com/westes/flex
+- rev = a562291415922732e22cd23cd330901ffa57db45

@@ -420,6 +420,27 @@ install(
   )
 
 
+ecm_generate_headers( ${PROJECT}_VENDOR_FLEX_HEADERS_CPP
+  ORIGINAL
+    CAMELCASE
+  HEADER_NAMES
+    FlexLexer
+  PREFIX
+    ${PROJECT}/vendor/flex
+  RELATIVE
+    vendor/flex
+  REQUIRED_HEADERS
+    ${PROJECT}_VENDOR_FLEX_HEADERS
+  )
+install(
+  FILES
+    ${${PROJECT}_VENDOR_FLEX_HEADERS}
+    ${${PROJECT}_VENDOR_FLEX_HEADERS_CPP}
+  DESTINATION
+    "include/${PROJECT}/vendor/flex"
+  )
+
+
 ecm_generate_headers( ${PROJECT}_VENDOR_GETOPT_HEADERS_CPP
   ORIGINAL
     CAMELCASE
