@@ -198,6 +198,7 @@ def searcher( dirpath, rootdir = True ) :
 
         if fileext in \
         [ ".org"   # Org-Mode Source
+        , ".cson"  # CoffeeScript-Object-Notation Source
         ] :
             relicense( filepath, "# " )
 
