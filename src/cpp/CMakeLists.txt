@@ -142,6 +142,7 @@ ecm_generate_headers( ${PROJECT}_HEADERS_CPP
     Network
     Optional
     Random
+    RestoreOnScopeExit
     SourceLocation
     Stack
     Standard
