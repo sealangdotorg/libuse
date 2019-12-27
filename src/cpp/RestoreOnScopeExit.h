@@ -41,49 +41,57 @@
 //  statement from your version.
 //
 
-#pragma once
-#ifndef _LIBSTDHL_H_
-#define _LIBSTDHL_H_
-
-/**
-   @brief    TODO
-
-   TODO
-*/
-
-#include <libstdhl/Allocator>
-#include <libstdhl/Ansi>
-#include <libstdhl/Args>
-#include <libstdhl/Binding>
-#include <libstdhl/Enum>
-#include <libstdhl/Environment>
-#include <libstdhl/Exception>
-#include <libstdhl/File>
-#include <libstdhl/Hash>
-#include <libstdhl/Json>
-#include <libstdhl/Labeling>
-#include <libstdhl/List>
-#include <libstdhl/Log>
-#include <libstdhl/Memory>
-#include <libstdhl/Network>
-#include <libstdhl/Random>
-#include <libstdhl/RestoreOnScopeExit>
-#include <libstdhl/SourceLocation>
-#include <libstdhl/Stack>
-#include <libstdhl/Standard>
-#include <libstdhl/String>
-#include <libstdhl/Type>
-#include <libstdhl/Unicode>
-#include <libstdhl/Variadic>
-#include <libstdhl/Version>
-#include <libstdhl/Xml>
-#include <libstdhl/Yaml>
+#ifndef _LIBSTDHL_RESTORE_ON_SCOPE_EXIT_H_
+#define _LIBSTDHL_RESTORE_ON_SCOPE_EXIT_H_
 
 namespace libstdhl
 {
+    /**
+       @brief Restores the previous value when the instance goes out of scope.
+     */
+    template < typename T >
+    class RestoreOnScopeExit
+    {
+      public:
+        RestoreOnScopeExit( T &target )
+        : m_target( target )
+        , m_originalValue( target )
+        , m_shouldRestore( true )
+        {
+        }
+
+        ~RestoreOnScopeExit( void )
+        {
+            if( m_shouldRestore )
+            {
+                restore();
+            }
+        }
+
+        void dismiss( void )
+        {
+            m_shouldRestore = false;
+        }
+
+        RestoreOnScopeExit( RestoreOnScopeExit const & ) = delete;
+        RestoreOnScopeExit( RestoreOnScopeExit && ) = delete;
+        RestoreOnScopeExit &operator=( RestoreOnScopeExit const & ) = delete;
+        RestoreOnScopeExit &operator=( RestoreOnScopeExit && ) = delete;
+
+      private:
+        void restore( void )
+        {
+            m_target = std::move( m_originalValue );
+        }
+
+      private:
+        T &m_target;
+        T m_originalValue;
+        bool m_shouldRestore;
+    };
 }
 
-#endif  // _LIBSTDHL_H_
+#endif  // _LIBSTDHL_RESTORE_ON_SCOPE_EXIT_H_
 
 //
 //  Local variables:

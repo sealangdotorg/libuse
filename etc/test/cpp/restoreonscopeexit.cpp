@@ -41,49 +41,40 @@
 //  statement from your version.
 //
 
-#pragma once
-#ifndef _LIBSTDHL_H_
-#define _LIBSTDHL_H_
+#include <libstdhl/Test>
 
-/**
-   @brief    TODO
+using namespace libstdhl;
 
-   TODO
-*/
-
-#include <libstdhl/Allocator>
-#include <libstdhl/Ansi>
-#include <libstdhl/Args>
-#include <libstdhl/Binding>
-#include <libstdhl/Enum>
-#include <libstdhl/Environment>
-#include <libstdhl/Exception>
-#include <libstdhl/File>
-#include <libstdhl/Hash>
-#include <libstdhl/Json>
-#include <libstdhl/Labeling>
-#include <libstdhl/List>
-#include <libstdhl/Log>
-#include <libstdhl/Memory>
-#include <libstdhl/Network>
-#include <libstdhl/Random>
-#include <libstdhl/RestoreOnScopeExit>
-#include <libstdhl/SourceLocation>
-#include <libstdhl/Stack>
-#include <libstdhl/Standard>
-#include <libstdhl/String>
-#include <libstdhl/Type>
-#include <libstdhl/Unicode>
-#include <libstdhl/Variadic>
-#include <libstdhl/Version>
-#include <libstdhl/Xml>
-#include <libstdhl/Yaml>
-
-namespace libstdhl
+TEST( libstdhl_cpp_RestoreOnScopeExit, should_restore_value_of_variable_when_going_out_of_scope )
 {
+    // GIVEN
+    std::size_t var = 42;
+
+    // WHEN
+    {
+        RestoreOnScopeExit< std::size_t > restoreVar( var );
+        var = 21;
+    }
+
+    // THEN
+    EXPECT_EQ( 42, var );
 }
 
-#endif  // _LIBSTDHL_H_
+TEST( libstdhl_cpp_RestoreOnScopeExit, should_not_restore_value_of_variable_when_dismissed )
+{
+    // GIVEN
+    std::size_t var = 42;
+
+    // WHEN
+    {
+        RestoreOnScopeExit< std::size_t > restoreVar( var );
+        var = 21;
+        restoreVar.dismiss();
+    }
+
+    // THEN
+    EXPECT_EQ( 21, var );
+}
 
 //
 //  Local variables:
