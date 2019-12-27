@@ -60,7 +60,7 @@ namespace libstdhl
         {
         }
 
-        ~RestoreOnScopeExit( void )
+        virtual ~RestoreOnScopeExit( void )
         {
             if( m_shouldRestore )
             {
