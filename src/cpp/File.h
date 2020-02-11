@@ -100,6 +100,8 @@ namespace libstdhl
             u1 exists( const std::string& path );
 
             void remove( const std::string& path );
+
+            std::string temporary( void );
         }
     }
 }
