@@ -237,6 +237,19 @@ TEST( libstdhl_cpp_File_Path, redundant_creation_triggers_exception )
     EXPECT_FALSE( libstdhl::File::Path::exists( path ) );
 }
 
+TEST( libstdhl_cpp_File_Path, temporary )
+{
+    // GIVEN
+#if defined( __WIN32__ ) or defined( __WIN32 ) or defined( _WIN32 )
+    std::string path = "C:/Windows/TEMP";
+#else
+    std::string path = "/tmp";
+#endif
+
+    // WHEN & THEN
+    EXPECT_STREQ( libstdhl::File::Path::temporary().c_str(), path.c_str() );
+}
+
 //
 //  Local variables:
 //  mode: c++

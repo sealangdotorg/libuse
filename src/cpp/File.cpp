@@ -227,6 +227,20 @@ void File::Path::remove( const std::string& path )
 
 #undef PATH_REMOVE
 
+#if defined( __WIN32__ ) or defined( __WIN32 ) or defined( _WIN32 )
+#define PATH_TEMPORARY "C:/Windows/TEMP"
+#else
+#define PATH_TEMPORARY "/tmp"
+#endif
+
+std::string File::Path::temporary( void )
+{
+    // @ppaulweber: when using C++17 change to std::filesystem::temp_directory_path();
+    return PATH_TEMPORARY;
+}
+
+#undef PATH_TEMPORARY
+
 //
 //  Local variables:
 //  mode: c++
