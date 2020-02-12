@@ -46,6 +46,10 @@ function( compile_flags KIND )
   add_definitions( -Wall )
   add_definitions( -Wno-deprecated )
 
+  if( CMAKE_COMPILER_IS_MINGW )
+    add_compile_options( -Wa,-mbig-obj )
+  endif( CMAKE_COMPILER_IS_MINGW )
+
   set( CMAKE_${KIND}_FLAGS          "${CMAKE_${KIND}_FLAGS}" )
   set( CMAKE_${KIND}_FLAGS_DEBUG    "${CMAKE_${KIND}_FLAGS_DEBUG} -O0" )
   set( CMAKE_${KIND}_FLAGS_RELEASE  "${CMAKE_${KIND}_FLAGS_RELEASE}" )
