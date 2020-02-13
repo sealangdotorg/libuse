@@ -122,7 +122,7 @@ add_executable( ${PROJECT}-check
 
 if( ${LIBGTEST_FOUND} )
   target_link_libraries( ${PROJECT}-check
-    ${PROJECT}
+    ${PROJECT}-ar
     ${LIBGTEST_LIBRARY}
     ${LIBGTEST_MAIN}
     Threads::Threads
