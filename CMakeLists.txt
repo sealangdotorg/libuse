@@ -141,7 +141,7 @@ add_executable( ${PROJECT}-run
 
 if( ${LIBHAYAI_FOUND} )
   target_link_libraries( ${PROJECT}-run
-    ${PROJECT}
+    ${PROJECT}-ar
     ${LIBHAYAI_LIBRARY}
     )
 endif()
