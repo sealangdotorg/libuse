@@ -70,24 +70,47 @@ add_subdirectory( etc
   EXCLUDE_FROM_ALL
   )
 
-
+#
 #
 # library
 #
 
-add_library( ${PROJECT} STATIC
+set( ${PROJECT}_VERSION ${GIT_REVTAG} )
+set_property( TARGET ${PROJECT}-cpp PROPERTY POSITION_INDEPENDENT_CODE 1 )
+
+add_library( ${PROJECT} SHARED
   $<TARGET_OBJECTS:${PROJECT}-cpp>
   )
 
-if( WIN32 )
-  target_link_libraries( ${PROJECT} ws2_32 )
-endif()
-
-set( ${PROJECT}_VERSION ${GIT_REVTAG} )
+set_property( TARGET ${PROJECT} PROPERTY OUTPUT_NAME ${PROJECT} )
 set_property( TARGET ${PROJECT} PROPERTY VERSION ${${PROJECT}_VERSION} )
 set_property( TARGET ${PROJECT} PROPERTY PREFIX  "" )
 
+if( WIN32 )
+  target_link_libraries( ${PROJECT}
+    ws2_32
+    )
+endif()
 
+add_library( ${PROJECT}-obj STATIC
+  $<TARGET_OBJECTS:${PROJECT}-cpp>
+  )
+
+set_property( TARGET ${PROJECT}-obj PROPERTY OUTPUT_NAME ${PROJECT} )
+set_property( TARGET ${PROJECT}-obj PROPERTY VERSION ${${PROJECT}_VERSION} )
+set_property( TARGET ${PROJECT}-obj PROPERTY PREFIX  "" )
+
+if( WIN32 )
+  target_link_libraries( ${PROJECT}-obj
+    ws2_32
+    )
+endif()
+
+add_dependencies( ${PROJECT}
+  ${PROJECT}-obj
+  )
+
+#
 #
 # test
 # 
@@ -106,7 +129,7 @@ if( ${LIBGTEST_FOUND} )
     )
 endif()
 
-
+#
 #
 # benchmark
 #
@@ -118,18 +141,18 @@ add_executable( ${PROJECT}-run
 
 if( ${LIBHAYAI_FOUND} )
   target_link_libraries( ${PROJECT}-run
-    ${PROJECT}
+    ${PROJECT}-obj
     ${LIBHAYAI_LIBRARY}
     )
 endif()
 
-
+#
 #
 # install
 #
 
 install(
-  TARGETS  ${PROJECT}
+  TARGETS  ${PROJECT} ${PROJECT}-obj
   EXPORT   ${PROJECT}Targets
   LIBRARY  DESTINATION lib
   ARCHIVE  DESTINATION lib
@@ -137,7 +160,9 @@ install(
   INCLUDES DESTINATION include
   )
 
-generate_export_header( ${PROJECT} )
+generate_export_header(
+  ${PROJECT}
+  )
 
 install(
   FILES
@@ -151,7 +176,7 @@ export(
   FILE    ${PROJECT}Config.cmake
   )
 
-
+#
 #
 # cmake
 #
@@ -168,7 +193,7 @@ install(
     "share/cmake/Module/${PROJECT}"
   )
 
-
+#
 #
 # build features and checks
 #
