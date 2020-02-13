@@ -443,6 +443,10 @@ ifeq (,$(findstring Visual,$(ENV_GEN)))
       $(ENV_CMAKE_CXX_FLAGS)"
   endif
 
+  ifeq ("$(TYPE)","release")
+      ENV_CMAKE_FLAGS += -DCMAKE_SHARED_LINKER_FLAGS="-s"
+  endif
+
   ifeq ($(ENV_OSYS),Windows)
     ifeq ($(ENV_CC),clang)
       ENV_CMAKE_FLAGS += -DCMAKE_EXE_LINKER_FLAGS="-Wl,--allow-multiple-definition"
