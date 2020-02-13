@@ -231,6 +231,14 @@ TEST( libstdhl_cpp_String, expansion_utf8 )
     EXPECT_STREQ( String::expansion( str, 22, 2, 4, '.', ":-" ).c_str(), ".." );
 }
 
+TEST( libstdhl_cpp_String, urlEncode )
+{
+    EXPECT_STREQ( String::urlEncode( "Hello World!" ).c_str(), "Hello%20World%21" );
+    EXPECT_STREQ(
+        String::urlEncode( "http://example.com/~user" ).c_str(),
+        "http%3A%2F%2Fexample.com%2F~user" );
+}
+
 //
 //  Local variables:
 //  mode: c++
