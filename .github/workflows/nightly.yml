@@ -91,9 +91,9 @@ jobs:
         make ci-bundle
     - name: Persisting
       uses: actions/upload-artifact@v1
-        with:
-          name: package
-          path: obj/bundle
+      with:
+        name: package
+        path: obj/bundle
 
   darwin-x86_64:
     runs-on: macos-latest
@@ -139,9 +139,9 @@ jobs:
         make ci-bundle
     - name: Persisting
       uses: actions/upload-artifact@v1
-        with:
-          name: package
-          path: obj/bundle
+      with:
+        name: package
+        path: obj/bundle
 
   windows-x86_64:
     runs-on: windows-2019
@@ -184,6 +184,6 @@ jobs:
         make ci-bundle
     - name: Persisting
       uses: actions/upload-artifact@v1
-        with:
-          name: package
-          path: obj/bundle
+      with:
+        name: package
+        path: obj/bundle
