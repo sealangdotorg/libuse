@@ -92,7 +92,7 @@ jobs:
     - name: Persisting
       uses: actions/upload-artifact@v1
       with:
-        name: package
+        name: packages
         path: obj/bundle
 
   darwin-x86_64:
@@ -140,7 +140,7 @@ jobs:
     - name: Persisting
       uses: actions/upload-artifact@v1
       with:
-        name: package
+        name: packages
         path: obj/bundle
 
   windows-x86_64:
@@ -158,6 +158,7 @@ jobs:
     - name: Setup
       run: |
         make info
+        choco install zip
         make ci-tools
     - name: Fetching
       env:
@@ -185,5 +186,5 @@ jobs:
     - name: Persisting
       uses: actions/upload-artifact@v1
       with:
-        name: package
+        name: packages
         path: obj/bundle
