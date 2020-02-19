@@ -504,6 +504,13 @@ ENV_CMAKE_FLAGS += -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 ENV_CMAKE_FLAGS += -DCMAKE_INSTALL_PREFIX=$(ENV_INSTALL)
 
 
+# define the config path to load .cmake modules
+ifndef CONFIG
+  CONFIG = .
+endif
+ENV_CMAKE_FLAGS += -DCMAKE_CONFIG_PATH=$(CONFIG)/.cmake
+
+
 sync: debug-sync
 
 sync-all: $(TYPES:%=%-sync)
@@ -601,17 +608,17 @@ update: $(UPDATE_FILE:%=%-update)
 	@for i in $(UPDATE_PATH); \
 	  do \
 	    cp -v \
-	    $(UPDATE_ROOT)/$(patsubst %-update,%,$@) \
+	    $(CONFIG)/$(patsubst %-update,%,$@) \
 	    $$i/$(patsubst %-update,%,$@); \
 	  done
 
 
-license: $(UPDATE_ROOT:%=%-license) $(UPDATE_PATH:%=%-license)
+license: $(CONFIG:%=%-license) $(UPDATE_PATH:%=%-license)
 
 %-license:
 	@echo "-- Relicense: $(patsubst %-update,%,$@)"
 	@cd $(patsubst %-update,%,$@); \
-	python2 $(UPDATE_ROOT)/src/py/Licenser.py
+	python2 $(CONFIG)/src/py/Licenser.py
 
 license-info:
 	@grep LICENSE.txt -e "---:" | sed "s/---://g"

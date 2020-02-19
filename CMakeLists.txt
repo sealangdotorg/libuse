@@ -50,8 +50,7 @@ set( CMAKE_CXX_STANDARD 14 )
 set( CMAKE_CXX_EXTENSIONS OFF )
 set( CMAKE_VERSION 3.2 )
 set( CMAKE_MODULE_PATH ${${PROJECT}_SOURCE_DIR}/.cmake )
-
-include( LibPackage )
+include( ${CMAKE_CONFIG_PATH}/LibPackage.cmake )
 
 package_git( ${PROJECT} )
 package_git_submodule( libgtest master REQUIRED build ../gtest lib/gtest )
@@ -189,6 +188,7 @@ install(
     .cmake/Findlibhayai.cmake
     .cmake/LibCompile.cmake
     .cmake/LibPackage.cmake
+    .cmake/config.mk
   DESTINATION
     "share/cmake/Module/${PROJECT}"
   )
