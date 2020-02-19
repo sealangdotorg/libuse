@@ -54,6 +54,6 @@ FORMAT += etc/test/cpp
 FORMAT += etc/test/cpp/*
 FORMAT += etc/test/cpp/net/*
 
-CONFIG = .
-
-include $(CONFIG)/.cmake/config.mk
+CONFIG  = .
+INCLUDE = $(CONFIG)/.cmake/config.mk
+include $(INCLUDE)
