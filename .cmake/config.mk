@@ -469,6 +469,12 @@ ifeq (,$(findstring Visual,$(ENV_GEN)))
       ENV_CMAKE_FLAGS += -DCMAKE_EXE_LINKER_FLAGS="-Wl,--allow-multiple-definition"
     endif
   endif
+
+  ifeq ($(ENV_OSYS),Mac)
+    ifeq ($(ENV_CC),gcc)
+      ENV_CMAKE_FLAGS += -DCMAKE_EXE_LINKER_FLAGS="-lc++"
+    endif
+  endif
 else
   ENV_CMAKE_FLAGS += -DCMAKE_CXX_FLAGS="\
    /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING\
@@ -861,25 +867,25 @@ $(FETCH):%-fetch: info-fetch
 
 
 ci-tools:
-	@$(MAKE) --no-print-directory I=$(I) C=$(C) info-tools
+	@$(MAKE) --no-print-directory C=$(C) G=$(G) I=$(I) info-tools
 
 ci-fetch:
-	@$(MAKE) --no-print-directory I=$(I) C=$(C) $(B)-fetch
+	@$(MAKE) --no-print-directory C=$(C) G=$(G) I=$(I) $(B)-fetch
 
 ci-deps:
-	@$(MAKE) --no-print-directory I=$(I) C=$(C) $(B)-deps
+	@$(MAKE) --no-print-directory C=$(C) G=$(G) I=$(I) $(B)-deps
 
 ci-build:
-	@$(MAKE) --no-print-directory I=$(I) C=$(C) $(B)-build
+	@$(MAKE) --no-print-directory C=$(C) G=$(G) I=$(I) $(B)-build
 
 ci-test:
-	@$(MAKE) --no-print-directory I=$(I) C=$(C) $(B)-test
+	@$(MAKE) --no-print-directory C=$(C) G=$(G) I=$(I) $(B)-test
 
 ci-benchmark:
-	@$(MAKE) --no-print-directory I=$(I) C=$(C) $(B)-benchmark
+	@$(MAKE) --no-print-directory C=$(C) G=$(G) I=$(I) $(B)-benchmark
 
 ci-install:
-	@$(MAKE) --no-print-directory I=$(I) C=$(C) $(B)-install
+	@$(MAKE) --no-print-directory C=$(C) G=$(G) I=$(I) $(B)-install
 
 ci-bundle:
 	@$(MAKE) --no-print-directory bundle
