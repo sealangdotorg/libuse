@@ -94,7 +94,7 @@ jobs:
     - name: Persisting
       uses: actions/upload-artifact@v1
       with:
-        name: packages
+        name: linux
         path: obj/bundle
 
   darwin-x86_64:
@@ -144,7 +144,7 @@ jobs:
     - name: Persisting
       uses: actions/upload-artifact@v1
       with:
-        name: packages
+        name: darwin
         path: obj/bundle
 
   windows-x86_64:
@@ -192,5 +192,5 @@ jobs:
     - name: Persisting
       uses: actions/upload-artifact@v1
       with:
-        name: packages
+        name: windows
         path: obj/bundle
