@@ -469,12 +469,6 @@ ifeq (,$(findstring Visual,$(ENV_GEN)))
       ENV_CMAKE_FLAGS += -DCMAKE_EXE_LINKER_FLAGS="-Wl,--allow-multiple-definition"
     endif
   endif
-
-  ifeq ($(ENV_OSYS),Mac)
-    ifeq ($(ENV_CC),gcc)
-      ENV_CMAKE_FLAGS += -DCMAKE_EXE_LINKER_FLAGS="-lc++"
-    endif
-  endif
 else
   ENV_CMAKE_FLAGS += -DCMAKE_CXX_FLAGS="\
    /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING\
