@@ -62,7 +62,8 @@ jobs:
       C: ${{ matrix.tool.chain }}
       G: ninja
     steps:
-    - uses: actions/checkout@v1
+    - name: Checkout
+      uses: actions/checkout@v1
     - name: Setup
       run: |
         make info
@@ -107,7 +108,8 @@ jobs:
       C: ${{ matrix.tool.chain }}
       G: ninja
     steps:
-    - uses: actions/checkout@v1
+    - name: Checkout
+      uses: actions/checkout@v1
     - name: Setup
       run: |
         make info
@@ -147,7 +149,8 @@ jobs:
       C: ${{ matrix.tool.chain }}
       G: ninja
     steps:
-    - uses: actions/checkout@v1
+    - name: Checkout
+      uses: actions/checkout@v1
     - name: Setup
       run: |
         make info
