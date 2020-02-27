@@ -47,7 +47,7 @@ name: nightly
 
 on:
   schedule:
-    - cron:  '23 1 * * *'
+    - cron:  '29 1 * * *'
 
 jobs:
   linux-x86_64:
@@ -95,7 +95,7 @@ jobs:
     - name: Persisting
       uses: actions/upload-artifact@v1
       with:
-        name: linux
+        name: bundle
         path: obj/bundle
 
   darwin-x86_64:
@@ -146,7 +146,7 @@ jobs:
     - name: Persisting
       uses: actions/upload-artifact@v1
       with:
-        name: darwin
+        name: bundle
         path: obj/bundle
 
   windows-x86_64:
@@ -195,11 +195,14 @@ jobs:
     - name: Persisting
       uses: actions/upload-artifact@v1
       with:
-        name: windows
+        name: bundle
         path: obj/bundle
 
   release:
-    needs: linux-x86_64 darwin-x86_64 windows-x86_64
+    needs:
+      - linux-x86_64
+      - darwin-x86_64
+      - windows-x86_64
     runs-on: ubuntu-18.04
     steps:
     - name: Checkout
@@ -207,20 +210,10 @@ jobs:
     - name: Setup
       run: |
         mkdir .attic
-    - name: Fetching Linux
+    - name: Fetching
       uses: actions/download-artifact@v1
       with:
-        name: linux
-        path: .attic
-    - name: Fetching Darwin
-      uses: actions/download-artifact@v1
-      with:
-        name: darwin
-        path: .attic
-    - name: Fetching Windows
-      uses: actions/download-artifact@v1
-      with:
-        name: windows
+        name: bundle
         path: .attic
     - name: Release
       uses: softprops/action-gh-release@v1
