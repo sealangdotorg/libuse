@@ -47,7 +47,7 @@ name: nightly
 
 on:
   schedule:
-    - cron:  '29 1 * * *'
+    - cron:  '22 2 * * *'
 
 jobs:
   linux-x86_64:
