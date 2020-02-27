@@ -62,7 +62,8 @@ jobs:
       C: ${{ matrix.tool.chain }}
       G: ninja
     steps:
-    - uses: actions/checkout@v1
+    - name: Checkout
+      uses: actions/checkout@v1
     - name: Setup
       run: |
         make info
@@ -109,7 +110,8 @@ jobs:
       C: ${{ matrix.tool.chain }}
       G: ninja
     steps:
-    - uses: actions/checkout@v1
+    - name: Checkout
+      uses: actions/checkout@v1
     - name: Setup
       run: |
         make info
@@ -159,7 +161,8 @@ jobs:
       C: ${{ matrix.tool.chain }}
       G: ninja
     steps:
-    - uses: actions/checkout@v1
+    - name: Checkout
+      uses: actions/checkout@v1
     - name: Setup
       run: |
         make info
@@ -194,3 +197,40 @@ jobs:
       with:
         name: windows
         path: obj/bundle
+
+  release:
+    needs: linux-x86_64 darwin-x86_64 windows-x86_64
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Setup
+      run: |
+        mkdir .attic
+    - name: Fetching Linux
+      uses: actions/download-artifact@v1
+      with:
+        name: linux
+        path: .attic
+    - name: Fetching Darwin
+      uses: actions/download-artifact@v1
+      with:
+        name: darwin
+        path: .attic
+    - name: Fetching Windows
+      uses: actions/download-artifact@v1
+      with:
+        name: windows
+        path: .attic
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ".attic/**"
+        tag_name: nightly
+        name: nightly
+        draft: false
+        prerelease: true
+        body: |
+          Nightly build release created by the GitHub [nightly](https://github.com/${{ github.repository }}/actions?query=workflow%3Anightly) workflow.
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
