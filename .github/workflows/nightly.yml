@@ -46,8 +46,9 @@
 name: nightly
 
 on:
+  push:
   schedule:
-    - cron:  '12 0 * * *'
+    - cron: '12 0 * * *'
 
 jobs:
   linux-x86_64:
@@ -215,13 +216,30 @@ jobs:
       with:
         name: bundle
         path: .attic
-    - name: Release
-      uses: softprops/action-gh-release@v1
+    - name: Publishing
+      uses: machine-learning-apps/gpr-docker-publish@master
+      id: docker
       with:
-        files: ".attic/**"
-        tag_name: nightly
-        name: nightly
-        draft: false
-        prerelease: true
+        IMAGE_NAME: 'nightly'
+#        TAG: 'tag'
+        DOCKERFILE_PATH: '.github/package.Dockerfile'
+        BUILD_CONTEXT: '.'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Information
+      run: |
+        echo "revision: $VAR1"
+        echo "location: $VAR2"
+      env:
+        VAR1: ${{ steps.docker.outputs.IMAGE_SHA_NAME }}
+        VAR2: ${{ steps.docker.outputs.IMAGE_URL }}
+#     - name: Release
+#       uses: softprops/action-gh-release@v1
+#       with:
+#         files: ".attic/**"
+#         tag_name: nightly
+#         name: nightly
+#         draft: false
+#         prerelease: true
+#       env:
+#         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
