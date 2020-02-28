@@ -47,7 +47,7 @@ name: nightly
 
 on:
   schedule:
-    - cron:  '22 2 * * *'
+    - cron:  '12 0 * * *'
 
 jobs:
   linux-x86_64:
@@ -223,7 +223,5 @@ jobs:
         name: nightly
         draft: false
         prerelease: true
-        body: |
-          Nightly build release created by the GitHub [nightly](https://github.com/${{ github.repository }}/actions?query=workflow%3Anightly) workflow.
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
