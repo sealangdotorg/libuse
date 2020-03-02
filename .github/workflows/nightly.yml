@@ -46,7 +46,6 @@
 name: nightly
 
 on:
-  push:
   schedule:
     - cron: '12 0 * * *'
 
@@ -96,7 +95,7 @@ jobs:
     - name: Persisting
       uses: actions/upload-artifact@v1
       with:
-        name: bundle
+        name: linux
         path: obj/bundle
 
   darwin-x86_64:
@@ -147,7 +146,7 @@ jobs:
     - name: Persisting
       uses: actions/upload-artifact@v1
       with:
-        name: bundle
+        name: darwin
         path: obj/bundle
 
   windows-x86_64:
@@ -196,50 +195,5 @@ jobs:
     - name: Persisting
       uses: actions/upload-artifact@v1
       with:
-        name: bundle
+        name: windows
         path: obj/bundle
-
-  release:
-    needs:
-      - linux-x86_64
-      - darwin-x86_64
-      - windows-x86_64
-    runs-on: ubuntu-18.04
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v1
-    - name: Setup
-      run: |
-        mkdir .attic
-    - name: Fetching
-      uses: actions/download-artifact@v1
-      with:
-        name: bundle
-        path: .attic
-    - name: Publishing
-      uses: machine-learning-apps/gpr-docker-publish@master
-      id: docker
-      with:
-        IMAGE_NAME: 'nightly'
-#        TAG: 'tag'
-        DOCKERFILE_PATH: '.github/package.Dockerfile'
-        BUILD_CONTEXT: '.'
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Information
-      run: |
-        echo "revision: $VAR1"
-        echo "location: $VAR2"
-      env:
-        VAR1: ${{ steps.docker.outputs.IMAGE_SHA_NAME }}
-        VAR2: ${{ steps.docker.outputs.IMAGE_URL }}
-#     - name: Release
-#       uses: softprops/action-gh-release@v1
-#       with:
-#         files: ".attic/**"
-#         tag_name: nightly
-#         name: nightly
-#         draft: false
-#         prerelease: true
-#       env:
-#         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
