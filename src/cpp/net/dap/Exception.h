@@ -1,9 +1,10 @@
 //
-//  Copyright (C) 2014-2018 CASM Organization <https://casm-lang.org>
+//  Copyright (C) 2014-2020 CASM Organization <https://casm-lang.org>
 //  All rights reserved.
 //
 //  Developed by: Philipp Paulweber
 //                Emmanuel Pescosta
+//                Christian Lascsak
 //                <https://github.com/casm-lang/libstdhl>
 //
 //  This file is part of libstdhl.
