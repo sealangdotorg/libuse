@@ -89,7 +89,7 @@ DAP::Protocol DAP::Protocol::parse( const std::string& data )
     for( auto p : parts )
     {
         // check for content length field
-        if( strncmp( p.c_str(), CL.c_str(), CL.size() ) == 0 )
+        if( p == CL )
         {
             length = std::stoull( p.substr( CL.size() + 1 ) );
             if( length == 0 )
@@ -98,7 +98,7 @@ DAP::Protocol DAP::Protocol::parse( const std::string& data )
             }
         }
         // check for content type field
-        else if( strncmp( p.c_str(), CT.c_str(), CT.size() ) == 0 )
+        else if( p == CT )
         {
             const auto type = String::trim( p.substr( CL.size() ) );
             if( type.compare( TYPE ) != 0 )
