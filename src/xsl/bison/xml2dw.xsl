@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (C) 2014-2020 CASM Organization <https://casm-lang.org>
+    Copyright (C) 2014-2021 CASM Organization <https://casm-lang.org>
     All rights reserved.
 
     Developed by: Philipp Paulweber
