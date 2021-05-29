@@ -153,10 +153,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
 
-    - name: Environment
-      shell: bash
-      run: echo "PATH=$PATH:C:\msys64\mingw64\bin" >> $GITHUB_ENV
-
     - name: Setup
       run: |
         make info
