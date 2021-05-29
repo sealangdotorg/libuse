@@ -154,7 +154,11 @@ jobs:
       uses: actions/checkout@v1
     - name: Environment
       run: |
-        echo /c/msys64/mingw64/bin >> $GITHUB_ENV
+        ls -al /c/msys64/mingw64/bin
+        echo GITHUB_ENV=
+        echo $GITHUB_ENV
+        echo PATH=
+        echo $PATH
     - name: Setup
       run: |
         make info
