@@ -155,7 +155,7 @@ jobs:
     - name: Environment
       shell: bash
       run: |
-        echo /c/msys64/mingw64/bin >> $GITHUB_ENV
+        echo "/c/msys64/mingw64/bin" >> $GITHUB_ENV
     - name: Setup
       run: |
         make info
