@@ -144,18 +144,16 @@ jobs:
       matrix:
         tool:
         - build: debug
-          chain: msvc
+          chain: vs19
     env:
       B: ${{ matrix.tool.build }}
-      C: ${{ matrix.tool.chain }}
-      G: ninja
+      G: ${{ matrix.tool.chain }}
     steps:
     - name: Checkout
       uses: actions/checkout@v1
     - name: Setup
       run: |
         make info
-        choco install ninja
         make ci-tools
     - name: Install
       uses: ppaulweber/github-action-setup-z3@bug/url_fix
