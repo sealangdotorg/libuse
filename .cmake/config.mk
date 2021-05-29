@@ -523,7 +523,7 @@ $(SYNCS):%-sync: $(OBJ)
 	@$(MAKE) --no-print-directory TYPE=$(patsubst %-sync,%,$@) $(OBJ)/CMakeCache.txt
 else
 $(SYNCS):%-sync: $(OBJ)
-	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) --target rebuild_cache -- $(ENV_BUILD_FLAGS)
+#	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) --target rebuild_cache -- $(ENV_BUILD_FLAGS)
 endif
 
 $(TYPES):%: %-sync
