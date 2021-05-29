@@ -423,7 +423,7 @@ ifeq (,$(findstring Visual,$(ENV_GEN)))
       ENV_CMAKE_CXX_FLAGS += -Wa,-mbig-obj
     endif
     ifeq ($(ENV_CC),clang)
-      ENV_CMAKE_CXX_FLAGS += -buildmode=exe
+      ENV_CMAKE_CXX_FLAGS += -Wa,-mbigobj
     endif
   else
     ifeq ("$(TYPE)","release")
@@ -848,7 +848,7 @@ fetch: debug-fetch
 
 $(FETCH):%-fetch: info-fetch
 	$(if $(filter $(patsubst %-fetch,%,$@),release), \
-	  $(eval SUBMODULES=.) \
+	  $(eval SUBMODULES=$(shell grep submodule .gitmodules | grep "submodule" | grep -ve "# private" | sed "s/\[submodule \"//g" | sed "s/\"\].*//g")) \
 	, \
 	  $(eval SUBMODULES=$(shell grep submodule .gitmodules | grep "submodule" | grep -ve "# external" | sed "s/\[submodule \"//g" | sed "s/\"\].*//g")) \
 	)
