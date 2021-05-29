@@ -144,8 +144,6 @@ jobs:
       matrix:
         tool:
         - build: debug
-          chain: cl
-        - build: debug
           chain: clang
     env:
       B: ${{ matrix.tool.build }}
@@ -159,6 +157,8 @@ jobs:
         make info
         choco install ninja
         make ci-tools
+        echo \"PATH=$PATH:C:\\msys64\\mingw64\\bin\" >> $GITHUB_ENV
+
     - name: Install
       uses: ppaulweber/github-action-setup-z3@bug/url_fix
       with:
