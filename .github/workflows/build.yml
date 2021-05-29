@@ -155,6 +155,8 @@ jobs:
 
     - name: Setup
       run: |
+        echo $GITHUB_PATH
+        echo \"C:\msys64\mingw32\bin\" >> $GITHUB_PATH
         make info
         choco install ninja
         make ci-tools
