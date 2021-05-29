@@ -144,7 +144,7 @@ jobs:
       matrix:
         tool:
         - build: debug
-          chain: gcc
+          chain: msvc
     env:
       B: ${{ matrix.tool.build }}
       C: ${{ matrix.tool.chain }}
