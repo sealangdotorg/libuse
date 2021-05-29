@@ -152,15 +152,14 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v1
-
+    - name: Environment
+      shell: bash
+      run: echo "PATH=$PATH:C:\msys64\mingw64\bin" >> $GITHUB_ENV
     - name: Setup
       run: |
-        echo $GITHUB_PATH
-        echo \"C:\msys64\mingw32\bin\" >> $GITHUB_PATH
         make info
         choco install ninja
         make ci-tools
-
     - name: Install
       uses: ppaulweber/github-action-setup-z3@bug/url_fix
       with:
