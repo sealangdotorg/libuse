@@ -50,6 +50,14 @@ BIN = install
 .PHONY: $(OBJ)
 .NOTPARALLEL: $(OBJ)
 
+ifeq ($(ENV_LOG),)
+    ENV_LOG=0
+endif
+
+ifeq ($(ENV_LOG),0)
+    LOG=@
+endif
+
 ifneq (,$(findstring sh,$(SHELL)))
 ENV_SHELL := sh
 WHICH := which
@@ -389,22 +397,22 @@ ENV_SEP=$(strip $(ENV_SEP_))
 default: debug
 
 help:
-	@echo "TODO"
+	$(LOG)echo "TODO"
 
 
 $(OBJ):
 ifeq ($(wildcard $(OBJ)),)
-	@mkdir $(OBJ)
+	$(LOG)mkdir $(OBJ)
 endif
 
 clean:
 ifneq ("$(wildcard $(OBJ)/CMakeCache.txt)","")
-	@$(MAKE) $(MFLAGS) --no-print-directory -C $(OBJ) clean
+	$(LOG)$(MAKE) $(MFLAGS) --no-print-directory -C $(OBJ) clean
 endif
 
 clean-all:
 	@echo "-- Removing build directory" $(OBJ)
-	@rm -rf $(OBJ)
+	$(LOG)rm -rf $(OBJ)
 
 TYPES = debug sanitize coverage release
 
@@ -522,18 +530,18 @@ sync: debug-sync
 sync-all: $(TYPES:%=%-sync)
 
 $(OBJ)/CMakeCache.txt: $(OBJ) info-build
-	@cd $(OBJ) && cmake $(ENV_CMAKE_FLAGS) ..
+	$(LOG)cd $(OBJ) && cmake $(ENV_CMAKE_FLAGS) ..
 
 ifeq ("$(wildcard $(OBJ)/CMakeCache.txt)","")
 $(SYNCS):%-sync: $(OBJ)
-	@$(MAKE) --no-print-directory TYPE=$(patsubst %-sync,%,$@) $(OBJ)/CMakeCache.txt
+	$(LOG)$(MAKE) --no-print-directory TYPE=$(patsubst %-sync,%,$@) $(OBJ)/CMakeCache.txt
 else
 $(SYNCS):%-sync: $(OBJ)
-	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) --target rebuild_cache -- $(ENV_BUILD_FLAGS)
+	$(LOG)cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) --target rebuild_cache -- $(ENV_BUILD_FLAGS)
 endif
 
 $(TYPES):%: %-sync
-	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) --target $(TARGET) -- $(ENV_BUILD_FLAGS)
+	$(LOG)cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) --target $(TARGET) -- $(ENV_BUILD_FLAGS)
 
 
 environment:
@@ -543,7 +551,7 @@ environment:
 all: debug-all
 
 $(ALL):%-all: %-sync
-	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) -- $(ENV_BUILD_FLAGS)
+	$(LOG)cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) -- $(ENV_BUILD_FLAGS)
 
 
 test: debug-test
@@ -551,7 +559,7 @@ test: debug-test
 test-all: $(TYPES:%=%-test)
 
 $(TESTS):%-test: %
-	@cmake --build $(OBJ) --config $(patsubst %-test,%,$@) --target $(TARGET)-check -- $(ENV_BUILD_FLAGS)
+	$(LOG)cmake --build $(OBJ) --config $(patsubst %-test,%,$@) --target $(TARGET)-check -- $(ENV_BUILD_FLAGS)
 ifeq ($(ENV_CC),emcc)
 	cd ./$(OBJ) && \
 	`cat CMakeFiles/$(TARGET)-check.dir/link.txt | \
@@ -559,7 +567,7 @@ ifeq ($(ENV_CC),emcc)
 	cd ./$(OBJ) && ln -fs $(TARGET)-check.js $(TARGET)-check
 endif
 	@echo "-- Running unit test"
-	@$(ENV_FLAGS) .$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-check --gtest_output=xml:obj$(ENV_SEP)report.xml $(ENV_ARGS)
+	$(ENV_FLAGS) .$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-check --gtest_output=xml:obj$(ENV_SEP)report.xml $(ENV_ARGS)
 
 
 benchmark: debug-benchmark
@@ -567,7 +575,7 @@ benchmark: debug-benchmark
 benchmark-all: $(TYPES:%=%-benchmark)
 
 $(BENCH):%-benchmark: %
-	@cmake --build $(OBJ) --config $(patsubst %-benchmark,%,$@) --target $(TARGET)-run -- $(ENV_BUILD_FLAGS)
+	$(LOG)cmake --build $(OBJ) --config $(patsubst %-benchmark,%,$@) --target $(TARGET)-run -- $(ENV_BUILD_FLAGS)
 ifeq ($(ENV_CC),emcc)
 	cd ./$(OBJ) && \
 	`cat CMakeFiles/$(TARGET)-run.dir/link.txt | \
@@ -579,7 +587,7 @@ endif
 
 benchmark-run:
 	@echo "-- Running benchmark"
-	@$(ENV_FLAGS) .$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-run -o console -o json:obj$(ENV_SEP)report.json $(ENV_ARGS)
+	$(LOG)$(ENV_FLAGS) .$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-run -o console -o json:obj$(ENV_SEP)report.json $(ENV_ARGS)
 
 
 install: debug-install
@@ -587,7 +595,7 @@ install: debug-install
 install-all: $(TYPES:%=%-install)
 
 $(INSTA):%-install: %
-	@cmake --build $(OBJ) --config $(patsubst %-install,%,$@) --target install -- $(ENV_BUILD_FLAGS)
+	$(LOG)cmake --build $(OBJ) --config $(patsubst %-install,%,$@) --target install -- $(ENV_BUILD_FLAGS)
 
 
 build: debug
@@ -598,21 +606,21 @@ $(BUILD):%-build: %
 deps: debug-deps
 
 $(DEPS):%-deps: %-sync
-	@cmake --build $(OBJ) --config $(patsubst %-deps,%,$@) --target $(TARGET)-deps -- $(ENV_BUILD_FLAGS)
+	$(LOG)cmake --build $(OBJ) --config $(patsubst %-deps,%,$@) --target $(TARGET)-deps -- $(ENV_BUILD_FLAGS)
 
 
 format: $(FORMAT:%=%-format-cpp)
 
 %-format-cpp:
 	@echo "-- Formatting Code C++: $(patsubst %-format-cpp,%,$@)"
-	@clang-format -i `ls $(patsubst %-format-cpp,%,$@)/*.h 2> /dev/null | grep -e "\.h"` 2> /dev/null
-	@clang-format -i `ls $(patsubst %-format-cpp,%,$@)/*.cpp 2> /dev/null | grep -e "\.cpp"` 2> /dev/null
+	$(LOG)clang-format -i `ls $(patsubst %-format-cpp,%,$@)/*.h 2> /dev/null | grep -e "\.h"` 2> /dev/null
+	$(LOG)clang-format -i `ls $(patsubst %-format-cpp,%,$@)/*.cpp 2> /dev/null | grep -e "\.cpp"` 2> /dev/null
 
 update: $(UPDATE_FILE:%=%-update)
 
 %-update:
 	@echo "-- Updating: $(patsubst %-update,%,$@)"
-	@for i in $(UPDATE_PATH); \
+	$(LOG)for i in $(UPDATE_PATH); \
 	  do \
 	    cp -v \
 	    $(CONFIG)/$(patsubst %-update,%,$@) \
@@ -624,13 +632,13 @@ license: $(CONFIG:%=%-license) $(UPDATE_PATH:%=%-license)
 
 %-license:
 	@echo "-- Relicense: $(patsubst %-update,%,$@)"
-	@cd $(patsubst %-update,%,$@); \
+	$(LOG)cd $(patsubst %-update,%,$@); \
 	python2 $(CONFIG)/src/py/Licenser.py
 
 license-info:
-	@grep LICENSE.txt -e "---:" | sed "s/---://g"
-	@head -n `grep -B1 -ne "---" LICENSE.txt | head -n 1 | sed "s/-//g"` LICENSE.txt > $(OBJ)/notice.txt
-	@cat $(OBJ)/notice.txt | sed "s/^/  /g" | sed "s/$$/\\\n/g" | tr -d '\n' > $(OBJ)/notice
+	$(LOG)grep LICENSE.txt -e "---:" | sed "s/---://g"
+	$(LOG)head -n `grep -B1 -ne "---" LICENSE.txt | head -n 1 | sed "s/-//g"` LICENSE.txt > $(OBJ)/notice.txt
+	$(LOG)cat $(OBJ)/notice.txt | sed "s/^/  /g" | sed "s/$$/\\\n/g" | tr -d '\n' > $(OBJ)/notice
 
 
 analyze: debug-analyze
@@ -639,9 +647,9 @@ analyze-all: $(TYPES:%=%-analyze)
 
 $(ANALY):%-analyze: %
 	@echo "-- Running analysis tools"
-	$(MAKE) $(MFLAGS) $@-cppcheck
-	$(MAKE) $(MFLAGS) $@-iwyu
-	$(MAKE) $(MFLAGS) $@-scan-build
+	$(LOG)$(MAKE) $(MFLAGS) $@-cppcheck
+	$(LOG)$(MAKE) $(MFLAGS) $@-iwyu
+	$(LOG)$(MAKE) $(MFLAGS) $@-scan-build
 
 
 analyze-cppcheck: debug-analyze-cppcheck
@@ -650,8 +658,8 @@ CPPCHECK_REPORT = ./$(OBJ)/.cppcheck.xml
 
 %-analyze-cppcheck:
 	@echo "-- Running 'cppcheck' $(patsubst %-analyze-cppcheck,%,$@)"
-	@echo -n "" > $(CPPCHECK_REPORT)
-	cppcheck \
+	$(LOG)echo -n "" > $(CPPCHECK_REPORT)
+	$(LOG)cppcheck \
 	-v \
 	--template=gcc \
 	--force \
@@ -677,9 +685,9 @@ IWYU_REPORT = ./$(OBJ)/.iwyu.txt
 
 %-analyze-iwyu:
 	@echo "-- Running 'iwyu' $(patsubst %-analyze-iwyu,%,$@)"
-	@echo -n "" > $(IWYU_REPORT)
-	@for i in `find ./c*`; do include-what-you-use $$i; done
-	@for i in `find ./c*`; do include-what-you-use $$i >> $(IWYU_REPORT); done
+	$(LOG)echo -n "" > $(IWYU_REPORT)
+	$(LOG)for i in `find ./c*`; do include-what-you-use $$i; done
+	$(LOG)for i in `find ./c*`; do include-what-you-use $$i >> $(IWYU_REPORT); done
 
 
 analyze-scan-build: debug-analyze-scan-build
@@ -690,10 +698,10 @@ SCAN_BUILD_REPORT_ATTIC = $(SCAN_BUILD_REPORT).attic
 %-analyze-scan-build: clean
 	@echo "-- Running 'scan-build' $(patsubst %-analyze-scan-build,%,$@)"
 ifeq ($(wildcard $(SCAN_BUILD_REPORT_ATTIC)/.*),)
-	@mkdir $(SCAN_BUILD_REPORT_ATTIC)
+	$(LOG)mkdir $(SCAN_BUILD_REPORT_ATTIC)
 endif
 
-	scan-build \
+	$(LOG)scan-build \
 	-v \
 	-o $(SCAN_BUILD_REPORT).attic \
 	-stats \
@@ -705,7 +713,7 @@ endif
 	--keep-empty \
 	$(MAKE) $(MFLAGS) $(patsubst %-analyze-scan-build,%,$@)
 
-	@ln -f -s \
+	$(LOG)ln -f -s \
 	$(SCAN_BUILD_REPORT_ATTIC)/`ls -t $(SCAN_BUILD_REPORT_ATTIC) | head -1` \
 	$(SCAN_BUILD_REPORT)
 
