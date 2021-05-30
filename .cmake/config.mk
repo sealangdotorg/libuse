@@ -373,18 +373,18 @@ ifeq ($(ENV_INSTALL),)
   $(error empty environment install path detected! $(I), $(ENV_INSTALL), $(BIN))
 endif
 
-ifeq ($(ENV_OSYS),Windows)
-  ENV_SET := set
-else
-  ENV_SET := export
-endif
 
 ifeq ($(ENV_OSYS),Windows)
+  ENV_SET  := set
   ENV_SEP_ := \\
+  ENV_CMD  := &
 else
+  ENV_SET  := export
   ENV_SEP_ := /
+  ENV_CMD  := ;
 endif
 ENV_SEP=$(strip $(ENV_SEP_))
+
 
 default: debug
 
@@ -536,6 +536,10 @@ $(TYPES):%: %-sync
 	@cmake --build $(OBJ) --config $(patsubst %-sync,%,$@) --target $(TARGET) -- $(ENV_BUILD_FLAGS)
 
 
+environment:
+	@echo "-- Environment setup"
+
+
 all: debug-all
 
 $(ALL):%-all: %-sync
@@ -555,7 +559,7 @@ ifeq ($(ENV_CC),emcc)
 	cd ./$(OBJ) && ln -fs $(TARGET)-check.js $(TARGET)-check
 endif
 	@echo "-- Running unit test"
-	.$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-check --gtest_output=xml:obj$(ENV_SEP)report.xml $(ENV_ARGS)
+	@$(ENV_FLAGS) .$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-check --gtest_output=xml:obj$(ENV_SEP)report.xml $(ENV_ARGS)
 
 
 benchmark: debug-benchmark
@@ -570,15 +574,12 @@ ifeq ($(ENV_CC),emcc)
 	sed "s/$(TARGET)-run/$(TARGET)-run.js -s MAIN_MODULE=1/g"`
 	cd ./$(OBJ) && ln -fs $(TARGET)-run.js $(TARGET)-run
 endif
-	$(if $(filter $(patsubst %-benchmark,%,$@),release), \
-	  @.$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-run -o console -o json:obj$(ENV_SEP)report.json $(ENV_ARGS) \
-	, \
-	  @echo "-- Run benchmark via 'make run-benchmark'" \
-	)
+	@echo "-- Run benchmark via 'make benchmark-run'"
 
-run-benchmark:
+
+benchmark-run:
 	@echo "-- Running benchmark"
-	@.$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-run -o console -o json:obj$(ENV_SEP)report.json $(ENV_ARGS)
+	@$(ENV_FLAGS) .$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-run -o console -o json:obj$(ENV_SEP)report.json $(ENV_ARGS)
 
 
 install: debug-install
