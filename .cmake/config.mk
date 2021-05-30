@@ -582,7 +582,7 @@ ifeq ($(ENV_CC),emcc)
 	cd ./$(OBJ) && ln -fs $(TARGET)-check.js $(TARGET)-check
 endif
 	@echo "-- Running unit test"
-	$(LOG)$(ENV_FLAGS) .$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-check --gtest_output=xml:obj$(ENV_SEP)report.xml $(ENV_ARGS)
+	$(ENV_FLAGS) ./$(OBJ)/$(TARGET)-check --gtest_output=xml:obj/report.xml $(ENV_ARGS)
 
 
 benchmark: debug-benchmark
@@ -602,7 +602,7 @@ endif
 
 benchmark-run:
 	@echo "-- Running benchmark"
-	$(LOG)$(ENV_FLAGS) .$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-run -o console -o json:obj$(ENV_SEP)report.json $(ENV_ARGS)
+	$(ENV_FLAGS) ./$(OBJ)/$(TARGET)-run -o console -o json:obj/report.json $(ENV_ARGS)
 
 
 install: debug-install
