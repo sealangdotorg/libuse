@@ -152,11 +152,9 @@ ifdef C
     ENV_CXX=g++-9
   endif
   ifeq ($(C),msvc)
-    ENV_CC=msvc
     ENV_CXX=msvc
   endif
   ifeq ($(C),emcc)
-    ENV_CC=emcc
     ENV_CXX=em++
   endif
 else
