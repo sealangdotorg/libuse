@@ -126,13 +126,30 @@ CLANG := $(shell ${WHICH} clang 2>${DEVNUL})
 GCC := $(shell gcc --version 2>${DEVNUL})
 
 ifdef C
+  ENV_CC=$(C)
   ifeq ($(C),clang)
-    ENV_CC=clang
     ENV_CXX=clang++
   endif
+  ifeq ($(C),clang-12)
+    ENV_CXX=clang++-12
+  endif
+  ifeq ($(C),clang-11)
+    ENV_CXX=clang++-11
+  endif
+  ifeq ($(C),clang-10)
+    ENV_CXX=clang++-10
+  endif
   ifeq ($(C),gcc)
-    ENV_CC=gcc
     ENV_CXX=g++
+  endif
+  ifeq ($(C),gcc-11)
+    ENV_CXX=g++-11
+  endif
+  ifeq ($(C),gcc-10)
+    ENV_CXX=g++-10
+  endif
+  ifeq ($(C),gcc-9)
+    ENV_CXX=g++-9
   endif
   ifeq ($(C),msvc)
     ENV_CC=msvc
@@ -567,7 +584,7 @@ ifeq ($(ENV_CC),emcc)
 	cd ./$(OBJ) && ln -fs $(TARGET)-check.js $(TARGET)-check
 endif
 	@echo "-- Running unit test"
-	$(ENV_FLAGS) .$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-check --gtest_output=xml:obj$(ENV_SEP)report.xml $(ENV_ARGS)
+	$(LOG)$(ENV_FLAGS) .$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-check --gtest_output=xml:obj$(ENV_SEP)report.xml $(ENV_ARGS)
 
 
 benchmark: debug-benchmark
@@ -577,10 +594,10 @@ benchmark-all: $(TYPES:%=%-benchmark)
 $(BENCH):%-benchmark: %
 	$(LOG)cmake --build $(OBJ) --config $(patsubst %-benchmark,%,$@) --target $(TARGET)-run -- $(ENV_BUILD_FLAGS)
 ifeq ($(ENV_CC),emcc)
-	cd ./$(OBJ) && \
+	$(LOG)cd ./$(OBJ) && \
 	`cat CMakeFiles/$(TARGET)-run.dir/link.txt | \
 	sed "s/$(TARGET)-run/$(TARGET)-run.js -s MAIN_MODULE=1/g"`
-	cd ./$(OBJ) && ln -fs $(TARGET)-run.js $(TARGET)-run
+	$(LOG)cd ./$(OBJ) && ln -fs $(TARGET)-run.js $(TARGET)-run
 endif
 	@echo "-- Run benchmark via 'make benchmark-run'"
 
