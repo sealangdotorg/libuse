@@ -120,6 +120,7 @@ jobs:
         make info
         ln -s /usr/local/opt/llvm/bin/clang   /usr/local/bin/clang-12
         ln -s /usr/local/opt/llvm/bin/clang++ /usr/local/bin/clang++-12
+        brew install gcc@8
         brew install ninja
         brew install z3
         make ci-tools
@@ -162,10 +163,10 @@ jobs:
       run: |
         make info
         echo "C:\msys64\mingw64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-        New-Item -ItemType SymbolicLink -Path "C:\msys64\mingw64\bin\clang-10"   -Target "C:\msys64\mingw64\bin\clang"
-        New-Item -ItemType SymbolicLink -Path "C:\msys64\mingw64\bin\clang++-10" -Target "C:\msys64\mingw64\bin\clang++"
-        New-Item -ItemType SymbolicLink -Path "C:\msys64\mingw64\bin\gcc-9" -Target "C:\msys64\mingw64\bin\gcc"
-        New-Item -ItemType SymbolicLink -Path "C:\msys64\mingw64\bin\g++-9" -Target "C:\msys64\mingw64\bin\g++"
+        New-Item -ItemType HardLink -Path "C:\msys64\mingw64\bin\clang-10"   -Value "C:\msys64\mingw64\bin\clang"
+        New-Item -ItemType HardLink -Path "C:\msys64\mingw64\bin\clang++-10" -Value "C:\msys64\mingw64\bin\clang++"
+        New-Item -ItemType HardLink -Path "C:\msys64\mingw64\bin\gcc-9"      -Value "C:\msys64\mingw64\bin\gcc"
+        New-Item -ItemType HardLink -Path "C:\msys64\mingw64\bin\g++-9"      -Value "C:\msys64\mingw64\bin\g++"
         choco install ninja
         make ci-tools
     - name: Install
