@@ -379,6 +379,12 @@ else
   ENV_SET := export
 endif
 
+ifeq ($(ENV_OSYS),Windows)
+  ENV_SEP_ := \\
+else
+  ENV_SEP_ := /
+endif
+ENV_SEP=$(strip $(ENV_SEP_))
 
 default: debug
 
@@ -549,11 +555,8 @@ ifeq ($(ENV_CC),emcc)
 	cd ./$(OBJ) && ln -fs $(TARGET)-check.js $(TARGET)-check
 endif
 	@echo "-- Running unit test"
-ifeq ($(ENV_OSYS),Windows)
-	@$(ENV_FLAGS) .\\$(OBJ)\\$(TARGET)-check --gtest_output=xml:obj/report.xml $(ENV_ARGS)
-else
-	@$(ENV_FLAGS) ./$(OBJ)/$(TARGET)-check --gtest_output=xml:obj/report.xml $(ENV_ARGS)
-endif
+	.$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-check --gtest_output=xml:obj$(ENV_SEP)report.xml $(ENV_ARGS)
+
 
 benchmark: debug-benchmark
 
@@ -568,18 +571,14 @@ ifeq ($(ENV_CC),emcc)
 	cd ./$(OBJ) && ln -fs $(TARGET)-run.js $(TARGET)-run
 endif
 	$(if $(filter $(patsubst %-benchmark,%,$@),release), \
-	  @$(ENV_FLAGS) ./$(OBJ)/$(TARGET)-run -o console -o json:obj/report.json $(ENV_ARGS) \
+	  @.$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-run -o console -o json:obj$(ENV_SEP)report.json $(ENV_ARGS) \
 	, \
 	  @echo "-- Run benchmark via 'make run-benchmark'" \
 	)
 
 run-benchmark:
 	@echo "-- Running benchmark"
-ifeq ($(ENV_OSYS),Windows)
-	@$(ENV_FLAGS) .\\$(OBJ)\$(TARGET)-run -o console -o json:obj/report.json $(ENV_ARGS)
-else
-	@$(ENV_FLAGS) ./$(OBJ)/$(TARGET)-run -o console -o json:obj/report.json $(ENV_ARGS)
-endif
+	@.$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-run -o console -o json:obj$(ENV_SEP)report.json $(ENV_ARGS)
 
 
 install: debug-install
