@@ -41,22 +41,23 @@
 #   statement from your version.
 #
 
-# https://help.github.com/en/articles/virtual-environments-for-github-actions#supported-virtual-environments
+# https://help.github.com/en/articles/virtual-environments-for-github-actions
 
 name: build
 
 on: [push]
 
 jobs:
+  # https://github.com/actions/virtual-environments/blob/main/images/linux
   linux-x86_64:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
         tool:
         - build: debug
-          chain: clang
+          chain: clang-11
         - build: coverage
-          chain: gcc
+          chain: gcc-10
     env:
       B: ${{ matrix.tool.build }}
       C: ${{ matrix.tool.chain }}
@@ -97,13 +98,16 @@ jobs:
         chmod 755 bash
         ./bash
 
+  # https://github.com/actions/virtual-environments/blob/main/images/macos
   darwin-x86_64:
     runs-on: macos-10.15
     strategy:
       matrix:
         tool:
         - build: debug
-          chain: gcc
+          chain: clang-12
+        - build: debug
+          chain: gcc-11
     env:
       B: ${{ matrix.tool.build }}
       C: ${{ matrix.tool.chain }}
@@ -115,9 +119,6 @@ jobs:
       run: |
         make info
         brew install ninja
-        brew install gcc@9
-        ln -s /usr/local/bin/gcc-9 /usr/local/bin/gcc
-        ln -s /usr/local/bin/g++-9 /usr/local/bin/g++
         brew install z3
         make ci-tools
     - name: Fetching
@@ -138,13 +139,16 @@ jobs:
       run: |
         make ci-benchmark
 
+  # https://github.com/actions/virtual-environments/blob/main/images/win
   windows-x86_64:
     runs-on: windows-2019
     strategy:
       matrix:
         tool:
         - build: debug
-          chain: clang
+          chain: clang-10
+        - build: debug
+          chain: gcc-9
     env:
       B: ${{ matrix.tool.build }}
       C: ${{ matrix.tool.chain }}
