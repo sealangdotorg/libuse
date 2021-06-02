@@ -827,6 +827,15 @@ info-generators:
 	@echo "   vs08w64    = 'Visual Studio 9 2008 Win64'"
 	@echo "   vs08ia64   = 'Visual Studio 9 2008 IA64'"
 
+#
+#
+# Development Configuration Targets
+#
+
+development:
+	@echo "-- Git Access Configuration"
+	@git config --add --local \
+	url."git@github.com:".insteadOf "https://github.com/"
 
 #
 #
