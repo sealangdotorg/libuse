@@ -58,18 +58,25 @@ ifeq ($(ENV_LOG),0)
     LOG=@
 endif
 
-ifneq (,$(findstring sh,$(SHELL)))
-ENV_SHELL := sh
+ifneq (,$(findstring bin/sh,$(SHELL)))
+ENV_SHELL := $(SHELL)
 ENV_EXEC := $(ENV_SHELL) -c
 WHICH := which
 DEVNUL := /dev/null
 endif
-ifneq (,$(findstring cmd,$(SHELL)))
+ifneq (,$(findstring cmd.exe,$(SHELL)))
 ENV_SHELL := cmd
-ENV_EXEC := $(ENV_SHELL) /c
+ENV_EXEC := $(ENV_SHELL) /s /c
 WHICH := where
 DEVNUL := NUL
 endif
+ifneq (,$(findstring pwsh.exe,$(SHELL)))
+ENV_SHELL := cmd
+ENV_EXEC := $(ENV_SHELL) /s /c
+WHICH := where
+DEVNUL := NUL
+endif
+
 ifeq ($(ENV_SHELL),)
   $(error environment shell '$(ENV_SHELL)' not supported!)
 endif
@@ -741,7 +748,7 @@ info:
 	@echo "   P = $(ENV_PLAT)"
 	@echo "   O = $(ENV_OSYS)"
 	@echo "   A = $(ENV_ARCH)"
-	@echo "   S = $(shell ${WHICH} $(SHELL))"
+	@echo "   S = $(ENV_EXEC)"
 
 
 info-build: info
