@@ -63,19 +63,29 @@ ENV_SHELL := $(SHELL)
 ENV_EXEC := $(ENV_SHELL) -c
 WHICH := which
 DEVNUL := /dev/null
+ENV_SET  := export
+ENV_SEP_ := /
+ENV_CMD  := ;
 endif
 ifneq (,$(findstring cmd.exe,$(SHELL)))
 ENV_SHELL := cmd
 ENV_EXEC := $(ENV_SHELL) /s /c
 WHICH := where
 DEVNUL := NUL
+ENV_SET  := set
+ENV_SEP_ := \\
+ENV_CMD  := &
 endif
 ifneq (,$(findstring pwsh.exe,$(SHELL)))
 ENV_SHELL := cmd
 ENV_EXEC := $(ENV_SHELL) /s /c
 WHICH := where
 DEVNUL := NUL
+ENV_SET  := set
+ENV_SEP_ := \\
+ENV_CMD  := &
 endif
+ENV_SEP=$(strip $(ENV_SEP_))
 
 ifeq ($(ENV_SHELL),)
   $(error environment shell '$(ENV_SHELL)' not supported!)
@@ -404,18 +414,6 @@ endif
 ifeq ($(ENV_INSTALL),)
   $(error empty environment install path detected! $(I), $(ENV_INSTALL), $(BIN))
 endif
-
-
-ifeq ($(ENV_OSYS),Windows)
-  ENV_SET  := set
-  ENV_SEP_ := \\
-  ENV_CMD  := &
-else
-  ENV_SET  := export
-  ENV_SEP_ := /
-  ENV_CMD  := ;
-endif
-ENV_SEP=$(strip $(ENV_SEP_))
 
 
 default: debug
