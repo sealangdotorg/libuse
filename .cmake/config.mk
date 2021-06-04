@@ -60,11 +60,13 @@ endif
 
 ifneq (,$(findstring sh,$(SHELL)))
 ENV_SHELL := sh
+ENV_EXEC := $(ENV_SHELL) -c
 WHICH := which
 DEVNUL := /dev/null
 endif
 ifneq (,$(findstring cmd,$(SHELL)))
 ENV_SHELL := cmd
+ENV_EXEC := $(ENV_SHELL) /c
 WHICH := where
 DEVNUL := NUL
 endif
@@ -582,7 +584,7 @@ ifeq ($(ENV_CC),emcc)
 	cd ./$(OBJ) && ln -fs $(TARGET)-check.js $(TARGET)-check
 endif
 	@echo "-- Running unit test"
-	$(ENV_FLAGS) .$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-check --gtest_output=xml:obj$(ENV_SEP)report.xml $(ENV_ARGS)
+	$(ENV_EXEC) "$(ENV_FLAGS) .$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-check --gtest_output=xml:obj$(ENV_SEP)report.xml $(ENV_ARGS)"
 
 
 benchmark: debug-benchmark
@@ -602,7 +604,7 @@ endif
 
 benchmark-run:
 	@echo "-- Running benchmark"
-	$(ENV_FLAGS) .$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-run -o console -o json:obj$(ENV_SEP)report.json $(ENV_ARGS)
+	$(ENV_EXEC) "$(ENV_FLAGS) .$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-run -o console -o json:obj$(ENV_SEP)report.json $(ENV_ARGS)"
 
 
 install: debug-install
