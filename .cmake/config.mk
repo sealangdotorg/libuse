@@ -902,28 +902,28 @@ $(FETCH):%-fetch: info-fetch
 	@$(MAKE) --no-print-directory info-repo
 
 
-ci-tools:
+ci-tools: info
 	@$(MAKE) --no-print-directory C=$(C) G=$(G) I=$(I) info-tools
 
-ci-fetch:
+ci-fetch: info
 	@$(MAKE) --no-print-directory C=$(C) G=$(G) I=$(I) $(B)-fetch
 
-ci-deps:
+ci-deps: info
 	@$(MAKE) --no-print-directory C=$(C) G=$(G) I=$(I) $(B)-deps
 
-ci-build:
+ci-build: info
 	@$(MAKE) --no-print-directory C=$(C) G=$(G) I=$(I) $(B)-build
 
-ci-test:
+ci-test: info
 	@$(MAKE) --no-print-directory C=$(C) G=$(G) I=$(I) $(B)-test
 
-ci-benchmark:
+ci-benchmark: info
 	@$(MAKE) --no-print-directory C=$(C) G=$(G) I=$(I) $(B)-benchmark
 
-ci-install:
+ci-install: info
 	@$(MAKE) --no-print-directory C=$(C) G=$(G) I=$(I) $(B)-install
 
-ci-bundle:
+ci-bundle: info
 	@$(MAKE) --no-print-directory bundle
 
 
