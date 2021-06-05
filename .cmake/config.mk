@@ -133,13 +133,17 @@ endif
 
 ifeq ($(ENV_OSYS),Linux)
   ENV_CPUM := $(shell cat /proc/cpuinfo | grep -e "model name" | sed "s/model name.*: //g" | head -n1 )
+  ENV_OSEP_:= /
 endif
 ifeq ($(ENV_OSYS),Mac)
   ENV_CPUM := $(shell sysctl -n machdep.cpu.brand_string )
+  ENV_OSEP_:= /
 endif
 ifeq ($(ENV_OSYS),Windows)
   ENV_CPUM := $(shell wmic CPU get NAME | head -n2 | tail -n1 )
+  ENV_OSEP_:= \\
 endif
+ENV_OSEP=$(strip $(ENV_OSEP_))
 
 CLANG := $(shell ${WHICH} clang 2>${DEVNUL})
 GCC := $(shell gcc --version 2>${DEVNUL})
