@@ -58,16 +58,35 @@ ifeq ($(ENV_LOG),0)
     LOG=@
 endif
 
-ifneq (,$(findstring sh,$(SHELL)))
+ifneq (,$(findstring bin/sh,$(SHELL)))
 ENV_SHELL := sh
+ENV_EXEC := $(ENV_SHELL) -c
 WHICH := which
 DEVNUL := /dev/null
+ENV_SET  := export
+ENV_SEP_ := /
+ENV_CMD  := ;
 endif
-ifneq (,$(findstring cmd,$(SHELL)))
+ifneq (,$(findstring cmd.exe,$(SHELL)))
 ENV_SHELL := cmd
+ENV_EXEC := $(ENV_SHELL) /s /c
 WHICH := where
 DEVNUL := NUL
+ENV_SET  := set
+ENV_SEP_ := \\
+ENV_CMD  := &
 endif
+ifneq (,$(findstring pwsh.exe,$(SHELL)))
+ENV_SHELL := cmd
+ENV_EXEC := $(ENV_SHELL) /s /c
+WHICH := where
+DEVNUL := NUL
+ENV_SET  := set
+ENV_SEP_ := \\
+ENV_CMD  := &
+endif
+ENV_SEP=$(strip $(ENV_SEP_))
+
 ifeq ($(ENV_SHELL),)
   $(error environment shell '$(ENV_SHELL)' not supported!)
 endif
@@ -397,18 +416,6 @@ ifeq ($(ENV_INSTALL),)
 endif
 
 
-ifeq ($(ENV_OSYS),Windows)
-  ENV_SET  := set
-  ENV_SEP_ := \\
-  ENV_CMD  := &
-else
-  ENV_SET  := export
-  ENV_SEP_ := /
-  ENV_CMD  := ;
-endif
-ENV_SEP=$(strip $(ENV_SEP_))
-
-
 default: debug
 
 help:
@@ -582,7 +589,7 @@ ifeq ($(ENV_CC),emcc)
 	cd ./$(OBJ) && ln -fs $(TARGET)-check.js $(TARGET)-check
 endif
 	@echo "-- Running unit test"
-	$(ENV_FLAGS) .$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-check --gtest_output=xml:obj$(ENV_SEP)report.xml $(ENV_ARGS)
+	$(ENV_EXEC) "$(ENV_FLAGS) .$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-check --gtest_output=xml:obj$(ENV_SEP)report.xml $(ENV_ARGS)"
 
 
 benchmark: debug-benchmark
@@ -602,7 +609,7 @@ endif
 
 benchmark-run:
 	@echo "-- Running benchmark"
-	$(ENV_FLAGS) .$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-run -o console -o json:obj$(ENV_SEP)report.json $(ENV_ARGS)
+	$(ENV_EXEC) "$(ENV_FLAGS) .$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-run -o console -o json:obj$(ENV_SEP)report.json $(ENV_ARGS)"
 
 
 install: debug-install
@@ -734,12 +741,12 @@ endif
 
 
 info:
-	@echo "-- Environment"
+	@echo "-- Environment ($(SHELL))"
 	@echo "   M = $(ENV_CPUM)"
 	@echo "   P = $(ENV_PLAT)"
 	@echo "   O = $(ENV_OSYS)"
 	@echo "   A = $(ENV_ARCH)"
-	@echo "   S = $(shell ${WHICH} $(SHELL))"
+	@echo "   S = $(ENV_EXEC)"
 
 
 info-build: info
@@ -893,28 +900,28 @@ $(FETCH):%-fetch: info-fetch
 	@$(MAKE) --no-print-directory info-repo
 
 
-ci-tools:
+ci-tools: info
 	@$(MAKE) --no-print-directory C=$(C) G=$(G) I=$(I) info-tools
 
-ci-fetch:
+ci-fetch: info
 	@$(MAKE) --no-print-directory C=$(C) G=$(G) I=$(I) $(B)-fetch
 
-ci-deps:
+ci-deps: info
 	@$(MAKE) --no-print-directory C=$(C) G=$(G) I=$(I) $(B)-deps
 
-ci-build:
+ci-build: info
 	@$(MAKE) --no-print-directory C=$(C) G=$(G) I=$(I) $(B)-build
 
-ci-test:
+ci-test: info
 	@$(MAKE) --no-print-directory C=$(C) G=$(G) I=$(I) $(B)-test
 
-ci-benchmark:
+ci-benchmark: info
 	@$(MAKE) --no-print-directory C=$(C) G=$(G) I=$(I) $(B)-benchmark
 
-ci-install:
+ci-install: info
 	@$(MAKE) --no-print-directory C=$(C) G=$(G) I=$(I) $(B)-install
 
-ci-bundle:
+ci-bundle: info
 	@$(MAKE) --no-print-directory bundle
 
 
