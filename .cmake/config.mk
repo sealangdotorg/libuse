@@ -59,7 +59,7 @@ ifeq ($(ENV_LOG),0)
 endif
 
 ifneq (,$(findstring bin/sh,$(SHELL)))
-ENV_SHELL := $(SHELL)
+ENV_SHELL := sh
 ENV_EXEC := $(ENV_SHELL) -c
 WHICH := which
 DEVNUL := /dev/null
@@ -741,7 +741,7 @@ endif
 
 
 info:
-	@echo "-- Environment"
+	@echo "-- Environment ($(SHELL))"
 	@echo "   M = $(ENV_CPUM)"
 	@echo "   P = $(ENV_PLAT)"
 	@echo "   O = $(ENV_OSYS)"
