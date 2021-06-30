@@ -51,8 +51,10 @@ if len( sys.argv ) == 2 :
 
 licensepath = os.path.join( rootdir, "LICENSE.txt" )
 if not os.path.exists( licensepath ) :
-    sys.stderr.write( "%s: license file '%s' does not exist!\n" % ( sys.argv[0], licensepath ) )
-    sys.exit( -1 )
+    licensepath = os.path.join( rootdir, "LICENSE" )
+    if not os.path.exists( licensepath ) :
+        sys.stderr.write( "%s: license file '%s' does not exist!\n" % ( sys.argv[0], licensepath ) )
+        sys.exit( -1 )
 
 licensetext = []
 with open( licensepath, "r" ) as fd :
@@ -208,6 +210,7 @@ def searcher( dirpath, rootdir = True ) :
         , ".pro"              # QtProject Script
         , ".cmake"            # CMake Script
         , ".yml"              # YAML Configuration
+        , ".toml"             # TOML Configuration
         , ".cfg"              # UNIX Configuration
         , ".sh"               # BASH/Shell Script
         , ".conf"             # BASH/Shell Configuration
