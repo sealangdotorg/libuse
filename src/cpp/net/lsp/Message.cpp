@@ -222,6 +222,12 @@ RequestMessage::RequestMessage( const std::string& id, const std::string& method
     operator[]( Identifier::params ) = Data::object();
 }
 
+RequestMessage::RequestMessage( void )
+: Message( ID::REQUEST_MESSAGE )
+{
+    operator[]( Identifier::id ) = nullptr;
+}
+
 std::string RequestMessage::id( void ) const
 {
     const auto& data_id = operator[]( Identifier::id );
@@ -512,6 +518,12 @@ NotificationMessage::NotificationMessage( const std::string& method )
 {
     operator[]( Identifier::method ) = method;
     operator[]( Identifier::params ) = Data::object();
+}
+
+NotificationMessage::NotificationMessage( void )
+: Message( ID::NOTIFICATION_MESSAGE )
+{
+    operator[]( Identifier::id ) = nullptr;
 }
 
 std::string NotificationMessage::method( void ) const

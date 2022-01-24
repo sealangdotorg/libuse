@@ -115,6 +115,8 @@ namespace libstdhl
 
                 RequestMessage( const std::string& id, const std::string& method );
 
+                RequestMessage( void );
+
                 std::string id( void ) const;
 
                 std::string method( void ) const;
@@ -162,6 +164,8 @@ namespace libstdhl
                 NotificationMessage( const Data& data );
 
                 NotificationMessage( const std::string& method );
+
+                NotificationMessage( void );
 
                 std::string method( void ) const;
 
