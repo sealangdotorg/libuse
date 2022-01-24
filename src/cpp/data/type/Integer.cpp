@@ -83,11 +83,16 @@ static inline u64 umull_carry( u64 a, u64 b )
 static inline u1 uaddl_overflow( u64 a, u64 b, u64* res )
 {
 #if defined( __GNUG__ ) or defined( __clang__ )
-#if defined( __MINGW32__ ) or defined( __APPLE__ )
+  #if defined( __MINGW32__ ) or defined( __APPLE__ )
     return __builtin_uaddll_overflow( a, b, res );
-#else
+  #else
+    #if defined( __EMSCRIPTEN__ )
+    *res = a + b;
+    return ( a + b ) < a;
+    #else
     return __builtin_uaddl_overflow( a, b, res );
-#endif
+    #endif
+  #endif
 #else
     *res = a + b;
     return ( a + b ) < a;
@@ -97,11 +102,16 @@ static inline u1 uaddl_overflow( u64 a, u64 b, u64* res )
 static inline bool umull_overflow( u64 a, u64 b, u64* res )
 {
 #if defined( __GNUG__ ) or defined( __clang__ )
-#if defined( __MINGW32__ ) or defined( __APPLE__ )
+  #if defined( __MINGW32__ ) or defined( __APPLE__ )
     return __builtin_umulll_overflow( a, b, res );
-#else
+  #else
+    #if defined( __EMSCRIPTEN__ )
+    *res = a * b;
+    return b > 0 && a > ( ULONG_MAX / b );
+    #else
     return __builtin_umull_overflow( a, b, res );
-#endif
+    #endif
+  #endif
 #else
     *res = a * b;
     return b > 0 && a > ( ULONG_MAX / b );
