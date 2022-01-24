@@ -90,6 +90,8 @@ namespace libstdhl
 
                 ResponseError( const ErrorCode code, const std::string& message );
 
+                ResponseError( void ) = default;
+
                 ErrorCode code( void ) const;
 
                 std::string message( void ) const;
