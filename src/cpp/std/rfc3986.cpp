@@ -134,11 +134,7 @@ UniformResourceIdentifier UniformResourceIdentifier::fromString( const std::stri
 
     scheme.reserve( distance( uri.begin(), scheme_iterator ) );
 
-    transform(
-        uri.begin(),
-        scheme_iterator,
-        back_inserter( scheme ),
-        std::ptr_fun< int, int >( tolower ) );
+    transform( uri.begin(), scheme_iterator, back_inserter( scheme ), tolower );
 
     if( scheme_iterator == uri.end() )
     {
@@ -151,11 +147,7 @@ UniformResourceIdentifier UniformResourceIdentifier::fromString( const std::stri
 
     authority.reserve( distance( scheme_iterator, path_iterator ) );
 
-    transform(
-        scheme_iterator,
-        path_iterator,
-        back_inserter( authority ),
-        std::ptr_fun< int, int >( tolower ) );
+    transform( scheme_iterator, path_iterator, back_inserter( authority ), tolower );
 
     std::string::const_iterator query_iterator = find( path_iterator, uri.end(), '?' );
 
