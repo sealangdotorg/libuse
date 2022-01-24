@@ -44,7 +44,7 @@
 #define _LIBSTDHL_CPP_OPTIONAL_H_
 
 #include <exception>
-#include <experimental/optional>
+#include <optional>
 
 /**
    @brief    TODO
@@ -59,12 +59,12 @@ namespace libstdhl
        @class Optional
      */
     template < typename T >
-    class Optional : public std::experimental::optional< T >
+    class Optional : public std::optional< T >
     {
       public:
         template < typename... Args >
         Optional( Args&&... args )
-        : std::experimental::optional< T >{ std::forward< Args >( args )... }
+        : std::optional< T >{ std::forward< Args >( args )... }
         {
         }
 
@@ -92,7 +92,7 @@ namespace libstdhl
         }
     };
 
-    constexpr auto nullopt = std::experimental::nullopt;
+    constexpr auto nullopt = std::nullopt;
 }
 
 #endif  // _LIBSTDHL_CPP_OPTIONAL_H_
