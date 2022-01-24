@@ -177,6 +177,12 @@ ifdef C
   endif
   ifeq ($(C),emcc)
     ENV_CXX=em++
+    ENV_FLAGS=node
+  endif
+  ifeq ($(C),wasm)
+    ENV_CC=clang
+    ENV_CXX=clang++
+    ENV_TARGET=$(C)
   endif
 else
   ifdef CLANG
@@ -507,6 +513,16 @@ ifeq (,$(findstring Visual,$(ENV_GEN)))
       ENV_CMAKE_FLAGS += -DCMAKE_EXE_LINKER_FLAGS="-Wl,--allow-multiple-definition"
     endif
   endif
+
+  ifeq ($(ENV_CC),emcc)
+    ENV_CMAKE_FLAGS += -DCMAKE_CXX_FLAGS="-sNO_DISABLE_EXCEPTION_CATCHING -sALLOW_MEMORY_GROWTH=1"
+  endif
+
+  ifeq ("$(ENV_TARGET)","wasm")
+    ENV_CMAKE_FLAGS += -DCMAKE_CXX_FLAGS="--target=wasm32 -nostdlib -Wl,--no-entry -Wl,--export-all\
+      $(ENV_CMAKE_CXX_FLAGS)"
+    # -O3 -flto -Wl,--lto-O3
+  endif
 else
   ENV_CMAKE_FLAGS += -DCMAKE_CXX_FLAGS="\
    /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING\
@@ -584,12 +600,6 @@ test-all: $(TYPES:%=%-test)
 
 $(TESTS):%-test: %
 	$(LOG)cmake --build $(OBJ) --config $(patsubst %-test,%,$@) --target $(TARGET)-check -- $(ENV_BUILD_FLAGS)
-ifeq ($(ENV_CC),emcc)
-	cd ./$(OBJ) && \
-	`cat CMakeFiles/$(TARGET)-check.dir/link.txt | \
-	sed "s/$(TARGET)-check/$(TARGET)-check.js -s MAIN_MODULE=1/g"`
-	cd ./$(OBJ) && ln -fs $(TARGET)-check.js $(TARGET)-check
-endif
 	@echo "-- Running unit test"
 	$(ENV_EXEC) "$(ENV_FLAGS) .$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-check --gtest_output=xml:obj$(ENV_SEP)report.xml $(ENV_ARGS)"
 
@@ -600,12 +610,6 @@ benchmark-all: $(TYPES:%=%-benchmark)
 
 $(BENCH):%-benchmark: %
 	$(LOG)cmake --build $(OBJ) --config $(patsubst %-benchmark,%,$@) --target $(TARGET)-run -- $(ENV_BUILD_FLAGS)
-ifeq ($(ENV_CC),emcc)
-	$(LOG)cd ./$(OBJ) && \
-	`cat CMakeFiles/$(TARGET)-run.dir/link.txt | \
-	sed "s/$(TARGET)-run/$(TARGET)-run.js -s MAIN_MODULE=1/g"`
-	$(LOG)cd ./$(OBJ) && ln -fs $(TARGET)-run.js $(TARGET)-run
-endif
 	@echo "-- Run benchmark via 'make benchmark-run'"
 
 
