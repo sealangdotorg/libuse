@@ -468,7 +468,7 @@ TEST( libstdhl_cpp_network_lsp, workspace_configuration )
         } );
     server.flush( [&]( const Message& message ) {
         const auto packet = libstdhl::Network::LSP::Packet( message );
-        id = static_cast< RequestMessage >( message ).id();
+        id = static_cast< const RequestMessage& >( message ).id();
     } );
     ResponseMessage response( id );
     response.setResult( Data::array() );
@@ -527,7 +527,7 @@ TEST( libstdhl_cpp_network_lsp, workspace_applyEdit )
         } );
     server.flush( [&]( const Message& message ) {
         const auto packet = libstdhl::Network::LSP::Packet( message );
-        id = static_cast< RequestMessage >( message ).id();
+        id = static_cast< const RequestMessage& >( message ).id();
     } );
     ResponseMessage response( id );
     response.setResult( ApplyWorkspaceEditResult( true ) );
