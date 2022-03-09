@@ -63,7 +63,7 @@ Decimal Type::createDecimal( const double value )
     // IEEE 754 double-precision binary decimal-point format
     static_assert( sizeof( double ) == 8, " double shall be a byte-size of 8 " );
 
-    Decimal tmp( ( value >= 0 ? (u64)value : ( u64 )( -value ) ), ( value < 0 ) );
+    Decimal tmp( ( value >= 0 ? (u64)value : (u64)( -value ) ), ( value < 0 ) );
 
     return tmp;
 }
