@@ -79,13 +79,13 @@ const u32 UTF8::point( void ) const
 
 std::string UTF8::description( void ) const
 {
-    const auto value = Type::createInteger( (u64)code() );
+    const auto value = Type::createInteger( code() );
     return value.to< Type::Radix::HEXADECIMAL, Type::Literal::NONE >();
 }
 
 std::string UTF8::unicode( void ) const
 {
-    const auto value = Type::createInteger( (u64)point() );
+    const auto value = Type::createInteger( point() );
     auto hexPoint = value.to< Type::Radix::HEXADECIMAL, Type::Literal::NONE >();
 
     for_each( hexPoint.begin(), hexPoint.end(), []( char& character ) {
