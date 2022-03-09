@@ -81,12 +81,12 @@ namespace libstdhl
       public:
         static Type::Integer min() noexcept
         {
-            return Type::createInteger( std::numeric_limits< i64 >::min() );
+            return Type::createInteger( std::numeric_limits< int >::min() );
         }
 
         static Type::Integer max() noexcept
         {
-            return Type::createInteger( std::numeric_limits< i64 >::max() );
+            return Type::createInteger( std::numeric_limits< int >::max() );
         }
     };
 
