@@ -52,66 +52,84 @@
 using namespace libstdhl;
 using namespace Type;
 
-static inline u64 hi( u64 x )
+static inline std::size_t hi( std::size_t x )
 {
+#ifdef LIBSTDHL_CPP_TYPE_64_BIT
+    static_assert( sizeof( std::size_t ) == ( 64 / 8 ) );
     return x >> 32;
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
+    static_assert( sizeof( std::size_t ) == ( 32 / 8 ) );
+    return x >> 16;
+#endif
 }
 
-static inline u64 lo( u64 x )
+static inline std::size_t lo( std::size_t x )
 {
-    return ( ( ( (u64)1 ) << 32 ) - 1 ) & x;
+#ifdef LIBSTDHL_CPP_TYPE_64_BIT
+    static_assert( sizeof( std::size_t ) == ( 64 / 8 ) );
+    return ( ( ( (std::size_t)1 ) << 32 ) - 1 ) & x;
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
+    static_assert( sizeof( std::size_t ) == ( 32 / 8 ) );
+    return ( ( ( (std::size_t)1 ) << 16 ) - 1 ) & x;
+#endif
 }
 
-static inline u64 umull_carry( u64 a, u64 b )
+static inline std::size_t umull_carry( std::size_t a, std::size_t b )
 {
-    u64 x = lo( a ) * lo( b );
+    std::size_t x = lo( a ) * lo( b );
 
     x = hi( a ) * lo( b ) + hi( x );
-    u64 s1 = lo( x );
-    u64 s2 = hi( x );
+    std::size_t s1 = lo( x );
+    std::size_t s2 = hi( x );
 
     x = s1 + lo( a ) * hi( b );
     s1 = lo( x );
 
     x = s2 + hi( a ) * hi( b ) + hi( x );
     s2 = lo( x );
-    u64 s3 = hi( x );
+    std::size_t s3 = hi( x );
 
+#ifdef LIBSTDHL_CPP_TYPE_64_BIT
+    static_assert( sizeof( std::size_t ) == ( 64 / 8 ) );
     return ( s3 << 32 ) | s2;
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
+    static_assert( sizeof( std::size_t ) == ( 32 / 8 ) );
+    return ( s3 << 16 ) | s2;
+#endif
 }
 
-static inline u1 uaddl_overflow( u64 a, u64 b, u64* res )
+static inline u1 uaddl_overflow( std::size_t a, std::size_t b, std::size_t* res )
 {
 #if defined( __GNUG__ ) or defined( __clang__ )
-  #if defined( __MINGW32__ ) or defined( __APPLE__ )
+#if defined( __MINGW32__ ) or defined( __APPLE__ )
     return __builtin_uaddll_overflow( a, b, res );
-  #else
-    #if defined( __EMSCRIPTEN__ )
+#else
+#if defined( __EMSCRIPTEN__ )
     *res = a + b;
     return ( a + b ) < a;
-    #else
+#else
     return __builtin_uaddl_overflow( a, b, res );
-    #endif
-  #endif
+#endif
+#endif
 #else
     *res = a + b;
     return ( a + b ) < a;
 #endif
 }
 
-static inline bool umull_overflow( u64 a, u64 b, u64* res )
+static inline bool umull_overflow( std::size_t a, std::size_t b, std::size_t* res )
 {
 #if defined( __GNUG__ ) or defined( __clang__ )
-  #if defined( __MINGW32__ ) or defined( __APPLE__ )
+#if defined( __MINGW32__ ) or defined( __APPLE__ )
     return __builtin_umulll_overflow( a, b, res );
-  #else
-    #if defined( __EMSCRIPTEN__ )
+#else
+#if defined( __EMSCRIPTEN__ )
     *res = a * b;
     return b > 0 && a > ( ULONG_MAX / b );
-    #else
+#else
     return __builtin_umull_overflow( a, b, res );
-    #endif
-  #endif
+#endif
+#endif
 #else
     *res = a * b;
     return b > 0 && a > ( ULONG_MAX / b );
@@ -127,15 +145,15 @@ Integer Type::createInteger( const std::string& value, const Radix radix )
     return Integer::fromString( value, radix );
 }
 
-Integer Type::createInteger( const u64 value )
+Integer Type::createInteger( const unsigned int value )
 {
     Integer tmp( value, false );
     return tmp;
 }
 
-Integer Type::createInteger( const i64 value )
+Integer Type::createInteger( const int value )
 {
-    Integer tmp( ( value >= 0 ? (u64)value : ( u64 )( -value ) ), ( value < 0 ) );
+    Integer tmp( ( value >= 0 ? (std::size_t)value : ( std::size_t )( -value ) ), ( value < 0 ) );
     return tmp;
 }
 
@@ -159,7 +177,7 @@ Integer Type::createInteger( const Natural& value, const u1 sign )
 
 Integer Integer::fromString( const std::string& value, const Radix radix )
 {
-    const u64 shift =
+    const std::size_t shift =
         ( radix == BINARY
               ? 1
               : ( radix == OCTAL ? 3
@@ -186,9 +204,9 @@ Integer Integer::fromString( const std::string& value, const Radix radix )
         throw std::domain_error( "unable to convert string '" + data + "' to a valid Integer" );
     }
 
-    const i64 bound = ( i64 )( sign );
+    const i64 bound = (i64)( sign );
 
-    Integer tmp = Type::createInteger( (u64)0 );
+    Integer tmp = Type::createInteger( 0 );
     assert( tmp.trivial() );
     assert( tmp.value() == 0 );
 
@@ -216,7 +234,7 @@ Integer Integer::fromString( const std::string& value, const Radix radix )
     }
 }
 
-const u64 Integer::operator[]( std::size_t idx ) const
+const std::size_t Integer::operator[]( std::size_t idx ) const
 {
     if( m_trivial )
     {
@@ -234,7 +252,7 @@ const u64 Integer::operator[]( std::size_t idx ) const
 // IntegerLayout
 //
 
-IntegerLayout::IntegerLayout( const u64 low, const u64 high )
+IntegerLayout::IntegerLayout( const std::size_t low, const std::size_t high )
 : m_word( { low, high } )
 {
 }
@@ -246,7 +264,7 @@ Layout* IntegerLayout::clone( void ) const
 
 std::size_t IntegerLayout::hash( void ) const
 {
-    auto h = std::hash< u64 >()( m_word[ 0 ] );
+    auto h = std::hash< std::size_t >()( m_word[ 0 ] );
 
     for( std::size_t c = 1; c < m_word.size(); c++ )
     {
@@ -256,13 +274,13 @@ std::size_t IntegerLayout::hash( void ) const
     return h;
 }
 
-const u64 IntegerLayout::operator[]( std::size_t idx ) const
+const std::size_t IntegerLayout::operator[]( std::size_t idx ) const
 {
     assert( m_word.size() > 0 and idx < m_word.size() );
     return m_word[ idx ];
 }
 
-const std::vector< u64 >& IntegerLayout::word( void ) const
+const std::vector< std::size_t >& IntegerLayout::word( void ) const
 {
     return m_word;
 }
@@ -275,7 +293,7 @@ const std::vector< u64 >& IntegerLayout::word( void ) const
 // operator '==' and '!='
 //
 
-u1 Integer::operator==( const u64 rhs ) const
+u1 Integer::operator==( const std::size_t rhs ) const
 {
     if( trivial() )
     {
@@ -363,7 +381,7 @@ u1 Integer::operator==( const Integer& rhs ) const
     }
 }
 
-u1 IntegerLayout::operator==( const u64 rhs ) const
+u1 IntegerLayout::operator==( const std::size_t rhs ) const
 {
     assert( m_word.size() > 0 );
 
@@ -408,7 +426,7 @@ u1 IntegerLayout::operator==( const IntegerLayout& rhs ) const
 // operator '<' and '>='
 //
 
-u1 Integer::operator<( const u64 rhs ) const
+u1 Integer::operator<( const std::size_t rhs ) const
 {
     if( not trivial() )
     {
@@ -471,7 +489,7 @@ u1 Integer::operator<( const Integer& rhs ) const
 // operator '>' and '<='
 //
 
-u1 Integer::operator>( const u64 rhs ) const
+u1 Integer::operator>( const std::size_t rhs ) const
 {
     if( sign() )
     {
@@ -546,7 +564,7 @@ Integer Integer::operator++( int )
     return tmp;
 }
 
-Integer& Integer::operator+=( const u64 rhs )
+Integer& Integer::operator+=( const std::size_t rhs )
 {
     if( trivial() )
     {
@@ -566,7 +584,7 @@ Integer& Integer::operator+=( const u64 rhs )
         }
         else
         {
-            const auto addof = uaddl_overflow( lhs, rhs, (u64*)&m_data.value );
+            const auto addof = uaddl_overflow( lhs, rhs, (std::size_t*)&m_data.value );
 
             if( addof )
             {
@@ -615,11 +633,11 @@ Integer& Integer::operator+=( const Integer& rhs )
     return *this;
 }
 
-IntegerLayout& IntegerLayout::operator+=( const u64 rhs )
+IntegerLayout& IntegerLayout::operator+=( const std::size_t rhs )
 {
     assert( m_word.size() > 0 );
 
-    u64 carry = rhs;
+    std::size_t carry = rhs;
 
     for( std::size_t c = 0; c < m_word.size(); c++ )
     {
@@ -652,7 +670,7 @@ Integer Integer::operator--( int )
     return tmp;
 }
 
-Integer& Integer::operator-=( const u64 rhs )
+Integer& Integer::operator-=( const std::size_t rhs )
 {
     if( trivial() )
     {
@@ -713,7 +731,7 @@ Integer& Integer::operator-=( const Integer& rhs )
     return *this;
 }
 
-IntegerLayout& IntegerLayout::operator-=( const u64 rhs )
+IntegerLayout& IntegerLayout::operator-=( const std::size_t rhs )
 {
     assert( m_word.size() > 0 );
 
@@ -732,7 +750,7 @@ IntegerLayout& IntegerLayout::operator-=( const u64 rhs )
 // operator '*=' and '*'
 //
 
-Integer& Integer::operator*=( const u64 rhs )
+Integer& Integer::operator*=( const std::size_t rhs )
 {
     if( *this == 0 )
     {
@@ -801,11 +819,11 @@ Integer& Integer::operator*=( const Integer& rhs )
     return *this;
 }
 
-IntegerLayout& IntegerLayout::operator*=( const u64 rhs )
+IntegerLayout& IntegerLayout::operator*=( const std::size_t rhs )
 {
     assert( m_word.size() > 0 );
 
-    u64 carry = 0;
+    std::size_t carry = 0;
 
     for( std::size_t c = 0; c < m_word.size(); c++ )
     {
@@ -831,11 +849,11 @@ IntegerLayout& IntegerLayout::operator*=( const u64 rhs )
 // operator '%=' and '%'
 //
 
-Integer& Integer::operator%=( const u64 rhs )
+Integer& Integer::operator%=( const std::size_t rhs )
 {
     assert( trivial() );
 
-    const u64 a = value();
+    const std::size_t a = value();
     m_data.value = a % rhs;
 
     return *this;
@@ -884,10 +902,10 @@ Integer& Integer::operator^=( const Natural& rhs )
     assert( trivial() );
     assert( rhs.trivial() );
 
-    const u64 a = value();
-    const u64 b = rhs.value();
+    const std::size_t a = value();
+    const std::size_t b = rhs.value();
 
-    m_data.value = (u64)std::llround( std::pow( a, b ) );
+    m_data.value = (std::size_t)std::llround( std::pow( a, b ) );
     m_sign = sign() and ( rhs % 2 ) == 1;
 
     return *this;
@@ -929,7 +947,7 @@ IntegerLayout& IntegerLayout::operator~( void )
 // operator '<<=' and '<<'
 //
 
-Integer& Integer::operator<<=( const u64 rhs )
+Integer& Integer::operator<<=( const std::size_t rhs )
 {
     if( rhs == 0 )
     {
@@ -938,10 +956,10 @@ Integer& Integer::operator<<=( const u64 rhs )
 
     if( trivial() )
     {
-        const u64 shift = rhs;
-        const u64 shinv = 64 - rhs;
+        const std::size_t shift = rhs;
+        const std::size_t shinv = 64 - rhs;
 
-        const u64 current = m_data.value >> shinv;
+        const std::size_t current = m_data.value >> shinv;
         m_data.value = m_data.value << shift;
 
         if( current != 0 )
@@ -970,15 +988,15 @@ Integer& Integer::operator<<=( const Integer& rhs )
     return this->operator<<=( rhs.value() );
 }
 
-IntegerLayout& IntegerLayout::operator<<=( const u64 rhs )
+IntegerLayout& IntegerLayout::operator<<=( const std::size_t rhs )
 {
     assert( m_word.size() > 0 );
 
-    const u64 shift = rhs;
-    const u64 shinv = 64 - rhs;
+    const std::size_t shift = rhs;
+    const std::size_t shinv = 64 - rhs;
 
-    u64 current = 0;
-    u64 previous = 0;
+    std::size_t current = 0;
+    std::size_t previous = 0;
 
     for( std::size_t c = 0; c < m_word.size(); c++ )
     {
@@ -999,7 +1017,7 @@ IntegerLayout& IntegerLayout::operator<<=( const u64 rhs )
 // operator '>>=' and '>>'
 //
 
-Integer& Integer::operator>>=( const u64 rhs )
+Integer& Integer::operator>>=( const std::size_t rhs )
 {
     if( rhs == 0 )
     {
@@ -1008,7 +1026,7 @@ Integer& Integer::operator>>=( const u64 rhs )
 
     if( trivial() )
     {
-        const u64 shift = rhs;
+        const std::size_t shift = rhs;
         m_data.value = m_data.value >> shift;
     }
     else
@@ -1039,14 +1057,14 @@ Integer& Integer::operator>>=( const Integer& rhs )
     return this->operator>>=( rhs.value() );
 }
 
-IntegerLayout& IntegerLayout::operator>>=( const u64 rhs )
+IntegerLayout& IntegerLayout::operator>>=( const std::size_t rhs )
 {
     assert( m_word.size() > 0 );
 
-    const u64 shift = rhs;
-    const u64 shinv = 64 - rhs;
+    const std::size_t shift = rhs;
+    const std::size_t shinv = 64 - rhs;
 
-    u64 next = 0;
+    std::size_t next = 0;
 
     for( std::size_t c = 0; c < m_word.size() - 1; c++ )
     {

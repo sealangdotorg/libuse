@@ -68,15 +68,15 @@ namespace libstdhl
 
             static Integer fromString( const std::string& value, const Radix radix );
 
-            const u64 operator[]( std::size_t idx ) const;
+            const std::size_t operator[]( std::size_t idx ) const;
 
             //
             // operator '==' and '!='
             //
 
-            u1 operator==( const u64 rhs ) const;
+            u1 operator==( const std::size_t rhs ) const;
 
-            inline u1 operator!=( const u64 rhs ) const
+            inline u1 operator!=( const std::size_t rhs ) const
             {
                 return not( operator==( rhs ) );
             }
@@ -92,14 +92,14 @@ namespace libstdhl
             // operator '<' and '>='
             //
 
-            u1 operator<( const u64 rhs ) const;
+            u1 operator<( const std::size_t rhs ) const;
 
-            inline u1 operator>=( const u64 rhs ) const
+            inline u1 operator>=( const std::size_t rhs ) const
             {
                 return not( operator<( rhs ) );
             }
 
-            inline friend u1 operator<( const u64 lhs, const Integer& rhs )
+            inline friend u1 operator<( const std::size_t lhs, const Integer& rhs )
             {
                 return rhs >= lhs;
             }
@@ -115,14 +115,14 @@ namespace libstdhl
             // operator '>' and '<='
             //
 
-            u1 operator>( const u64 rhs ) const;
+            u1 operator>( const std::size_t rhs ) const;
 
-            inline u1 operator<=( const u64 rhs ) const
+            inline u1 operator<=( const std::size_t rhs ) const
             {
                 return not( operator>( rhs ) );
             }
 
-            inline friend u1 operator>( const u64 lhs, const Integer& rhs )
+            inline friend u1 operator>( const std::size_t lhs, const Integer& rhs )
             {
                 return rhs <= lhs;
             }
@@ -142,9 +142,9 @@ namespace libstdhl
 
             Integer operator++( const int increment );
 
-            Integer& operator+=( const u64 rhs );
+            Integer& operator+=( const std::size_t rhs );
 
-            inline friend Integer operator+( Integer lhs, const u64 rhs )
+            inline friend Integer operator+( Integer lhs, const std::size_t rhs )
             {
                 lhs += rhs;
                 return lhs;
@@ -166,9 +166,9 @@ namespace libstdhl
 
             Integer operator--( const int decrement );
 
-            Integer& operator-=( const u64 rhs );
+            Integer& operator-=( const std::size_t rhs );
 
-            inline friend Integer operator-( Integer lhs, const u64 rhs )
+            inline friend Integer operator-( Integer lhs, const std::size_t rhs )
             {
                 lhs -= rhs;
                 return lhs;
@@ -204,9 +204,9 @@ namespace libstdhl
             // operator '*=' and '*'
             //
 
-            Integer& operator*=( const u64 rhs );
+            Integer& operator*=( const std::size_t rhs );
 
-            inline friend Integer operator*( Integer lhs, const u64 rhs )
+            inline friend Integer operator*( Integer lhs, const std::size_t rhs )
             {
                 lhs *= rhs;
                 return lhs;
@@ -216,9 +216,9 @@ namespace libstdhl
             // operator '%=' and '%'
             //
 
-            Integer& operator%=( const u64 rhs );
+            Integer& operator%=( const std::size_t rhs );
 
-            inline friend Integer operator%( Integer lhs, const u64 rhs )
+            inline friend Integer operator%( Integer lhs, const std::size_t rhs )
             {
                 lhs %= rhs;
                 return lhs;
@@ -266,9 +266,9 @@ namespace libstdhl
             // operator '<<=' and '<<'
             //
 
-            Integer& operator<<=( const u64 rhs );
+            Integer& operator<<=( const std::size_t rhs );
 
-            inline friend Integer operator<<( Integer lhs, const u64 rhs )
+            inline friend Integer operator<<( Integer lhs, const std::size_t rhs )
             {
                 lhs <<= rhs;
                 return lhs;
@@ -286,9 +286,9 @@ namespace libstdhl
             // operator '>>=' and '>>'
             //
 
-            Integer& operator>>=( const u64 rhs );
+            Integer& operator>>=( const std::size_t rhs );
 
-            inline friend Integer operator>>( Integer lhs, const u64 rhs )
+            inline friend Integer operator>>( Integer lhs, const std::size_t rhs )
             {
                 lhs >>= rhs;
                 return lhs;
@@ -308,23 +308,23 @@ namespace libstdhl
           public:
             using Ptr = std::unique_ptr< IntegerLayout >;
 
-            IntegerLayout( const u64 low, const u64 high );
+            IntegerLayout( const std::size_t low, const std::size_t high );
 
             Layout* clone( void ) const override;
 
             std::size_t hash( void ) const override;
 
-            const u64 operator[]( std::size_t idx ) const;
+            const std::size_t operator[]( std::size_t idx ) const;
 
-            const std::vector< u64 >& word( void ) const;
+            const std::vector< std::size_t >& word( void ) const;
 
             //
             // operator '==' and '!='
             //
 
-            u1 operator==( const u64 rhs ) const;
+            u1 operator==( const std::size_t rhs ) const;
 
-            inline u1 operator!=( const u64 rhs ) const
+            inline u1 operator!=( const std::size_t rhs ) const
             {
                 return not( operator==( rhs ) );
             }
@@ -340,9 +340,9 @@ namespace libstdhl
             // operator '+=' and '+'
             //
 
-            IntegerLayout& operator+=( const u64 rhs );
+            IntegerLayout& operator+=( const std::size_t rhs );
 
-            inline friend IntegerLayout operator+( IntegerLayout lhs, const u64 rhs )
+            inline friend IntegerLayout operator+( IntegerLayout lhs, const std::size_t rhs )
             {
                 lhs += rhs;
                 return lhs;
@@ -352,9 +352,9 @@ namespace libstdhl
             // operator '-=' and '-'
             //
 
-            IntegerLayout& operator-=( const u64 rhs );
+            IntegerLayout& operator-=( const std::size_t rhs );
 
-            inline friend IntegerLayout operator-( IntegerLayout lhs, const u64 rhs )
+            inline friend IntegerLayout operator-( IntegerLayout lhs, const std::size_t rhs )
             {
                 lhs -= rhs;
                 return lhs;
@@ -364,9 +364,9 @@ namespace libstdhl
             // operator '*=' and '*'
             //
 
-            IntegerLayout& operator*=( const u64 rhs );
+            IntegerLayout& operator*=( const std::size_t rhs );
 
-            inline friend IntegerLayout operator*( IntegerLayout lhs, const u64 rhs )
+            inline friend IntegerLayout operator*( IntegerLayout lhs, const std::size_t rhs )
             {
                 lhs *= rhs;
                 return lhs;
@@ -382,9 +382,9 @@ namespace libstdhl
             // operator '<<=' and '<<'
             //
 
-            IntegerLayout& operator<<=( const u64 rhs );
+            IntegerLayout& operator<<=( const std::size_t rhs );
 
-            inline friend IntegerLayout operator<<( IntegerLayout lhs, const u64 rhs )
+            inline friend IntegerLayout operator<<( IntegerLayout lhs, const std::size_t rhs )
             {
                 lhs <<= rhs;
                 return lhs;
@@ -394,16 +394,16 @@ namespace libstdhl
             // operator '>>=' and '>>'
             //
 
-            IntegerLayout& operator>>=( const u64 rhs );
+            IntegerLayout& operator>>=( const std::size_t rhs );
 
-            inline friend IntegerLayout operator>>( IntegerLayout lhs, const u64 rhs )
+            inline friend IntegerLayout operator>>( IntegerLayout lhs, const std::size_t rhs )
             {
                 lhs >>= rhs;
                 return lhs;
             }
 
           private:
-            std::vector< u64 > m_word;
+            std::vector< std::size_t > m_word;
         };
     }
 }
