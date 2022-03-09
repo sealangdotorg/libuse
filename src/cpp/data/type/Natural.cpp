@@ -74,7 +74,7 @@ Natural Type::createNatural( const Integer& value )
     }
 }
 
-Natural Type::createNatural( const u64 value )
+Natural Type::createNatural( const std::size_t value )
 {
     return Natural( value, false );
 }
@@ -95,7 +95,7 @@ Natural Natural::fromString( const std::string& value, const Type::Radix radix )
     return createNatural( tmp );
 }
 
-u1 Natural::isSet( const u64 bit ) const
+u1 Natural::isSet( const std::size_t bit ) const
 {
     assert( bit > 0 );
     assert( bit <= 64 );
@@ -113,8 +113,8 @@ Natural& Natural::operator^=( const Natural& rhs )
     assert( this->trivial() );
     assert( rhs.trivial() );
 
-    const u64 a = value();
-    const u64 b = rhs.value();
+    const std::size_t a = value();
+    const std::size_t b = rhs.value();
 
     m_data.value = a ^ b;
 
@@ -130,8 +130,8 @@ Natural& Natural::operator|=( const Natural& rhs )
     assert( this->trivial() );
     assert( rhs.trivial() );
 
-    const u64 a = value();
-    const u64 b = rhs.value();
+    const std::size_t a = value();
+    const std::size_t b = rhs.value();
 
     m_data.value = a | b;
 
@@ -147,8 +147,8 @@ Natural& Natural::operator&=( const Natural& rhs )
     assert( this->trivial() );
     assert( rhs.trivial() );
 
-    const u64 a = value();
-    const u64 b = rhs.value();
+    const std::size_t a = value();
+    const std::size_t b = rhs.value();
 
     m_data.value = a & b;
 
@@ -159,7 +159,7 @@ Natural& Natural::operator&=( const Natural& rhs )
 // operator '<<=' and '<<'
 //
 
-Natural& Natural::operator<<=( const u64 rhs )
+Natural& Natural::operator<<=( const std::size_t rhs )
 {
     static_cast< Integer* >( this )->operator<<=( rhs );
     return *this;

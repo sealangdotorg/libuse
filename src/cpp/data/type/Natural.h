@@ -64,7 +64,7 @@ namespace libstdhl
 
             static Natural fromString( const std::string& value, const Radix radix );
 
-            u1 isSet( const u64 bit ) const;
+            u1 isSet( const std::size_t bit ) const;
 
             inline friend Natural operator~( Natural arg )
             {
@@ -112,9 +112,9 @@ namespace libstdhl
             // operator '<<=' and '<<'
             //
 
-            Natural& operator<<=( const u64 rhs );
+            Natural& operator<<=( const std::size_t rhs );
 
-            inline friend Natural operator<<( Natural lhs, const u64 rhs )
+            inline friend Natural operator<<( Natural lhs, const std::size_t rhs )
             {
                 lhs <<= rhs;
                 return lhs;
