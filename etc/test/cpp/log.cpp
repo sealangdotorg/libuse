@@ -71,7 +71,7 @@ TEST( libstdhl_cpp_Log, example )
     c.flush( ff );
 }
 
-TEST( libstdhl_cpp_Log, merging_two_streams_and_routing_them_to_two_sinks )
+TEST( DISABLED_libstdhl_cpp_Log, merging_two_streams_and_routing_them_to_two_sinks )
 {
     /*
 
@@ -110,12 +110,12 @@ TEST( libstdhl_cpp_Log, merging_two_streams_and_routing_them_to_two_sinks )
 
     Log::Router rr;
 
-    auto f0 = rr.add< Log::Filter >();
+    const auto f0 = rr.add< Log::Filter >();
     f0->setLevel( Log::Level::ID::WARNING );
     f0->setLevel( Log::Level::ID::ERROR );
     f0->set< Log::OutputStreamSink >( std::cerr, sf );
 
-    auto f1 = rr.add< Log::Filter >();
+    const auto f1 = rr.add< Log::Filter >();
     f1->setLevel( Log::Level::ID::ALERT );
     f1->set< Log::OutputStreamSink >( std::cout, cf );
 
