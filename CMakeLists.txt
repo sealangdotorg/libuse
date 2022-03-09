@@ -67,13 +67,14 @@ add_subdirectory( etc
   EXCLUDE_FROM_ALL
   )
 
+set_property( TARGET ${PROJECT}-cpp PROPERTY POSITION_INDEPENDENT_CODE 1 )
+
 #
 #
 # static library
 #
 
 set( ${PROJECT}_VERSION ${GIT_REVTAG} )
-set_property( TARGET ${PROJECT}-cpp PROPERTY POSITION_INDEPENDENT_CODE 1 )
 
 add_library( ${PROJECT} STATIC
   $<TARGET_OBJECTS:${PROJECT}-cpp>
@@ -97,10 +98,7 @@ endif()
 set( ${PROJECT}_SHARED "" )
 if( NOT CMAKE_CXX_EMSCRIPTEN )
   set( ${PROJECT}_SHARED ${PROJECT}-so )
-endif()
 
-message( "'${PROJECT}_SHARED' '${${PROJECT}_SHARED}'" )
-if( NOT ${${PROJECT}_SHARED} )
   add_library( ${${PROJECT}_SHARED} SHARED
     $<TARGET_OBJECTS:${PROJECT}-cpp>
     )
