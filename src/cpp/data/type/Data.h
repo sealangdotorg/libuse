@@ -69,7 +69,7 @@ namespace libstdhl
             /**
                trivial defined data
              */
-            explicit Data( const u64 value, const u1 sign );
+            explicit Data( const std::size_t value, const u1 sign );
 
             /**
                non-trivial defined data
@@ -91,7 +91,7 @@ namespace libstdhl
 
             Data& operator=( Data&& other ) noexcept;
 
-            u64 value( void ) const;
+            std::size_t value( void ) const;
 
             Layout* ptr( void ) const;
 
@@ -106,7 +106,7 @@ namespace libstdhl
           protected:
             union content
             {
-                u64 value;
+                std::size_t value;
                 Layout* ptr;
             } m_data;
 
@@ -136,7 +136,7 @@ namespace libstdhl
             std::string to_string(
                 const Radix radix = DECIMAL, const Literal literal = NONE ) const;
 
-            static u64 to_digit(
+            static std::size_t to_digit(
                 const char character, const Radix radix = DECIMAL, const Literal literal = NONE );
         };
     }

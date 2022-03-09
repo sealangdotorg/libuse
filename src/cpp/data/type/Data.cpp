@@ -61,25 +61,27 @@ static constexpr const char* digits_definitions[] = {
     "./" NUMBER UPPER_CASE LOWER_CASE,  // unix radix 64 encoding
 };
 
-Data::Data( const u64 data, const u1 sign )
-: m_sign( sign )
+Data::Data( const std::size_t data, const u1 sign )
+: m_data( { 0 } )
+, m_sign( sign )
 , m_trivial( true )
 {
     m_data.value = data;
 }
 
 Data::Data( Layout* data )
-: m_sign( false )
+: m_data( { 0 } )
+, m_sign( false )
 , m_trivial( false )
 {
     m_data.ptr = data;
 }
 
 Data::Data( void )
-: m_sign( false )
+: m_data( { 0 } )
+, m_sign( false )
 , m_trivial( false )
 {
-    m_data.ptr = nullptr;
 }
 
 Data::~Data( void )
@@ -158,7 +160,7 @@ Data& Data::operator=( Data&& other ) noexcept
     return *this;
 }
 
-u64 Data::value( void ) const
+std::size_t Data::value( void ) const
 {
     return m_data.value;
 }
@@ -325,10 +327,10 @@ std::string Data::to_string( const Radix radix, const Literal literal ) const
     const char* digits = digits_definitions[ literal / 10 ];
 
     std::string format;
-    u64 n = 0;
+    std::size_t n = 0;
 
     assert( trivial() );
-    u64 tmp = m_data.value;
+    std::size_t tmp = m_data.value;
     // Data tmp( *this ); // PPA: TODO: FIXME:
 
     do
@@ -353,7 +355,7 @@ std::string Data::to_string( const Radix radix, const Literal literal ) const
     }
 }
 
-u64 Data::to_digit( const char character, const Radix radix, const Literal literal )
+std::size_t Data::to_digit( const char character, const Radix radix, const Literal literal )
 {
     const char* digits = digits_definitions[ literal / 10 ];
 
@@ -365,7 +367,7 @@ u64 Data::to_digit( const char character, const Radix radix, const Literal liter
             "invalid character '" + std::string( 1, character ) + "' to convert to a digit" );
     }
 
-    u64 digit = pos - digits;
+    std::size_t digit = pos - digits;
 
     if( digit >= radix )
     {
