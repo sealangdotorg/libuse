@@ -69,7 +69,7 @@ Rational Type::createRational( const Integer& numerator, const Integer& denomina
 
 Rational Type::createRational( const Integer& numerator )
 {
-    return createRational( numerator, Type::createInteger( (u64)1 ) );
+    return createRational( numerator, Type::createInteger( 1 ) );
 }
 
 //
@@ -104,7 +104,7 @@ Rational Rational::fromString( const std::string& value, const Type::Radix radix
     }
     else
     {
-        tmp.m_data.ptr = new RationalLayout( numerator, createInteger( (u64)1 ) );
+        tmp.m_data.ptr = new RationalLayout( numerator, createInteger( 1 ) );
     }
 
     return tmp;
