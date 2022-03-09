@@ -97,7 +97,7 @@ IPv4Socket::IPv4Socket( const std::string& name )
 
     u16 port = std::stoi( addrPort[ 1 ] );
 
-    m_port = { { ( u8 )( port >> 8 ), (u8)port } };
+    m_port = { { (u8)( port >> 8 ), (u8)port } };
 }
 
 void IPv4Socket::connect( void )
@@ -157,7 +157,7 @@ std::size_t IPv4Socket::send( const IPv4Packet& data ) const
     socklen_t len = sizeof( cfg );
 
     const auto result = ::sendto(
-        id(), ( bufferType )( data.buffer() ), data.size(), 0, (struct sockaddr*)&cfg, len );
+        id(), (bufferType)( data.buffer() ), data.size(), 0, (struct sockaddr*)&cfg, len );
 
     if( result < 0 )
     {
@@ -178,23 +178,23 @@ std::size_t IPv4Socket::receive( IPv4Packet& data ) const
     socklen_t len = sizeof( cfg );
 
     const auto result = ::recvfrom(
-        id(), ( bufferType )( data.buffer() ), data.size(), 0, (struct sockaddr*)&cfg, &len );
+        id(), (bufferType)( data.buffer() ), data.size(), 0, (struct sockaddr*)&cfg, &len );
 
     data.setIp( { m_address,
                   {
                       {
-                          ( u8 )( cfg.sin_addr.s_addr ),
-                          ( u8 )( cfg.sin_addr.s_addr >> 8 ),
-                          ( u8 )( cfg.sin_addr.s_addr >> 16 ),
-                          ( u8 )( cfg.sin_addr.s_addr >> 24 ),
+                          (u8)( cfg.sin_addr.s_addr ),
+                          (u8)( cfg.sin_addr.s_addr >> 8 ),
+                          (u8)( cfg.sin_addr.s_addr >> 16 ),
+                          (u8)( cfg.sin_addr.s_addr >> 24 ),
                       },
                   } } );
 
     data.setUdp( { m_port,
                    {
                        {
-                           ( u8 )( cfg.sin_port ),
-                           ( u8 )( cfg.sin_port >> 8 ),
+                           (u8)( cfg.sin_port ),
+                           (u8)( cfg.sin_port >> 8 ),
                        },
                    } } );
 

@@ -112,7 +112,7 @@ eof)***";
     // THEN
     auto sourceLineCounter = 0;
     const auto result = libstdhl::File::readLines(
-        filename, [&]( u32 readLineCounter, const std::string& readLineString ) {
+        filename, [ & ]( u32 readLineCounter, const std::string& readLineString ) {
             EXPECT_EQ( readLineCounter, sourceLineCounter );
             EXPECT_STREQ( readLineString.c_str(), sourceLineStrings[ readLineCounter ].c_str() );
             sourceLineCounter++;

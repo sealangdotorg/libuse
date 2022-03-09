@@ -61,7 +61,7 @@ TEST( libstdhl_args_cpp, no_files_pass )
     u32 cnt = 0;
 
     const char* argv[] = { "program" };
-    Args options( 1, argv, [&options, &cnt]( const char* arg ) {
+    Args options( 1, argv, [ &options, &cnt ]( const char* arg ) {
         EXPECT_TRUE( false );
         return 0;
     } );
@@ -82,7 +82,7 @@ TEST( libstdhl_args_cpp, no_files_fail_one )
 {
     u32 cnt = 0;
     const char* argv[] = { "program", "file.txt" };
-    Args options( 2, argv, [&options, &cnt]( const char* arg ) {
+    Args options( 2, argv, [ &options, &cnt ]( const char* arg ) {
         EXPECT_TRUE( true );
         cnt++;
         return 0;
@@ -104,7 +104,7 @@ TEST( libstdhl_args_cpp, no_files_fail_multiple )
 {
     u32 cnt = 0;
     const char* argv[] = { "program", "file.txt", "file.txt", "file.txt" };
-    Args options( 4, argv, [&options, &cnt]( const char* arg ) {
+    Args options( 4, argv, [ &options, &cnt ]( const char* arg ) {
         EXPECT_TRUE( true );
         cnt++;
         return 0;
@@ -128,7 +128,7 @@ TEST( libstdhl_args_cpp, create_only_one_file )
     u32 cnt = 0;
 
     const char* argv[] = { "program", "input.txt" };
-    Args options( 2, argv, [&options, &argument, &cnt]( const char* arg ) {
+    Args options( 2, argv, [ &options, &argument, &cnt ]( const char* arg ) {
         cnt++;
         EXPECT_LE( cnt, 1 );
         argument = arg;
@@ -157,12 +157,13 @@ TEST( libstdhl_args_cpp, argument_once_required_parameter_short_no_metatag )
     const char* argv[] = { "program", "file.txt", "-a", "data", "file.txt" };
     Args options( 5, argv );
 
-    options.add( 'a', Args::REQUIRED, __FUNCTION__, [&options, &argument, &cnt]( const char* arg ) {
-        cnt++;
-        EXPECT_LE( cnt, 1 );
-        argument = arg;
-        return 0;
-    } );
+    options.add(
+        'a', Args::REQUIRED, __FUNCTION__, [ &options, &argument, &cnt ]( const char* arg ) {
+            cnt++;
+            EXPECT_LE( cnt, 1 );
+            argument = arg;
+            return 0;
+        } );
 
     EXPECT_STRNE( "data", argument );
 
@@ -184,12 +185,13 @@ TEST( libstdhl_args_cpp, argument_once_required_parameter_short_with_metatag )
     const char* argv[] = { "program", "file.txt", "-a", "data", "file.txt" };
     Args options( 5, argv );
 
-    options.add( 'a', Args::REQUIRED, __FUNCTION__, [&options, &argument, &cnt]( const char* arg ) {
-        cnt++;
-        EXPECT_LE( cnt, 1 );
-        argument = arg;
-        return 0;
-    } );
+    options.add(
+        'a', Args::REQUIRED, __FUNCTION__, [ &options, &argument, &cnt ]( const char* arg ) {
+            cnt++;
+            EXPECT_LE( cnt, 1 );
+            argument = arg;
+            return 0;
+        } );
 
     EXPECT_STRNE( "data", argument );
 
@@ -245,7 +247,7 @@ TEST_P( cpp_Args, param )
     const char* argument = "";
 
     Args options(
-        argc, (const char**)argv, [&param, &options, &argument, &cnt_files]( const char* arg ) {
+        argc, (const char**)argv, [ &param, &options, &argument, &cnt_files ]( const char* arg ) {
             cnt_files++;
             EXPECT_LE( cnt_files, param.cnt_files );
             argument = arg;
@@ -261,7 +263,7 @@ TEST_P( cpp_Args, param )
         cnt_options_str[ std::string( param_opt.str ? param_opt.str : "" ) ] = 0;
 
         std::function< i32( const char* ) > hook =
-            [param_opt, &cnt_options_chr, &cnt_options_str]( const char* arg ) {
+            [ param_opt, &cnt_options_chr, &cnt_options_str ]( const char* arg ) {
                 if( param_opt.chr )
                 {
                     cnt_options_chr[ param_opt.chr ] += 1;

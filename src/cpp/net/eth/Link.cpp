@@ -66,7 +66,7 @@ Frame Link::send( const std::vector< u8 >& data )
     assert( size <= 1500 );
 
     auto& link = static_cast< Ethernet::Socket& >( *socket() );
-    const Type type = { { ( u8 )( size >> 8 ), (u8)size } };
+    const Type type = { { (u8)( size >> 8 ), (u8)size } };
     const auto frame = Frame( BROADCAST, link.address(), type, data );
     send( frame );
     return frame;

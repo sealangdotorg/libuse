@@ -200,7 +200,7 @@ TEST( libstdhl_cpp_network_lsp, parse_packet_request_initialize_monaco )
 
     request.process( server );
 
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
 
         std::string ack = "Content-Length: 55\r\n";
@@ -259,7 +259,7 @@ TEST( libstdhl_cpp_network_lsp, parse_packet_request_initialize_vscode )
 
     request.process( server );
 
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
 
         std::string ack = "Content-Length: 55\r\n";
@@ -282,7 +282,7 @@ TEST( libstdhl_cpp_network_lsp, window_showMessage )
     server.window_showMessage( ShowMessageParams( MessageType::Log, "Log Message" ) );
     server.window_showMessage( ShowMessageParams( MessageType::Warning, "Warning Message" ) );
 
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -293,13 +293,13 @@ TEST( libstdhl_cpp_network_lsp, window_showMessageRequest )
 
     u1 processed = false;
     const auto params = ShowMessageRequestParams( MessageType::Info, "Info Message" );
-    server.window_showMessageRequest( params, [&]( const ResponseMessage& response ) {
+    server.window_showMessageRequest( params, [ & ]( const ResponseMessage& response ) {
         processed = true;
         ShowMessageRequestResult result( response.result() );
         EXPECT_STREQ( result[ Identifier::title ].get< std::string >().c_str(), "title" );
     } );
     std::string id = "";
-    server.flush( [&]( const Message& message ) {
+    server.flush( [ & ]( const Message& message ) {
         const auto packet = libstdhl::Network::LSP::Packet( message );
         id = static_cast< const RequestMessage& >( message ).id();
     } );
@@ -318,7 +318,7 @@ TEST( libstdhl_cpp_network_lsp, window_logMessage )
     server.window_logMessage( LogMessageParams( MessageType::Log, "Log Message" ) );
     server.window_logMessage( LogMessageParams( MessageType::Warning, "Warning Message" ) );
 
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -328,7 +328,7 @@ TEST( libstdhl_cpp_network_lsp, telemetry_event )
     TestServer server;
     server.telemetry_event( TelemetryEventParams( Data::object() ) );
 
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -341,7 +341,7 @@ TEST( libstdhl_cpp_network_lsp, client_registerCapability )
     Registration reg2( "2", "test/method" );
     auto registrations = std::vector< Registration >( { reg, reg2 } );
     server.client_registerCapability(
-        RegistrationParams( registrations ), [&]( const ResponseMessage& response ) {
+        RegistrationParams( registrations ), [ & ]( const ResponseMessage& response ) {
             processed = true;
             EXPECT_EQ( Data(), response.result() );
         } );
@@ -349,7 +349,7 @@ TEST( libstdhl_cpp_network_lsp, client_registerCapability )
     registrationsData[ "registrations" ].push_back( reg );
 
     std::string id = "";
-    server.flush( [&]( const Message& message ) {
+    server.flush( [ & ]( const Message& message ) {
         const auto packet = libstdhl::Network::LSP::Packet( message );
         id = static_cast< const RequestMessage& >( message ).id();
     } );
@@ -368,12 +368,12 @@ TEST( libstdhl_cpp_network_lsp, Request_callback )
 
     // make first request
     const auto params = ShowMessageRequestParams( MessageType::Info, "Info Message" );
-    server.window_showMessageRequest( params, [&]( const ResponseMessage& response ) {
+    server.window_showMessageRequest( params, [ & ]( const ResponseMessage& response ) {
         messageRequestProcessed = true;
         ShowMessageRequestResult result( response.result() );
         EXPECT_STREQ( id.c_str(), response.id().c_str() );
     } );
-    server.flush( [&]( const Message& message ) {
+    server.flush( [ & ]( const Message& message ) {
         const auto packet = libstdhl::Network::LSP::Packet( message );
         id = static_cast< const RequestMessage& >( message ).id();
     } );
@@ -393,12 +393,12 @@ TEST( libstdhl_cpp_network_lsp, client_unregisterCapability )
     Unregistration reg2( "2", "test/method" );
     auto unregistrations = std::vector< Unregistration >( { reg, reg2 } );
     server.client_unregisterCapability(
-        UnregistrationParams( unregistrations ), [&]( const ResponseMessage& response ) {
+        UnregistrationParams( unregistrations ), [ & ]( const ResponseMessage& response ) {
             processed = true;
             EXPECT_EQ( response.result(), Data() );
             EXPECT_STREQ( id.c_str(), response.id().c_str() );
         } );
-    server.flush( [&]( const Message& message ) {
+    server.flush( [ & ]( const Message& message ) {
         const auto packet = libstdhl::Network::LSP::Packet( message );
         id = static_cast< const RequestMessage& >( message ).id();
     } );
@@ -414,13 +414,13 @@ TEST( libstdhl_cpp_network_lsp, workspace_workspaceFolders )
     TestServer server;
     u1 processed = false;
     std::string id = "";
-    server.workspace_workspaceFolders( [&]( const ResponseMessage& response ) {
+    server.workspace_workspaceFolders( [ & ]( const ResponseMessage& response ) {
         WorkspaceFoldersResult result( response.result() );
         EXPECT_EQ( result, WorkspaceFoldersResult() );
         EXPECT_STREQ( id.c_str(), response.id().c_str() );
         processed = true;
     } );
-    server.flush( [&]( const Message& message ) {
+    server.flush( [ & ]( const Message& message ) {
         const auto packet = libstdhl::Network::LSP::Packet( message );
         id = static_cast< const RequestMessage& >( message ).id();
     } );
@@ -439,7 +439,7 @@ TEST( libstdhl_cpp_network_lsp, workspace_didChangeWorkspaceFolders )
     auto removed = std::vector< WorkspaceFolder >();
     server.workspace_didChangeWorkspaceFolders(
         DidChangeWorkspaceFoldersParams( WorkspaceFoldersChangeEvent( added, removed ) ) );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -448,7 +448,7 @@ TEST( libstdhl_cpp_network_lsp, workspace_didChangeConfiguration )
 {
     TestServer server;
     server.workspace_didChangeConfiguration( DidChangeConfigurationParams( Data::object() ) );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -461,12 +461,12 @@ TEST( libstdhl_cpp_network_lsp, workspace_configuration )
     auto items = std::vector< ConfigurationItem >();
     items.emplace_back( ConfigurationItem( "scope://Uri", "section" ) );
     server.workspace_configuration(
-        ConfigurationParams( items ), [&]( const ResponseMessage& response ) {
+        ConfigurationParams( items ), [ & ]( const ResponseMessage& response ) {
             processed = true;
             ConfigurationResult result( response.result() );
             EXPECT_EQ( result, Data::array() );
         } );
-    server.flush( [&]( const Message& message ) {
+    server.flush( [ & ]( const Message& message ) {
         const auto packet = libstdhl::Network::LSP::Packet( message );
         id = static_cast< const RequestMessage& >( message ).id();
     } );
@@ -486,7 +486,7 @@ TEST( libstdhl_cpp_network_lsp, workspace_didChangeWatchedFiles )
     events.emplace_back( FileEvent( uri, FileChangeType::Changed ) );
     server.workspace_didChangeWatchedFiles( DidChangeWatchedFilesParams( events ) );
     // server.workspace_didChangeWatchedFiles( DidChangeWatchedFilesParams( empty ) );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -496,7 +496,7 @@ TEST( libstdhl_cpp_network_lsp, workspace_symbol )
     TestServer server;
     auto result = server.workspace_symbol( WorkspaceSymbolParams( std::string( "query" ) ) );
 
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -509,7 +509,7 @@ TEST( libstdhl_cpp_network_lsp, workspace_executeCommand )
     EXPECT_TRUE( params.hasArguments() );
     auto result = server.workspace_executeCommand( params );
 
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -520,12 +520,12 @@ TEST( libstdhl_cpp_network_lsp, workspace_applyEdit )
     auto processed = false;
     std::string id = "";
     server.workspace_applyEdit(
-        ApplyWorkspaceEditParams( WorkspaceEdit() ), [&]( const ResponseMessage& response ) {
+        ApplyWorkspaceEditParams( WorkspaceEdit() ), [ & ]( const ResponseMessage& response ) {
             processed = true;
             ApplyWorkspaceEditResult result( response.result() );
             EXPECT_EQ( result, ApplyWorkspaceEditResult( true ) );
         } );
-    server.flush( [&]( const Message& message ) {
+    server.flush( [ & ]( const Message& message ) {
         const auto packet = libstdhl::Network::LSP::Packet( message );
         id = static_cast< const RequestMessage& >( message ).id();
     } );
@@ -543,7 +543,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_willSave )
     server.textDocument_willSave(
         WillSaveTextDocumentParams( document, TextDocumentSaveReason::AfterDelay ) );
 
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -558,7 +558,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_didSave )
     EXPECT_TRUE( params.hasText() );
     server.textDocument_didSave( params );
 
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -570,7 +570,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_didClose )
     auto params = DidCloseTextDocumentParams( document );
     server.textDocument_didClose( params );
 
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -581,7 +581,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_signatureHelp )
     auto document = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto params = TextDocumentPositionParams( document, Position( 10, 10 ) );
     auto result = server.textDocument_signatureHelp( params );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -592,7 +592,7 @@ TEST( DISABLED_libstdhl_cpp_network_lsp, textDocument_definition )
     auto document = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto params = TextDocumentPositionParams( document, Position( 10, 10 ) );
     auto result = server.textDocument_definition( params );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -603,7 +603,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_completion )
     auto document = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto params = CompletionParams( document, Position( 1, 10 ) );
     auto result = server.textDocument_completion( params );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -614,7 +614,7 @@ TEST( libstdhl_cpp_network_lsp, completionItem_resolve )
     auto document = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto params = CompletionParams( document, Position( 1, 10 ) );
     auto result = server.completionItem_resolve( params );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -624,7 +624,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_typeDefinition )
     TestServer server;
     auto result = server.textDocument_typeDefinition( TextDocumentPositionParams(
         TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) ), Position( 1, 1 ) ) );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -634,7 +634,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_implementation )
     TestServer server;
     auto result = server.textDocument_implementation( TextDocumentPositionParams(
         TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) ), Position( 1, 1 ) ) );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -646,7 +646,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_references )
     auto pos = Position( 1, 1 );
     auto result =
         server.textDocument_references( ReferenceParams( uri, pos, ReferenceContext( true ) ) );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -657,7 +657,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_documentHighlight )
     auto uri = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto pos = Position( 1, 1 );
     auto result = server.textDocument_documentHighlight( DocumentHighlightParams( uri, pos ) );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -667,7 +667,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_documentSymbol )
     TestServer server;
     auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto result = server.textDocument_documentSymbol( DocumentSymbolParams( doc ) );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -679,7 +679,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_codeAction )
     auto range = Range( Position( 10, 10 ), Position( 10, 10 ) );
     auto result = server.textDocument_codeAction(
         CodeActionParams( doc, range, CodeActionContext( Diagnostics() ) ) );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -689,7 +689,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_codeLens )
     TestServer server;
     auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto result = server.textDocument_codeLens( CodeLensParams( doc ) );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -700,7 +700,7 @@ TEST( libstdhl_cpp_network_lsp, codeLens_resolve )
     auto start = Position( 1, 1 );
     auto end = Position( 1, 10 );
     auto result = server.codeLens_resolve( CodeLensResolveParams( Range( start, end ) ) );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -710,7 +710,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_documentLink )
     TestServer server;
     auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto result = server.textDocument_documentLink( DocumentLinkParams( doc ) );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -721,7 +721,7 @@ TEST( libstdhl_cpp_network_lsp, documentLink_resolve )
     auto start = Position( 1, 1 );
     auto end = Position( 1, 10 );
     auto result = server.documentLink_resolve( DocumentLinkResolveParams( Range( start, end ) ) );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -731,7 +731,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_documentColor )
     TestServer server;
     auto result = server.textDocument_documentColor(
         DocumentColorParams( TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) ) ) );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -746,7 +746,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_colorPresentation )
     auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto result =
         server.textDocument_colorPresentation( ColorPresentationParams( doc, color, range ) );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -757,7 +757,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_formatting )
     auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto options = FormattingOptions( 2, true );
     auto result = server.textDocument_formatting( DocumentFormattingParams( doc, options ) );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -772,7 +772,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_rangeFormatting )
     auto range = Range( start, end );
     auto result =
         server.textDocument_rangeFormatting( DocumentRangeFormattingParams( doc, range, options ) );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -785,7 +785,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_onTypeFormatting )
     auto start = Position( 1, 1 );
     auto result = server.textDocument_onTypeFormatting(
         DocumentOnTypeFormattingParams( doc, options, start, "a" ) );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -796,7 +796,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_rename )
     auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto start = Position( 1, 1 );
     auto result = server.textDocument_rename( RenameParams( doc, start, "newName" ) );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -807,7 +807,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_prepareRename )
     auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto start = Position( 1, 1 );
     auto result = server.textDocument_prepareRename( PrepareRenameParams( doc, start ) );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }
@@ -818,7 +818,7 @@ TEST( libstdhl_cpp_network_lsp, textDocument_foldingRange )
     auto doc = TextDocumentIdentifier( DocumentUri::fromString( "test://uri" ) );
     auto start = Position( 1, 1 );
     auto result = server.textDocument_foldingRange( FoldingRangeParams( doc ) );
-    server.flush( [&]( const Message& response ) {
+    server.flush( [ & ]( const Message& response ) {
         const auto packet = libstdhl::Network::LSP::Packet( response );
     } );
 }

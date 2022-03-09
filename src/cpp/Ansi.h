@@ -172,9 +172,9 @@ namespace libstdhl
         template < const Style STYLE >
         std::string format( const std::string& text )
         {
-            const auto enable = ( SGR )( (std::size_t)SGR::BOLD_ON + (std::size_t)STYLE );
+            const auto enable = (SGR)( (std::size_t)SGR::BOLD_ON + (std::size_t)STYLE );
 
-            const auto disable = ( SGR )( (std::size_t)SGR::BOLD_OFF + (std::size_t)STYLE );
+            const auto disable = (SGR)( (std::size_t)SGR::BOLD_OFF + (std::size_t)STYLE );
 
             return format< enable, disable >( text );
         }
@@ -184,15 +184,13 @@ namespace libstdhl
         {
             if( not background )
             {
-                const auto color =
-                    ( SGR )( (std::size_t)SGR::FOREGROUND_BLACK + (std::size_t)COLOR );
+                const auto color = (SGR)( (std::size_t)SGR::FOREGROUND_BLACK + (std::size_t)COLOR );
 
                 return format< color, SGR::FOREGROUND_DEFAULT >( text );
             }
             else
             {
-                const auto color =
-                    ( SGR )( (std::size_t)SGR::BACKGROUND_BLACK + (std::size_t)COLOR );
+                const auto color = (SGR)( (std::size_t)SGR::BACKGROUND_BLACK + (std::size_t)COLOR );
 
                 return format< color, SGR::BACKGROUND_DEFAULT >( text );
             }

@@ -101,7 +101,7 @@ std::string UTF8::toString( void ) const
     u32 byteValue = code();
     while( byteValue != 0x00 )
     {
-        byteSequence = std::string( 1, ( u8 )( byteValue & 0x000000ff ) ) + byteSequence;
+        byteSequence = std::string( 1, (u8)( byteValue & 0x000000ff ) ) + byteSequence;
         byteValue = byteValue >> 8;
     }
     return byteSequence;
@@ -176,7 +176,7 @@ UTF8 UTF8::fromString( const std::string& byteSequence )
 
         for( auto position = 1; position < size; position++ )
         {
-            const auto byteElement = ( u8 )( byteSequence[ position ] );
+            const auto byteElement = (u8)( byteSequence[ position ] );
             if( byteElement < 0x80 or byteElement > 0xbf )
             {
                 valid = false;
@@ -192,7 +192,7 @@ UTF8 UTF8::fromString( const std::string& byteSequence )
         std::stringstream stream;
         for( const auto byteElement : byteSequence )
         {
-            stream << std::hex << ( u8 )( byteElement );
+            stream << std::hex << (u8)( byteElement );
         }
         throw std::domain_error( "invalid UTF-8 character '" + stream.str() + "'" );
     }

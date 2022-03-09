@@ -97,7 +97,7 @@ IPv4Socket::IPv4Socket( const std::string& name )
 
     u16 port = std::stoi( addrPort[ 1 ] );
 
-    m_port = { { ( u8 )( port >> 8 ), (u8)port } };
+    m_port = { { (u8)( port >> 8 ), (u8)port } };
 }
 
 IPv4Socket::IPv4Socket( const IPv4Socket& socket, i32 connection )

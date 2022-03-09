@@ -64,7 +64,7 @@ libstdhl::Yaml::Content& libstdhl::Yaml::Content::operator[]( const std::string&
     {
         throw libstdhl::Yaml::Exception( "YAML map has no key '" + mapKey + "'" );
     }
-    auto& map = ( ::Yaml::Node&)( *this );
+    auto& map = (::Yaml::Node&)( *this );
     auto& mapValue = map[ mapKey ];
     return static_cast< Content& >( mapValue );
 }
@@ -77,7 +77,7 @@ libstdhl::Yaml::Content& libstdhl::Yaml::Content::operator[](
         throw libstdhl::Yaml::Exception(
             "YAML sequence has no index '" + std::to_string( sequenceIndex ) + "'" );
     }
-    auto& sequence = ( ::Yaml::Node&)( *this );
+    auto& sequence = (::Yaml::Node&)( *this );
     auto& sequenceValue = sequence[ sequenceIndex ];
     return static_cast< Content& >( sequenceValue );
 }
@@ -91,7 +91,7 @@ libstdhl::u1 libstdhl::Yaml::Content::has( const std::string& mapKey ) const
     }
 
     u1 found = false;
-    foreach( [&]( const std::string& key, const Content&, u1& abort ) {
+    foreach( [ & ]( const std::string& key, const Content&, u1& abort ) {
         if( mapKey == key )
         {
             found = true;
@@ -146,7 +146,7 @@ libstdhl::Yaml::Content::Value libstdhl::Yaml::Content::emplace(
         return Value{ existingMapValue };
     }
 
-    auto& map = ( ::Yaml::Node&)( *this );
+    auto& map = (::Yaml::Node&)( *this );
     auto& content = map[ mapKey ];
     content = mapValue;
     return Value{ libstdhl::nullopt };

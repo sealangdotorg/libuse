@@ -48,11 +48,11 @@
 #include <string>
 
 #if INTPTR_MAX == INT32_MAX
-  #define LIBSTDHL_CPP_TYPE_32_BIT
+#define LIBSTDHL_CPP_TYPE_32_BIT
 #elif INTPTR_MAX == INT64_MAX
-  #define LIBSTDHL_CPP_TYPE_64_BIT
+#define LIBSTDHL_CPP_TYPE_64_BIT
 #else
-  #error "unsupported architecture"
+#error "unsupported architecture"
 #endif
 
 /**

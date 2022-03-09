@@ -272,7 +272,7 @@ TEST( libstdhl_cpp_Enum_Flags, foreach_iterate_over_no_flags )
     EXPECT_TRUE( output.empty() );
 
     // WHEN
-    input.foreach( [&output]( const Color c ) -> u1 {
+    input.foreach( [ &output ]( const Color c ) -> u1 {
         output.set( c );
         return true;
     } );
@@ -290,7 +290,7 @@ TEST( libstdhl_cpp_Enum_Flags, foreach_iterate_over_partial_flags )
     EXPECT_TRUE( output.empty() );
 
     // WHEN
-    input.foreach( [&output]( const Color c ) -> u1 {
+    input.foreach( [ &output ]( const Color c ) -> u1 {
         output.set( c );
         return true;
     } );
@@ -313,7 +313,7 @@ TEST( libstdhl_cpp_Enum_Flags, foreach_iterate_over_all_set_flags )
     EXPECT_TRUE( output.empty() );
 
     // WHEN
-    input.foreach( [&output]( const Color c ) -> u1 {
+    input.foreach( [ &output ]( const Color c ) -> u1 {
         output.set( c );
         return true;
     } );
