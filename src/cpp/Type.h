@@ -47,6 +47,14 @@
 #include <sstream>
 #include <string>
 
+#if INTPTR_MAX == INT32_MAX
+  #define LIBSTDHL_CPP_TYPE_32_BIT
+#elif INTPTR_MAX == INT64_MAX
+  #define LIBSTDHL_CPP_TYPE_64_BIT
+#else
+  #error "unsupported architecture"
+#endif
+
 /**
    @brief    TODO
 
@@ -109,9 +117,9 @@ namespace libstdhl
 
         Integer createInteger( const std::string& value, const Radix radix = DECIMAL );
 
-        Integer createInteger( const u64 value );
+        Integer createInteger( const unsigned int value );
 
-        Integer createInteger( const i64 value );
+        Integer createInteger( const int value );
 
         Integer createInteger( const Natural& value, const u1 sign );
 
@@ -123,7 +131,7 @@ namespace libstdhl
 
         Natural createNatural( const Integer& value );
 
-        Natural createNatural( const u64 value );
+        Natural createNatural( const std::size_t value );
 
         //
         // Rational
