@@ -40,7 +40,6 @@
 //
 
 #include <libstdhl/Test>
-
 #include <libstdhl/data/type/Integer>
 #include <libstdhl/data/type/Natural>
 
@@ -51,7 +50,7 @@ using namespace Type;
 
 TEST( libstdhl_cpp_type_integer, u64_valid )
 {
-    u64 number = 1234;
+    unsigned int number = 1234;
 
     auto i = createInteger( number );
 
@@ -63,7 +62,7 @@ TEST( libstdhl_cpp_type_integer, u64_valid )
 
 TEST( libstdhl_cpp_type_integer, i64_positive )
 {
-    i64 number = 123456789;
+    int number = 123456789;
 
     auto i = createInteger( number );
 
@@ -75,7 +74,7 @@ TEST( libstdhl_cpp_type_integer, i64_positive )
 
 TEST( libstdhl_cpp_type_integer, i64_negative )
 {
-    i64 number = -123456789;
+    int number = -123456789;
 
     auto i = createInteger( number );
 
@@ -109,10 +108,18 @@ TEST( libstdhl_cpp_type_integer, str_binary64 )
         ,
         Type::Radix::BINARY );
 
+#ifdef LIBSTDHL_CPP_TYPE_64_BIT
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.defined(), true );
     EXPECT_EQ( i.trivial(), true );
     EXPECT_EQ( i.value(), 0x7bf204ee7bf204ed );
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
+    EXPECT_EQ( i.sign(), false );
+    EXPECT_EQ( i.defined(), true );
+    EXPECT_EQ( i.trivial(), false );
+    EXPECT_EQ( i[ 1 ], 0x7bf204ee );
+    EXPECT_EQ( i[ 0 ], 0x7bf204ed );
+#endif
 }
 
 TEST( libstdhl_cpp_type_integer, str_binary64_max )
@@ -129,10 +136,18 @@ TEST( libstdhl_cpp_type_integer, str_binary64_max )
         ,
         Type::Radix::BINARY );
 
+#ifdef LIBSTDHL_CPP_TYPE_64_BIT
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.defined(), true );
     EXPECT_EQ( i.trivial(), true );
     EXPECT_EQ( i.value(), UINT64_MAX );
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
+    EXPECT_EQ( i.sign(), false );
+    EXPECT_EQ( i.defined(), true );
+    EXPECT_EQ( i.trivial(), false );
+    EXPECT_EQ( i[ 1 ], 0xffffffff );
+    EXPECT_EQ( i[ 0 ], 0xffffffff );
+#endif
 }
 
 TEST( libstdhl_cpp_type_integer, str_binary70 )
@@ -150,11 +165,20 @@ TEST( libstdhl_cpp_type_integer, str_binary70 )
         ,
         Type::Radix::BINARY );
 
+#ifdef LIBSTDHL_CPP_TYPE_64_BIT
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.defined(), true );
     EXPECT_EQ( i.trivial(), false );
     EXPECT_EQ( i[ 1 ], 0x2a );
     EXPECT_EQ( i[ 0 ], 0x7bf204ee7bf204ed );
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
+    EXPECT_EQ( i.sign(), false );
+    EXPECT_EQ( i.defined(), true );
+    EXPECT_EQ( i.trivial(), false );
+    EXPECT_EQ( i[ 2 ], 0x2a );
+    EXPECT_EQ( i[ 1 ], 0x7bf204ee );
+    EXPECT_EQ( i[ 0 ], 0x7bf204ed );
+#endif
 }
 
 TEST( libstdhl_cpp_type_integer, str_binary522 )
@@ -229,6 +253,7 @@ TEST( libstdhl_cpp_type_integer, str_binary522 )
         ,
         Type::Radix::BINARY );
 
+#ifdef LIBSTDHL_CPP_TYPE_64_BIT
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.defined(), true );
     EXPECT_EQ( i.trivial(), false );
@@ -241,6 +266,28 @@ TEST( libstdhl_cpp_type_integer, str_binary522 )
     EXPECT_EQ( i[ 2 ], 0x7bf204ee7bf204ed );
     EXPECT_EQ( i[ 1 ], 0x7bf204ee7bf204ed );
     EXPECT_EQ( i[ 0 ], 0x7bf204ee7bf204ed );
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
+    EXPECT_EQ( i.sign(), false );
+    EXPECT_EQ( i.defined(), true );
+    EXPECT_EQ( i.trivial(), false );
+    EXPECT_EQ( i[ 16 ], 0x03f2 );
+    EXPECT_EQ( i[ 15 ], 0x7bf204ee );
+    EXPECT_EQ( i[ 14 ], 0x7bf204ed );
+    EXPECT_EQ( i[ 13 ], 0x7bf204ee );
+    EXPECT_EQ( i[ 12 ], 0x7bf204ed );
+    EXPECT_EQ( i[ 11 ], 0x7bf204ee );
+    EXPECT_EQ( i[ 10 ], 0x7bf204ed );
+    EXPECT_EQ( i[ 9 ], 0x7bf204ee );
+    EXPECT_EQ( i[ 8 ], 0x7bf204ed );
+    EXPECT_EQ( i[ 7 ], 0x7bf204ee );
+    EXPECT_EQ( i[ 6 ], 0x7bf204ed );
+    EXPECT_EQ( i[ 5 ], 0x7bf204ee );
+    EXPECT_EQ( i[ 4 ], 0x7bf204ed );
+    EXPECT_EQ( i[ 3 ], 0x7bf204ee );
+    EXPECT_EQ( i[ 2 ], 0x7bf204ed );
+    EXPECT_EQ( i[ 1 ], 0x7bf204ee );
+    EXPECT_EQ( i[ 0 ], 0x7bf204ed );
+#endif
 }
 
 TEST( libstdhl_cpp_type_integer, str_octal5 )
@@ -257,52 +304,94 @@ TEST( libstdhl_cpp_type_integer, str_octal21 )
 {
     auto i = createInteger( "543217060554321706053", Type::Radix::OCTAL );
 
+#ifdef LIBSTDHL_CPP_TYPE_64_BIT
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.defined(), true );
     EXPECT_EQ( i.trivial(), true );
     EXPECT_EQ( i.value(), 0543217060554321706053 );
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
+    EXPECT_EQ( i.sign(), false );
+    EXPECT_EQ( i.defined(), true );
+    EXPECT_EQ( i.trivial(), false );
+    EXPECT_EQ( i[ 1 ], 1490150155 );
+    EXPECT_EQ( i[ 0 ], 1665633323 );
+#endif
 }
 
 TEST( libstdhl_cpp_type_integer, str_octal22_u64max )
 {
     auto i = createInteger( "1777777777777777777777", Type::Radix::OCTAL );
 
+#ifdef LIBSTDHL_CPP_TYPE_64_BIT
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.defined(), true );
     EXPECT_EQ( i.trivial(), true );
     EXPECT_EQ( i.value(), UINT64_MAX );
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
+    EXPECT_EQ( i.sign(), false );
+    EXPECT_EQ( i.defined(), true );
+    EXPECT_EQ( i.trivial(), false );
+    EXPECT_EQ( i[ 1 ], 0xffffffff );
+    EXPECT_EQ( i[ 0 ], 0xffffffff );
+#endif
 }
 
 TEST( libstdhl_cpp_type_integer, str_octal22_no_overlap )
 {
     auto i = createInteger( "1543217060554321706053", Type::Radix::OCTAL );
 
+#ifdef LIBSTDHL_CPP_TYPE_64_BIT
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.defined(), true );
     EXPECT_EQ( i.trivial(), true );
     EXPECT_EQ( i.value(), 01543217060554321706053 );
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
+    EXPECT_EQ( i.sign(), false );
+    EXPECT_EQ( i.defined(), true );
+    EXPECT_EQ( i.trivial(), false );
+    EXPECT_EQ( i[ 1 ], 3637633803 );
+    EXPECT_EQ( i[ 0 ], 1665633323 );
+#endif
 }
 
 TEST( libstdhl_cpp_type_integer, str_octal22_with_overlap )
 {
     auto i = createInteger( "7543217060554321706053", Type::Radix::OCTAL );
 
+#ifdef LIBSTDHL_CPP_TYPE_64_BIT
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.defined(), true );
     EXPECT_EQ( i.trivial(), false );
     EXPECT_EQ( i[ 1 ], 03 );
     EXPECT_EQ( i[ 0 ], 01543217060554321706053 );
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
+    EXPECT_EQ( i.sign(), false );
+    EXPECT_EQ( i.defined(), true );
+    EXPECT_EQ( i.trivial(), false );
+    EXPECT_EQ( i[ 2 ], 3 );
+    EXPECT_EQ( i[ 1 ], 3637633803 );
+    EXPECT_EQ( i[ 0 ], 1665633323 );
+#endif
 }
 
 TEST( libstdhl_cpp_type_integer, str_octal23 )
 {
     auto i = createInteger( "337543217060554321706053", Type::Radix::OCTAL );
 
+#ifdef LIBSTDHL_CPP_TYPE_64_BIT
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.defined(), true );
     EXPECT_EQ( i.trivial(), false );
     EXPECT_EQ( i[ 1 ], 0157 );
     EXPECT_EQ( i[ 0 ], 01543217060554321706053 );
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
+    EXPECT_EQ( i.sign(), false );
+    EXPECT_EQ( i.defined(), true );
+    EXPECT_EQ( i.trivial(), false );
+    EXPECT_EQ( i[ 2 ], 111 );
+    EXPECT_EQ( i[ 1 ], 3637633803 );
+    EXPECT_EQ( i[ 0 ], 1665633323 );
+#endif
 }
 
 TEST( libstdhl_cpp_type_integer, str_hexadecimal2 )
@@ -319,10 +408,18 @@ TEST( libstdhl_cpp_type_integer, str_hexadecimal16_max )
 {
     auto i = createInteger( "ffffffffffffffff", Type::Radix::HEXADECIMAL );
 
+#ifdef LIBSTDHL_CPP_TYPE_64_BIT
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.defined(), true );
     EXPECT_EQ( i.trivial(), true );
     EXPECT_EQ( i.value(), UINT64_MAX );
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
+    EXPECT_EQ( i.sign(), false );
+    EXPECT_EQ( i.defined(), true );
+    EXPECT_EQ( i.trivial(), false );
+    EXPECT_EQ( i[ 1 ], 0xffffffff );
+    EXPECT_EQ( i[ 0 ], 0xffffffff );
+#endif
 }
 
 TEST( libstdhl_cpp_type_integer, str_hexadecimal17 )
@@ -332,11 +429,20 @@ TEST( libstdhl_cpp_type_integer, str_hexadecimal17 )
         "eedbee0123456789",
         Type::Radix::HEXADECIMAL );
 
+#ifdef LIBSTDHL_CPP_TYPE_64_BIT
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.defined(), true );
     EXPECT_EQ( i.trivial(), false );
     EXPECT_EQ( i[ 1 ], 0xf );
     EXPECT_EQ( i[ 0 ], 0xeedbee0123456789 );
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
+    EXPECT_EQ( i.sign(), false );
+    EXPECT_EQ( i.defined(), true );
+    EXPECT_EQ( i.trivial(), false );
+    EXPECT_EQ( i[ 2 ], 0xf );
+    EXPECT_EQ( i[ 1 ], 0xeedbee01 );
+    EXPECT_EQ( i[ 0 ], 0x23456789 );
+#endif
 }
 
 TEST( libstdhl_cpp_type_integer, str_hexadecimal140 )
@@ -355,6 +461,7 @@ TEST( libstdhl_cpp_type_integer, str_hexadecimal140 )
         ,
         Type::Radix::HEXADECIMAL );
 
+#ifdef LIBSTDHL_CPP_TYPE_64_BIT
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.defined(), true );
     EXPECT_EQ( i.trivial(), false );
@@ -368,6 +475,30 @@ TEST( libstdhl_cpp_type_integer, str_hexadecimal140 )
     EXPECT_EQ( i[ 2 ], 0xef13579024feedbe );  //
     EXPECT_EQ( i[ 1 ], 0x579024feedbeef13 );  // 128, 32
     EXPECT_EQ( i[ 0 ], 0x24feedbeef135790 );  // 64,  16
+#else                                         // LIBSTDHL_CPP_TYPE_32_BIT
+    EXPECT_EQ( i.sign(), false );
+    EXPECT_EQ( i.defined(), true );
+    EXPECT_EQ( i.trivial(), false );
+    EXPECT_EQ( i[ 18 ], 0xaffe );
+    EXPECT_EQ( i[ 17 ], 0xfeedbeef );
+    EXPECT_EQ( i[ 16 ], 0x13579024 );
+    EXPECT_EQ( i[ 15 ], 0x9024feed );  // 512, 128
+    EXPECT_EQ( i[ 14 ], 0xbeef1357 );  //
+    EXPECT_EQ( i[ 13 ], 0x13579024 );  //
+    EXPECT_EQ( i[ 12 ], 0xfeedbeef );  //
+    EXPECT_EQ( i[ 11 ], 0xbeef1357 );  //
+    EXPECT_EQ( i[ 10 ], 0x9024feed );  //
+    EXPECT_EQ( i[ 9 ], 0xfeedbeef );   //
+    EXPECT_EQ( i[ 8 ], 0x13579024 );   //
+    EXPECT_EQ( i[ 7 ], 0xedbeef13 );   // 256, 64
+    EXPECT_EQ( i[ 6 ], 0x579024fe );   //
+    EXPECT_EQ( i[ 5 ], 0xef135790 );   //
+    EXPECT_EQ( i[ 4 ], 0x24feedbe );   //
+    EXPECT_EQ( i[ 3 ], 0x579024fe );   // 128, 32
+    EXPECT_EQ( i[ 2 ], 0xedbeef13 );   //
+    EXPECT_EQ( i[ 1 ], 0x24feedbe );   // 64,  16
+    EXPECT_EQ( i[ 0 ], 0xef135790 );   //
+#endif
 }
 
 TEST( libstdhl_cpp_type_integer, str_decimal3 )
@@ -410,6 +541,31 @@ TEST( libstdhl_cpp_type_integer, str_decimal8_sign )
     EXPECT_EQ( i.value(), 64242662 );
 }
 
+// TODO: @ppaulweber: add 32bit max +/- one bound check 4294967295
+
+TEST( libstdhl_cpp_type_integer, str_decimal20_u64max_minus_one )
+{
+    auto i = createInteger(
+        "1844674407"  // 20
+        "3709551614"  // 10
+        ,
+        Type::Radix::DECIMAL );
+
+#ifdef LIBSTDHL_CPP_TYPE_64_BIT
+    EXPECT_EQ( i.sign(), false );
+    EXPECT_EQ( i.defined(), true );
+    EXPECT_EQ( i.trivial(), true );
+    EXPECT_EQ( i.value(), UINT64_MAX - 1 );
+    EXPECT_EQ( i.value(), 0xfffffffffffffffe );
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
+    EXPECT_EQ( i.sign(), false );
+    EXPECT_EQ( i.defined(), true );
+    EXPECT_EQ( i.trivial(), false );
+    EXPECT_EQ( i[ 1 ], 0xffffffff );
+    EXPECT_EQ( i[ 0 ], 0xfffffffe );
+#endif
+}
+
 TEST( libstdhl_cpp_type_integer, str_decimal20_u64max )
 {
     auto i = createInteger(
@@ -418,11 +574,19 @@ TEST( libstdhl_cpp_type_integer, str_decimal20_u64max )
         ,
         Type::Radix::DECIMAL );
 
+#ifdef LIBSTDHL_CPP_TYPE_64_BIT
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.defined(), true );
     EXPECT_EQ( i.trivial(), true );
     EXPECT_EQ( i.value(), UINT64_MAX );
     EXPECT_EQ( i.value(), 0xffffffffffffffff );
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
+    EXPECT_EQ( i.sign(), false );
+    EXPECT_EQ( i.defined(), true );
+    EXPECT_EQ( i.trivial(), false );
+    EXPECT_EQ( i[ 1 ], 0xffffffff );
+    EXPECT_EQ( i[ 0 ], 0xffffffff );
+#endif
 }
 
 TEST( libstdhl_cpp_type_integer, str_decimal20_u64max_plus_one )
@@ -433,11 +597,20 @@ TEST( libstdhl_cpp_type_integer, str_decimal20_u64max_plus_one )
         ,
         Type::Radix::DECIMAL );
 
+#ifdef LIBSTDHL_CPP_TYPE_64_BIT
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.defined(), true );
     EXPECT_EQ( i.trivial(), false );
     EXPECT_EQ( i[ 1 ], 0x1 );
     EXPECT_EQ( i[ 0 ], 0x0 );
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
+    EXPECT_EQ( i.sign(), false );
+    EXPECT_EQ( i.defined(), true );
+    EXPECT_EQ( i.trivial(), false );
+    EXPECT_EQ( i[ 2 ], 0x1 );
+    EXPECT_EQ( i[ 1 ], 0x0 );
+    EXPECT_EQ( i[ 0 ], 0x0 );
+#endif
 }
 
 TEST( libstdhl_cpp_type_integer, str_decimal21 )
@@ -449,11 +622,20 @@ TEST( libstdhl_cpp_type_integer, str_decimal21 )
         ,
         Type::Radix::DECIMAL );
 
+#ifdef LIBSTDHL_CPP_TYPE_64_BIT
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.defined(), true );
     EXPECT_EQ( i.trivial(), false );
     EXPECT_EQ( i[ 1 ], 0x14 );  // 14 4428F03C3341CC54
     EXPECT_EQ( i[ 0 ], 0x4428f03c3341cc54 );
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
+    EXPECT_EQ( i.sign(), false );
+    EXPECT_EQ( i.defined(), true );
+    EXPECT_EQ( i.trivial(), false );
+    EXPECT_EQ( i[ 2 ], 0x14 );
+    EXPECT_EQ( i[ 1 ], 0x4428f03c );
+    EXPECT_EQ( i[ 0 ], 0x3341cc54 );
+#endif
 }
 
 TEST( libstdhl_cpp_type_integer, str_decimal21_sign )
@@ -465,11 +647,20 @@ TEST( libstdhl_cpp_type_integer, str_decimal21_sign )
         ,
         Type::Radix::DECIMAL );
 
+#ifdef LIBSTDHL_CPP_TYPE_64_BIT
     EXPECT_EQ( i.sign(), true );
     EXPECT_EQ( i.defined(), true );
     EXPECT_EQ( i.trivial(), false );
     EXPECT_EQ( i[ 1 ], 0x14 );
     EXPECT_EQ( i[ 0 ], 0x4428f03c3341cc54 );
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
+    EXPECT_EQ( i.sign(), true );
+    EXPECT_EQ( i.defined(), true );
+    EXPECT_EQ( i.trivial(), false );
+    EXPECT_EQ( i[ 2 ], 0x14 );
+    EXPECT_EQ( i[ 1 ], 0x4428f03c );
+    EXPECT_EQ( i[ 0 ], 0x3341cc54 );
+#endif
 }
 
 TEST( libstdhl_cpp_type_integer, str_decimal23 )
@@ -481,11 +672,20 @@ TEST( libstdhl_cpp_type_integer, str_decimal23 )
         ,
         Type::Radix::DECIMAL );
 
+#ifdef LIBSTDHL_CPP_TYPE_64_BIT
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.defined(), true );
     EXPECT_EQ( i.trivial(), false );
     EXPECT_EQ( i[ 1 ], 0x29e );
     EXPECT_EQ( i[ 0 ], 0xc99d1582a2c1cc54 );
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
+    EXPECT_EQ( i.sign(), false );
+    EXPECT_EQ( i.defined(), true );
+    EXPECT_EQ( i.trivial(), false );
+    EXPECT_EQ( i[ 2 ], 0x29e );
+    EXPECT_EQ( i[ 1 ], 0xc99d1582 );
+    EXPECT_EQ( i[ 0 ], 0xa2c1cc54 );
+#endif
 }
 
 TEST( libstdhl_cpp_type_integer, str_decimal40 )
@@ -498,12 +698,23 @@ TEST( libstdhl_cpp_type_integer, str_decimal40 )
         ,
         Type::Radix::DECIMAL );
 
+#ifdef LIBSTDHL_CPP_TYPE_64_BIT
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.defined(), true );
     EXPECT_EQ( i.trivial(), false );
     EXPECT_EQ( i[ 2 ], 0x1b );
     EXPECT_EQ( i[ 1 ], 0x263f55d94d2aacd2 );
     EXPECT_EQ( i[ 0 ], 0x2893945af841cc54 );
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
+    EXPECT_EQ( i.sign(), false );
+    EXPECT_EQ( i.defined(), true );
+    EXPECT_EQ( i.trivial(), false );
+    EXPECT_EQ( i[ 4 ], 0x1b );
+    EXPECT_EQ( i[ 3 ], 0x263f55d9 );
+    EXPECT_EQ( i[ 2 ], 0x4d2aacd2 );
+    EXPECT_EQ( i[ 1 ], 0x2893945a );
+    EXPECT_EQ( i[ 0 ], 0xf841cc54 );
+#endif
 }
 
 TEST( libstdhl_cpp_type_integer, str_decimal40_sign )
@@ -517,12 +728,23 @@ TEST( libstdhl_cpp_type_integer, str_decimal40_sign )
         ,
         Type::Radix::DECIMAL );
 
+#ifdef LIBSTDHL_CPP_TYPE_64_BIT
     EXPECT_EQ( i.sign(), true );
     EXPECT_EQ( i.defined(), true );
     EXPECT_EQ( i.trivial(), false );
     EXPECT_EQ( i[ 2 ], 0x947ed5 );
     EXPECT_EQ( i[ 1 ], 0xf16ce3f39bdb16aa );
     EXPECT_EQ( i[ 0 ], 0x4b67475af841cc54 );
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
+    EXPECT_EQ( i.sign(), true );
+    EXPECT_EQ( i.defined(), true );
+    EXPECT_EQ( i.trivial(), false );
+    EXPECT_EQ( i[ 4 ], 0x947ed5 );
+    EXPECT_EQ( i[ 3 ], 0xf16ce3f3 );
+    EXPECT_EQ( i[ 2 ], 0x9bdb16aa );
+    EXPECT_EQ( i[ 1 ], 0x4b67475a );
+    EXPECT_EQ( i[ 0 ], 0xf841cc54 );
+#endif
 }
 
 TEST( libstdhl_cpp_type_integer, str_decimal77_sign )
@@ -538,6 +760,7 @@ TEST( libstdhl_cpp_type_integer, str_decimal77_sign )
         "1234567890"  // 10
     );
 
+#ifdef LIBSTDHL_CPP_TYPE_64_BIT
     EXPECT_EQ( i.sign(), false );
     EXPECT_EQ( i.defined(), true );
     EXPECT_EQ( i.trivial(), false );
@@ -545,11 +768,24 @@ TEST( libstdhl_cpp_type_integer, str_decimal77_sign )
     EXPECT_EQ( i[ 2 ], 0x3f98e610151e6e07 );
     EXPECT_EQ( i[ 1 ], 0x5f72b95e8f5f488b );
     EXPECT_EQ( i[ 0 ], 0xaccff196ce3f0ad2 );
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
+    EXPECT_EQ( i.sign(), false );
+    EXPECT_EQ( i.defined(), true );
+    EXPECT_EQ( i.trivial(), false );
+    EXPECT_EQ( i[ 7 ], 0x1b4b66fc );
+    EXPECT_EQ( i[ 6 ], 0xc6b7a850 );
+    EXPECT_EQ( i[ 5 ], 0x3f98e610 );
+    EXPECT_EQ( i[ 4 ], 0x151e6e07 );
+    EXPECT_EQ( i[ 3 ], 0x5f72b95e );
+    EXPECT_EQ( i[ 2 ], 0x8f5f488b );
+    EXPECT_EQ( i[ 1 ], 0xaccff196 );
+    EXPECT_EQ( i[ 0 ], 0xce3f0ad2 );
+#endif
 }
 
 TEST( libstdhl_cpp_type_integer, hash_equal )
 {
-    u64 number = 1234;
+    int number = 1234;
 
     auto a = createInteger( number );
     auto b = createInteger( number );
@@ -559,7 +795,7 @@ TEST( libstdhl_cpp_type_integer, hash_equal )
 
 TEST( libstdhl_cpp_type_integer, hash_not_equal )
 {
-    u64 number = 1234;
+    int number = 1234;
 
     auto a = createInteger( number );
     auto b = createInteger( number * ( -1 ) );
@@ -567,15 +803,15 @@ TEST( libstdhl_cpp_type_integer, hash_not_equal )
     EXPECT_NE( a.hash(), b.hash() );
 }
 
-#define TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_( NAME, OP, A, B )         \
-    TEST( libstdhl_cpp_type_integer, operator_##NAME )                       \
-    {                                                                        \
-        const auto a = createInteger( (i64)A );                              \
-        const auto b = createInteger( (i64)B );                              \
-                                                                             \
-        const auto c = a OP b;                                               \
-        EXPECT_EQ( c.trivial(), true );                                      \
-        EXPECT_EQ( (i64)c.value() * ( c.sign() ? ( -1 ) : ( 1 ) ), A OP B ); \
+#define TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_( NAME, OP, A, B )    \
+    TEST( libstdhl_cpp_type_integer, operator_##NAME )                  \
+    {                                                                   \
+        const auto a = createInteger( (int)A );                         \
+        const auto b = createInteger( (int)B );                         \
+                                                                        \
+        const auto c = a OP b;                                          \
+        EXPECT_EQ( c.trivial(), true );                                 \
+        EXPECT_EQ( c.value() * ( c.sign() ? ( -1 ) : ( 1 ) ), A OP B ); \
     }
 
 TEST( libstdhl_cpp_type_integer, operator_equ_zero_pn )
@@ -608,8 +844,8 @@ TEST( libstdhl_cpp_type_integer, operator_equ_zero_nn )
 #define TEST_CPP_TYPE_INTEGER_OPERATOR_COMPARE_( NAME, OP, A, B ) \
     TEST( libstdhl_cpp_type_integer, operator_##NAME )            \
     {                                                             \
-        const auto a = createInteger( (i64)A );                   \
-        const auto b = createInteger( (i64)B );                   \
+        const auto a = createInteger( (int)A );                   \
+        const auto b = createInteger( (int)B );                   \
                                                                   \
         const auto c = a OP b;                                    \
         EXPECT_EQ( c, A OP B );                                   \
@@ -659,12 +895,12 @@ TEST( libstdhl_cpp_type_integer, operator_equ_zero_nn )
 #define TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC_POW( NUMBER, A, B )                  \
     TEST( libstdhl_cpp_type_integer, operator_pow##NUMBER )                            \
     {                                                                                  \
-        const auto a = createInteger( (i64)A );                                        \
-        const auto b = createNatural( (i64)B );                                        \
+        const auto a = createInteger( (int)A );                                        \
+        const auto b = createNatural( (int)B );                                        \
                                                                                        \
         const auto c = a ^ b;                                                          \
         EXPECT_EQ( c.trivial(), true );                                                \
-        EXPECT_EQ( (i64)c.value() * ( c.sign() ? ( -1 ) : ( 1 ) ), std::pow( A, B ) ); \
+        EXPECT_EQ( (int)c.value() * ( c.sign() ? ( -1 ) : ( 1 ) ), std::pow( A, B ) ); \
     }
 
 #define TEST_CPP_TYPE_INTEGER_OPERATOR_ARITHMETIC__pow           \
