@@ -81,7 +81,7 @@ namespace libstdhl
         inline Type::Integer uniform< Type::Integer >(
             const Type::Integer& from, const Type::Integer& to )
         {
-            return Type::createInteger( uniform< u64 >( from[ 0 ], to[ 0 ] ) );
+            return Type::createInteger( uniform< int >( from[ 0 ], to[ 0 ] ) );
         }
 
         template <>
