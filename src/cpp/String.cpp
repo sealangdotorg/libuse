@@ -165,6 +165,10 @@ std::string String::expansion(
 
     for( auto position = begin; position < end; position++ )
     {
+        if( position >= str.length() )
+        {
+            break;
+        }
         const auto character = str[ position ];
         const auto utf8 = Standard::RFC3629::UTF8::byteSequenceLengthIndication( character );
 
