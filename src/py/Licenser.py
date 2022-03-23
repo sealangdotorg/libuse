@@ -169,6 +169,7 @@ def searcher( dirpath, rootdir = True ) :
         , ".c"                # C Source
         , ".cc"               # C++ Source
         , ".cpp"              # C++ Source
+        , ".rs"               # Rust Source
         , ".go"               # Golang Source
         , ".js"               # Javascript
         , ".jsx"              # Javascript Extended
