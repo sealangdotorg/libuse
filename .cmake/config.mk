@@ -484,7 +484,21 @@ ifeq (,$(findstring Visual,$(ENV_GEN)))
       endif
     endif
   endif
+
+  ifeq ($(ENV_CC),emcc)
+    ifeq ("$(TYPE)","debug")
+      ENV_CMAKE_CXX_FLAGS += --profiling
+    endif
+    ENV_CMAKE_CXX_FLAGS += -sNO_DISABLE_EXCEPTION_CATCHING=1
+    ENV_CMAKE_CXX_FLAGS += -sALLOW_MEMORY_GROWTH=1
+    ENV_CMAKE_CXX_FLAGS += -sINVOKE_RUN=0
+    ENV_CMAKE_CXX_FLAGS += -sEXIT_RUNTIME=0
+    ENV_CMAKE_CXX_FLAGS += -sEXPORTED_RUNTIME_METHODS=callMain
+    # -s INITIAL_MEMORY=1GB -sPTHREAD_POOL_SIZE=1 -sUSE_PTHREADS=1 -sMEMORY64=1 -sEXPORTED_FUNCTIONS=_main
+    #  -Wl,--lto-O3 -Wl,--export-al
+  endif
 endif
+
 
 ifeq (,$(findstring Visual,$(ENV_GEN)))
   ENV_CMAKE_FLAGS += -DCMAKE_C_COMPILER=$(ENV_CC)
@@ -527,16 +541,10 @@ ifeq (,$(findstring Visual,$(ENV_GEN)))
     endif
   endif
 
-  ifeq ($(ENV_CC),emcc)
-    ENV_CMAKE_FLAGS += -DCMAKE_CXX_FLAGS="-O0 -g --profiling -sNO_DISABLE_EXCEPTION_CATCHING=1 -sALLOW_MEMORY_GROWTH=1 -sINVOKE_RUN=0 -sEXIT_RUNTIME=0 -sEXPORTED_RUNTIME_METHODS=callMain"
-    # -s INITIAL_MEMORY=1GB -flto -sPTHREAD_POOL_SIZE=1 -sUSE_PTHREADS=1 -Wl,--lto-O3 -flto -sMEMORY64=1
-    # -Wl,--export-al -sEXPORTED_FUNCTIONS=_main
-  endif
-
-  ifeq ("$(ENV_TARGET)","wasm")
-    ENV_CMAKE_FLAGS += -DCMAKE_CXX_FLAGS="--target=wasm32 -nostdlib -Wl,--no-entry -Wl,--export-all\
-      $(ENV_CMAKE_CXX_FLAGS)"
-  endif
+  # ifeq ("$(ENV_TARGET)","wasm")
+  #   ENV_CMAKE_FLAGS += -DCMAKE_CXX_FLAGS="--target=wasm32 -nostdlib -Wl,--no-entry -Wl,--export-all\
+  #     $(ENV_CMAKE_CXX_FLAGS)"
+  # endif
 else
   ENV_CMAKE_FLAGS += -DCMAKE_CXX_FLAGS="\
    /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING\
