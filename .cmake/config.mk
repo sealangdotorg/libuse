@@ -97,12 +97,21 @@ ifeq ($(shell ${WHICH} cmake 2>${DEVNUL}),)
 endif
 
 ENV_ARCH := $(shell uname -m)
-# x86_64
-# i686
-ifneq ($(ENV_ARCH),x86_64)
-ifneq ($(ENV_ARCH),i686)
-  $(error environment architecture '$(ENV_ARCH)' not supported!)
+
+ifeq ($(ENV_ARCH),x86_64)
+  ENV_CPUA := Intel 64-bit
 endif
+ifeq ($(ENV_ARCH),i686)
+  ENV_CPUA := Intel 32-bit
+endif
+ifeq ($(ENV_ARCH),riscv64)
+  ENV_CPUA := RISC-V 64-bit
+endif
+ifeq ($(ENV_ARCH),riscv32)
+  ENV_CPUA := RISC-V 32-bit
+endif
+ifeq ($(ENV_CPUA),)
+  $(error environment CPU '$(ENV_ARCH)' not supported!)
 endif
 
 ENV_PLAT := "$(shell uname -a)"
@@ -130,7 +139,11 @@ ifeq ($(ENV_OSYS),)
 endif
 
 ifeq ($(ENV_OSYS),Linux)
-  ENV_CPUM := $(shell cat /proc/cpuinfo | grep -e "model name" | sed "s/model name.*: //g" | head -n1 )
+  ifneq ($(ENV_CPUA),RISC-V)
+    ENV_CPUM := $(shell cat /proc/cpuinfo | grep -e "model name" | sed "s/model name.*: //g" | head -n1 )
+  else
+    ENV_CPUM := "$(ENV_CPUA) ($(shell cat /proc/cpuinfo | grep -e "isa\|\mmu\|uarch"  | sed "s/\(isa\|mmu\|uarch\).*: //g" | head -n 3 | xargs | sed 's/ /,/g' ))"
+  endif
   ENV_OSEP_:= /
 endif
 ifeq ($(ENV_OSYS),Mac)
