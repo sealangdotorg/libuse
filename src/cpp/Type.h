@@ -47,9 +47,9 @@
 #include <sstream>
 #include <string>
 
-#if INTPTR_MAX == INT32_MAX
+#if SIZE_MAX == UINT32_MAX
 #define LIBSTDHL_CPP_TYPE_32_BIT
-#elif INTPTR_MAX == INT64_MAX
+#elif SIZE_MAX == UINT64_MAX
 #define LIBSTDHL_CPP_TYPE_64_BIT
 #else
 #error "unsupported architecture"
