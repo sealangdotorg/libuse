@@ -48,13 +48,14 @@
 #include <cassert>
 #include <cmath>
 #include <functional>
+#include <limits>
 
 using namespace libstdhl;
 using namespace Type;
 
 static inline std::size_t hi( std::size_t x )
 {
-#ifdef LIBSTDHL_CPP_TYPE_64_BIT
+#if defined( LIBSTDHL_CPP_TYPE_64_BIT )
     static_assert( sizeof( std::size_t ) == ( 64 / 8 ) );
     return x >> 32;
 #else  // LIBSTDHL_CPP_TYPE_32_BIT
@@ -65,7 +66,7 @@ static inline std::size_t hi( std::size_t x )
 
 static inline std::size_t lo( std::size_t x )
 {
-#ifdef LIBSTDHL_CPP_TYPE_64_BIT
+#if defined( LIBSTDHL_CPP_TYPE_64_BIT )
     static_assert( sizeof( std::size_t ) == ( 64 / 8 ) );
     return ( ( ( (std::size_t)1 ) << 32 ) - 1 ) & x;
 #else  // LIBSTDHL_CPP_TYPE_32_BIT
@@ -89,7 +90,7 @@ static inline std::size_t umull_carry( std::size_t a, std::size_t b )
     s2 = lo( x );
     std::size_t s3 = hi( x );
 
-#ifdef LIBSTDHL_CPP_TYPE_64_BIT
+#if defined( LIBSTDHL_CPP_TYPE_64_BIT )
     static_assert( sizeof( std::size_t ) == ( 64 / 8 ) );
     return ( s3 << 32 ) | s2;
 #else  // LIBSTDHL_CPP_TYPE_32_BIT
@@ -100,16 +101,11 @@ static inline std::size_t umull_carry( std::size_t a, std::size_t b )
 
 static inline u1 uaddl_overflow( std::size_t a, std::size_t b, std::size_t* res )
 {
-#if defined( __GNUG__ ) or defined( __clang__ )
-#if defined( __MINGW32__ ) or defined( __APPLE__ )
+#if( defined( __GNUG__ ) or defined( __clang__ ) ) and not defined( __EMSCRIPTEN__ )
+#if defined( LIBSTDHL_CPP_TYPE_64_BIT )
     return __builtin_uaddll_overflow( a, b, res );
-#else
-#if defined( __EMSCRIPTEN__ )
-    *res = a + b;
-    return ( a + b ) < a;
-#else
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
     return __builtin_uaddl_overflow( a, b, res );
-#endif
 #endif
 #else
     *res = a + b;
@@ -119,20 +115,15 @@ static inline u1 uaddl_overflow( std::size_t a, std::size_t b, std::size_t* res 
 
 static inline bool umull_overflow( std::size_t a, std::size_t b, std::size_t* res )
 {
-#if defined( __GNUG__ ) or defined( __clang__ )
-#if defined( __MINGW32__ ) or defined( __APPLE__ )
+#if( defined( __GNUG__ ) or defined( __clang__ ) ) and not defined( __EMSCRIPTEN__ )
+#if defined( LIBSTDHL_CPP_TYPE_64_BIT )
     return __builtin_umulll_overflow( a, b, res );
-#else
-#if defined( __EMSCRIPTEN__ )
-    *res = a * b;
-    return b > 0 && a > ( ULONG_MAX / b );
-#else
+#else  // LIBSTDHL_CPP_TYPE_32_BIT
     return __builtin_umull_overflow( a, b, res );
 #endif
-#endif
 #else
     *res = a * b;
-    return b > 0 && a > ( ULONG_MAX / b );
+    return b > 0 && a > ( std::numeric_limits< std::size_t >::max() / b );
 #endif
 }
 
