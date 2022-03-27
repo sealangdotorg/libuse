@@ -102,7 +102,11 @@ static inline std::size_t umull_carry( std::size_t a, std::size_t b )
 static inline u1 uaddl_overflow( std::size_t a, std::size_t b, std::size_t* res )
 {
 #if( defined( __GNUG__ ) or defined( __clang__ ) ) and not defined( __EMSCRIPTEN__ )
+  #if defined( __MINGW32__ ) or defined( __APPLE__ )
+    return __builtin_uaddll_overflow( a, b, res );
+  #else
     return __builtin_uaddl_overflow( a, b, res );
+  #endif
 #else
     *res = a + b;
     return ( a + b ) < a;
@@ -112,7 +116,11 @@ static inline u1 uaddl_overflow( std::size_t a, std::size_t b, std::size_t* res 
 static inline bool umull_overflow( std::size_t a, std::size_t b, std::size_t* res )
 {
 #if( defined( __GNUG__ ) or defined( __clang__ ) ) and not defined( __EMSCRIPTEN__ )
+  #if defined( __MINGW32__ ) or defined( __APPLE__ )
+    return __builtin_umulll_overflow( a, b, res );
+  #else
     return __builtin_umull_overflow( a, b, res );
+  #endif
 #else
     *res = a * b;
     return b > 0 && a > ( std::numeric_limits< std::size_t >::max() / b );
