@@ -53,7 +53,7 @@ on:
 jobs:
   build:
     name: ${{ matrix.job.os }} (${{ matrix.job.vm }}, ${{ matrix.job.isa }}, ${{ matrix.job.tool }}, ${{ matrix.job.build }})
-    runs-on: ${{ matrix.job.os }}
+    runs-on: ${{ matrix.job.vm }}
     strategy:
       fail-fast: false
       matrix:
