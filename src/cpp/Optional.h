@@ -45,6 +45,7 @@
 
 #include <exception>
 #include <optional>
+#include <stdexcept>
 
 /**
    @brief    TODO
