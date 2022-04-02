@@ -80,20 +80,20 @@ jobs:
       with:
         version: 3.1.2
         actions-cache-folder: '.attic/emsdk'
-    - name: Setup '${{ matrix.job.os }}'
+    - name: Setup 'linux'
       if:   matrix.job.os == 'linux'
       run: |
         make info
         sudo apt-get update
         sudo apt-get install -y ninja-build
         make ci-tools
-    - name: Setup '${{ matrix.job.os }}'
+    - name: Setup 'darwin'
       if:   matrix.job.os == 'darwin'
       run: |
         make info
         brew install ninja
         make ci-tools
-    - name: Setup '${{ matrix.job.os }}'
+    - name: Setup 'windows'
       if:   matrix.job.os == 'windows'
       run: |
         make info
