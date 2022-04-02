@@ -137,6 +137,15 @@ if( ${LIBGTEST_FOUND} )
     )
 endif()
 
+if( CMAKE_CXX_EMSCRIPTEN )
+  set( EMCC_TARGET "${PROJECT}-check" )
+  configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/js/emcc.in.js
+    ${EMCC_TARGET}.js
+  )
+  set( EMCC_TARGET "" )
+endif()
+
 #
 #
 # benchmark
@@ -152,6 +161,15 @@ if( ${LIBHAYAI_FOUND} )
     ${PROJECT}
     ${LIBHAYAI_LIBRARY}
     )
+endif()
+
+if( CMAKE_CXX_EMSCRIPTEN )
+  set( EMCC_TARGET "${PROJECT}-run" )
+  configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/js/emcc.in.js
+    ${EMCC_TARGET}.js
+  )
+  set( EMCC_TARGET "" )
 endif()
 
 #
@@ -175,6 +193,13 @@ generate_export_header(
 install(
   FILES
   "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}_export.h"
+  DESTINATION
+  "include/${PROJECT}"
+  )
+
+install(
+  FILES
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/js/emcc.in.js"
   DESTINATION
   "include/${PROJECT}"
   )

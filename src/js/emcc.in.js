@@ -39,57 +39,14 @@
 //  statement from your version.
 //
 
-let pcwd = process.cwd();
-let wasm = process.argv[ 2 ];
-let args = process.argv.slice( 3 );
-let path = __dirname
+let name = "./@EMCC_TARGET@"
+let args = process.argv.slice( 2 );
+let wasm = require( name );
 
-var lib = ''
-var abs = ''
-let tcwd = pcwd.split( '/' )
-tcwd.forEach
-( ( item, index, array ) =>
-  {
-      // console.log( index, item, array.length )
-      if( (index + 1) < array.length )
-      {
-	  abs = abs + item + '/'
-      }
-      else
-      {
-	  lib = item
-      }
-  }
-);
-
-var rel = '/'
-let dirs = path.replace( abs, '' ).split( '/' )
-
-dirs.forEach
-( ( item, index, array ) =>
-  {
-      // console.log( index, item, array.length )
-      rel = '/..' + rel
-  }
-);
-
-let exec = path + rel + lib + '/' + wasm
-
-// console.log( 'wasm: ' + wasm )
-// console.log( 'pcwd: ' + pcwd )
-// console.log( 'tcwd: ' + tcwd )
-// console.log( ' abs: ' + abs )
-// console.log( 'path: ' + path )
-// console.log( 'dirs: ' + dirs )
-// console.log( 'exec: ' + exec )
-// console.log( 'args: ' + args )
-
-let binary = require( exec );
-
-binary.onRuntimeInitialized
+wasm.onRuntimeInitialized
 = () =>
   {
-      binary.callMain( args );
+      wasm.callMain( args );
   }
 ;
 

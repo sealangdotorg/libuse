@@ -190,7 +190,8 @@ ifdef C
   endif
   ifeq ($(C),emcc)
     ENV_CXX=em++
-    ENV_FLAGS=node $(CONFIG)/src/js/emcc.js
+    ENV_FLAGS=node
+    ENV_EXT=.js
   endif
   ifeq ($(C),wasm)
     ENV_CC=clang
@@ -623,7 +624,7 @@ test-all: $(TYPES:%=%-test)
 $(TESTS):%-test: %
 	$(LOG)cmake --build $(OBJ) --config $(patsubst %-test,%,$@) --target $(TARGET)-check -- $(ENV_BUILD_FLAGS)
 	@echo "-- Running unit test"
-	$(ENV_EXEC) "$(ENV_FLAGS) .$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-check --gtest_output=xml:obj$(ENV_SEP)report.xml $(ENV_ARGS)"
+	$(ENV_EXEC) "$(ENV_FLAGS) .$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-check$(ENV_EXT) --gtest_output=xml:obj$(ENV_SEP)report.xml $(ENV_ARGS)"
 
 
 benchmark: debug-benchmark
@@ -637,7 +638,7 @@ $(BENCH):%-benchmark: %
 
 benchmark-run:
 	@echo "-- Running benchmark"
-	$(ENV_EXEC) "$(ENV_FLAGS) .$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-run -o console -o json:obj$(ENV_SEP)report.json $(ENV_ARGS)"
+	$(ENV_EXEC) "$(ENV_FLAGS) .$(ENV_SEP)$(OBJ)$(ENV_SEP)$(TARGET)-run$(ENV_EXT) -o console -o json:obj$(ENV_SEP)report.json $(ENV_ARGS)"
 
 
 install: debug-install
