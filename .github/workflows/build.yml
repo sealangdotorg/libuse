@@ -61,7 +61,7 @@ jobs:
         - { vm: ubuntu-20.04, os: linux,   isa: x86_64, tool: gcc,   build: coverage }
         - { vm: ubuntu-20.04, os: linux,   isa: x86_64, tool: emcc,  build: debug }
         - { vm: macos-10.15,  os: darwin,  isa: x86_64, tool: gcc,   build: debug }
-        - { vm: windows-2019, os: windows, isa: x86_64, tool: clang, build: debug }
+        - { vm: windows-2019, os: windows, isa: x86_64, tool: gcc,   build: debug }
     env:
       B: ${{ matrix.job.build }}
       C: ${{ matrix.job.tool }}
