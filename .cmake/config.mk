@@ -492,6 +492,7 @@ endif
 ENV_CMAKE_CXX_FLAGS =
 ifeq (,$(findstring Visual,$(ENV_GEN)))
   ifeq ($(ENV_OSYS),Windows)
+    ENV_CMAKE_FLAGS += -DPCL_ONLY_CORE_POINT_TYPES
     ENV_CMAKE_CXX_FLAGS += -Wa,-mbig-obj
   else
     ifeq ("$(TYPE)","release")
