@@ -106,6 +106,7 @@ if( NOT CMAKE_CXX_EMSCRIPTEN )
   set_property( TARGET ${${PROJECT}_SHARED} PROPERTY OUTPUT_NAME ${PROJECT} )
   set_property( TARGET ${${PROJECT}_SHARED} PROPERTY VERSION ${${PROJECT}_VERSION} )
   set_property( TARGET ${${PROJECT}_SHARED} PROPERTY PREFIX  "" )
+  set_property( TARGET ${${PROJECT}_SHARED} PROPERTY IMPORT_PREFIX  "" )
 
   if( WIN32 )
     target_link_libraries( ${${PROJECT}_SHARED}
