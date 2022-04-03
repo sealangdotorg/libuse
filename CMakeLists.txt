@@ -96,7 +96,7 @@ endif()
 #
 
 set( ${PROJECT}_SHARED "" )
-if( NOT CMAKE_CXX_EMSCRIPTEN )
+if( TARGET_LIBRARY AND NOT CMAKE_CXX_EMSCRIPTEN  )
   set( ${PROJECT}_SHARED ${PROJECT}-so )
 
   add_library( ${${PROJECT}_SHARED} SHARED

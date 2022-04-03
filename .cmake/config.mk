@@ -474,6 +474,12 @@ ALL   = $(TYPES:%=%-all)
 ENV_CMAKE_FLAGS  = -G$(ENV_GEN)
 ENV_CMAKE_FLAGS += -DCMAKE_BUILD_TYPE=$(TYPE)
 
+ifdef L
+  ifeq ("$(L)","shared")
+    ENV_CMAKE_FLAGS += -DTARGET_LIBRARY=1
+  endif
+endif
+
 ifdef H
   ifeq ("$(H)","ccache")
     ENV_CACHE=$(H)
@@ -492,7 +498,6 @@ endif
 ENV_CMAKE_CXX_FLAGS =
 ifeq (,$(findstring Visual,$(ENV_GEN)))
   ifeq ($(ENV_OSYS),Windows)
-    ENV_CMAKE_FLAGS += -DPCL_ONLY_CORE_POINT_TYPES
     ENV_CMAKE_CXX_FLAGS += -Wa,-mbig-obj
   else
     ifeq ("$(TYPE)","release")
