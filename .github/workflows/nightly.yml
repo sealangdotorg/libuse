@@ -66,14 +66,15 @@ jobs:
       B: ${{ matrix.job.build }}
       C: ${{ matrix.job.tool }}
       G: ninja
-      H: ccache
+      H: sccache
       I: ${{ github.workspace }}/.attic/install
     steps:
     - name: Checkout
       uses: actions/checkout@v1
-    - name: Install 'ccache'
+    - name: Install 'sccache'
       uses: hendrikmuhs/ccache-action@v1.2.1
       with:
+        variant: sccache
         key: ${{ matrix.job.os }}-${{ matrix.job.isa }}-${{ matrix.job.tool }}-${{ matrix.job.build }}
     - name: Install 'emcc'
       if:   matrix.job.tool == 'emcc'
