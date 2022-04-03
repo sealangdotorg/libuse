@@ -68,8 +68,6 @@ jobs:
       #I: ${{ github.workspace }}/.attic/install
       G: ninja
       H: sccache
-      SCCACHE_DIR: ${{ github.workspace }}/.attic/sccache
-      SCCACHE_MAX_FRAME_LENGTH: 104857600
     steps:
     - name: Checkout
       uses: actions/checkout@v1
@@ -81,11 +79,16 @@ jobs:
         key: ${{ matrix.job.os }}-${{ matrix.job.isa }}-${{ matrix.job.tool }}-${{ matrix.job.build }}
     - name: Setup 'linux'
       if:   matrix.job.os == 'linux'
+      env:
+        SCCACHE_URL: https://github.com/mozilla/sccache/releases/download/v0.2.15/sccache-v0.2.15-x86_64-unknown-linux-musl.tar.gz
       run: |
         make info
         sudo apt-get update
         sudo apt-get install -y ninja-build
-        sudo snap install sccache --candidate --classic
+        wget -qO  /tmp/archive.tar.gz --no-check-certificate $SCCACHE_URL
+        tar  -xf  /tmp/archive.tar.gz -C /usr/local/bin
+        rm   -f   /tmp/archive.tar.gz
+        chmod +x  /usr/local/bin/sccache
         make ci-tools
     - name: Setup 'darwin'
       if:   matrix.job.os == 'darwin'
@@ -102,6 +105,19 @@ jobs:
         choco install ninja
         choco install sccache
         make ci-tools
+    - name: Config
+      env:
+        SCCACHE_DIR: ${{ github.workspace }}/.attic/sccache
+        SCCACHE_MAX_FRAME_LENGTH: 104857600
+      run: |
+        sccache --start-server
+        sccache -s
+    - name: Post Config
+      uses: webiny/action-post-run@2.0.1
+      with:
+        run: |
+          sccache -s
+          sccache --stop-server
     - name: Install 'emcc'
       if:   matrix.job.tool == 'emcc'
       uses: mymindstorm/setup-emsdk@v11
@@ -113,7 +129,6 @@ jobs:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
       run: |
         make ci-fetch
-        sccache -s
     - name: Dependencies
       run: |
         make ci-deps
