@@ -86,24 +86,34 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y ninja-build
         wget -qO  /tmp/archive.tar.gz --no-check-certificate $SCCACHE_URL
-        tar  -xf  /tmp/archive.tar.gz -C /usr/local/bin
+        tar  -xf  /tmp/archive.tar.gz -C /usr/local
         rm   -f   /tmp/archive.tar.gz
+        mv  /usr/local/sccache-*/sccache /usr/local/bin/
         chmod +x  /usr/local/bin/sccache
         make ci-tools
     - name: Setup 'darwin'
       if:   matrix.job.os == 'darwin'
+        SCCACHE_URL: https://github.com/mozilla/sccache/releases/download/v0.2.15/sccache-v0.2.15-x86_64-apple-darwin.tar.gz
       run: |
         make info
         brew install ninja
-        brew install sccache
+        wget -qO  /tmp/archive.tar.gz --no-check-certificate $SCCACHE_URL
+        tar  -xf  /tmp/archive.tar.gz -C /usr/local
+        rm   -f   /tmp/archive.tar.gz
+        mv  /usr/local/sccache-*/sccache /usr/local/bin/
+        chmod +x  /usr/local/bin/sccache
         make ci-tools
     - name: Setup 'windows'
       if:   matrix.job.os == 'windows'
+      env:
+        SCCACHE_URL: https://github.com/mozilla/sccache/releases/download/v0.2.15/sccache-v0.2.15-x86_64-pc-windows-msvc.tar.gz
       run: |
         make info
         echo "C:\msys64\mingw64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
         choco install ninja
-        choco install sccache
+        Invoke-WebRequest $env:SCCACHE_URL -O C:\archive.tar.gz
+        Expand-Archive  C:\archive.tar.gz -DestinationPath C:\
+        Copy-Item -Path C:\sccache-v0.2.15-x86_64-pc-windows-msvc\sccache -Destination C:\msys64\bin -Force
         make ci-tools
     - name: Config
       env:
