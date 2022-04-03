@@ -53,7 +53,7 @@ find_path( LIBSTDHL_INCLUDE_DIR
   )
 
 find_library( LIBSTDHL_LIBRARY
-  NAMES stdhl
+  NAMES libstdhl.a stdhl
   PATHS ${LIBSTDHL_PKGCONF_LIBRARY_DIRS}
   )
 
