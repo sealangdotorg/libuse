@@ -65,9 +65,9 @@ jobs:
     env:
       B: ${{ matrix.job.build }}
       C: ${{ matrix.job.tool }}
+      I: ${{ github.workspace }}/.attic/install
       G: ninja
       H: sccache
-      #I: ${{ github.workspace }}/.attic/install
     steps:
     - name: Checkout
       uses: actions/checkout@v1
