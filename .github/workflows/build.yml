@@ -106,25 +106,21 @@ jobs:
         choco install ninja
         choco install sccache
         make ci-tools
-    - name: Install 'emcc'
+    - name: Setup 'emcc'
       if:   matrix.job.tool == 'emcc'
       uses: mymindstorm/setup-emsdk@v11
       with:
         version: 3.1.2
         actions-cache-folder: '.attic/emsdk'
-    - name: Config 'sccache'
+    - name: Setup 'sccache'
       env:
         SCCACHE_DIR: ${{ github.workspace }}/.attic/sccache
         SCCACHE_MAX_FRAME_LENGTH: 104857600
-      run: |
-        sccache --start-server
-        sccache --show-stats
-    - name: Config 'sccache'
+      run: sccache --start-server && sccache --show-stats
+    - name: Setup 'sccache'
       uses: webiny/action-post-run@2.0.1
       with:
-        run: |
-          sccache --show-stats
-          sccache --stop-server
+        run: sccache --show-stats && sccache --stop-server
     - name: Fetching
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
