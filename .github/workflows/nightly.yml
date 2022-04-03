@@ -65,7 +65,7 @@ jobs:
     env:
       B: ${{ matrix.job.build }}
       C: ${{ matrix.job.tool }}
-      I: ${{ github.workspace }}/.attic/install
+      #I: ${{ github.workspace }}/.attic/install
       G: ninja
       H: sccache
     steps:
