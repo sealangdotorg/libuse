@@ -85,8 +85,11 @@ jobs:
         make info
         sudo apt-get update
         sudo apt-get install -y ninja-build
-        sudo apt-get install -y snapd
-        sudo snap install sccache --candidate --classic
+        wget -qO  /tmp/archive.tar.gz --no-check-certificate $SCCACHE_URL
+        tar  -xf  /tmp/archive.tar.gz -C /tmp
+        rm   -f   /tmp/archive.tar.gz
+        sudo mv  /tmp/sccache-*/sccache /usr/local/bin/
+        sudo chmod +x  /usr/local/bin/sccache
         make ci-tools
     - name: Setup 'darwin'
       if:   matrix.job.os == 'darwin'
