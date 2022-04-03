@@ -84,6 +84,7 @@ jobs:
       run: |
         make info
         sudo apt-get update
+        sudo apt-get install -y gcc-multilib
         sudo apt-get install -y ninja-build
         wget -qO  /tmp/archive.tar.gz --no-check-certificate $SCCACHE_URL
         tar  -xf  /tmp/archive.tar.gz -C /tmp
@@ -106,21 +107,21 @@ jobs:
         choco install ninja
         choco install sccache
         make ci-tools
-    - name: Setup 'emcc'
+    - name: Install 'emcc'
       if:   matrix.job.tool == 'emcc'
       uses: mymindstorm/setup-emsdk@v11
       with:
         version: 3.1.2
         actions-cache-folder: '.attic/emsdk'
-    - name: Setup 'sccache'
+    - name: Cache 'sccache'
       env:
         SCCACHE_DIR: ${{ github.workspace }}/.attic/sccache
         SCCACHE_MAX_FRAME_LENGTH: 104857600
-      run: sccache --start-server && sccache --show-stats
-    - name: Setup 'sccache'
+      run: sccache --start-server
+    - name: Cache 'sccache'
       uses: webiny/action-post-run@2.0.1
       with:
-        run: sccache --show-stats && sccache --stop-server
+        run: sccache --show-stats
     - name: Fetching
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
