@@ -436,7 +436,8 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
 	OUTPUT_STRIP_TRAILING_WHITESPACE
 	)
 
-      message( "-- Found ${PREFIX} [${PREFIX_GIT_REVTAG}] @ '${${PREFIX}_REPO_DIR}'" )
+      message( "-- Found ${PREFIX} [${PREFIX_GIT_REVTAG}] @ [local]" )
+      message( "         ${${PREFIX}_REPO_DIR} ")
 
       set( ${PROJECT}_DEPS
 	${${PROJECT}_DEPS} ${PREFIX}
@@ -598,6 +599,11 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
 	PARENT_SCOPE
 	)
 
+      if( ${${PREFIX_NAME}_FOUND} )
+	message( "         ${${PREFIX_NAME}_INCLUDE_DIR} ")
+	message( "         ${${PREFIX_NAME}_LIBRARY} ")
+      endif()
+
       return()
     endif()
   endforeach()
@@ -614,7 +620,9 @@ function( package_git_submodule PREFIX VERSION MODE TMP ) # ${ARGN} search paths
     message( FATAL_ERROR "-- *NOT* Found ${PREFIX}" )
   else()
     set( ${PREFIX_NAME}_FOUND TRUE )
-    message( "-- Found ${PREFIX} [installed] @ '${${PREFIX_INCLUDE}}' & '${${PREFIX_LIBRARY}}'" )
+    message( "-- Found ${PREFIX} [installed]" )
+    message( "         ${${PREFIX_INCLUDE}} ")
+    message( "         ${${PREFIX_LIBRARY}} ")
     add_custom_target( ${PREFIX}
       COMMENT "Package ${PREFIX}"
       )
