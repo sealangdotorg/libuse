@@ -68,8 +68,8 @@ jobs:
       #I: ${{ github.workspace }}/.attic/install
       G: ninja
       H: sccache
-      SCCACHE_DIR="${{ github.workspace }}/.attic/sccache"
-      SCCACHE_MAX_FRAME_LENGTH="104857600"
+      SCCACHE_DIR: ${{ github.workspace }}/.attic/sccache
+      SCCACHE_MAX_FRAME_LENGTH: 104857600
     steps:
     - name: Checkout
       uses: actions/checkout@v1
