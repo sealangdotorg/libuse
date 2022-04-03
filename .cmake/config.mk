@@ -476,12 +476,18 @@ ENV_CMAKE_FLAGS += -DCMAKE_BUILD_TYPE=$(TYPE)
 
 ifdef H
   ifeq ("$(H)","ccache")
-    ENV_CMAKE_FLAGS += -DCMAKE_C_COMPILER_LAUNCHER=$(H)
-    ENV_CMAKE_FLAGS += -DCMAKE_CXX_COMPILER_LAUNCHER=$(H)
-  else
-    $(error caching tool '$(H)' is not supported!)
+    ENV_CACHE=$(H)
+  endif
+  ifeq ("$(H)","sccache")
+    ENV_CACHE=$(H)
   endif
 endif
+
+ifdef ENV_CACHE
+  ENV_CMAKE_FLAGS += -DCMAKE_C_COMPILER_LAUNCHER=$(ENV_CACHE)
+  ENV_CMAKE_FLAGS += -DCMAKE_CXX_COMPILER_LAUNCHER=$(ENV_CACHE)
+endif
+
 
 ENV_CMAKE_CXX_FLAGS =
 ifeq (,$(findstring Visual,$(ENV_GEN)))
