@@ -209,6 +209,7 @@ def searcher( dirpath, rootdir = True ) :
         , ".pro"              # QtProject Script
         , ".cmake"            # CMake Script
         , ".yml"              # YAML Configuration
+        , ".yaml"             # YAML Configuration
         , ".toml"             # TOML Configuration
         , ".cfg"              # UNIX Configuration
         , ".sh"               # BASH/Shell Script
