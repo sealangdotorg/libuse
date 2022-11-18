@@ -63,10 +63,10 @@ with open( licensepath, "r" ) as fd :
 
         
 for txt in licensetext :
-    print txt
+    print( txt )
         
 def relicense( filepath, comment, licensetext = licensetext ) :
-    print filepath, comment
+    print( filepath, comment )
 
     xml = False
     context = True
@@ -78,7 +78,7 @@ def relicense( filepath, comment, licensetext = licensetext ) :
         or line.startswith( "<?xml" ) \
         :
             xml = True
-            print "%s" % line.replace( "\n", "" )
+            print( "%s" % line.replace( "\n", "" ) )
             continue
         # end if
 
@@ -86,7 +86,7 @@ def relicense( filepath, comment, licensetext = licensetext ) :
         or line.startswith( "CoreASM" ) \
         or line.startswith( "%{" ) \
         :
-            print "%s" % line.replace( "\n", "" )
+            print( "%s" % line.replace( "\n", "" ) )
             continue
         # end if
 
@@ -99,20 +99,20 @@ def relicense( filepath, comment, licensetext = licensetext ) :
                 context = False
             else :
                 if xml :
-                    print "%s" % comment
+                    print( "%s" % comment )
                 # end if
                 for txt in licensetext :
                     if len( txt ) == 0 :
                         if xml :
-                            print ""
+                            print( "" )
                         else :
-                            print "%s" % comment
+                            print( "%s" % comment )
                         # end if
                     else :
                         if xml :
-                            print "%-4s%s" % ( "", txt )
+                            print( "%-4s%s" % ( "", txt ) )
                         else :
-                            print "%-4s%s" % ( comment, txt )
+                            print( "%-4s%s" % ( comment, txt ) )
                         # end if
                     # end if
                 # end for
@@ -134,7 +134,7 @@ def relicense( filepath, comment, licensetext = licensetext ) :
             # end if
         # end if
         
-        print line.replace( "\n", "" )
+        print( line.replace( "\n", "" ) )
     # end for
 # end def
 
