@@ -1,9 +1,9 @@
 #
-#   Copyright (C) 2014-2022 CASM Organization <https://casm-lang.org>
+#   Copyright (C) 2014-2023 CASM Organization <https://casm-lang.org>
 #   All rights reserved.
 #
 #   Developed by: Philipp Paulweber et al.
-#                 <https://github.com/casm-lang/libstdhl/graphs/contributors>
+#   <https://github.com/casm-lang/libstdhl/graphs/contributors>
 #
 #   This file is part of libstdhl.
 #
@@ -657,7 +657,7 @@ license: $(CONFIG:%=%-license) $(UPDATE_PATH:%=%-license)
 %-license:
 	@echo "-- Relicense: $(patsubst %-update,%,$@)"
 	$(LOG)cd $(patsubst %-update,%,$@); \
-	python2 $(CONFIG)/src/py/Licenser.py
+	python $(CONFIG)/src/py/Licenser.py
 
 license-info:
 	$(LOG)grep LICENSE.txt -e "---:" | sed "s/---://g"
